@@ -1,2 +1,22 @@
 This project's goal is to make an libswift based application for the Samsung TV.
 The TV to be used is the Samsung UEXXD70XX series.
+
+To compile binaries for the the Samsung TV, please visit opensource.samsung.com to download the correct tools.
+List of things you need:
+
+- VDLinux-armv7a8-toolchain-lite_20100630.tgz
+- arm_v7_vfp_le_20091117.tgz
+- 11_UE_UAxxD7xx0.tar.gz (optional, contains kernel and other built in stuff already in the TV)
+
+To setup the toolchain, unpack the first two packages and put them somewere you want them (usually /opt) and add them to your $PATH
+
+We are also working to emulate the TV correctly in QEMU.
+To download qemu, please visit http://wiki.qemu.org/Download
+
+Download the latest version, unpack and run:
+
+./configure --target-list=arm-softmmu --enable-sdl
+make
+sudo make install
+
+After this, you'll have qemu on your computer.
