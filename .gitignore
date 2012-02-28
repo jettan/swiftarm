@@ -1,0 +1,5 @@
+*.o
+*.lo
+lib
+lib2
+bin
