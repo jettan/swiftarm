@@ -29,7 +29,8 @@ libevent2/sample/signal-test
 libevent2/sample/time-test
 libevent2/samsung-build.sh~
 libevent2/stamp-h1
-libevent2/test/.deps/
+libevent2/build.sh
+libevent2/test/.deps
 libevent2/test/Makefile
 libevent2/test/bench
 libevent2/test/bench_cascade
