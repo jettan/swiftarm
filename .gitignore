@@ -44,6 +44,9 @@ libevent2/test/test-init
 libevent2/test/test-ratelim
 libevent2/test/test-time
 libevent2/test/test-weof
+libevent2/autom4te.cache/
+libevent2/sample/.libs/
+libevent2/test/.libs/
 m48-stb-swift/-t
 m48-stb-swift/swift
 

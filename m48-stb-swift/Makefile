@@ -1,4 +1,4 @@
-LIBEVENT_HOME=/home/jettan/swiftarm/lib2
+LIBEVENT_HOME=/home/jettan/Documents/swiftarm/lib
 
 CXX=arm-v7a8-linux-gnueabi-g++
 CPPFLAGS+=-O2 -I. -Wall -Wno-sign-compare -Wno-unused -g -I${LIBEVENT_HOME}/include -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE

@@ -1,8 +1,8 @@
 #!/bin/sh -x
 #
 
-SRC_DIR="/home/jettan/swiftarm/libevent2"
-INSTALL_DIR="/home/jettan/swiftarm/lib2"
+SRC_DIR="/home/jettan/Documents/swiftarm/libevent2"
+INSTALL_DIR="/home/jettan/Documents/swiftarm/lib"
 
 
 cd $SRC_DIR
@@ -13,12 +13,9 @@ export LD="arm-v7a8-linux-gnueabi-ld"
 export AR="arm-v7a8-linux-gnueabi-ar"
 export RANLIB="arm-v7a8-linux-gnueabi-ranlib"
 export STRIP="arm-v7a8-linux-gnueabi-strip"
-export LDFLAGS="-rpath /home/jettan/swiftarm/libevent2/include/event2"$LDFLAGS
+#export LDFLAGS="-rpath /home/jettan/Documents/swiftarm/libevent2/include/event2"$LDFLAGS
 export LDADD="-lgcc -lc -lrt"
 
-./configure --prefix=$INSTALL_DIR LIBS="-lc -lgcc -lrt"
-
-make
-make install
+./configure --host=arm-v7a8-linux-gnueabi --prefix=$INSTALL_DIR LIBS="-lc -lgcc -lrt"
 
 exit 0
