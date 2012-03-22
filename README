@@ -5,18 +5,40 @@ To compile binaries for the the Samsung TV, please visit opensource.samsung.com 
 List of things you need:
 
 - VDLinux-armv7a8-toolchain-lite_20100630.tgz
-- arm_v7_vfp_le_20091117.tgz
+- arm_v7_vfp_le_20091117.tgz (optional)
 - 11_UE_UAxxD7xx0.tar.gz (optional, contains kernel and other built in stuff already in the TV)
 
-To setup the toolchain, unpack the first two packages and put them somewere you want them (usually /opt) and add them to your $PATH
+To setup the toolchain, unpack the arm-v7a8 toolchain and put them somewhere you want them (usually /opt) and add them to your $PATH
 
-We are also working to emulate the TV correctly in QEMU.
-To download qemu, please visit http://wiki.qemu.org/Download
+To compile libevent2 for the Samsung TV, make sure you fork this repository on your home folder, otherwise you have to change some paths in the build files.
 
-Download the latest version, unpack and run:
+$cd swiftarm/libevent2
+$./samsung-build.sh
+$make
+$make install
 
-./configure --target-list=arm-softmmu --enable-sdl
-make
-sudo make install
+To compile libswift for the Samsung TV, just cd into the directory m48-stb-swift and run make.
+If this doesn't work, make sure you have your paths set correctly.
 
-After this, you'll have qemu on your computer.
+To do the demo, transfer the swift binary you compiled to your *ROOTED* Samsung TV using ftp.
+WARNING: DO NOT USE FILEZILLA OR OTHER FANCY FTP CLIENTS! THEY MODIFY THE BINARY AND GIVE A SEGFAULT!
+
+To try it out on the TV, transfer some mp3, mp4 or other files to your device using ftp.
+Don't forget to set the executable bit on for swift.
+
+chmod +x swift
+
+Then run the seeder.
+
+./swift -f path_to_file/file -l 127.0.0.1:20000 -p
+
+This will generate a root merkle hash.
+
+To stream it to yourself, run the http binder:
+
+./swift -t 127.0.0.1:20000 -g 127.0.0.1:1337 -w
+
+Then run any widget that can play http streams like nStreamPlayer with modified playlist.
+The http link where your stream will be is:
+http://127.0.0.1:1337/root_merkle_hash
+where root_merkle_hash is the hash you obtained by running the seeder.
