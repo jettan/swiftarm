@@ -1,7 +1,7 @@
 #ifndef _REQUESTHANDLER_H
 #define _REQUESTHANDLER_H
 
-#include <string.h>
+#include <string>
 
 class CRequest;
 
