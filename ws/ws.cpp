@@ -10,6 +10,7 @@
 #include "socketlistener.h"
 #include "request.h"
 #include "requesthandler.h"
+#include <iostream>
 
 void signalhandler(int signum);
 CSocketListener g_socketlistener;
@@ -31,7 +32,7 @@ int main(int argc, char* argv[]) {
 	sigaction(SIGPIPE, &sa, NULL);
 	
 	if (!g_socketlistener.Create(64)) {
-		fprintf(stderr, "Socket error.\n");
+		std::cerr << "Socker error." << std::endl;
 		g_socketlistener.Shutdown();
 		return 1;
 	}
@@ -53,7 +54,7 @@ int main(int argc, char* argv[]) {
 					}
 					
 					if (status != 0) {
-						fprintf(stderr, "Received SIGCHLD for pid = %d, status = %d\n", pid, status);
+						std::cerr << "Received SIGCHILD for pid = " << pid << ", status = " << status << std::endl;
 					}
 				}
 				g_signalhandled = false;

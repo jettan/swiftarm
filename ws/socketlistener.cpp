@@ -18,7 +18,7 @@
 #include "ws.h"
 #include "socketlistener.h"
 #include "request.h"
-
+#include <iostream>
 
 CSocketListener::CSocketListener() : m_iServerSock(-1), m_iMaxRequests(0) {
 	m_iSemId = semget(IPC_PRIVATE, 1, IPC_CREAT | IPC_EXCL | S_IRUSR | S_IWUSR);
@@ -45,7 +45,7 @@ CSocketListener::~CSocketListener() {
 void CSocketListener::dumpRequests(char *pMsg) {
 	fprintf(stderr, "%s\n", pMsg);
 	for (int i = 0; i < 5; i++) {
-		fprintf(stderr, "m_vRequests[%d] = %d\n", i, m_vRequests[i]);
+		std::cerr << "m_vRequests[" << i << "] = " << m_vRequests[i] << std::endl;
 	}
 }
 

@@ -34,7 +34,7 @@ bool CRequestHandler::Handle(CRequest *pRequest) {
 void CRequestHandler::HandleGET(CRequest *pRequest) {
 	int val = 1;
 	if (setsockopt(pRequest->GetHandle().iSock, SOL_TCP, TCP_CORK, & val, 4) == -1) {
-		fprintf(stderr, "setsockopt failed, errno = %d\n", errno);
+		std::cerr << "setsockopt failed, errno = " << errno << std::endl;
 		return;
 	}
 	
@@ -67,7 +67,7 @@ void CRequestHandler::HandleGET(CRequest *pRequest) {
 	memset(&buf, 0, sizeof(buf));
 	
 	if (fstat(iFile, &buf) != 0) {
-		fprintf(stderr, "error, fstat failed for: %s\n", pFileName);
+		std::cerr << "error, fstat failed for: " << pFileName << std::endl;
 		close(iFile);
 		return;
 	}
@@ -81,7 +81,7 @@ void CRequestHandler::HandleGET(CRequest *pRequest) {
 			"Keep-Alive: timeout=15, max=100\n"
 			"Connection: Keep-Alive\n"
 			"Content-Type: text/plain\n"
-			"Content-Length: %d\n\n", buf.st_size);
+			"Content-Length: %ld\n\n", buf.st_size);
 	}
 	
 	pRequest->Write(pBuf, strlen(pBuf));
@@ -93,7 +93,7 @@ void CRequestHandler::HandleGET(CRequest *pRequest) {
 	std::cout << "Sent the message." << std::endl;
 	
 	if (byteswritten != bytestowrite) {
-		fprintf(stderr, "error, bytestowrite = %d, byteswritten = %d\n", bytestowrite, byteswritten);
+		std::cerr << "error, bytestowrite = " << bytestowrite << ", byteswritten = " << byteswritten << std::endl;
 		close(iFile);
 		return;
 	}

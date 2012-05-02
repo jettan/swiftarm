@@ -16,7 +16,7 @@
 #include "ws.h"
 #include "socketlistener.h"
 #include "request.h"
-
+#include <iostream>
 CRequest::CRequest(CSocketListener *pSL, sockethandle handle) : m_pSocketListener(pSL), m_Handle(handle) {
 	Initialize();
 }
@@ -41,7 +41,7 @@ bool CRequest::ParseRequest(char *pRawRequest) {
 	
 	const char *pErr = re_compile_pattern(pRegex, strlen(pRegex), &buffer);
 	if (pErr) {
-		fprintf(stderr, "Error compiling regular expression while parsing request: %s\n", pErr);
+		std::cerr << "Error compiling regular expression while parsing request: " << pErr << std::endl;
 		regfree(&buffer);
 		return false;
 	}
@@ -49,7 +49,7 @@ bool CRequest::ParseRequest(char *pRawRequest) {
 	struct re_registers regs;
 	int iRet = re_search(&buffer, pRawRequest, strlen(pRawRequest), 0, strlen(pRawRequest), &regs);
 	if (iRet == -2) {
-		fprintf(stderr, "Internal error while searching request.\n");
+		std::cerr << "Internal error while searching request." << std::endl;
 		regfree(&buffer);
 		return false;
 	} else if (iRet == -1) {
