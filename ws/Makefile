@@ -1,8 +1,13 @@
 CXX= arm-v7a8-linux-gnueabi-g++
 CPPFLAGS+= -static -Wno-write-strings
+ifeq ($(CXX),arm-v7-linux-gnueabi-g++)
+	LIBS = /opt/armv7a8-toolchain-lite/arm-v7a8-linux-gnueabi/libc/usr/lib/libutil.a
+else
+	LIBS = -lutil
+endif
 
 ws: ws.o socketlistener.o request.o requesthandler.o
-	$(CXX) $(CFLAGS) $(CPPFLAGS) ws.o socketlistener.o request.o requesthandler.o -o ws /opt/armv7a8-toolchain-lite/arm-v7a8-linux-gnueabi/libc/usr/lib/libutil.a
+	$(CXX) $(CFLAGS) $(CPPFLAGS) ws.o socketlistener.o request.o requesthandler.o -o ws $(LIBS)
 
 ws.o: ws.cpp ws.h socketlistener.h request.h requesthandler.h
 	$(CXX) $(CFLAGS) $(CPPFLAGS) ws.cpp -c
