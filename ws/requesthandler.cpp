@@ -21,11 +21,14 @@
 #include "requesthandler.h"
 #include "socketlistener.h"
 #include "request.h"
+#include <iostream>
 
 bool CRequestHandler::Handle(CRequest *pRequest)
 {
-	if (strncmp(pRequest->GetCommand(), "GET", 3) == 0)
+	if (strncmp(pRequest->GetCommand(), "GET", 3) == 0) {
+		std::cout << "Received GET command." << std::endl;
 		HandleGET(pRequest);
+	}
 	return true;
 }
 
@@ -43,18 +46,19 @@ void CRequestHandler::HandleGET(CRequest *pRequest)
 
 	char pBuf[8192];
 	memset(pBuf, 0, sizeof(pBuf));
-	//sprintf(pBuf, "HTTP/1.1 200 OK\nDate: Sun, 13 Nov 2005 21:15:12 GMT\nServer: Apache/2.0.54 (Unix) mod_ssl/2.0.54 OpenSSL/0.9.7a PHP/5.0.5\nContent-Location: index.html.en\nVary: negotiate,accept-language,accept-charset\nTCN: choice\nLast-Modified: Sun, 21 Nov 2004 14:35:21 GMT\nETag: \"127e2d-5b0-a64a7c40;127e44-961-a64a7c40\"\nAccept-Ranges: bytes\nContent-Length: 1510\nKeep-Alive: timeout=15, max=100\nConnection: Keep-Alive\nContent-Type: text/html\nContent-Language: en\n\n");
-	//sprintf(pBuf, "HTTP/1.1 200 OK\nDate: Sun, 13 Nov 2005 21:22:28 GMT\nServer: Apache/2.0.54 (Unix) mod_ssl/2.0.54 OpenSSL/0.9.7a PHP/5.0.5\nX-Powered-By: PHP/5.0.5\nSet-Cookie: PHPSESSID=0e90326d25dd3f59509b02cbd6c6848b; path=/\nExpires: Thu, 19 Nov 1981 08:52:00 GMT\nCache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0\nPragma: no-cache\nContent-Length: 1515\nKeep-Alive: timeout=15, max=100\nConnection: Keep-Alive\nContent-Type: text/html\nAllow: GET, POST, HEAD, PUT\n\n");
 
-	char pFileName[256];
+	char pFileName[128];
 	memset(pFileName, 0, sizeof(pFileName));
-	if (strcmp(pRequest->GetPath(), "/") == 0)
-		sprintf(pFileName, "htdocs/index.html");
+	if (strcmp(pRequest->GetPath(), "/test.txt") == 0) {
+		sprintf(pFileName, "test.txt");
+	}
 	else
-		sprintf(pFileName, "htdocs%s", pRequest->GetPath());
+		std::cout << "Nothing to do here..." << std::endl;
+		//sprintf(pFileName, "htdocs%s", pRequest->GetPath());
 
-	fprintf(stderr, "%s\n", pFileName);
-
+	//fprintf(stderr, "%s\n", pFileName);
+	
+	
 	int iFile = open(pFileName, O_RDONLY);
 	if (iFile < 0)
 	{
@@ -82,15 +86,16 @@ void CRequestHandler::HandleGET(CRequest *pRequest)
 
 	// Check file type
 	char *pFileType = pFileName + (strlen(pFileName) - 5);
-	if (strcmp(pFileType, ".html") == 0)
+	if (strcmp(pFileType + 1, ".txt") == 0)
 	{
+		std::cout << "Sending the header..." << std::endl;
 		sprintf(pBuf, "HTTP/1.1 200 OK\n"
 			//"Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0\n"
 			//"Pragma: no-cache\n"
 			"Accept-Ranges: none\n"
 			"Keep-Alive: timeout=15, max=100\n"
 			"Connection: Keep-Alive\n"
-			"Content-Type: text/html\n"
+			"Content-Type: text/plain\n"
 			"Content-Length: %d\n\n", buf.st_size);
 	}
 	else if (strcmp(pFileType + 1, ".gif") == 0)
@@ -129,18 +134,23 @@ void CRequestHandler::HandleGET(CRequest *pRequest)
 			"Content-Type: application/x-javascript\n"
 			"Content-Length: %d\n\n", buf.st_size);
 	}
-
+	
 	pRequest->Write(pBuf, strlen(pBuf));
-
+	
+	std::cout << "Sending the message..." << std::endl;
 	ssize_t bytestowrite = buf.st_size;
 	off_t offset = 0;
 	ssize_t byteswritten = pRequest->WriteFile(iFile, bytestowrite);
+	std::cout << "Sent the message." << std::endl;
+	
 	if (byteswritten != bytestowrite)
 	{
 		fprintf(stderr, "error, bytestowrite = %d, byteswritten = %d\n", bytestowrite, byteswritten);
 		close(iFile);
 		return;
 	}
-
+	
 	close(iFile);
+	
+	return;
 }

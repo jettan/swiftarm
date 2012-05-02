@@ -1,10 +1,9 @@
 CXX= arm-v7a8-linux-gnueabi-g++
-CLAGS+= -static
 CPPFLAGS+= -static
 LD=arm-v7a8-linux-gnueabi-ld 
 
 ws: ws.o socketlistener.o request.o requesthandler.o
-	$(CXX) $(CFLAGS) $(CPPFLAGS) ws.o socketlistener.o request.o requesthandler.o -o ws /opt/Linux-armv7a8-toolchain-lite/arm-v7a8-linux-gnueabi/libc/usr/lib/libutil.a
+	$(CXX) $(CFLAGS) $(CPPFLAGS) ws.o socketlistener.o request.o requesthandler.o -o ws /opt/armv7a8-toolchain-lite/arm-v7a8-linux-gnueabi/libc/usr/lib/libutil.a
 
 ws.o: ws.cpp ws.h socketlistener.h request.h requesthandler.h
 	$(CXX) $(CFLAGS) $(CPPFLAGS) ws.cpp -c
