@@ -16,10 +16,9 @@ CSocketListener g_socketlistener;
 bool g_signalhandled = false;
 char g_signalname[32];
 
-int main(int argc, char* argv[])
-{
+int main(int argc, char* argv[]) {
 	char pBuf[512];
-
+	
 	// register to catch the signals
 	struct sigaction sa;
 	memset(&sa, 0, sizeof(sa));
@@ -30,84 +29,75 @@ int main(int argc, char* argv[])
 	sigaction(SIGKILL, &sa, NULL);
 	sigaction(SIGABRT, &sa, NULL);
 	sigaction(SIGPIPE, &sa, NULL);
-
-	if (!g_socketlistener.Create(64))
-	{
+	
+	if (!g_socketlistener.Create(64)) {
 		fprintf(stderr, "Socket error.\n");
 		g_socketlistener.Shutdown();
 		return 1;
 	}
-
-	while (true)
-	{
+	
+	while (true) {
 		CRequest *pRequest = g_socketlistener.Accept(); // blocks until a connection is made
-
-		if (g_signalhandled)
-		{
-			if (strcmp(g_signalname, "SIGCHLD") == 0)
-			{
+		
+		if (g_signalhandled) {
+			if (strcmp(g_signalname, "SIGCHLD") == 0) {
 				int pid;
 				int status;
-				while (true)
-				{
+				while (true) {
 					pid = waitpid(WAIT_ANY, &status, WNOHANG);
-					if (pid < 0)
+					if (pid < 0) {
 						break;
-					if (pid == 0)
+					}
+					if (pid == 0) {
 						break;
-
-					if (status != 0)
+					}
+					
+					if (status != 0) {
 						fprintf(stderr, "Received SIGCHLD for pid = %d, status = %d\n", pid, status);
+					}
 				}
 				g_signalhandled = false;
-			}
-			else
+			} else {
 				break;
+			}
 		}
-
-		if (pRequest)
-		{
-			if (fork() == 0)
-			{
-				while (true)
-				{
+		
+		if (pRequest) {
+			if (fork() == 0) {
+				while (true) {
 					CRequestHandler::Handle(pRequest);
 					bool bRet = g_socketlistener.PersistentWait(pRequest);
-					if (!bRet)
+					if (!bRet) {
 						break;
+					}
 				}
-
+				
 				g_socketlistener.CloseRequest(pRequest);
 				_exit(0);
 			}
-
+			
 			close(pRequest->GetHandle().iSock);
-#if USE_SSL == true
-			if (USE_SSL)
-				SSL_free(pRequest->GetHandle().pSSL);
-#endif
-
 			delete pRequest;
 		}
 	}
-
+	
 	g_socketlistener.Shutdown();
 	return 0;
 }
 
-void signalhandler(int signum)
-{
+void signalhandler(int signum) {
 	g_signalhandled = true;
-	if (signum == SIGINT)
+	if (signum == SIGINT) {
 		strcpy(g_signalname, "SIGINT");
-	else if (signum == SIGTERM)
+	} else if (signum == SIGTERM) {
 		strcpy(g_signalname, "SIGTERM");
-	else if (signum == SIGCHLD)
+	} else if (signum == SIGCHLD) {
 		strcpy(g_signalname, "SIGCHLD");
-	else if (signum == SIGKILL)
+	} else if (signum == SIGKILL) {
 		strcpy(g_signalname, "SIGKILL");
-	else if (signum == SIGABRT)
+	} else if (signum == SIGABRT) {
 		strcpy(g_signalname, "SIGABRT");
-	else if (signum == SIGPIPE)
+	} else if (signum == SIGPIPE) {
 		strcpy(g_signalname, "SIGPIPE");
+	}
 }

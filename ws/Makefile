@@ -1,5 +1,5 @@
 CXX= arm-v7a8-linux-gnueabi-g++
-CPPFLAGS+= -static
+CPPFLAGS+= -static -Wno-write-strings
 LD=arm-v7a8-linux-gnueabi-ld 
 
 ws: ws.o socketlistener.o request.o requesthandler.o

@@ -32,12 +32,10 @@ bool CRequestHandler::Handle(CRequest *pRequest) {
 }
 
 void CRequestHandler::HandleGET(CRequest *pRequest) {
-	if (!USE_SSL) {
-		int val = 1;
-		if (setsockopt(pRequest->GetHandle().iSock, SOL_TCP, TCP_CORK, & val, 4) == -1) {
-			fprintf(stderr, "setsockopt failed, errno = %d\n", errno);
-			return;
-		}
+	int val = 1;
+	if (setsockopt(pRequest->GetHandle().iSock, SOL_TCP, TCP_CORK, & val, 4) == -1) {
+		fprintf(stderr, "setsockopt failed, errno = %d\n", errno);
+		return;
 	}
 	
 	char pBuf[8192];
