@@ -1,6 +1,6 @@
-CXX= arm-v7a8-linux-gnueabi-g++
+CXX=arm-v7a8-linux-gnueabi-g++
 CPPFLAGS+= -static -Wno-write-strings
-ifeq ($(CXX),arm-v7-linux-gnueabi-g++)
+ifeq ($(CXX),arm-v7a8-linux-gnueabi-g++)
 	LIBS = /opt/armv7a8-toolchain-lite/arm-v7a8-linux-gnueabi/libc/usr/lib/libutil.a
 else
 	LIBS = -lutil

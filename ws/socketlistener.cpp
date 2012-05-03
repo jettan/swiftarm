@@ -43,7 +43,7 @@ CSocketListener::~CSocketListener() {
 }
 
 void CSocketListener::dumpRequests(char *pMsg) {
-	fprintf(stderr, "%s\n", pMsg);
+	std::cerr << pMsg << std::endl;
 	for (int i = 0; i < 5; i++) {
 		std::cerr << "m_vRequests[" << i << "] = " << m_vRequests[i] << std::endl;
 	}
@@ -59,7 +59,7 @@ bool CSocketListener::Create(int iLineCount) {
 	
 	m_iServerSock = socket(AF_INET, SOCK_STREAM, 0);
 	if (m_iServerSock < 0) {
-		fprintf(stderr, "Error: socket() failed\n");
+		std::cerr << "Error: socket() failed" << std::endl;
 		return false;
 	}
 	
@@ -70,16 +70,16 @@ bool CSocketListener::Create(int iLineCount) {
 	serv_addr.sin_port = htons(LISTENER_PORT);
 	
 	if (bind(m_iServerSock, (struct sockaddr*)&serv_addr, sizeof(serv_addr)) < 0) {
-		fprintf(stderr, "Error: socket bind() failed, errno = %d\n", errno);
+		std::cerr << "Error: socket bind() failed, errno = " << errno << std::endl;
 		return false;
 	}
 	
 	if (listen(m_iServerSock, 256) < 0) {
-		fprintf(stderr, "Error: socket listen() failed\n");
+		std::cerr << "Error: socket listen() failed" << std::endl;
 		return false;
 	}
 	
-	fprintf(stderr, "Listening for connections...\n");
+	std::cerr << "Listening for connections..." << std::endl;
 	return true;
 }
 
@@ -181,9 +181,9 @@ bool CSocketListener::PersistentWait(CRequest *pRequest) {
 			int n = Read(pRequest->GetHandle(), pRawRequest, sizeof(pRawRequest) - 1);
 			if (n < 0) {
 				if (g_signalhandled) {
-					fprintf(stderr, "g_signalhandled\n");
+					std::cerr << "g_signalhandled" << std::endl;
 				} else {
-					fprintf(stderr, "ERROR reading from socket\n");
+					std::cerr << "ERROR reading from socket" << std::endl;
 				}
 				
 				return false;
@@ -198,15 +198,15 @@ bool CSocketListener::PersistentWait(CRequest *pRequest) {
 			//CRequest *pRequest = new CRequest(this, pRequest->GetHandle());
 			pRequest->Initialize();
 			if (!pRequest->ParseRequest(pRawRequest)) {
-				fprintf(stderr, "ParseRequest failed\n");
+				std::cerr << "ParseRequest failed" << std::endl;
 				return false;
 			}
 		} else {
-			fprintf(stderr, "This can't be!\n");
+			std::cerr << "This can't be!" << std::endl;
 			return false;
 		}
 	} else {
-		fprintf(stderr, "Neither can this be!\n");
+		std::cerr << "Neither can this be!" << std::endl;
 		return false;
 	}
 	
@@ -299,6 +299,6 @@ void CSocketListener::Shutdown(void) {
 }
 
 void CSocketListener::fatalerror(const char *pMsg) {
-	fprintf(stderr, "fatal error occurred: %s\n", pMsg);
+	std::cerr << "Fatal error occurrd: " << pMsg << std::endl;
 	exit(1);
 }
