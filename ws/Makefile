@@ -7,19 +7,19 @@ else
 endif
 
 ws: ws.o socketlistener.o request.o requesthandler.o
-	$(CXX) $(CFLAGS) $(CPPFLAGS) ws.o socketlistener.o request.o requesthandler.o -o ws $(LIBS)
+	$(CXX) $(CPPFLAGS) ws.o socketlistener.o request.o requesthandler.o -o ws $(LIBS)
 
 ws.o: ws.cpp ws.h socketlistener.h request.h requesthandler.h
-	$(CXX) $(CFLAGS) $(CPPFLAGS) ws.cpp -c
+	$(CXX) $(CPPFLAGS) ws.cpp -c
 
 socketlistener.o: socketlistener.cpp ws.h socketlistener.h request.h
-	$(CXX) $(CFLAGS) $(CPPFLAGS) socketlistener.cpp -c
+	$(CXX) $(CPPFLAGS) socketlistener.cpp -c
 
 request.o: request.cpp ws.h request.h socketlistener.h
-	$(CXX) $(CFLAGS) $(CPPFLAGS) request.cpp -c
+	$(CXX) $(CPPFLAGS) request.cpp -c
 
 requesthandler.o: requesthandler.cpp ws.h requesthandler.h request.h
-	$(CXX) $(CFLAGS) $(CPPFLAGS) requesthandler.cpp -c
+	$(CXX) $(CPPFLAGS) requesthandler.cpp -c
 
 clean:
 	rm -f *.o ws

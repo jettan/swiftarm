@@ -1,8 +1,7 @@
 <html>
 <body>
 
-<a href="#" 
-onclick="httpGet()">
+<a href="#" onclick="httpGet()">
 <img name="jsbutton" src="icon.png" width="110" height="110" border="0" alt="javascript button">
 <textarea id="textarea" rows="1" cols="15"></textarea>
 
@@ -10,33 +9,21 @@ onclick="httpGet()">
 var request = null;
 
 function httpGet() {
-
 	request = new XMLHttpRequest();
-	document.getElementById("textarea").value = "2";
-
+	
 	request.open("GET", "http://192.168.2.1:1337/test.txt", true);
-	document.getElementById("textarea").value = "3";
-
 	request.onreadystatechange = processRequest;
 	request.send(null);
-	document.getElementById("textarea").value = "4";
-	/**
-	var response = request.response;
-	alert(response);
-	
-	*/
 }
 
 function processRequest() {
 	if (request.readyState == 4) {
-		var contentType = request.getResponseHeader("Content-Type");
 		var result = request.responseText;
 		document.getElementById("textarea").value = result;	
 	}
 }
-</script>
 
+</script>
 
 </body>
 <html>
-

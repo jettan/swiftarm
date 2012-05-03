@@ -56,7 +56,7 @@ void CRequestHandler::HandleGET(CRequest *pRequest) {
 		} else if (errno == ENOENT) {
 			sprintf(pBuf, "HTTP/1.1 404 File not found\n\n");
 		} else {
-			fprintf(stderr, "Error: open failed, unknown errno: %d\n", errno);
+			std::cerr << "Error: open failed, unknown errno: " << errno << std::endl;
 			sprintf(pBuf, "HTTP/1.1 404 File not found\n\n");
 		}
 		pRequest->Write(pBuf, strlen(pBuf));
