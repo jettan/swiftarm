@@ -45,6 +45,21 @@ void CRequestHandler::HandleGET(CRequest *pRequest) {
 	memset(pFileName, 0, sizeof(pFileName));
 	if (strcmp(pRequest->GetPath(), "/test.txt") == 0) {
 		sprintf(pFileName, "test.txt");
+	} else if (strcmp(pRequest->GetPath(), "/hello") == 0) {
+		sprintf(pBuf, "HTTP/1.1 200 OK\n"
+			"Content-Type: text/plain\n"
+			"Content-Length: 11\n\n"
+			"Hello World");
+		pRequest->Write(pBuf, strlen(pBuf));
+		return;
+	} else if (strcmp(pRequest->GetPath(), "/stream") == 0) {
+		// Call libswift to open stream...
+		sprintf(pBuf, "HTTP/1.1 200 OK\n"
+			"Content-Type: text/plain\n"
+			"Content-Length: 68\n\n"
+			"http://130.161.158.52:15000/ed29d19bc8ea69dfb5910e7e20247ee7e002f321");
+		pRequest->Write(pBuf, strlen(pBuf));
+		return;
 	} else {
 		std::cout << "Nothing to do here..." << std::endl;
 	}

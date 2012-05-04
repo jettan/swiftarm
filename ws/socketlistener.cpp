@@ -183,7 +183,7 @@ bool CSocketListener::PersistentWait(CRequest *pRequest) {
 				if (g_signalhandled) {
 					std::cerr << "g_signalhandled" << std::endl;
 				} else {
-					std::cerr << "ERROR reading from socket" << std::endl;
+					std::cerr << "Ignored TCP RST command." << std::endl;
 				}
 				
 				return false;
