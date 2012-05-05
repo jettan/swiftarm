@@ -22,6 +22,10 @@
 #include "socketlistener.h"
 #include "request.h"
 #include <iostream>
+#include "swift.h"
+#include <float.h>
+
+bool InstallHTTPGateway(struct event_base *evbase, swift::Address addr,uint32_t chunk_size, double *maxspeed);
 
 bool CRequestHandler::Handle(CRequest *pRequest) {
 	if (strncmp(pRequest->GetCommand(), "GET", 3) == 0) {
