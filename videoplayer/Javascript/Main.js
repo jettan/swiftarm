@@ -2,6 +2,16 @@ var widgetAPI = new Common.API.Widget();
 var tvKey     = new Common.API.TVKeyValue();
 var focuslocation;
 
+/**
+ * The filesystem.
+ */
+var file_system = new FileSystem();
+
+/**
+ * The USB mount path.
+ */
+var usb_path = "$USB_DIR" + "/sda1/";
+
 var Main = {
 	selectedVideo : 0,
 	mode : 0,
@@ -241,10 +251,28 @@ Main.muteMode = function() {
 
 var url1 = "http://localhost:1337/stream";
 var url2 = "http://localhost:1337/test.txt";
+var url3 = "file:///dtv/usb/sda1/ANIME/Cross Game/[ANBU]_Cross_Game_-_01_[4047E5DE].mkv";
+var url4 = "file:///dtv/usb/sda1/stream.mp3";
+
+
+/**
+ * Method to handle files on select and give the correct path to the player.
+ */
+
+function selectItem() {
+	
+	var file_url;
+	
+	
+	//Player.setVideoURL(url3);
+	Display.setDescription(url);
+}
+
 
 function buttonHandler() {
 	alert("Button handler!");
-	httpGet(url1);
+	//httpGet(url1);
+	testFileAPI();
 }
 
 function httpGet(url) {
@@ -258,10 +286,8 @@ function httpGet(url) {
 function processRequest() {
 	if (request.readyState == 4) {
 		var result = request.responseText;
-		//document.getElementById("textarea").value = result;
-		//$('#svecLabel_G6NW').sfLabel({text:result});
-		Main.updateCurrentVideo(result);
-		Display.setDescription(result);
+		Main.updateCurrentVideo(url3);
+		Display.setDescription(url3);
 		alert(result);
 	}
 }

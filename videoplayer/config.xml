@@ -20,14 +20,14 @@
     <audiomute>n</audiomute>
     <videomute>n</videomute>
     <dcont>y</dcont>
-    <widgetname>VideoTutorial</widgetname>
+    <widgetname>Troubler TV</widgetname>
     <description></description>
     <width>960</width>
     <height>540</height>
     <author>
-        <name>Samsung Electronics Co. Ltd.</name>
+        <name>Delft University of Technology</name>
         <email></email>
-        <link>http://www.sec.com</link>
-        <organization>Samsung Electronics Co. Ltd.</organization>
+        <link>http://www.eemcs.tudelft.nl</link>
+        <organization>Delft University of Technology</organization>
     </author>
 </widget>
