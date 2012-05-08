@@ -1,0 +1,93 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/div/html4/strict.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>p2ptv</title>
+		
+		<!-- Common widget API -->
+		 <script type='text/javascript' language='javascript' src='$MANAGER_WIDGET/Common/API/Widget.js'></script>
+		<script type='text/javascript' language='javascript' src='$MANAGER_WIDGET/Common/API/TVKeyValue.js'></script>
+		<script type='text/javascript' language='javascript' src='$MANAGER_WIDGET/Common/jquery.js'></script>
+		<script type='text/javascript' language='javascript' src='$MANAGER_WIDGET/Common/core.js'></script>
+		<script type='text/javascript' language='javascript' src='$MANAGER_WIDGET/Common/ui.js'></script>
+		
+		<!-- Widget code -->
+		<script language="javascript" type="text/javascript" src="javascript/Main.js"></script>
+		<script language="javascript" type="text/javascript" src="javascript/Player.js"></script>
+		<script language="javascript" type="text/javascript" src="javascript/Display.js"></script>
+		<script language="javascript" type="text/javascript" src="javascript/Audio.js"></script>
+		
+		<!-- Style sheets -->
+		<link rel="stylesheet" href="css/Main.css" type="text/css">
+		
+		<!-- Plugins -->
+		<object id="pluginPlayer" border=0 classid="clsid:SAMSUNG-INFOLINK-PLAYER"></object>
+		<object id="pluginAudio" border=0 classid="clsid:SAMSUNG-INFOLINK-AUDIO"></object>
+		<object id="pluginTVMW" border=0 classid="clsid:SAMSUNG-INFOLINK-TVMW"></object>
+		
+	</head>
+	
+	<body onload="Main.onLoad();" onunload="Main.onUnload();">
+		<!-- Key handler -->
+		<a href='javascript:void(0);' id='anchor' onkeydown='Main.keyDown();'></a>
+		
+		<!-- Layout begins -->
+		<div id="main">
+			<div id="logo"> </div>
+			<div id ="rightHalf">
+				<div id="videoBox_top"></div>
+				<div id="videoBox_left"></div>
+				<div id="videoBox_right"></div>
+				<div id="videoBox_bottom">
+					<div id="time">
+						<div id="progressBarBG">
+							<div id="progressBar"></div>
+						</div>
+						<div id="timeInfo"></div>
+					</div>
+					<div id="volume">
+						<div id="volumeIcon"></div>
+						<div id="volumeBarBG">
+							<div id="volumeBar"></div>
+						</div>
+						<div id="volumeInfo"></div>
+					</div>
+					<div id="videoControl">
+						<div id="rewind"></div>
+						<div id="play"></div>
+						<div id="stop"></div>
+						<div id="pause"></div>
+						<div id="forward"></div>
+					</div>
+					<div id="status"></div>
+				</div>
+				<div id="description_top"></div>
+				<div id="description_bottom"></div>
+				<div id="description"></div>
+			</div>
+			<div id="leftHalf">
+				<div id="videoList" class="style_videoList">
+					<div id='Button'></div>
+					<div id="video0"></div>
+					<div id="video1"></div>
+					<div id="video2"></div>
+					<div id="video3"></div>
+					<div id="videoCount"></div>
+				</div>
+				<div id="previous"></div>
+				<div id="next"></div>
+			</div> 
+			<div id="navi">
+				<div id="help_navi">
+					<img src="images/navi/play.png"></img>
+					<img src="images/navi/stop.png"></img>
+					<img src="images/navi/pause.png"></img>
+					<img src="images/navi/rewind.png"></img>
+					<img src="images/navi/forward.png"></img>&nbsp<a class="style_navi">Video Control</a>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+					<img src="images/navi/enter.png"></img>&nbsp<a class="style_navi">Full-screen/Window mode</a>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+					<img src="images/navi/return.png"></img>&nbsp<a class="style_navi">Return</a>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
