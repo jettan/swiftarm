@@ -2,7 +2,7 @@
 CPPFLAGS+= -static -O2 -I. -Wall -Wno-sign-compare -Wno-unused -g -I /usr/local/include -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE 
 #LD=arm-v7a8-linux-gnueabi-ld
 #LDADD=$(HOME)/swiftarm/lib/lib/libevent.a /opt/armv7a8-toolchain-lite/arm-v7a8-linux-gnueabi/lib/libstdc++.a /opt/armv7a8-toolchain-lite/arm-v7a8-linux-gnueabi/libc/usr/lib/libc.a /opt/armv7a8-toolchain-lite/arm-v7a8-linux-gnueabi/libc/usr/lib/librt.a /opt/armv7a8-toolchain-lite/lib/gcc/arm-v7a8-linux-gnueabi/4.4.1/libgcc.a
-LDADD= -levent -lstdc++ -lrt -lgcc -lutil
+LDADD= -levent -lstdc++ -lrt -lgcc -lutil -lpthread
 
 all: ws
 
@@ -20,7 +20,7 @@ request.o: request.cpp ws.h request.h socketlistener.h
 	$(CXX) $(CPPFLAGS) request.cpp -c
 
 requesthandler.o: requesthandler.cpp ws.h requesthandler.h request.h
-	$(CXX) $(CPPFLAGS) requesthandler.cpp -c
+	$(CXX) $(CPPFLAGS) requesthandler.cpp -c ${LDADD}
 
 sha1.o: sha1.cpp sha1.h 
 	$(CXX) $(CPPFLAGS) sha1.cpp -c

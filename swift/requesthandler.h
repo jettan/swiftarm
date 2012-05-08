@@ -12,6 +12,8 @@ struct directoryentry {
 
 class CRequestHandler {
 	public:
+		CRequestHandler();
+		~CRequestHandler();
 		static bool Handle(CRequest *pRequest);
 		static void HandleGET(CRequest *pRequest);
 		static void HandlePOST(CRequest *pRequest);

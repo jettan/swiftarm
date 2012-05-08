@@ -20,6 +20,7 @@ bool g_signalhandled = false;
 char g_signalname[32];
 
 int main(int argc, char* argv[]) {
+	swift::LibraryInit();
 	swift::Channel::evbase = event_base_new();
 	char pBuf[512];
 	// register to catch the signals
