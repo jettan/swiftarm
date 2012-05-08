@@ -116,7 +116,7 @@ void* Download(void *str) {
 		swift::Close(download);
 	}
 	
-	std::cout << "Exiting download thread." std::endl;
+	std::cout << "Exiting download thread." << std::endl;
 	// Close the download thread when the download is finished.
 	pthread_exit(NULL);
 }
