@@ -1,0 +1,31 @@
+/* Layout */
+
+body {
+	width: 960px;
+	height: 540px;
+}
+
+#search {
+	position: absolute;
+	left: 120px; top: 195px;
+	width: 240px; height: 120px;
+}
+
+#browse {
+	position: absolute;
+	left: 600px; top: 195px;
+	width: 240px; height: 120px;
+}
+
+#settings {
+	position: absolute;
+	left: 120px; top: 465px;
+	width: 240px; height: 120px;
+}
+
+
+#exit {
+	position: absolute;
+	left: 600px; top: 465px;
+	width: 240px; height: 120px;
+}
