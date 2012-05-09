@@ -5,27 +5,39 @@ body {
 	height: 540px;
 }
 
+#menu {
+	position: absolute;
+	left: 0px; top: 0px;
+	width: 960px; height: 180px;
+}
+
 #search {
 	position: absolute;
-	left: 120px; top: 195px;
-	width: 240px; height: 120px;
+	left: 60px; top: 20px;
+	width: 120px; height: 60px;
 }
 
 #browse {
 	position: absolute;
-	left: 600px; top: 195px;
-	width: 240px; height: 120px;
+	left: 300px; top: 20px;
+	width: 120px; height: 60px;
 }
 
 #settings {
 	position: absolute;
-	left: 120px; top: 465px;
-	width: 240px; height: 120px;
+	left: 540px; top: 20px;
+	width: 120px; height: 60px;
 }
 
 
 #exit {
 	position: absolute;
-	left: 600px; top: 465px;
-	width: 240px; height: 120px;
+	left: 780px; top: 20px;
+	width: 120px; height: 60px;
+}
+
+#content {
+	position: absolute;
+	left: 0px; top: 100px;
+	width: 960px; height: 440px;
 }
