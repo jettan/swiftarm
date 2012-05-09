@@ -1,0 +1,42 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/div/html4/strict.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>p2ptv</title>
+		
+		<!-- Common widget API -->
+		 <script type='text/javascript' language='javascript' src='$MANAGER_WIDGET/Common/API/Widget.js'></script>
+		<script type='text/javascript' language='javascript' src='$MANAGER_WIDGET/Common/API/TVKeyValue.js'></script>
+		<script type='text/javascript' language='javascript' src='$MANAGER_WIDGET/Common/jquery.js'></script>
+		<script type='text/javascript' language='javascript' src='$MANAGER_WIDGET/Common/core.js'></script>
+		<script type='text/javascript' language='javascript' src='$MANAGER_WIDGET/Common/ui.js'></script>
+		
+		<!-- Widget code -->
+		<script language="javascript" type="text/javascript" src="javascript/Main.js"></script>
+		
+		<!-- Style sheets -->
+		<link rel="stylesheet" href="css/MainMenu.css" type="text/css">
+		
+		<!-- Plugins -->
+		<object id="pluginPlayer" border=0 classid="clsid:SAMSUNG-INFOLINK-PLAYER"></object>
+		<object id="pluginAudio" border=0 classid="clsid:SAMSUNG-INFOLINK-AUDIO"></object>
+		<object id="pluginTVMW" border=0 classid="clsid:SAMSUNG-INFOLINK-TVMW"></object>
+		
+	</head>
+	
+	<body onload="Main.onLoad();" onunload="Main.onUnload();">
+		<!-- Key handler -->
+		<a href='javascript:void(0);' id='anchor' onkeydown='MainMenu.keyDown();'></a>
+		
+		<!-- Layout begins -->
+		<div id="menu">
+			<div id="search"> </div>
+			<div id="browse"> </div>
+			<div id="settings"> </div>
+			<div id="exit"> </div>
+		</div>
+		<div id="content">
+			<iframe id="contentFrame" src="browser.html" width="960" height="440" frameborder="0"></iframe>
+		</div>
+	</body>
+</html>
