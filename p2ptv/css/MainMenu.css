@@ -15,24 +15,28 @@ body {
 	position: absolute;
 	left: 60px; top: 20px;
 	width: 120px; height: 60px;
+	background-image:url("../images/searchBtn.png");
 }
 
 #browse {
 	position: absolute;
 	left: 300px; top: 20px;
 	width: 120px; height: 60px;
+	background-image:url("../images/browseBtn.png");
 }
 
 #settings {
 	position: absolute;
 	left: 540px; top: 20px;
 	width: 120px; height: 60px;
+	background-image:url("../images/settingsBtn.png");
 }
 
 #exit {
 	position: absolute;
 	left: 780px; top: 20px;
 	width: 120px; height: 60px;
+	background-image:url("../images/exitBtn.png");
 }
 
 #content {

@@ -27,9 +27,12 @@ Main.onLoad = function() {
 	$('#settings').sfButton('focus');
 	$('#exit').sfButton('focus');
 	
-	contentFrame = document.getElementById('contentFrame');
+	contentFrame = document.getElementById("contentFrame");
+	search = document.images["search"];
+	browse = document.images["browse"];
+	settings = document.images["setting"];
 	
-	gotoSearch();
+	gotoBrowser();
 	
 	this.enableKeys();
 	widgetAPI.sendReadyEvent();
@@ -84,7 +87,8 @@ Main.keyDown = function() {
 
 /* Go to the search page */
 function gotoSearch(){
-	contentFrame.src = "search.html";
+	//contentFrame.src = "search.html";
+	document.frames['contentFrame'].location.href = 'search.html';
 }
 
 /* Go to the settings page */
@@ -93,8 +97,14 @@ function gotoSettings(){
 }
 
 /* Go to the browse page */
-function gotoBrowse(){
-	contentFrame.src = "browser.html";
+function gotoBrowser(){
+	//contentFrame.src = "browser.html";
+	document.frames['contentFrame'].location.href = 'browser.html';
+}
+
+/* Go to the settings page */
+function gotoSettings(){
+	contentFrame.src = "settings.html";
 }
 
 /* Exit the app */
