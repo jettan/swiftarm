@@ -8,7 +8,7 @@ var yFocus = 0;
 var MaxXFocus = 4;
 var MaxYFocus = 0;
 
-var contentDiv;
+var contentFrame;
 var search;
 var browse;
 var settings;
@@ -27,12 +27,9 @@ Main.onLoad = function() {
 	$('#settings').sfButton('focus');
 	$('#exit').sfButton('focus');
 	
-	contentDiv = document.getElementById("content");
-	search = document.open('search.html');
-	browse = document.open('browser.html');
-	settings = document.open('settings.html');
+	contentFrame = document.getElementById('contentFrame');
 	
-	gotoBrowse();
+	gotoSearch();
 	
 	this.enableKeys();
 	widgetAPI.sendReadyEvent();
@@ -54,12 +51,6 @@ Main.keyDown = function() {
 	var keyCode = event.keyCode;
 	aler("Key Pressed: " + keyCode);	
 	switch(keyCode){
-		
-		case tvKey.KEY_ENTER:
-			alert("ENTER pressed");
-			handleEnter();
-			break;
-			
 		case tvKey.KEY_RETURN:
 			alert("RETURN pressed")
 			// Stop App from exiting when pressed
@@ -85,55 +76,25 @@ Main.keyDown = function() {
 			alert("BLUE pressed");
 			exit();
 			break;
-			
-		case tvKey.KEY_RIGHT:
-			alert("RIGHT pressed");
-			xFocus = (xFocus + 1) % maxXFocus
-			break;
-			
-		case tvKey.KEY_LEFT:
-			alert("RIGHT pressed");
-			xFocus = (xFocus - 1) % maxXFocus
-			break;
-			
-		case tvKey.KEY_DOWN:
-			alert("RIGHT pressed");
-			yFocus = (yFocus + 1) % maxYFocus
-			break;
-			
-		case tvKey.KEY_UP:
-			alert("RIGHT pressed");
-			yFocus = (yFocus - 1) % maxYFocus
-			break;
-			
 		default:
 			alert("Ignore Unhandled Key");
 			break;
 	}
 }
 
-function handleFocusChange() {
-	
-}
-
-/* Determines what to do when ENTER key is pressed */
-function handleEnter() {
-	
-}
-
 /* Go to the search page */
 function gotoSearch(){
-	contentDiv.innerHTML = "search.html";
+	contentFrame.src = "search.html";
 }
 
 /* Go to the settings page */
 function gotoSettings(){
-	contentDiv.innerHTML = "settings.html";
+	contentFrame.src = "settings.html";
 }
 
 /* Go to the browse page */
 function gotoBrowse(){
-	contentDiv.innerHTML = "browser.html";
+	contentFrame.src = "browser.html";
 }
 
 /* Exit the app */
