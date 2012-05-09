@@ -4,20 +4,28 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include <float.h>
 #include <sys/wait.h>
 #include <sys/socket.h>
-#include "ws.h"
+#include <iostream>
+
+#include "compat.h"
 #include "socketlistener.h"
 #include "request.h"
 #include "requesthandler.h"
-#include <iostream>
-#include "compat.h"
+#include "ws.h"
 #include "swift.h"
+
 
 void signalhandler(int signum);
 CSocketListener g_socketlistener;
 bool g_signalhandled = false;
 char g_signalname[32];
+
+/**
+ * Define the InstallHTTPGateway method in httpgw.cpp.
+ */
+bool InstallHTTPGateway(struct event_base *evbase, swift::Address addr, uint32_t chunk_size, double *maxspeed);
 
 int main(int argc, char* argv[]) {
 	
@@ -58,6 +66,13 @@ int main(int argc, char* argv[]) {
 		}
 	}
 	std::cout << "Listening on port " << swift::BoundAddress(sock).port() << "." << std::endl;
+	
+	swift::Address httpaddr    = swift::Address("127.0.0.1:15000");
+	
+	double maxspeed[2] = {DBL_MAX, DBL_MAX};
+	
+	// Install the HTTP gateway to stream.
+	InstallHTTPGateway(swift::Channel::evbase, httpaddr, SWIFT_DEFAULT_CHUNK_SIZE, maxspeed);
 	
 	while (true) {
 		CRequest *pRequest = g_socketlistener.Accept(); // blocks until a connection is made

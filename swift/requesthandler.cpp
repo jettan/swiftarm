@@ -41,7 +41,10 @@ int rc;
 
 DownloadArgs download_args;
 struct event evcompl;
+struct event evclose;
 int download;
+
+bool streaming;
 
 CRequestHandler::CRequestHandler() {
 	rc = 0;
@@ -55,6 +58,11 @@ CRequestHandler::CRequestHandler() {
 	pthread_sigmask(SIG_BLOCK, &oSignalSet, NULL);
 }
 
+
+
+/**
+ * Callback to check if a download is completed.
+ */
 void IsCompleteCallback(int fd, short event, void *arg) {
 	if (swift::SeqComplete(download) != swift::Size(download))
 		evtimer_add(&evcompl, swift::tint2tv(TINT_SEC));
@@ -62,14 +70,24 @@ void IsCompleteCallback(int fd, short event, void *arg) {
 		event_base_loopexit(swift::Channel::evbase, NULL);
 }
 
+void CloseCallback(int fd, short event, void *arg) {
+	if (streaming)
+		evtimer_add(&evclose, swift::tint2tv(TINT_SEC));
+	else {
+		std::cerr << "Calling loopexit of HTTPgw." << std::endl;
+		event_base_loopexit(swift::Channel::evbase, NULL);
+		std::cout << "loopexit called." << std::endl;
+	}
+}
 
 /**
  * Download a file using libswift.
- * @param tracker: The tracker (x.x.x.x:port).
- * @param hash: The root merkle hash (40 characters).
- * @param filename: The name to be given to the downloaded file.
+ * @param str: Struct containing all necessary data for downloads.
  */
 void* Download(void *str) {
+	// Change the directory to Downloads folder.
+	chdir("/home/jettan/Downloads/");
+	
 	DownloadArgs *da = (DownloadArgs*) str;
 	download         = 0;
 	char* tracker    = da->tracker;
@@ -108,6 +126,32 @@ void* Download(void *str) {
 	pthread_exit(NULL);
 }
 
+/**
+ * Stream a file using libswift.
+ * @param str: Struct containing all necessary data for streams.
+ */
+void* Stream(void *str) {
+	// Change the directory to Downloads folder.
+	chdir("/home/jettan/Downloads/");
+	
+	DownloadArgs *da = (DownloadArgs*) str;
+	char* tracker    = da->tracker;
+	
+	swift::Address trackeraddr = swift::Address(tracker);
+	
+	// Set the tracker.
+	std::cout << "Setting the tracker..." << std::endl;
+	swift::SetTracker(trackeraddr);
+	
+	evtimer_assign(&evclose, swift::Channel::evbase, CloseCallback, NULL);
+	evtimer_add(&evclose, swift::tint2tv(TINT_SEC));
+	
+	event_base_dispatch(swift::Channel::evbase);
+	
+	std::cout << "Exiting stream thread." << std::endl;
+	// Exit the download thread when the download is finished.
+	pthread_exit(NULL);
+}
 
 /**
  * The HTTP request command handler.
@@ -152,6 +196,31 @@ void CRequestHandler::HandleGET(CRequest *pRequest) {
 			"Content-Type: text/plain\n"
 			"Content-Length: 18\n\n"
 			"Download started.\n");
+		pRequest->Write(message, strlen(message));
+		
+	} else if (strcmp(pRequest->GetPath(), "/close") == 0) {
+		std::cout << "Close request received." << std::endl;
+		streaming = false;
+		
+		sprintf(message, "HTTP/1.1 200 OK\n"
+			"Content-Type: text/plain\n"
+			"Content-Length: 24\n\n"
+			"Deleted the HTTPGateway\n");
+		pRequest->Write(message, strlen(message));
+		
+	} else if (strcmp(pRequest->GetPath(), "/stream") == 0) {
+		streaming = true;
+		download_args.tracker = "127.0.0.1:20000";
+		rc = pthread_create(&thread, NULL, Stream, (void *) &download_args);
+		
+		if (rc) {
+			std::cerr << "ERROR: failed to create stream thread. Code: " << rc << "." << std::endl;
+		}
+		
+		sprintf(message, "HTTP/1.1 200 OK\n"
+			"Content-Type: text/plain\n"
+			"Content-Length: 63\n\n"
+			"http://127.0.0.1:15000/ed29d19bc8ea69dfb5910e7e20247ee7e002f321");
 		pRequest->Write(message, strlen(message));
 		
 	} else {
