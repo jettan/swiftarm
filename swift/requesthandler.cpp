@@ -50,8 +50,9 @@ CRequestHandler::CRequestHandler() {
 	sigaddset(&oSignalSet, SIGINT);
 	sigaddset(&oSignalSet, SIGABRT);
 	sigaddset(&oSignalSet, SIGQUIT);
+	sigaddset(&oSignalSet, SIGKILL);
+	sigaddset(&oSignalSet, SIGTERM);
 	pthread_sigmask(SIG_BLOCK, &oSignalSet, NULL);
-	
 }
 
 void IsCompleteCallback(int fd, short event, void *arg) {
@@ -74,25 +75,6 @@ void* Download(void *str) {
 	char* tracker    = da->tracker;
 	char* hash       = da->hash;
 	char* filename   = da->filename;
-	
-	// Make a socket to listen to.
-	evutil_socket_t sock = INVALID_SOCKET;
-	swift::Address bindaddress;
-	for (int i = 0; i < 10; i++) {
-		bindaddress = swift::Address((uint32_t) INADDR_ANY, 0);
-		sock = swift::Listen(swift::Address(bindaddress));
-		
-		if (sock > 0) {
-			break;
-		}
-		
-		if (sock == 9) {
-			std::cerr << "Could not listen to any socket." << std::endl;
-			pthread_exit(NULL);
-		}
-	}
-	
-	std::cout << "Listening on port " << swift::BoundAddress(sock).port() << "." << std::endl;
 	
 	swift::Address trackeraddr = swift::Address(tracker);
 	swift::Sha1Hash root_hash = swift::Sha1Hash(true, hash);
@@ -119,9 +101,6 @@ void* Download(void *str) {
 		// Close the file.
 		swift::Close(download);
 		
-		std::cout << "Shutting down listener." << std::endl;
-		// Shutdown the listener port.
-		swift::Shutdown(sock);
 	}
 	
 	std::cout << "Exiting download thread." << std::endl;
@@ -156,29 +135,14 @@ void CRequestHandler::HandleGET(CRequest *pRequest) {
 	char message[8192];
 	memset(message, 0, sizeof(message));
 	
-	if (strcmp(pRequest->GetPath(), "/stop") == 0) {
-		std::cout << "Stopping download..." << std::endl;
-		
-		pthread_join(thread,(void**) &rc);
-		
-		if (rc) {
-			std::cerr << "ERROR: Join failed! Code: " << rc << "." << std::endl;
-		}
-		
-		sprintf(message, "HTTP/1.1 200 OK\n"
-			"Content-Type: text/plain\n"
-			"Content-Length: 17\n\n"
-			"Closed download.\n");
-		pRequest->Write(message, strlen(message));
-	} else if (strcmp(pRequest->GetPath(), "/download") == 0) {
-		
+	if (strcmp(pRequest->GetPath(), "/download") == 0) {
 		// Fill in the neccessary arguments to download a file.
 		download_args.tracker  = "127.0.0.1:20000";
 		download_args.hash     = "ed29d19bc8ea69dfb5910e7e20247ee7e002f321";
 		download_args.filename = "stream.mp4";
 		
 		// Spawn new thread to download the file requested.
-		rc = pthread_create(&thread, NULL, &Download, (void*) &download_args);
+		rc = pthread_create(&thread, NULL, Download, (void *) &download_args);
 		
 		if (rc) {
 			std::cerr << "ERROR: failed to create download thread. Code: " << rc << "." << std::endl;
