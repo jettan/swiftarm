@@ -20,26 +20,6 @@ bool g_signalhandled = false;
 char g_signalname[32];
 
 int main(int argc, char* argv[]) {
-	swift::Channel::evbase = event_base_new();
-	
-	
-	// Make a socket to listen to.
-	evutil_socket_t sock = INVALID_SOCKET;
-	swift::Address bindaddress;
-	for (int i = 0; i < 10; i++) {
-		bindaddress = swift::Address((uint32_t) INADDR_ANY, 0);
-		sock = swift::Listen(swift::Address(bindaddress));
-		
-		if (sock > 0) {
-			break;
-		}
-		
-		if (sock == 9) {
-			std::cerr << "Could not listen to any socket for swift." << std::endl;
-			return 1;
-		}
-	}
-	std::cout << "Listening on port " << swift::BoundAddress(sock).port() << "." << std::endl;
 	
 	char pBuf[512];
 	// register to catch the signals
@@ -58,6 +38,26 @@ int main(int argc, char* argv[]) {
 		g_socketlistener.Shutdown();
 		return 1;
 	}
+	
+	swift::Channel::evbase = event_base_new();
+	
+	// Make a socket to listen to.
+	evutil_socket_t sock = INVALID_SOCKET;
+	swift::Address bindaddress;
+	for (int i = 0; i < 10; i++) {
+		bindaddress = swift::Address((uint32_t) INADDR_ANY, 0);
+		sock = swift::Listen(swift::Address(bindaddress));
+		
+		if (sock > 0) {
+			break;
+		}
+		
+		if (sock == 9) {
+			std::cerr << "Could not listen to any socket for swift." << std::endl;
+			return 1;
+		}
+	}
+	std::cout << "Listening on port " << swift::BoundAddress(sock).port() << "." << std::endl;
 	
 	while (true) {
 		CRequest *pRequest = g_socketlistener.Accept(); // blocks until a connection is made
