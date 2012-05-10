@@ -279,7 +279,6 @@ Main.muteMode = function() {
 /**
  * Method to handle files on select and give the correct path to the player.
  */
-
 function selectItem() {
 	
 	var file_url;

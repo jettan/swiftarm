@@ -31,7 +31,7 @@ function init() {
 	*/
 	
 	this.enableKeys();
-	//widgetAPI.sendReadyEvent();
+	widgetAPI.sendReadyEvent();
 	
 	alert("init() completed");
 }

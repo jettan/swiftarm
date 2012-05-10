@@ -1,7 +1,7 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<title>p2ptv Search</title>
+		<title>p2ptv Settings</title>
 		
 		<!-- Common widget API -->
 		<script type='text/javascript' language='javascript' src='$MANAGER_WIDGET/Common/API/Widget.js'></script>
@@ -19,9 +19,9 @@
 		
 	</head>
 		
-	<body onload="Settings.onload();" onunload="Settings.onUnload();">
+	<body onload="Settings.init();">
 		<!-- Key handler -->
-		<a href='javascript:void(0);' id='anchor' onkeydown='Settings.keyDown();'></a>
+		<a href='javascript:void(0);' id='anchor' onkeydown='keyDown();'></a>
 		
 		<!-- Layout -->
 		<div id="settingsMainLayout">

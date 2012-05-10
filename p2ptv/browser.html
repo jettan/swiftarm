@@ -12,7 +12,7 @@
 		<script type='text/javascript' language='javascript' src='$MANAGER_WIDGET/Common/ui.js'></script>
 		
 		<!-- Widget code -->
-		<script language="javascript" type="text/javascript" src="javascript/Main.js"></script>
+		<script language="javascript" type="text/javascript" src="javascript/Browser.js"></script>
 		<script language="javascript" type="text/javascript" src="javascript/Player.js"></script>
 		<script language="javascript" type="text/javascript" src="javascript/Display.js"></script>
 		<script language="javascript" type="text/javascript" src="javascript/Audio.js"></script>
@@ -27,9 +27,9 @@
 		
 	</head>
 	
-	<body onload="Main.onLoad();" onunload="Main.onUnload();">
+	<body onload="init();" onunload="onUnload();">
 		<!-- Key handler -->
-		<a href='javascript:void(0);' id='anchor' onkeydown='Main.keyDown();'></a>
+		<a href='javascript:void(0);' id='anchor' onkeydown='keyDown();'></a>
 		
 		<!-- Layout begins -->
 		<div id="main">

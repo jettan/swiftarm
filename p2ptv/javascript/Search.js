@@ -4,7 +4,7 @@ var tvKey     = new Common.API.TVKeyValue();
 function init() {
 	
 	this.enableKeys();
-	//widgetAPI.sendReadyEvent();
+	widgetAPI.sendReadyEvent();
 }
 
 function enableKeys(){
@@ -23,7 +23,7 @@ function keyDown() {
 			break;
 			
 		default:
-			alert("Ignore Unhandled Key");
+		alert("Ignore Unhandled Key");
 			break;
 	}
 }

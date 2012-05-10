@@ -4,7 +4,7 @@ var tvKey     = new Common.API.TVKeyValue();
 function init() {
 	
 	this.enableKeys();
-	//widgetAPI.sendReadyEvent();
+	widgetAPI.sendReadyEvent();
 }
 
 function enableKeys(){
