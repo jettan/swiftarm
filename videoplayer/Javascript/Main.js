@@ -1,6 +1,8 @@
 var widgetAPI = new Common.API.Widget();
 var tvKey     = new Common.API.TVKeyValue();
 var focuslocation;
+var streaming = new Boolean();
+var settable = new Boolean();
 
 /**
  * The filesystem.
@@ -11,6 +13,10 @@ var file_system = new FileSystem();
  * The USB mount path.
  */
 var usb_path = "$USB_DIR" + "/sda1/";
+
+var streamUrl = "http://localhost:1337/stream";
+var downloadUrl = "http://127.0.0.1:1337/download";
+var closeUrl = "http://127.0.0.1:1337/close";
 
 var Main = {
 	selectedVideo : 0,
@@ -46,7 +52,11 @@ Main.onLoad = function() {
 	
 	$('#Button').sfButton({text:'Button1'});
 	$('#Button').sfButton('blur');
+	$('#Button2').sfButton({text:'Button2'});
+	$('#Button2').sfButton('blur');
 	focuslocation = 0;
+	streaming = false;
+	settable = false;
 }
 
 Main.onUnload = function() {
@@ -79,6 +89,10 @@ Main.keyDown = function() {
 		case tvKey.KEY_STOP:
 			alert ("STOP");
 			Player.stopVideo();
+			if (streaming) {
+				httpGet(closeUrl);
+				streaming = false;
+			}
 			break;
 		case tvKey.KEY_PAUSE:
 			alert ("PAUSE");
@@ -118,21 +132,31 @@ Main.keyDown = function() {
 		case tvKey.KEY_LEFT:
 			alert("LEFT");
 			if (focuslocation == 0) {
-				$('#Button').sfButton('focus');
-			} else {
+				$('#Button2').sfButton('focus');
+				focuslocation = 2;
+			} else if (focuslocation == 1) {
 				$('#Button').sfButton('blur');
+				focuslocation = 0;
+			} else {
+				$('#Button2').sfButton('blur');
+				$('#Button').sfButton('focus');
+				focuslocation = 1;
 			}
-			focuslocation = (focuslocation==0 ? 1 : 0);
 			alert (focuslocation);
 			break;
 			case tvKey.KEY_RIGHT:
 				alert ("RIGHT");
 				if (focuslocation == 0) {
 					$('#Button').sfButton('focus');
-				} else {
+					focuslocation = 1;
+				} else if (focuslocation == 1) {
 					$('#Button').sfButton('blur');
+					$('#Button2').sfButton('focus');
+					focuslocation = 2;
+				} else {
+					$('#Button2').sfButton('blur');
+					focuslocation = 0;
 				}
-				focuslocation = (focuslocation==0 ? 1 : 0);
 				alert(focuslocation);
 				break;
 			case tvKey.KEY_ENTER:
@@ -140,6 +164,8 @@ Main.keyDown = function() {
 				alert (focuslocation);
 				if (focuslocation == 1) {
 					buttonHandler();
+				} else if (focuslocation == 2) {
+					button2Handler();
 				} else {
 					this.toggleMode();
 				}
@@ -249,12 +275,6 @@ Main.muteMode = function() {
 	}
 }
 
-var url1 = "http://localhost:1337/stream";
-var url2 = "http://localhost:1337/test.txt";
-var url3 = "file:///dtv/usb/sda1/ANIME/Cross Game/[ANBU]_Cross_Game_-_01_[4047E5DE].mkv";
-var url4 = "file:///dtv/usb/sda1/stream.mp3";
-
-
 /**
  * Method to handle files on select and give the correct path to the player.
  */
@@ -271,8 +291,16 @@ function selectItem() {
 
 function buttonHandler() {
 	alert("Button handler!");
-	//httpGet(url1);
-	testFileAPI();
+	settable = true;
+	httpGet(streamUrl);
+	streaming = true;
+	//testFileAPI();
+}
+
+function button2Handler() {
+	alert("Button2 handler!");
+	settable = true;
+	httpGet(downloadUrl);
 }
 
 function httpGet(url) {
@@ -286,8 +314,10 @@ function httpGet(url) {
 function processRequest() {
 	if (request.readyState == 4) {
 		var result = request.responseText;
-		Main.updateCurrentVideo(url3);
-		Display.setDescription(url3);
+		if (settable)
+			Main.updateCurrentVideo(result);
+		Display.setDescription(result);
+		settable = false;
 		alert(result);
 	}
 }

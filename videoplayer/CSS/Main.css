@@ -269,6 +269,15 @@ width:150px; height:47px;
     padding-top:10px;
 }
 
+#Button2
+{
+position:absolute;
+left:180px; top:70px;
+width:150px; height:47px;
+   padding-left:20px;
+    padding-top:10px;
+}
+
 #video0
 {
     position:absolute;
@@ -295,17 +304,6 @@ width:150px; height:47px;
 {
     position:absolute;
     left:30px; top:190px;
-    width:330px; height:47px;
-    
-    background-repeat:no-repeat; 
-    padding-left:20px;
-    padding-top:10px;
-}
-
-#video3
-{
-    position:absolute;
-    left:30px; top:250px;
     width:330px; height:47px;
     
     background-repeat:no-repeat; 
