@@ -1,5 +1,5 @@
-//var widgetAPI = new Common.API.Widget();
-//var tvKey     = new Common.API.TVKeyValue();
+var widgetAPI = new Common.API.Widget();
+var tvKey     = new Common.API.TVKeyValue();
 
 // Variables that keep track of the focus
 var xFocus = 0;
@@ -18,8 +18,6 @@ var settings;
 function init() {
 	
 	alert("init() called");
-	
-	//document.bgColor = "#000099";
 	/*
 	$('#search').sfButton({text:'Search'});
 	$('#browse').sfButton({text:'Browse'});
@@ -30,24 +28,20 @@ function init() {
 	$('#browse').sfButton('focus');
 	$('#settings').sfButton('focus');
 	$('#exit').sfButton('focus');
-	
-	contentFrame = document.getElementById("contentFrame");
-	search = document.images["search"];
-	browse = document.images["browse"];
-	settings = document.images["setting"];
 	*/
-	//gotoSearch();
 	
-	//this.enableKeys();
+	this.enableKeys();
 	//widgetAPI.sendReadyEvent();
+	
+	alert("init() completed");
 }
 
-Main.onUnload = function() {
+function onUnload() {
 	
 }
 
 /* initialises the key handler */
-Main.enableKeys = function() {
+function enableKeys() {
 	
 	document.getElementById("anchor").focus();
 }
@@ -59,9 +53,9 @@ function keyDown() {
 	alert("Key Pressed: " + keyCode);
 	switch(keyCode){
 		case tvKey.KEY_RETURN:
+			widgetAPI.blockNavigation();
 			alert("RETURN pressed");
 			// Stop App from exiting when pressed
-			widgetAPI.blockNavigation();
 			break;
 			
 		case tvkey.KEY_RED:
@@ -91,72 +85,22 @@ function keyDown() {
 
 /* Go to the search page */
 function gotoSearch(){
-	//var div = document.getElementById("content");
-	//div.innerHTML="<iframe src=\"search.html\" frameborder =\"0\"></iframe>";
-	//contentFrame.src = "search.html";
-	//document.getElementById("contentFrame").src = "../search.html";
-	//window.frames["contentFrame"].src = "browser.html";
-	//document.frames['contentFrame'].location.href = "browser.html";
-	
-	/*
-	var req = new XmlHttpRequest();
-	req.open("GET", "browser.html", flase);
-	req.send(null);
-	
-	var page = req.responseText;
-	
-	document.getElementById("content").innerHTML = page;
-	*/
-	alert("gotoSearch called");
 	window.location = "search.html";
-	/*
-	var objTag = document.getElementById("contentFrame");
-	if (objTag != null) {
-		 objTag.setAttribute('data', 'search.html');
-		alert('Page should have been changed');
-	}
-	*/
 }
 
 /* Go to the settings page */
 function gotoSettings(){
-	//contentFrame.src = "settings.html";
-	//var div document.getElementById("content");
-	//div.innerHTML='<object id=\"contentFrame\" name=\"contentFrame\" data=\"browser.html\"></object>';
 	window.location = "settings.html";
 }
 
 /* Go to the browse page */
 function gotoBrowser() {
-	
-	var div document.getElementById("content");
-	div.innerHTML="<iframe src=\"browser.html\" frameborder ='0'></iframe>";
-	var objTag = document.getElementById("contentFrame");
-	if (objTag != null) {
-		 objTag.setAttribute('data', 'browser.html');
-		alert('Page should have been changed');
-	}
-	
-	var req = new XmlHttpRequest();
-	req.open("GET", "browser.html", flase);
-	req.send(null);
-	
-	var page = req.responseText;
-	
-	document.getElementById("content").innerHTML = page;
-	
-	//document.getElementById("contentFrame").src = "browser.html";
-	//window.frames["contentFrame"].src = "browser.html";
-	//document.frames['contentFrame'].location.href = "browser.html";
-}
-
-/* Go to the settings page */
-function gotoSettings(){
-	contentFrame.src = "settings.html";
+	window.location = "browser.html";
 }
 
 /* Exit the app */
 function exit(){
 	widgetAPI.sendReturnEvent();
 }
+
 

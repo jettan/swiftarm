@@ -1,33 +1,34 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 	<head>
-		<!--
+		
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		-->
+		
 		<title>p2ptv</title>
 		
-		<!-- Common widget API 
+		<!-- Common widget API -->
 		<script type='text/javascript' language='javascript' src='$MANAGER_WIDGET/Common/API/Widget.js'></script>
 		<script type='text/javascript' language='javascript' src='$MANAGER_WIDGET/Common/API/TVKeyValue.js'></script>
 		<script type='text/javascript' language='javascript' src='$MANAGER_WIDGET/Common/jquery.js'></script>
 		<script type='text/javascript' language='javascript' src='$MANAGER_WIDGET/Common/core.js'></script>
 		<script type='text/javascript' language='javascript' src='$MANAGER_WIDGET/Common/ui.js'></script>
-		 -->
+		 
 		<!-- Widget code -->
-		<script type='text/javascript' language='javascript' src="ijavascript/Main.js"></script>
+		<script type="text/javascript" language="javascript" src="javascript/Main.js"></script>
 		
 		<!-- Style sheets -->
 		<link rel="stylesheet" href="css/MainMenu.css" type="text/css">
 		
-		<!-- Plugins 
+		<!-- Plugins -->
 		<object id="pluginPlayer" border=0 classid="clsid:SAMSUNG-INFOLINK-PLAYER"></object>
 		<object id="pluginAudio" border=0 classid="clsid:SAMSUNG-INFOLINK-AUDIO"></object>
 		<object id="pluginTVMW" border=0 classid="clsid:SAMSUNG-INFOLINK-TVMW"></object>
-		-->
+		
 	</head>
 	
 	<body onLoad="init()">
 		<!-- Key handler -->
+		<a href="javascript:keyDown()" id="anchor"></a>
 		
 		<!-- Layout begins -->
 		<div id="menu">
@@ -40,7 +41,6 @@
 			<div id="exit"> </div>
 		</div>
 		<div id="content">
-		<a href="gotoSearch()" id='anchor'>bla</a>
 		</div>
 	</body>
 </html>
