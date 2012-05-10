@@ -1,34 +1,36 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/div/html4/strict.dtd">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 	<head>
+		<!--
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		-->
 		<title>p2ptv</title>
 		
-		<!-- Common widget API -->
-		 <script type='text/javascript' language='javascript' src='$MANAGER_WIDGET/Common/API/Widget.js'></script>
+		<!-- Common widget API 
+		<script type='text/javascript' language='javascript' src='$MANAGER_WIDGET/Common/API/Widget.js'></script>
 		<script type='text/javascript' language='javascript' src='$MANAGER_WIDGET/Common/API/TVKeyValue.js'></script>
 		<script type='text/javascript' language='javascript' src='$MANAGER_WIDGET/Common/jquery.js'></script>
 		<script type='text/javascript' language='javascript' src='$MANAGER_WIDGET/Common/core.js'></script>
 		<script type='text/javascript' language='javascript' src='$MANAGER_WIDGET/Common/ui.js'></script>
-		
+		 -->
 		<!-- Widget code -->
 		<script language="javascript" type="text/javascript" src="javascript/Main.js"></script>
 		
 		<!-- Style sheets -->
 		<link rel="stylesheet" href="css/MainMenu.css" type="text/css">
 		
-		<!-- Plugins -->
+		<!-- Plugins 
 		<object id="pluginPlayer" border=0 classid="clsid:SAMSUNG-INFOLINK-PLAYER"></object>
 		<object id="pluginAudio" border=0 classid="clsid:SAMSUNG-INFOLINK-AUDIO"></object>
 		<object id="pluginTVMW" border=0 classid="clsid:SAMSUNG-INFOLINK-TVMW"></object>
-		
+		-->
 	</head>
 	
-	<body onload="Main.onLoad();" onunload="Main.onUnload();">
+	<body onload="Main.onLoad()" onunload="javascript:Main.onUnload()">
 		<!-- Key handler -->
-		<a href='javascript:void(0);' id='anchor' onkeydown='Main.keyDown();'></a>
+		<a href='javascript:void(0);' id='anchor' onkeydown='javascript:Main.keyDown()'></a>
 		
-		<!-- Layout begins -->
+		<!-- Layout begins 
 		<div id="menu">
 			<div id="search">
 			</div>
@@ -39,7 +41,6 @@
 			<div id="exit"> </div>
 		</div>
 		<div id="content">
-			<iframe id="contentFrame" src="about:blank" frameborder="0" width="960" height="440"> </iframe>
-		</div>
+		</div>-->
 	</body>
 </html>
