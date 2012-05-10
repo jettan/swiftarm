@@ -184,7 +184,7 @@ Display.setVideoListPosition = function(position, move) {
 				this.videoList[i].style.backgroundImage= "url(Images/listBox/selector.png)";
 			} else {
 				this.videoList[i].style.backgroundImage= "url(none)";
-			{
+			}
 		}
 	} else if (this.currentWindow == this.LASTIDX && move == Main.DOWN) {
 		if (position == this.FIRSTIDX) {

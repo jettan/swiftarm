@@ -18,7 +18,7 @@ var streamUrl = "http://localhost:1337/stream";
 var downloadUrl = "http://127.0.0.1:1337/download";
 var closeUrl = "http://127.0.0.1:1337/close";
 
-var Main = {
+var Browser = {
 	selectedVideo : 0,
 	mode : 0,
 	mute : 0,
@@ -33,7 +33,7 @@ var Main = {
 	YMUTE : 1
 }
 
-Main.onLoad = function() {
+Browser.init = function() {
 	if (Player.init() && Audio.init() && Display.init()) {
 		Display.setVolume( Audio.getVolume() );
 		Display.setTime(0);
@@ -59,19 +59,19 @@ Main.onLoad = function() {
 	settable = false;
 }
 
-Main.onUnload = function() {
+Browser.onUnload = function() {
     Player.deinit();
 }
 
-Main.updateCurrentVideo = function(videoURL) {
+Browser.updateCurrentVideo = function(videoURL) {
     Player.setVideoURL(videoURL);
 }
 
-Main.enableKeys = function() {
+Browser.enableKeys = function() {
     document.getElementById("anchor").focus();
 }
 
-Main.keyDown = function() {
+Browser.keyDown = function() {
 	var keyCode = event.keyCode;
 	alert("Key pressed: " + keyCode);
 	
@@ -82,7 +82,13 @@ Main.keyDown = function() {
 			alert ("RETURN");
 			Player.stopVideo();
 			gotoMain();
-			break;    
+			break;
+		case tvKey.MENU:
+		case tvKey.KEY_PRECH:
+			alert("PRECH pressed");
+			Player.stopVideo();
+			gotoMain();
+			break;
 		case tvKey.KEY_PLAY:
 			alert ("PLAY");
 			this.handlePlayKey();
@@ -183,7 +189,7 @@ Main.keyDown = function() {
 	}
 }
 
-Main.handlePlayKey = function() {
+Browser.handlePlayKey = function() {
 	switch ( Player.getState() ) {
 		case Player.STOPPED:
 			Player.playVideo();
@@ -197,7 +203,7 @@ Main.handlePlayKey = function() {
 	}
 }
 
-Main.handlePauseKey = function() {
+Browser.handlePauseKey = function() {
 	switch ( Player.getState() ) {
 		case Player.PLAYING:
 			Player.pauseVideo();
@@ -208,7 +214,7 @@ Main.handlePauseKey = function() {
 	}
 }
 
-Main.setFullScreenMode = function() {
+Browser.setFullScreenMode = function() {
 if (this.mode != this.FULLSCREEN) {
 		Display.hide();
 		Player.setFullscreen();
@@ -216,7 +222,7 @@ if (this.mode != this.FULLSCREEN) {
 	}
 }
 
-Main.setWindowMode = function() {
+Browser.setWindowMode = function() {
 	if (this.mode != this.WINDOW) {
 		Display.show();
 		Player.setWindow();
@@ -224,7 +230,7 @@ Main.setWindowMode = function() {
 	}
 }
 
-Main.toggleMode = function() {
+Browser.toggleMode = function() {
 	if (Player.getState() == Player.PAUSED) {
 		Player.resumeVideo();
 	}
@@ -241,7 +247,7 @@ Main.toggleMode = function() {
 	}
 }
 
-Main.setMuteMode = function() {
+Browser.setMuteMode = function() {
 	if (this.mute != this.YMUTE) {
 		var volumeElement = document.getElementById("volumeInfo");
 		Audio.plugin.SetUserMute(true);
@@ -252,7 +258,7 @@ Main.setMuteMode = function() {
 	}
 }
 
-Main.noMuteMode = function() {
+Browser.noMuteMode = function() {
 	if (this.mute != this.NMUTE) {
 		Audio.plugin.SetUserMute(false);
 		document.getElementById("volumeBar").style.backgroundImage = "url(Images/videoBox/volumeBar.png)";
@@ -262,7 +268,7 @@ Main.noMuteMode = function() {
 	}
 }
 
-Main.muteMode = function() {
+Browser.muteMode = function() {
 	switch (this.mute) {
 		case this.NMUTE:
 			this.setMuteMode();

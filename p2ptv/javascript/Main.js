@@ -18,7 +18,7 @@ var settings;
 function init() {
 	
 	alert("init() called");
-	/*
+	
 	$('#search').sfButton({text:'Search'});
 	$('#browse').sfButton({text:'Browse'});
 	$('#settings').sfButton({text:'Settings'});
@@ -28,9 +28,8 @@ function init() {
 	$('#browse').sfButton('focus');
 	$('#settings').sfButton('focus');
 	$('#exit').sfButton('focus');
-	*/
 	
-	this.enableKeys();
+	enableKeys();
 	widgetAPI.sendReadyEvent();
 	
 	alert("init() completed");
@@ -58,14 +57,14 @@ function keyDown() {
 			// Stop App from exiting when pressed
 			break;
 			
-		case tvkey.KEY_RED:
+		case tvKey.KEY_RED:
 			alert("RED pressed");
 			gotoSearch();
 			break;
 			
 		case tvKey.KEY_GREEN:
 			alert("GREEN pressed");
-			gotoBrowse();
+			gotoBrowser();
 			break;
 			
 		case tvKey.KEY_YELLOW:

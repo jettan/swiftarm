@@ -1,7 +1,7 @@
 /**
  * The player.
  */
-var Player  {
+var Player = {
 	plugin : null,
 	state : -1,
 	skipState : -1,

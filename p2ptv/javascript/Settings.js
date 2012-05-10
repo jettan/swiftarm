@@ -21,6 +21,11 @@ function keyDown() {
 			alert("RETURN pressed");
 			gotoMain();
 			break;
+		case tvKey.MENU:
+		case tvKey.KEY_PRECH:
+			alert("PRECH pressed");
+			gotoMain();
+			break;
 			
 		default:
 			alert("Ignore Unhandled Key");
