@@ -399,12 +399,18 @@ bool InstallHTTPGateway (struct event_base *evbase,Address bindaddr, uint32_t ch
 		print_error("httpgw: evhttp_new failed");
 		return false;
 	}
-
+	
+	fprintf(stderr, "Created httppgw event.\n");
+	
 	/* Install callback for all requests */
 	evhttp_set_gencb(http_gw_event, HttpGwNewRequestCallback, NULL);
+	fprintf(stderr, "Installed callback for request.\n");
 
 	/* Now we tell the evhttp what port to listen on */
 	http_gw_handle = evhttp_bind_socket_with_handle(http_gw_event, bindaddr.ipv4str(), bindaddr.port());
+	
+	fprintf(stderr, "Bound socket.\n");
+	
 	if (!http_gw_handle) {
 		print_error("httpgw: evhttp_bind_socket_with_handle failed");
 		return false;
@@ -412,6 +418,8 @@ bool InstallHTTPGateway (struct event_base *evbase,Address bindaddr, uint32_t ch
 
 	httpgw_chunk_size = chunk_size;
 	httpgw_maxspeed = maxspeed;
+	
+	fprintf(stderr, "Returning.\n");
 	return true;
 }
 

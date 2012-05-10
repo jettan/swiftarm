@@ -1407,6 +1407,7 @@ event_dispatch(void)
 int
 event_base_dispatch(struct event_base *event_base)
 {
+	printf("DISPATCHED!");
 	return (event_base_loop(event_base, 0));
 }
 
@@ -1509,6 +1510,7 @@ event_base_loop(struct event_base *base, int flags)
 		event_warnx("%s: reentrant invocation.  Only one event_base_loop"
 		    " can run on each event_base at once.", __func__);
 		EVBASE_RELEASE_LOCK(base, th_base_lock);
+		printf("Not working!");
 		return -1;
 	}
 
@@ -1592,6 +1594,7 @@ done:
 
 	EVBASE_RELEASE_LOCK(base, th_base_lock);
 
+	printf("Works!");
 	return (retval);
 }
 

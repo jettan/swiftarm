@@ -17,11 +17,11 @@
 #include <grp.h>
 #include <time.h>
 #include <vector>
-#include <iostream>
 #include <float.h>
 #include <pthread.h>
 #include <signal.h>
 #include <unistd.h>
+#include <iostream>
 
 #include "swift.h"
 #include "ws.h"
@@ -64,16 +64,19 @@ CRequestHandler::CRequestHandler() {
  * Callback to check if a download is completed.
  */
 void IsCompleteCallback(int fd, short event, void *arg) {
-	if (swift::SeqComplete(download) != swift::Size(download))
+	if (swift::SeqComplete(download) != swift::Size(download)) {
+		std::cout << "Download busy..." << std::endl;
 		evtimer_add(&evcompl, swift::tint2tv(TINT_SEC));
+	}
 	else
 		event_base_loopexit(swift::Channel::evbase, NULL);
 }
 
 void CloseCallback(int fd, short event, void *arg) {
-	if (streaming)
+	if (streaming) {
 		evtimer_add(&evclose, swift::tint2tv(TINT_SEC));
-	else {
+		std::cout << "Busy streaming..." << std::endl;
+	} else {
 		std::cerr << "Calling loopexit of HTTPgw." << std::endl;
 		event_base_loopexit(swift::Channel::evbase, NULL);
 		std::cout << "loopexit called." << std::endl;
@@ -85,8 +88,10 @@ void CloseCallback(int fd, short event, void *arg) {
  * @param str: Struct containing all necessary data for downloads.
  */
 void* Download(void *str) {
+	std::cout << "Entered download thread." << std::endl;
+	
 	// Change the directory to Downloads folder.
-	chdir("/dtv/usb/sda1/Downloads/");
+	chdir("/tmp");
 	
 	DownloadArgs *da = (DownloadArgs*) str;
 	download         = 0;
@@ -131,8 +136,10 @@ void* Download(void *str) {
  * @param str: Struct containing all necessary data for streams.
  */
 void* Stream(void *str) {
+	std::cout << "Entered the stream thread." << std::endl;
+	
 	// Change the directory to Downloads folder.
-	chdir("/dtv/usb/sda1/Downloads");
+	chdir("/tmp");
 	
 	DownloadArgs *da = (DownloadArgs*) str;
 	char* tracker    = da->tracker;
@@ -146,10 +153,11 @@ void* Stream(void *str) {
 	evtimer_assign(&evclose, swift::Channel::evbase, CloseCallback, NULL);
 	evtimer_add(&evclose, swift::tint2tv(TINT_SEC));
 	
+	std::cout << "Dispatching the event base." << std::endl;
 	event_base_dispatch(swift::Channel::evbase);
 	
 	std::cout << "Exiting stream thread." << std::endl;
-	// Exit the download thread when the download is finished.
+	// Exit the stream thread when the download is finished.
 	pthread_exit(NULL);
 }
 
@@ -182,8 +190,8 @@ void CRequestHandler::HandleGET(CRequest *pRequest) {
 	if (strcmp(pRequest->GetPath(), "/download") == 0) {
 		// Fill in the neccessary arguments to download a file.
 		download_args.tracker  = "130.161.158.52:20000";
-		download_args.hash     = "ed29d19bc8ea69dfb5910e7e20247ee7e002f321";
-		download_args.filename = "stream.mp4";
+		download_args.hash     = "8ed31acdda676eb2c26db1dae6b5e3c463ee784f";
+		download_args.filename = "stream.m2ts";
 		
 		// Spawn new thread to download the file requested.
 		rc = pthread_create(&thread, NULL, Download, (void *) &download_args);
@@ -194,8 +202,8 @@ void CRequestHandler::HandleGET(CRequest *pRequest) {
 		
 		sprintf(message, "HTTP/1.1 200 OK\n"
 			"Content-Type: text/plain\n"
-			"Content-Length: 18\n\n"
-			"Download started.\n");
+			"Content-Length: 41\n\n"
+			"file:///tmp/stream.m2ts");
 		pRequest->Write(message, strlen(message));
 		
 	} else if (strcmp(pRequest->GetPath(), "/close") == 0) {
@@ -204,8 +212,8 @@ void CRequestHandler::HandleGET(CRequest *pRequest) {
 		
 		sprintf(message, "HTTP/1.1 200 OK\n"
 			"Content-Type: text/plain\n"
-			"Content-Length: 24\n\n"
-			"Deleted the HTTPGateway\n");
+			"Content-Length: 23\n\n"
+			"Not streaming anymore.\n");
 		pRequest->Write(message, strlen(message));
 		
 	} else if (strcmp(pRequest->GetPath(), "/stream") == 0) {
@@ -219,8 +227,8 @@ void CRequestHandler::HandleGET(CRequest *pRequest) {
 		
 		sprintf(message, "HTTP/1.1 200 OK\n"
 			"Content-Type: text/plain\n"
-			"Content-Length: 64\n\n"
-			"http://127.0.0.1:15000/8ed31acdda676eb2c26db1dae6b5e3c463ee784f\n");
+			"Content-Length: 69\n\n"
+			"http://130.161.159.107:15000/8ed31acdda676eb2c26db1dae6b5e3c463ee784f");
 		pRequest->Write(message, strlen(message));
 		
 	} else {

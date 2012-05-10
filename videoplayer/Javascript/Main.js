@@ -1,8 +1,6 @@
 var widgetAPI = new Common.API.Widget();
 var tvKey     = new Common.API.TVKeyValue();
 var focuslocation;
-var streaming = new Boolean();
-var settable = new Boolean();
 
 /**
  * The filesystem.
@@ -14,9 +12,9 @@ var file_system = new FileSystem();
  */
 var usb_path = "$USB_DIR" + "/sda1/";
 
-var streamUrl = "http://localhost:1337/stream";
-var downloadUrl = "http://127.0.0.1:1337/download";
-var closeUrl = "http://127.0.0.1:1337/close";
+var streamUrl = "http://130.161.159.107:1337/stream";
+var downloadUrl = "http://130.161.159.107:1337/download";
+var closeUrl = "http://130.161.159.107:1337/close";
 
 var Main = {
 	selectedVideo : 0,
@@ -55,8 +53,6 @@ Main.onLoad = function() {
 	$('#Button2').sfButton({text:'Button2'});
 	$('#Button2').sfButton('blur');
 	focuslocation = 0;
-	streaming = false;
-	settable = false;
 }
 
 Main.onUnload = function() {
@@ -89,10 +85,7 @@ Main.keyDown = function() {
 		case tvKey.KEY_STOP:
 			alert ("STOP");
 			Player.stopVideo();
-			if (streaming) {
-				httpGet(closeUrl);
-				streaming = false;
-			}
+			httpGet(closeUrl);
 			break;
 		case tvKey.KEY_PAUSE:
 			alert ("PAUSE");
@@ -291,15 +284,11 @@ function selectItem() {
 
 function buttonHandler() {
 	alert("Button handler!");
-	settable = true;
 	httpGet(streamUrl);
-	streaming = true;
-	//testFileAPI();
 }
 
 function button2Handler() {
 	alert("Button2 handler!");
-	settable = true;
 	httpGet(downloadUrl);
 }
 
@@ -314,10 +303,8 @@ function httpGet(url) {
 function processRequest() {
 	if (request.readyState == 4) {
 		var result = request.responseText;
-		if (settable)
-			Main.updateCurrentVideo(result);
+		Main.updateCurrentVideo(result);
 		Display.setDescription(result);
-		settable = false;
 		alert(result);
 	}
 }

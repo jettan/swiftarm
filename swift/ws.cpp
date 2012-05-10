@@ -67,12 +67,15 @@ int main(int argc, char* argv[]) {
 	}
 	std::cout << "Listening on port " << swift::BoundAddress(sock).port() << "." << std::endl;
 	
-	swift::Address httpaddr    = swift::Address("127.0.0.1:15000");
+	swift::Address httpaddr    = swift::Address("130.161.159.107:15000");
 	
+	//swift::Address httpaddr    = swift::Address("127.0.0.1:15000");
 	double maxspeed[2] = {DBL_MAX, DBL_MAX};
 	
 	// Install the HTTP gateway to stream.
-	InstallHTTPGateway(swift::Channel::evbase, httpaddr, SWIFT_DEFAULT_CHUNK_SIZE, maxspeed);
+	bool res = InstallHTTPGateway(swift::Channel::evbase, httpaddr, SWIFT_DEFAULT_CHUNK_SIZE, maxspeed);
+	
+	std::cerr << "HTTP gateway creation returned " << res << "." << std::endl;
 	
 	while (true) {
 		CRequest *pRequest = g_socketlistener.Accept(); // blocks until a connection is made
