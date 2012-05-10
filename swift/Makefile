@@ -1,8 +1,9 @@
-#CXX=arm-v7a8-linux-gnueabi-g++
-CPPFLAGS+= -static -O2 -I. -Wall -Wno-sign-compare -Wno-unused -g -I /usr/local/include -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE 
-#LD=arm-v7a8-linux-gnueabi-ld
-#LDADD=$(HOME)/swiftarm/lib/lib/libevent.a /opt/armv7a8-toolchain-lite/arm-v7a8-linux-gnueabi/lib/libstdc++.a /opt/armv7a8-toolchain-lite/arm-v7a8-linux-gnueabi/libc/usr/lib/libc.a /opt/armv7a8-toolchain-lite/arm-v7a8-linux-gnueabi/libc/usr/lib/librt.a /opt/armv7a8-toolchain-lite/lib/gcc/arm-v7a8-linux-gnueabi/4.4.1/libgcc.a
-LDADD= -levent -lstdc++ -lrt -lgcc -lutil -lpthread
+CXX=arm-v7a8-linux-gnueabi-g++
+CPPFLAGS+= -static -O2 -I. -Wall -Wno-sign-compare -Wno-unused -g -I $(HOME)/Documents/swiftarm/lib/include -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE 
+LD=arm-v7a8-linux-gnueabi-ld
+LDADD=$(HOME)/Documents/swiftarm/lib/lib/libevent.a /opt/armv7a8-toolchain-lite/arm-v7a8-linux-gnueabi/lib/libstdc++.a /opt/armv7a8-toolchain-lite/arm-v7a8-linux-gnueabi/libc/usr/lib/librt.a /opt/armv7a8-toolchain-lite/lib/gcc/arm-v7a8-linux-gnueabi/4.4.1/libgcc.a
+LDADD+= /opt/armv7a8-toolchain-lite/arm-v7a8-linux-gnueabi/libc/usr/lib/libutil.a /opt/armv7a8-toolchain-lite/arm-v7a8-linux-gnueabi/libc/usr/lib/libpthread.a
+#LDADD= -levent -lrt -lstdc++ -lgcc -lutil -lpthread
 
 all: ws
 

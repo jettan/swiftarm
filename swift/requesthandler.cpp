@@ -86,7 +86,7 @@ void CloseCallback(int fd, short event, void *arg) {
  */
 void* Download(void *str) {
 	// Change the directory to Downloads folder.
-	chdir("/home/jettan/Downloads/");
+	chdir("/dtv/usb/sda1/Downloads/");
 	
 	DownloadArgs *da = (DownloadArgs*) str;
 	download         = 0;
@@ -132,7 +132,7 @@ void* Download(void *str) {
  */
 void* Stream(void *str) {
 	// Change the directory to Downloads folder.
-	chdir("/home/jettan/Downloads/");
+	chdir("/dtv/usb/sda1/Downloads");
 	
 	DownloadArgs *da = (DownloadArgs*) str;
 	char* tracker    = da->tracker;
@@ -181,7 +181,7 @@ void CRequestHandler::HandleGET(CRequest *pRequest) {
 	
 	if (strcmp(pRequest->GetPath(), "/download") == 0) {
 		// Fill in the neccessary arguments to download a file.
-		download_args.tracker  = "127.0.0.1:20000";
+		download_args.tracker  = "130.161.158.52:20000";
 		download_args.hash     = "ed29d19bc8ea69dfb5910e7e20247ee7e002f321";
 		download_args.filename = "stream.mp4";
 		
@@ -210,7 +210,7 @@ void CRequestHandler::HandleGET(CRequest *pRequest) {
 		
 	} else if (strcmp(pRequest->GetPath(), "/stream") == 0) {
 		streaming = true;
-		download_args.tracker = "127.0.0.1:20000";
+		download_args.tracker = "130.161.158.52:20000";
 		rc = pthread_create(&thread, NULL, Stream, (void *) &download_args);
 		
 		if (rc) {
@@ -219,8 +219,8 @@ void CRequestHandler::HandleGET(CRequest *pRequest) {
 		
 		sprintf(message, "HTTP/1.1 200 OK\n"
 			"Content-Type: text/plain\n"
-			"Content-Length: 63\n\n"
-			"http://127.0.0.1:15000/ed29d19bc8ea69dfb5910e7e20247ee7e002f321");
+			"Content-Length: 64\n\n"
+			"http://127.0.0.1:15000/8ed31acdda676eb2c26db1dae6b5e3c463ee784f\n");
 		pRequest->Write(message, strlen(message));
 		
 	} else {
