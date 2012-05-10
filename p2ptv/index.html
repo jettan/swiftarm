@@ -14,7 +14,7 @@
 		<script type='text/javascript' language='javascript' src='$MANAGER_WIDGET/Common/ui.js'></script>
 		 -->
 		<!-- Widget code -->
-		<script language="javascript" type="text/javascript" src="javascript/Main.js"></script>
+		<script type='text/javascript' language='javascript' src="ijavascript/Main.js"></script>
 		
 		<!-- Style sheets -->
 		<link rel="stylesheet" href="css/MainMenu.css" type="text/css">
@@ -26,11 +26,10 @@
 		-->
 	</head>
 	
-	<body onload="Main.onLoad()" onunload="javascript:Main.onUnload()">
+	<body onLoad="init()">
 		<!-- Key handler -->
-		<a href='javascript:void(0);' id='anchor' onkeydown='javascript:Main.keyDown()'></a>
 		
-		<!-- Layout begins 
+		<!-- Layout begins -->
 		<div id="menu">
 			<div id="search">
 			</div>
@@ -41,6 +40,7 @@
 			<div id="exit"> </div>
 		</div>
 		<div id="content">
-		</div>-->
+		<a href="gotoSearch()" id='anchor'>bla</a>
+		</div>
 	</body>
 </html>

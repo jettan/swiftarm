@@ -15,9 +15,9 @@ var settings;
 
 /* Function called when the app is initialised
  * Creates the buttons and starts key handler */
-Main.onLoad = function() {
+function init() {
 	
-	alert("Main.onLoad called");
+	alert("init() called");
 	
 	//document.bgColor = "#000099";
 	/*
@@ -53,13 +53,13 @@ Main.enableKeys = function() {
 }
 
 /* Function called on key down event */
-Main.keyDown = function() {
+function keyDown() {
 	
 	var keyCode = event.keyCode;
 	alert("Key Pressed: " + keyCode);
 	switch(keyCode){
 		case tvKey.KEY_RETURN:
-			alert("RETURN pressed")
+			alert("RETURN pressed");
 			// Stop App from exiting when pressed
 			widgetAPI.blockNavigation();
 			break;
@@ -107,12 +107,15 @@ function gotoSearch(){
 	
 	document.getElementById("content").innerHTML = page;
 	*/
-	window.location = "search.html"
+	alert("gotoSearch called");
+	window.location = "search.html";
+	/*
 	var objTag = document.getElementById("contentFrame");
 	if (objTag != null) {
 		 objTag.setAttribute('data', 'search.html');
 		alert('Page should have been changed');
 	}
+	*/
 }
 
 /* Go to the settings page */
@@ -120,11 +123,11 @@ function gotoSettings(){
 	//contentFrame.src = "settings.html";
 	//var div document.getElementById("content");
 	//div.innerHTML='<object id=\"contentFrame\" name=\"contentFrame\" data=\"browser.html\"></object>';
-	window.location = "settings.html"
+	window.location = "settings.html";
 }
 
 /* Go to the browse page */
-function gotoBrowser(){
+function gotoBrowser() {
 	
 	var div document.getElementById("content");
 	div.innerHTML="<iframe src=\"browser.html\" frameborder ='0'></iframe>";
