@@ -85,7 +85,6 @@ function keyDown() {
 			alert("MENU pressed");
 			gotoMain();
 			break;
-			
 		case tvKey.KEY_PRECH:
 			shift = (shift + 1) % 2;
 			updateLetters();
@@ -96,7 +95,7 @@ function keyDown() {
 			letterSelection(2);
 			break;
 		case tvKey.KEY_3:
-			letterSelection(4);
+			letterSelection(3);
 			break;
 		case tvKey.KEY_4:
 			letterSelection(4);
@@ -119,7 +118,16 @@ function keyDown() {
 		case tvKey.KEY_0:
 			letterSelection(0);
 			break;
-			
+		case tvKey.KEY_EMPTY:
+			document.getElementById("searchBar").value = searchBarValue + " ";
+			break;
+		case tvKey.KEY_MUTE:
+			var searchVal = document.getElementById("searchBar").value;
+			document.getElementById("searchBar").value = searchVal.substring(0, searchVal.length-2);
+			break;
+		case tvKey.KEY_ENTER:
+			// SEARCH!
+			break;
 		default:
 			alert("Ignore Unhandled Key");
 			break;
@@ -128,20 +136,24 @@ function keyDown() {
 
 function letterSelection(number){
 	
-	if(keyState == keyStates.OVERVIEW){
+	if(keyState == keyStates.OVERVIEW) {
 		
 		selection = number;
 		updateLetters();
 		keyState = keyStates.SELECTION;
 	}
-	else if(keyState == keyStates.SELECTION){
+	else if(keyState == keyStates.SELECTION) {
 	
-		if(number <= letters[selection].length && number > 0){ 
+		if(number <= letters[selection].length && number > 0) {
 			
 			var searchBarValue = document.getElementById("searchBar").value;
 			// send selected letter to searchbar here
-			document.getElementById("searchBar").value = searchBarValue + letters[selection][number-1];
-		
+			if(shift == shiftState.OFF){
+				document.getElementById("searchBar").value = searchBarValue + letters[selection][number-1];
+			}
+			else{
+				document.getElementById("searchBar").value = searchBarValue + letters[selection][number-1].toUpperCase();
+			}
 			selection = -1;
 			updateLetters();
 			keyState = keyStates.OVERVIEW;
@@ -149,16 +161,21 @@ function letterSelection(number){
 	}
 }
 
-function updateLetters(){
+function updateLetters() {
 	
-	if(selection == -1){
+	if(selection == -1) {
 		resetLetters();
 	}
 	else{
-		for(var j = 1; j < letters[selection].length+1; j++){
-			$(labels[j]).sfLabel({text:letters[selection][j-1]});
+		for(var j = 1; j < letters[selection].length+1; j++) {
+			if(shift == shiftState.OFF){
+				$(labels[j]).sfLabel({text:letters[selection][j-1]});
+			}
+			else{
+				$(labels[j]).sfLabel({text:letters[selection][j-1].toUpperCase()});
+			}
 		}
-		for(var i = letters[selection].length+1; i < labels.length; i++){
+		for(var i = letters[selection].length+1; i < labels.length; i++) {
 			$(labels[i]).sfLabel({text:" "});
 		}
 	}
@@ -166,7 +183,12 @@ function updateLetters(){
 
 function resetLetters(){
 	for(var j = 0; j < buttons.length; j++){
-		$(labels[j]).sfLabel({text:overviewLetters[j]});
+		if(shift == shiftState.OFF){
+			$(labels[j]).sfLabel({text:overviewLetters[j]});
+		}
+		else{
+			$(labels[j]).sfLabel({text:overviewLetters[j].toUpperCase()});
+		}
 	}
 }
 
