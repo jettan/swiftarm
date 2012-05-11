@@ -190,7 +190,7 @@ void CRequestHandler::HandleGET(CRequest *pRequest) {
 	if (strcmp(pRequest->GetPath(), "/download") == 0) {
 		// Fill in the neccessary arguments to download a file.
 		download_args.tracker  = "130.161.158.52:20000";
-		download_args.hash     = "8ed31acdda676eb2c26db1dae6b5e3c463ee784f";
+		download_args.hash     = "ed29d19bc8ea69dfb5910e7e20247ee7e002f321";
 		download_args.filename = "stream.m2ts";
 		
 		// Spawn new thread to download the file requested.
@@ -228,7 +228,14 @@ void CRequestHandler::HandleGET(CRequest *pRequest) {
 		sprintf(message, "HTTP/1.1 200 OK\n"
 			"Content-Type: text/plain\n"
 			"Content-Length: 69\n\n"
-			"http://130.161.159.107:15000/8ed31acdda676eb2c26db1dae6b5e3c463ee784f");
+			"http://130.161.159.107:15000/ed29d19bc8ea69dfb5910e7e20247ee7e002f321");
+		pRequest->Write(message, strlen(message));
+		
+	} else if (strcmp(pRequest->GetPath(), "/alive") == 0) {
+		sprintf(message, "HTTP/1.1 200 OK\n"
+			"Content-Type: text/plain\n"
+			"Content-Length: 11\n\n"
+			"I'm alive!\n");
 		pRequest->Write(message, strlen(message));
 		
 	} else {

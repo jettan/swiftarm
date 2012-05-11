@@ -1,6 +1,6 @@
 CXX=arm-v7a8-linux-gnueabi-g++
-CPPFLAGS+= -O2 -I . -I /home/jettan/Documents/swiftarm/lib/include -I /opt/armv7a8-toolchain-lite/arm-v7a8-linux-gnueabi/include -I /opt/armv7a8-toolchain-lite/arm-v7a8-linux-gnueabi/libc/include -Wall -Wno-sign-compare -Wno-unused -g
-CPPFLAGS +=-D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE 
+CPPFLAGS+= -O2 -I . -I /home/jettan/Documents/swiftarm/lib/include -I /opt/armv7a8-toolchain-lite/arm-v7a8-linux-gnueabi/include -I /opt/armv7a8-toolchain-lite/arm-v7a8-linux-gnueabi/libc/include 
+CPPFLAGS +=-Wall -Wno-sign-compare -Wno-unused -g -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE 
 LD=arm-v7a8-linux-gnueabi-ld
 #LDADD=$(HOME)/Documents/swiftarm/lib/lib/libevent.a /opt/armv7a8-toolchain-lite/arm-v7a8-linux-gnueabi/lib/libstdc++.a /opt/armv7a8-toolchain-lite/arm-v7a8-linux-gnueabi/libc/usr/lib/librt.a /opt/armv7a8-toolchain-lite/lib/gcc/arm-v7a8-linux-gnueabi/4.4.1/libgcc.a
 #LDADD+= /opt/armv7a8-toolchain-lite/arm-v7a8-linux-gnueabi/libc/usr/lib/libutil.a /opt/armv7a8-toolchain-lite/arm-v7a8-linux-gnueabi/libc/usr/lib/libpthread.a

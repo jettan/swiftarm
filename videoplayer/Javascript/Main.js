@@ -15,6 +15,7 @@ var usb_path = "$USB_DIR" + "/sda1/";
 var streamUrl = "http://130.161.159.107:1337/stream";
 var downloadUrl = "http://130.161.159.107:1337/download";
 var closeUrl = "http://130.161.159.107:1337/close";
+var isAlive = "http://130.161.159.107:1337/alive";
 
 var Main = {
 	selectedVideo : 0,
@@ -118,6 +119,7 @@ Main.keyDown = function() {
 			break;
 		case tvKey.KEY_DOWN:
 			alert("DOWN");
+			httpGet(isAlive);
 			break;
 		case tvKey.KEY_UP:
 			alert("UP");
