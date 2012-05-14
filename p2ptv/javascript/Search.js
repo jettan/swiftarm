@@ -85,6 +85,7 @@ function keyDown() {
 			alert("MENU pressed");
 			gotoMain();
 			break;
+		// Shift
 		case tvKey.KEY_PRECH:
 			shift = (shift + 1) % 2;
 			updateLetters();
@@ -118,9 +119,11 @@ function keyDown() {
 		case tvKey.KEY_0:
 			letterSelection(0);
 			break;
+		// Spacebar
 		case tvKey.KEY_EMPTY:
 			document.getElementById("searchBar").value = searchBarValue + " ";
 			break;
+		// Backspace functionality
 		case tvKey.KEY_MUTE:
 			var searchVal = document.getElementById("searchBar").value;
 			document.getElementById("searchBar").value = searchVal.substring(0, searchVal.length-2);
