@@ -5,7 +5,11 @@ CPPFLAGS +=-Wall -Wno-sign-compare -Wno-unused -g -D_FILE_OFFSET_BITS=64 -D_LARG
 LD=arm-v7a8-linux-gnueabi-ld
 LDADD= $(HOME)/Documents/swiftarm/lib/lib/libevent.a -lrt -lstdc++ -lgcc -lutil -lpthread
 
+
 all: ws
+
+eventws: eventws.o
+	$(CXX) ${CPPFLAGS} eventws.cpp -o eventws ${LDADD}
 
 ws: ws.o socketlistener.o request.o requesthandler.o sha1.o compat.o sendrecv.o send_control.o hashtree.o bin.o binmap.o binheap.o channel.o transfer.o httpgw.o statsgw.o cmdgw.o avgspeed.o availability.o
 #nat_test.o
@@ -71,4 +75,4 @@ availability.o: availability.cpp availability.h
 clean:
 	rm -f *.o ws 2>/dev/null
 
-.PHONY: all clean
+.PHONY: all clean eventws

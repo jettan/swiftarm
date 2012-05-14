@@ -8,6 +8,7 @@ bin
 *.pc
 ws/ws
 swift/ws
+swift/eventws
 libevent2/.deps
 libevent2/.libs
 libevent2/Makefile
