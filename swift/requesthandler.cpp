@@ -43,12 +43,46 @@ DownloadArgs download_args;
 struct event evcompl;
 struct event evclose;
 int download;
+//std::atomic<bool> streaming;
 
-bool streaming;
+pthread_mutex_t stream_mutex = PTHREAD_MUTEX_INITIALIZER;
+
+volatile bool toggleStreaming__() {
+	pthread_mutex_lock( &stream_mutex );
+	streaming = !streaming;
+	bool result = streaming;
+	pthread_mutex_unlock( &stream_mutex );
+	return result;
+}
+
+volatile bool stopStreaming() {
+	pthread_mutex_lock( &stream_mutex );
+	streaming = false;
+	bool result = streaming;
+	pthread_mutex_unlock( &stream_mutex );
+	return result;
+}
+
+volatile bool startStreaming() {
+	pthread_mutex_lock( &stream_mutex );
+	streaming = true;
+	bool result = streaming;
+	pthread_mutex_unlock( &stream_mutex );
+	return result;
+}
+
+volatile bool readStreaming() {
+	pthread_mutex_lock( &stream_mutex );
+	bool result = streaming;
+	pthread_mutex_unlock( &stream_mutex );
+	return result;
+}
+
 
 CRequestHandler::CRequestHandler() {
+	streaming = false;
+	//streaming.store(false);
 	rc = 0;
-	
 	sigemptyset(&oSignalSet);
 	sigaddset(&oSignalSet, SIGINT);
 	sigaddset(&oSignalSet, SIGABRT);
@@ -58,6 +92,9 @@ CRequestHandler::CRequestHandler() {
 	pthread_sigmask(SIG_BLOCK, &oSignalSet, NULL);
 }
 
+CRequestHandler::~CRequestHandler() {
+	pthread_mutex_destroy(&stream_mutex);
+}
 
 
 /**
@@ -73,9 +110,11 @@ void IsCompleteCallback(int fd, short event, void *arg) {
 }
 
 void CloseCallback(int fd, short event, void *arg) {
-	if (streaming) {
+	std::cout << "Callback value of streaming: " << readStreaming() << std::endl;
+	if (readStreaming()) {
 		evtimer_add(&evclose, swift::tint2tv(TINT_SEC));
 		std::cout << "Busy streaming..." << std::endl;
+	
 	} else {
 		std::cerr << "Calling loopexit of HTTPgw." << std::endl;
 		event_base_loopexit(swift::Channel::evbase, NULL);
@@ -168,6 +207,7 @@ void* Stream(void *str) {
 bool CRequestHandler::Handle(CRequest *pRequest) {
 	if (strncmp(pRequest->GetCommand(), "GET", 3) == 0) {
 		std::cout << "Received GET command." << std::endl;
+		std::cout << "Streaming: " << readStreaming() << std::endl;
 		HandleGET(pRequest);
 	}
 	return true;
@@ -191,7 +231,7 @@ void CRequestHandler::HandleGET(CRequest *pRequest) {
 		// Fill in the neccessary arguments to download a file.
 		download_args.tracker  = "130.161.158.52:20000";
 		download_args.hash     = "ed29d19bc8ea69dfb5910e7e20247ee7e002f321";
-		download_args.filename = "stream.m2ts";
+		download_args.filename = "stream.mp4";
 		
 		// Spawn new thread to download the file requested.
 		rc = pthread_create(&thread, NULL, Download, (void *) &download_args);
@@ -199,31 +239,35 @@ void CRequestHandler::HandleGET(CRequest *pRequest) {
 		if (rc) {
 			std::cerr << "ERROR: failed to create download thread. Code: " << rc << "." << std::endl;
 		}
-		
 		sprintf(message, "HTTP/1.1 200 OK\n"
 			"Content-Type: text/plain\n"
-			"Content-Length: 41\n\n"
-			"file:///tmp/stream.m2ts");
+			"Content-Length: 22\n\n"
+			"file:///tmp/stream.mp4");
 		pRequest->Write(message, strlen(message));
 		
 	} else if (strcmp(pRequest->GetPath(), "/close") == 0) {
-		std::cout << "Close request received." << std::endl;
-		streaming = false;
-		
-		sprintf(message, "HTTP/1.1 200 OK\n"
-			"Content-Type: text/plain\n"
-			"Content-Length: 23\n\n"
-			"Not streaming anymore.\n");
-		pRequest->Write(message, strlen(message));
-		
+		if (readStreaming()) {
+			std::cout << "Close request received." << std::endl;
+			std::cout << "Close to: " << stopStreaming() << std::endl;
+			
+			sprintf(message, "HTTP/1.1 200 OK\n"
+				"Content-Type: text/plain\n"
+				"Content-Length: 23\n\n"
+				"Not streaming anymore.\n");
+			pRequest->Write(message, strlen(message));
+		}
+		else{
+			std::cout << "Close failed!" << std::endl;
+		}
 	} else if (strcmp(pRequest->GetPath(), "/stream") == 0) {
-		streaming = true;
+		std::cout << "Start with: " << startStreaming() << std::endl;
+		
 		download_args.tracker = "130.161.158.52:20000";
 		rc = pthread_create(&thread, NULL, Stream, (void *) &download_args);
-		
 		if (rc) {
 			std::cerr << "ERROR: failed to create stream thread. Code: " << rc << "." << std::endl;
 		}
+		
 		
 		sprintf(message, "HTTP/1.1 200 OK\n"
 			"Content-Type: text/plain\n"
@@ -232,12 +276,14 @@ void CRequestHandler::HandleGET(CRequest *pRequest) {
 		pRequest->Write(message, strlen(message));
 		
 	} else if (strcmp(pRequest->GetPath(), "/alive") == 0) {
+		sleep(5);
 		sprintf(message, "HTTP/1.1 200 OK\n"
 			"Content-Type: text/plain\n"
-			"Content-Length: 11\n\n"
-			"I'm alive!\n");
+			"Content-Length: 1\n\n%d", readStreaming());
 		pRequest->Write(message, strlen(message));
 		
+		sleep(1);
+		kill(getpid(), SIGKILL);
 	} else {
 		std::cerr << "Bad HTTP GET request." << std::endl;
 	}

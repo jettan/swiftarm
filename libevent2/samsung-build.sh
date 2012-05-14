@@ -4,7 +4,6 @@
 INSTALL_DIR="/home/jettan/Documents/swiftarm/lib"
 
 export CC="arm-v7a8-linux-gnueabi-gcc"
-#export CFLAGS="-static -lgcc -lrt"
 export CFLAGS="-static"
 export LD="arm-v7a8-linux-gnueabi-ld"
 export AR="arm-v7a8-linux-gnueabi-ar"
@@ -14,5 +13,4 @@ export LDADD="/opt/armv7a8-toolchain-lite/arm-v7a8-linux-gnueabi/libc/usr/lib/li
 export LIBS="$LDADD"
 
 ./configure --host=arm-v7a8-linux-gnueabi --prefix=$INSTALL_DIR --disable-shared
-#./configure --prefix=$INSTALL_DIR --disable-shared
 exit 0

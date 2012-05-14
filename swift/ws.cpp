@@ -20,6 +20,7 @@
 void signalhandler(int signum);
 CSocketListener g_socketlistener;
 bool g_signalhandled = false;
+volatile bool streaming = false;
 char g_signalname[32];
 
 /**
