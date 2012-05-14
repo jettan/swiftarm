@@ -22,7 +22,7 @@ var shiftState = {
 	ON:1
 };
 
-var shift = 0;
+var shift = false;
 var selection = -1;
 var type = 0;
 var keyState = keyStates.OVERVIEW;
@@ -87,7 +87,7 @@ function keyDown() {
 			break;
 		// Shift
 		case tvKey.KEY_PRECH:
-			shift = (shift + 1) % 2;
+			shift = !shift;
 			updateLetters();
 		case tvKey.KEY_1:
 			letterSelection(1);
@@ -96,8 +96,7 @@ function keyDown() {
 			letterSelection(2);
 			break;
 		case tvKey.KEY_3:
-			letterSelection(3);
-			break;
+			letterSelection(3);			break;
 		case tvKey.KEY_4:
 			letterSelection(4);
 			break;
@@ -121,6 +120,7 @@ function keyDown() {
 			break;
 		// Spacebar
 		case tvKey.KEY_EMPTY:
+			var seachValue = document.getElementById("searchBar").value;
 			document.getElementById("searchBar").value = searchBarValue + " ";
 			break;
 		// Backspace functionality
@@ -171,7 +171,7 @@ function updateLetters() {
 	}
 	else{
 		for(var j = 1; j < letters[selection].length+1; j++) {
-			if(shift == shiftState.OFF){
+			if(!shift){
 				$(labels[j]).sfLabel({text:letters[selection][j-1]});
 			}
 			else{
@@ -186,7 +186,7 @@ function updateLetters() {
 
 function resetLetters(){
 	for(var j = 0; j < buttons.length; j++){
-		if(shift == shiftState.OFF){
+		if(!shift){
 			$(labels[j]).sfLabel({text:overviewLetters[j]});
 		}
 		else{
