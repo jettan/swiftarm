@@ -181,27 +181,43 @@ void* Stream(void *str) {
 	pthread_exit(NULL);
 }
 
-void sigHandler(int sig) {
-	std::cout << "Now exiting application!" << std::endl;
-	event_base_loopexit(base, NULL);
+/**
+ * Send the HTTP response.
+ */
+static void send_response(struct evhttp_request *req, struct evbuffer *buf,  const char *message) {
+
+	// Add HTTP headers.
+	evhttp_add_header(evhttp_request_get_output_headers(req), "Content-Type", "text/plain");
+	
+	// Add the plaintext message with this.
+	evbuffer_add_printf(buf, message);
+	
+	// Send the final message.
+	evhttp_send_reply(req, 200, "OK", buf);
+	std::cout << "Sent the message." << std::endl;
 }
+
 
 /**
  * The HTTP GET request handler.
  */
 static void request_handler(struct evhttp_request *req, void *arg) {
-	struct evbuffer *evb;
 	const char *uri = evhttp_request_get_uri(req);
-	struct evhttp_uri *decoded;
 	const char *path;
+	struct evbuffer *evb;
+	struct evhttp_uri *decoded;
 	
 	std::cout << "Got a GET request for " << uri << std::endl;
 	
 	// Decode the URI.
 	decoded = evhttp_uri_parse(uri);
-
+	
 	// This is the string we want to compare.
 	path = evhttp_uri_get_path(decoded);
+	
+	// This holds the content we want to send.
+	evb = evbuffer_new();
+	
 	if(strcmp(path, "/download") == 0) {
 		download_args.tracker  = "130.161.158.52:20000";
 		download_args.hash     = "ed29d19bc8ea69dfb5910e7e20247ee7e002f321";
@@ -213,100 +229,44 @@ static void request_handler(struct evhttp_request *req, void *arg) {
 		if (rc) {
 			std::cerr << "ERROR: failed to create download thread. Code: " << rc << "." << std::endl;
 		}
-		// This holds the content we want to send.
-		evb = evbuffer_new();
-	
-		// Add HTTP headers.
-		evhttp_add_header(evhttp_request_get_output_headers(req), "Content-Type", "text/plain");
-	
-		// Add the plaintext message with this.
-		evbuffer_add_printf(evb, "file:///tmp/stream.mp4");
-	
-		// Send the final message.
-		evhttp_send_reply(req, 200, "OK", evb);
-		std::cout << "Sent the message." << std::endl;
-	
-		// Some garbage collecting.
-		if (decoded)
-			evhttp_uri_free(decoded);
-		if (evb)
-			evbuffer_free(evb);
+		
+		send_response(req, evb, "file:///tmp/stream.mp4");
+		
 	} else if (strcmp(path, "/close") == 0) {
 		if (readStreaming()) {
 			std::cout << "Close request received." << std::endl;
 			std::cout << "Close to: " << stopStreaming() << std::endl;
 			
-			// This holds the content we want to send.
-			evb = evbuffer_new();
+			send_response(req, evb, "Streaming stopped");
 			
-			// Add HTTP headers.
-			evhttp_add_header(evhttp_request_get_output_headers(req), "Content-Type", "text/plain");
-			
-			// Add the plaintext message with this.
-			evbuffer_add_printf(evb, "Streaming stopped");
-			
-			// Send the final message.
-			evhttp_send_reply(req, 200, "OK", evb);
-			std::cout << "Sent the message." << std::endl;
-			
-			// Some garbage collecting.
-			if (decoded)
-				evhttp_uri_free(decoded);
-			if (evb)
-				evbuffer_free(evb);
 		} else {
-			std::cout << "Close failed!" << std::endl;
+			std::cout << "No stream closed." << std::endl;
 		}
-
+		
 	} else if (strcmp(path, "/stream") == 0) {
 		std::cout << "Start with: " << startStreaming() << std::endl;
 		
 		download_args.tracker = "130.161.158.52:20000";
 		rc = pthread_create(&thread, NULL, Stream, (void *) &download_args);
+		
 		if (rc) {
 			std::cerr << "ERROR: failed to create stream thread. Code: " << rc << "." << std::endl;
 		}
 		
-		// This holds the content we want to send.
-		evb = evbuffer_new();
+		send_response(req, evb, "http://130.161.159.107:15000/ed29d19bc8ea69dfb5910e7e20247ee7e002f321");
 		
-		// Add HTTP headers.
-		evhttp_add_header(evhttp_request_get_output_headers(req), "Content-Type", "text/plain");
-		
-		// Add the plaintext message with this.
-		evbuffer_add_printf(evb, "http://130.161.159.107:15000/ed29d19bc8ea69dfb5910e7e20247ee7e002f321");
-		
-		// Send the final message.
-		evhttp_send_reply(req, 200, "OK", evb);
-		std::cout << "Sent the message." << std::endl;
-		
-		// Some garbage collecting.
-		if (decoded)
-			evhttp_uri_free(decoded);
-		if (evb)
-			evbuffer_free(evb);
 	} else if (strcmp(path, "/alive") == 0) {
-		// This holds the content we want to send.
-		evb = evbuffer_new();
+		send_response(req, evb, "I'm alive!");
 		
-		// Add HTTP headers.
-		evhttp_add_header(evhttp_request_get_output_headers(req), "Content-Type", "text/plain");
-		
-		// Add the plaintext message with this.
-		evbuffer_add_printf(evb, "readStreaming is: %d", readStreaming());
-		
-		// Send the final message.
-		evhttp_send_reply(req, 200, "OK", evb);
-		std::cout << "Sent the message." << std::endl;
-		
-		// Some garbage collecting.
-		if (decoded)
-			evhttp_uri_free(decoded);
-		if (evb)
-			evbuffer_free(evb);
 	} else {
 		std::cout << "Bad request: " << path << std::endl;
 	}
+	
+	// Some garbage collecting.
+	if (decoded)
+		evhttp_uri_free(decoded);
+	if (evb)
+		evbuffer_free(evb);
 }
 
 int main(int argc, char **argv) {
@@ -372,6 +332,7 @@ int main(int argc, char **argv) {
 	evhttp_set_gencb(http, request_handler, NULL);
 	
 	// Now we tell the evhttp what port to listen on.
+//	handle = evhttp_bind_socket_with_handle(http, "127.0.0.1", port);
 	handle = evhttp_bind_socket_with_handle(http, "130.161.159.107", port);
 	if (!handle) {
 		std::cerr << "Couldn't bind to port " << (int)port << ". Exiting." << std::endl;
