@@ -1,9 +1,9 @@
-#CXX=arm-v7a8-linux-gnueabi-g++
-#CPPFLAGS+= -O2 -I . -I /home/jettan/Documents/swiftarm/lib/include -I /opt/armv7a8-toolchain-lite/arm-v7a8-linux-gnueabi/include -I /opt/armv7a8-toolchain-lite/arm-v7a8-linux-gnueabi/libc/include 
-CPPFLAGS+= -O2 -I . -I /home/jettan/Documents/swiftarm/lib2/include
+CXX=arm-v7a8-linux-gnueabi-g++
+CPPFLAGS+= -O2 -I . -I /home/jettan/Documents/swiftarm/lib/include -I /opt/armv7a8-toolchain-lite/arm-v7a8-linux-gnueabi/include -I /opt/armv7a8-toolchain-lite/arm-v7a8-linux-gnueabi/libc/include 
+#CPPFLAGS+= -O2 -I . -I /home/jettan/Documents/swiftarm/lib2/include
 CPPFLAGS +=-Wall -Wno-sign-compare -Wno-unused -g -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE 
-#LD=arm-v7a8-linux-gnueabi-ld
-LDADD=$(HOME)/Documents/swiftarm/lib2/lib/libevent_pthreads.a $(HOME)/Documents/swiftarm/lib2/lib/libevent.a -lrt -lstdc++ -lgcc -lutil -lpthread
+LD=arm-v7a8-linux-gnueabi-ld
+LDADD=$(HOME)/Documents/swiftarm/lib/lib/libevent_pthreads.a $(HOME)/Documents/swiftarm/lib/lib/libevent.a -lrt -lstdc++ -lgcc -lutil -lpthread
 
 all: eventws
 
@@ -61,4 +61,4 @@ availability.o: availability.cpp availability.h
 clean:
 	rm -f *.o ws 2>/dev/null
 
-.PHONY: all clean eventws
+.PHONY: all clean
