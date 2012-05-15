@@ -17,4 +17,5 @@ private:
 	
 	double percentage;
 };
+
 #endif // _DOWNLOAD_H
