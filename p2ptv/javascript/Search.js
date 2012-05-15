@@ -3,7 +3,7 @@ var tvKey     = new Common.API.TVKeyValue();
 
 var letters = [[",", ".", "/", "-", "_", ":", ";", "(", ")"], ["a","b","c"], ["d","e","f"], ["g","h","i"], ["j","k","l"], ["m","n","o"], ["p","q","r"], ["s","t","u"], ["v","w","x"], ["y","z"]];
 var overviewLetters = [", . / - _ : ; ( )", "a, b, c", "d, e, f", "g, h, i", "j, k, l", "m, n, o", "p, q, r", "s, t, u", "v, w, x", "y, z"]
-var buttonValues = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "shift", "type"];
+var buttonValues = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "PRE-CH:\nshift", "type"];
 var buttons = new Array('#zero', '#one', '#two', '#three', '#four', '#five', '#six', '#seven', '#eight', '#nine', '#shift', '#type');
 var labels = new Array('#zeroletters', '#oneletters', '#twoletters', '#threeletters', '#fourletters', '#fiveletters', '#sixletters', '#sevenletters', '#eightletters', '#nineletters');
 
@@ -15,27 +15,29 @@ var keyStates = {
 var letterType = {
 	LETTERS:0,
 	NUMBERS:1
-}
-
-var shiftState = {
-	OFF:0,
-	ON:1
 };
 
-var shift = false;
-var selection = -1;
-var type = 0;
-var keyState = keyStates.OVERVIEW;
+var shift;
+var selection;
+var type;
+var keyState;
 
 function init() {
 	
 	alert("Search init() called");
 	
+	shift = false;
+	selection = -1;
+	type = letterType.LETTERS;
+	keyState = keyStates.OVERVIEW;
+		
 	for(var i = 0; i < buttons.length; i++){
 		$(buttons[i]).sfButton({text:buttonValues[i]});
 	}
 	
 	resetLetters();
+
+
 	/*
 	$('#one').sfButton({text:'1'});
 	$('#two').sfButton({text:'2'});
@@ -82,6 +84,7 @@ function keyDown() {
 			gotoMain();
 			break;
 		case tvKey.MENU:
+			widgetAPI.blockNavigation();
 			alert("MENU pressed");
 			gotoMain();
 			break;
@@ -89,6 +92,7 @@ function keyDown() {
 		case tvKey.KEY_PRECH:
 			shift = !shift;
 			updateLetters();
+			break;
 		case tvKey.KEY_1:
 			letterSelection(1);
 			break;
@@ -96,7 +100,8 @@ function keyDown() {
 			letterSelection(2);
 			break;
 		case tvKey.KEY_3:
-			letterSelection(3);			break;
+			letterSelection(3);
+			break;
 		case tvKey.KEY_4:
 			letterSelection(4);
 			break;
@@ -119,17 +124,22 @@ function keyDown() {
 			letterSelection(0);
 			break;
 		// Spacebar
-		case tvKey.KEY_EMPTY:
-			var seachValue = document.getElementById("searchBar").value;
-			document.getElementById("searchBar").value = searchBarValue + " ";
+		case tvKey.KEY_MUTE:
+			var searchValue = document.getElementById("searchBar").value;
+			document.getElementById("searchBar").value = searchValue + " ";
 			break;
 		// Backspace functionality
-		case tvKey.KEY_MUTE:
+		case tvKey.KEY_TTX_MIX:
+			widgetAPI.blockNavigation();
 			var searchVal = document.getElementById("searchBar").value;
-			document.getElementById("searchBar").value = searchVal.substring(0, searchVal.length-2);
+			document.getElementById("searchBar").value = searchVal.substring(0, searchVal.length-1);
 			break;
 		case tvKey.KEY_ENTER:
+		case tvKey.KEY_SEARCH:
 			// SEARCH!
+			break;
+		case tvKey.KEY_DOWN:
+			gotoTestSwarms();
 			break;
 		default:
 			alert("Ignore Unhandled Key");
@@ -139,19 +149,19 @@ function keyDown() {
 
 function letterSelection(number){
 	
-	if(keyState == keyStates.OVERVIEW) {
+	if(selection == -1) {
 		
 		selection = number;
 		updateLetters();
 		keyState = keyStates.SELECTION;
 	}
-	else if(keyState == keyStates.SELECTION) {
+	else if(selection > -1 && selection  < 10) {
 	
 		if(number <= letters[selection].length && number > 0) {
 			
 			var searchBarValue = document.getElementById("searchBar").value;
 			// send selected letter to searchbar here
-			if(shift == shiftState.OFF){
+			if(!shift){
 				document.getElementById("searchBar").value = searchBarValue + letters[selection][number-1];
 			}
 			else{
@@ -199,3 +209,6 @@ function gotoMain(){
 	window.location = "index.html";
 }
 
+function gotoTestSwarms(){
+	window.location = "testSwarms.html";
+}
