@@ -1,31 +1,17 @@
-CXX=arm-v7a8-linux-gnueabi-g++
-CPPFLAGS+= -O2 -I . -I /home/jettan/Documents/swiftarm/lib/include -I /opt/armv7a8-toolchain-lite/arm-v7a8-linux-gnueabi/include -I /opt/armv7a8-toolchain-lite/arm-v7a8-linux-gnueabi/libc/include 
-#CPPFLAGS+= -O2 -I . -I /home/jettan/Documents/swiftarm/lib2/include
+#CXX=arm-v7a8-linux-gnueabi-g++
+#CPPFLAGS+= -O2 -I . -I /home/jettan/Documents/swiftarm/lib/include -I /opt/armv7a8-toolchain-lite/arm-v7a8-linux-gnueabi/include -I /opt/armv7a8-toolchain-lite/arm-v7a8-linux-gnueabi/libc/include 
+CPPFLAGS+= -O2 -I . -I /home/jettan/Documents/swiftarm/lib2/include
 CPPFLAGS +=-Wall -Wno-sign-compare -Wno-unused -g -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE 
-LD=arm-v7a8-linux-gnueabi-ld
-LDADD= $(HOME)/Documents/swiftarm/lib/lib/libevent.a -lrt -lstdc++ -lgcc -lutil -lpthread
+#LD=arm-v7a8-linux-gnueabi-ld
+LDADD=$(HOME)/Documents/swiftarm/lib2/lib/libevent_pthreads.a $(HOME)/Documents/swiftarm/lib2/lib/libevent.a -lrt -lstdc++ -lgcc -lutil -lpthread
 
+all: eventws
 
-all: ws
+eventws: eventws.o sha1.o compat.o sendrecv.o send_control.o hashtree.o bin.o binmap.o binheap.o channel.o transfer.o httpgw.o statsgw.o cmdgw.o avgspeed.o availability.o
+	$(CXX) ${CPPFLAGS} -o ws *.o ${LDADD}
 
-eventws: eventws.o
-	$(CXX) ${CPPFLAGS} eventws.cpp -o eventws ${LDADD}
-
-ws: ws.o socketlistener.o request.o requesthandler.o sha1.o compat.o sendrecv.o send_control.o hashtree.o bin.o binmap.o binheap.o channel.o transfer.o httpgw.o statsgw.o cmdgw.o avgspeed.o availability.o
-#nat_test.o
-	$(CXX) ${CPPFLAGS} -o ws *.o  ${LDADD}
-
-ws.o: ws.cpp ws.h socketlistener.h request.h requesthandler.h compat.h swift.h
-	$(CXX) $(CPPFLAGS) ws.cpp -c
-
-socketlistener.o: socketlistener.cpp ws.h socketlistener.h request.h
-	$(CXX) $(CPPFLAGS) socketlistener.cpp -c
-
-request.o: request.cpp ws.h request.h socketlistener.h
-	$(CXX) $(CPPFLAGS) request.cpp -c
-
-requesthandler.o: requesthandler.cpp ws.h requesthandler.h request.h
-	$(CXX) $(CPPFLAGS) requesthandler.cpp -c
+#eventws.o: eventws.cpp swift.h
+#	$(CXX) $(CPPFLAGS) eventws.cpp -c
 
 sha1.o: sha1.cpp sha1.h 
 	$(CXX) $(CPPFLAGS) sha1.cpp -c
