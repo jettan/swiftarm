@@ -113,7 +113,7 @@ void* Download(void *str) {
 	std::cout << "Entered download thread." << std::endl;
 	
 	// Change the directory to Downloads folder.
-	chdir("/tmp");
+	chdir("/dtv/usb/sda1/Downloads");
 	
 	DownloadArgs *da = (DownloadArgs*) str;
 	download         = 0;
@@ -160,7 +160,7 @@ void* Stream(void *str) {
 	std::cout << "Entered the stream thread." << std::endl;
 	
 	// Change the directory to Downloads folder.
-	chdir("/tmp");
+	chdir("/dtv/usb/sda1/Downloads");
 	
 	DownloadArgs *da = (DownloadArgs*) str;
 	char* tracker    = da->tracker;
@@ -221,7 +221,7 @@ static void request_handler(struct evhttp_request *req, void *arg) {
 	
 	if(strcmp(path, "/download") == 0) {
 		download_args.tracker  = "130.161.158.52:20000";
-		download_args.hash     = "ed29d19bc8ea69dfb5910e7e20247ee7e002f321";
+		download_args.hash     = "012b5549e2622ea8bf3d694b4f55c959539ac848";
 		download_args.filename = "stream.mp4";
 		
 		// Spawn new thread to download the file requested.
@@ -231,7 +231,7 @@ static void request_handler(struct evhttp_request *req, void *arg) {
 			std::cerr << "ERROR: failed to create download thread. Code: " << rc << "." << std::endl;
 		}
 		
-		send_response(req, evb, "file:///tmp/stream.mp4");
+		send_response(req, evb, "file:///dtv/usb/sda1/Downloads/stream.mp4");
 		
 	} else if (strcmp(path, "/close") == 0) {
 		if (readStreaming()) {
@@ -255,7 +255,7 @@ static void request_handler(struct evhttp_request *req, void *arg) {
 				std::cerr << "ERROR: failed to create stream thread. Code: " << rc << "." << std::endl;
 			}	
 		}
-		send_response(req, evb, "http://130.161.159.107:15000/ed29d19bc8ea69dfb5910e7e20247ee7e002f321");
+		send_response(req, evb, "http://130.161.159.107:15000/012b5549e2622ea8bf3d694b4f55c959539ac848");
 		
 	} else if (strcmp(path, "/alive") == 0) {
 		send_response(req, evb, "I'm alive!");

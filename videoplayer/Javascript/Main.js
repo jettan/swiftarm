@@ -1,6 +1,7 @@
 var widgetAPI = new Common.API.Widget();
 var tvKey     = new Common.API.TVKeyValue();
 var focuslocation;
+var streaming = new Boolean();
 
 /**
  * The filesystem.
@@ -49,11 +50,12 @@ Main.onLoad = function() {
 		alert("Failed to initialise");
 	}
 	
-	$('#Button').sfButton({text:'Button1'});
+	$('#Button').sfButton({text:'Stream'});
 	$('#Button').sfButton('blur');
-	$('#Button2').sfButton({text:'Button2'});
+	$('#Button2').sfButton({text:'Download'});
 	$('#Button2').sfButton('blur');
 	focuslocation = 0;
+	streaming = false;
 }
 
 Main.onUnload = function() {
@@ -77,8 +79,18 @@ Main.keyDown = function() {
 		case tvKey.KEY_PANEL_RETURN:
 			alert ("RETURN");
 			Player.stopVideo();
-			widgetAPI.sendReturnEvent(); 
-			break;    
+			widgetAPI.sendReturnEvent();
+			break;
+		case tvKey.KEY_REC:
+			alert ("REC");
+			if (Player.getState() == Player.PLAYING) {
+				Player.stopVideo();
+			}
+			if (streaming) {
+				httpGet(closeUrl, false);
+				streaming = false;
+			}
+			break;
 		case tvKey.KEY_PLAY:
 			alert ("PLAY");
 			this.handlePlayKey();
@@ -86,7 +98,6 @@ Main.keyDown = function() {
 		case tvKey.KEY_STOP:
 			alert ("STOP");
 			Player.stopVideo();
-			httpGet(closeUrl);
 			break;
 		case tvKey.KEY_PAUSE:
 			alert ("PAUSE");
@@ -119,10 +130,11 @@ Main.keyDown = function() {
 			break;
 		case tvKey.KEY_DOWN:
 			alert("DOWN");
-			httpGet(isAlive);
+			httpGet(isAlive, false);
 			break;
 		case tvKey.KEY_UP:
 			alert("UP");
+			Player.getVideoResolution();
 			break;
 		case tvKey.KEY_LEFT:
 			alert("LEFT");
@@ -285,24 +297,30 @@ function selectItem() {
 
 
 function buttonHandler() {
-	alert("Button handler!");
-	httpGet(streamUrl);
+	if (!streaming) {
+		alert("Button handler!");
+		streaming = true;
+		httpGet(streamUrl, true);
+	}
 }
 
 function button2Handler() {
 	alert("Button2 handler!");
-	httpGet(downloadUrl);
+	httpGet(downloadUrl, true);
 }
 
-function httpGet(url) {
+function httpGet(url, settable) {
 	request = new XMLHttpRequest();
 	
 	request.open("GET", url, true);
-	request.onreadystatechange = processRequest;
+	if (settable)
+		request.onreadystatechange = processAndSet;
+	else
+		request.onreadystatechange = processRequest;
 	request.send(null);
 }
 
-function processRequest() {
+function processAndSet() {
 	if (request.readyState == 4) {
 		var result = request.responseText;
 		Main.updateCurrentVideo(result);
@@ -311,3 +329,10 @@ function processRequest() {
 	}
 }
 
+function processRequest() {
+	if (request.readyState == 4) {
+		var result = request.responseText;
+		Display.setDescription(result);
+		alert(result);
+	}
+}

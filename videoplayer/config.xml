@@ -10,7 +10,7 @@
     <ListIcon>Images/icon/Tutorial_Video_85.png</ListIcon>
     <BigListIcon>Images/icon/Tutorial_Video_95.png</BigListIcon>
   
-    <ver>1.3</ver>
+    <ver>1.0</ver>
     <mgrver></mgrver>
     <fullwidget>y</fullwidget>
 	<movie>y</movie>
@@ -20,7 +20,7 @@
     <audiomute>n</audiomute>
     <videomute>n</videomute>
     <dcont>y</dcont>
-    <widgetname>Troubler TV</widgetname>
+    <widgetname>Swift P2P TV</widgetname>
     <description></description>
     <width>960</width>
     <height>540</height>

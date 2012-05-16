@@ -53,6 +53,12 @@ Player.deinit = function()
       }
 }
 
+Player.getVideoResolution = function()
+{
+	var resolution = this.plugin.GetVideoResolution();
+	Display.setDescription(resolution);
+}
+
 Player.setWindow = function()
 {
     this.plugin.SetDisplayArea(458, 58, 472, 270);
