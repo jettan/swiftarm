@@ -7,7 +7,7 @@ var settable = new Boolean();
 /**
  * The filesystem.
  */
-var file_system = new FileSystem();
+var fileSystem;
 
 /**
  * The USB mount path.
@@ -57,6 +57,15 @@ Browser.init = function() {
 	focuslocation = 0;
 	streaming = false;
 	settable = false;
+	
+	fileSystem = new FileSystem();
+	var files = fileSystem.readDir();i
+	
+	if(files){
+		for(int i = 0; i < fileObj.length; i++){
+			alert(files.[i].name);
+		}
+	}
 }
 
 Browser.onUnload = function() {
@@ -298,7 +307,7 @@ function selectItem() {
 function buttonHandler() {
 	alert("Button handler!");
 	settable = true;
-	httpGet(streamUrl);
+	HttpClient.httpGet(streamUrl);
 	streaming = true;
 	//testFileAPI();
 }
@@ -306,26 +315,7 @@ function buttonHandler() {
 function button2Handler() {
 	alert("Button2 handler!");
 	settable = true;
-	httpGet(downloadUrl);
-}
-
-function httpGet(url) {
-	request = new XMLHttpRequest();
-	
-	request.open("GET", url, true);
-	request.onreadystatechange = processRequest;
-	request.send(null);
-}
-
-function processRequest() {
-	if (request.readyState == 4) {
-		var result = request.responseText;
-		if (settable)
-			Main.updateCurrentVideo(result);
-		Display.setDescription(result);
-		settable = false;
-		alert(result);
-	}
+	HttpClient.httpGet(downloadUrl);
 }
 
 function gotoMain(){

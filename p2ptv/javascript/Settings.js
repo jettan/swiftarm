@@ -17,13 +17,14 @@ function keyDown() {
 	var keyCode = event.keyCode;
 	switch(keyCode){
 		case tvKey.KEY_RETURN:
-			widgetAPI.blockNavigation();
+			widgetAPI.blockNavigation(event);
 			alert("RETURN pressed");
 			gotoMain();
 			break;
 		case tvKey.MENU:
+			widgetAPI.blockNavigation(event);
 		case tvKey.KEY_PRECH:
-			alert("PRECH pressed");
+			alert("MENU or PRECH pressed");
 			gotoMain();
 			break;
 			

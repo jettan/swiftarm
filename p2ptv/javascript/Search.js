@@ -136,6 +136,7 @@ function keyDown() {
 		case tvKey.KEY_ENTER:
 		case tvKey.KEY_SEARCH:
 			// SEARCH!
+			HttpClient.httpGet("/search:" + document.getElementById("searchBar").value);
 			break;
 		case tvKey.KEY_DOWN:
 			gotoTestSwarms();
