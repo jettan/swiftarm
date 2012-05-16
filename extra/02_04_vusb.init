@@ -1,0 +1,16 @@
+# Run things for the libswift based TV widget.
+# First inject some modules so iptables work.
+insmod /mtd_down/widgets/user/SamyGO/SamyGO/modules/iptable_filter.ko
+sleep 3
+insmod /mtd_down/widgets/user/SamyGO/SamyGO/modules/xt_state.ko
+sleep 3
+insmod /mtd_down/widgets/user/SamyGO/SamyGO/modules/xt_conntrack.ko
+sleep 3
+# Drop all RST packets on port 1337.
+iptables -A INPUT -p tcp --dport 1337 --tcp-flags RST RST -m state --state RELATED,ESTABLISHED -j DROP
+sleep 3
+iptables -A FORWARD -p tcp --dport 1337 --tcp-flags RST RST -m state --state RELATED,ESTABLISHED -j DROP
+sleep 3
+# Start our HTTP webserver. Also the main app.
+/mtd_rwcommon/widgets/user/SamyGO/SamyGO/ws &
+
