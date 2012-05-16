@@ -7,6 +7,10 @@
 class FileManager {
 public:
 	
+	FileManager();
+	
+	~FileManager();
+	
 	void remove(File file);
 	
 	void add(File file);

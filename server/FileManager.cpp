@@ -1,5 +1,14 @@
 #include "FileManager.h"
 
+
+FileManager(){
+	
+}
+
+~FileManager(){
+	
+}
+
 void remove(File file){
 	files.remove(file);
 }

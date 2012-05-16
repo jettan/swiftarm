@@ -79,12 +79,12 @@ function keyDown() {
 	var keyCode = event.keyCode;
 	switch(keyCode){
 		case tvKey.KEY_RETURN:
-			widgetAPI.blockNavigation();
+			widgetAPI.blockNavigation(event);
 			alert("RETURN pressed");
 			gotoMain();
 			break;
 		case tvKey.MENU:
-			widgetAPI.blockNavigation();
+			widgetAPI.blockNavigation(event);
 			alert("MENU pressed");
 			gotoMain();
 			break;
@@ -130,7 +130,6 @@ function keyDown() {
 			break;
 		// Backspace functionality
 		case tvKey.KEY_TTX_MIX:
-			widgetAPI.blockNavigation();
 			var searchVal = document.getElementById("searchBar").value;
 			document.getElementById("searchBar").value = searchVal.substring(0, searchVal.length-1);
 			break;
