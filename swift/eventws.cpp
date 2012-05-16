@@ -17,6 +17,7 @@
 #include <event2/util.h>
 #include <event2/event-config.h>
 #include <event2/thread.h>
+#include <math.h>
 
 #include "swift.h"
 
@@ -81,14 +82,14 @@ volatile bool readStreaming() {
  */
 void IsCompleteCallback(int fd, short event, void *arg) {
 	if (swift::SeqComplete(download) != swift::Size(download)) {
-		std::cout << "Download busy..." << std::endl;
+		std::cout << "Percentage downloaded: " << floorf(((swift::Complete(download) * 10000.0) / swift::Size(download) * 1.0) + 0.5) / 100 << std::endl;
 		evtimer_add(&evcompl, swift::tint2tv(TINT_SEC));
 	}
 	else
 		event_base_loopexit(swift::Channel::evbase, NULL);
 }
 
-/**
+/*
  * Callback needed to close streams.
  */
 void CloseCallback(int fd, short event, void *arg) {
@@ -244,15 +245,16 @@ static void request_handler(struct evhttp_request *req, void *arg) {
 		}
 		
 	} else if (strcmp(path, "/stream") == 0) {
-		std::cout << "Start with: " << startStreaming() << std::endl;
-		
-		download_args.tracker = "130.161.158.52:20000";
-		rc = pthread_create(&thread, NULL, Stream, (void *) &download_args);
-		
-		if (rc) {
-			std::cerr << "ERROR: failed to create stream thread. Code: " << rc << "." << std::endl;
+		if (!readStreaming()) {
+			std::cout << "Start with: " << startStreaming() << std::endl;
+			
+			download_args.tracker = "130.161.158.52:20000";
+			rc = pthread_create(&thread, NULL, Stream, (void *) &download_args);
+			
+			if (rc) {
+				std::cerr << "ERROR: failed to create stream thread. Code: " << rc << "." << std::endl;
+			}	
 		}
-		
 		send_response(req, evb, "http://130.161.159.107:15000/ed29d19bc8ea69dfb5910e7e20247ee7e002f321");
 		
 	} else if (strcmp(path, "/alive") == 0) {
