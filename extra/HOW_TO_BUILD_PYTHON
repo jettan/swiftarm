@@ -1,0 +1,44 @@
+# Get python 2.6.6
+wget http://www.python.org/ftp/python/2.6.6/Python-2.6.6.tgz
+
+# Untar.
+tar -xvzf Python-2.6.6.tgz
+
+# Go into python dir.
+cd Python-2.6.6
+
+# Configure for own computer.
+./configure
+
+# Make python interpreter and parser for own computer.
+make python Parser/pgen -j8
+
+# Rename stuff so compile will work later.
+mv python hostpython
+mv Parser/pgen Parser/hostpgen
+
+# Clean stuff.
+make distclean
+
+# Get the patch
+wget http://randomsplat.com/wp-content/uploads/2010/10/Python-2.6.6-xcompile.patch
+
+# Patch stuff so cross compiling will work
+patch -p1 < Python-2.6.6-xcompile.patch
+
+# Configure for arm.
+CC="arm_v7_vfp_le-gcc" \
+CXX="arm_v7_vfp_le-g++" \
+AR="arm_v7_vfp_le-ar" \
+RANLIB="arm_v7_vfp_le-ranlib" \
+LDFLAGS="-static" \
+CPPFLAGS="-static -I /home/jettan/Documents/swiftarm/lib/include" \
+LDADD="/home/jettan/Documents/swiftarm/lib/lib/libreadline.a /home/jettan/Documents/swiftarm/lib/lib/libsqlite3.a /home/jettan/Documents/swiftarm/lib/lib/libssl.a /home/jettan/Documents/swiftarm/lib/lib/libcrypto.a" \
+./configure --host=armv7fl-montavista-linux-gnueabi --build=x86_64-linux-gnu --prefix=/python
+
+# Might need to run this several times until you get all libraries needed.
+# If _ssl readline _sqlite3 could not be found, check the setup.py file for paths and run this one more time
+make HOSTPYTHON=./hostpython HOSTPGEN=./Parser/hostpgen BLDSTATIC="arm_v7_vfp_le-gcc -static" CROSS_COMPILE=arm_v7_vfp_le- CROSS_COMPILE_TARGET=yes HOSTARCH=armv7fl-montavista-linux-gnueabi BUILDARCH=x86_64-linux-gnu -j8
+
+# "Install" stuff to a directory, package that directory later and put it on your device.
+make install HOSTPYTHON=./hostpython BLDSTATIC="arm_v7_vfp_le-gcc -static" CROSS_COMPILE=arm_v7_vfp_le- CROSS_COMPILE_TARGET=yes prefix=~/Python-2.6.6/_install -j8
