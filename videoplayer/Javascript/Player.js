@@ -55,7 +55,9 @@ Player.deinit = function()
 
 Player.getVideoResolution = function()
 {
-	var resolution = this.plugin.GetVideoResolution();
+	var width      = this.plugin.GetVideoWidth();
+	var height     = this.plugin.GetVideoHeight();
+	var resolution = "Height: " + height + ", Width: " + width;
 	Display.setDescription(resolution);
 }
 
