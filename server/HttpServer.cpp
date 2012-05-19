@@ -1,5 +1,27 @@
 #include "HttpServer.h"
 
+/**
+ * Get the eth0 IPv4 address of the machine.
+ * @return: The IPv4 address of the machine, NULL if eth0 is not enabled.
+ */
+char* getIPv4Address() {
+	struct ifaddrs *ifAddrStruct = NULL;
+	struct ifaddrs *ifa          = NULL;
+	void *tmpAddrPtr             = NULL;
+	char addressBuffer[INET_ADDRSTRLEN];
+	
+	getifaddrs(&ifAddrStruct);
+	
+	// Iterate over all IP addresses assigned to this computer.
+	for (ifa = ifAddrStruct; ifa != NULL; ifa = ifa->ifa_next) {
+		if (ifa ->ifa_addr->sa_family == AF_INET && (strcmp(ifa->ifa_name, "eth0") == 0)) {
+			tmpAddrPtr = &((struct sockaddr_in *) ifa->ifa_addr)->sin_addr;
+			inet_ntop(AF_INET, tmpAddrPtr, addressBuffer, INET_ADDRSTRLEN);
+		}
+	}
+	if (ifAddrStruct != NULL) freeifaddrs(ifAddrStruct);
+	return addressBuffer;
+}
 
 /**
  * Define the InstallHTTPGateway method in httpgw.cpp.
@@ -96,7 +118,10 @@ static void handle_request(struct evhttp_request *req, void *arg) {
 		evbuffer_free(evb);
 }
 
-int init(int argc, char **argv) {
+/**
+ * Initialize the web server.
+ */
+int init() {
 	
 	// Enable pthread use in libevent.
 	evthread_use_pthreads();
@@ -107,6 +132,7 @@ int init(int argc, char **argv) {
 	// The port we want to bind.
 	unsigned short port = 1337;
 	
+	// Initialize the swift event base.
 	swift::Channel::evbase = event_base_new();
 	
 	// Make a socket to listen to for swift.
@@ -127,11 +153,12 @@ int init(int argc, char **argv) {
 	}
 	std::cout << "Listening on port " << swift::BoundAddress(sock).port() << "." << std::endl;
 	
+	// Get the current eth0 address.
+	char my_address[INET_ADDRSTRLEN] = getIPv4Address();
 	
 	// HTTP gateway address for swift to stream.
-	swift::Address httpaddr    = swift::Address("130.161.159.107:15000");
+	swift::Address httpaddr    = swift::Address(my_address, 15000);
 	
-	// swift::Address httpaddr    = swift::Address("130.161.158.52:15000");
 	double maxspeed[2] = {DBL_MAX, DBL_MAX};
 	
 	// Install the HTTP gateway to stream.
@@ -160,7 +187,7 @@ int init(int argc, char **argv) {
 	
 	// Now we tell the evhttp what port to listen on.
 	// handle = evhttp_bind_socket_with_handle(http, "127.0.0.1", port);
-	handle = evhttp_bind_socket_with_handle(http, "130.161.159.107", port);
+	handle = evhttp_bind_socket_with_handle(http, my_address, port);
 	if (!handle) {
 		std::cerr << "Couldn't bind to port " << (int)port << ". Exiting." << std::endl;
 		return 1;

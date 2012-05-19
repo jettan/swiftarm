@@ -6,13 +6,17 @@
 #include <cstdlib>
 #include <string>
 
+#include <math.h>
+#include <float.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <sys/socket.h>
 #include <signal.h>
 #include <unistd.h>
-#include <float.h>
 #include <pthread.h>
+#include <ifaddrs.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
 
 #include <event2/event.h>
 #include <event2/http.h>
@@ -20,10 +24,8 @@
 #include <event2/util.h>
 #include <event2/event-config.h>
 #include <event2/thread.h>
-#include <math.h>
 
 #include "swift.h"
-#include <String>
 
 class HttpServer {
 	
