@@ -13,8 +13,7 @@ var Player =
     REWIND : 4
 }
 
-Player.init = function()
-{
+Player.init = function() {
     var success = true;
           alert("success vale :  " + success);    
     this.state = this.STOPPED;
@@ -28,8 +27,6 @@ Player.init = function()
     }
     
     alert("success vale :  " + success);    
-    
-    this.setWindow();
     
     alert("success vale :  " + success);    
     
@@ -53,38 +50,59 @@ Player.deinit = function()
       }
 }
 
-Player.getVideoResolution = function()
-{
+Player.setWindow = function() {
 	var width      = this.plugin.GetVideoWidth();
 	var height     = this.plugin.GetVideoHeight();
-	var resolution = "Height: " + height + ", Width: " + width;
-	Display.setDescription(resolution);
+	
+	if (width && height) {
+		// Get aspect ratio from video.
+		var aspect_ratio = width/height;
+		var x = Math.round(480 / aspect_ratio);
+		
+		if (x > 270) {
+			x     = 270 * aspect_ratio;
+			var y = Math.round((480 - x) / 2);
+			this.plugin.SetDisplayArea(458 + y, 58, x, 270);
+		} else {
+			var y  = Math.round((270 - x) / 2);
+			this.plugin.SetDisplayArea(458, 58 + y, 480, x);
+		}
+	} else {
+		this.plugin.SetDisplayArea(458, 58, 480, 270);
+	}
 }
 
-Player.setWindow = function()
-{
-    this.plugin.SetDisplayArea(458, 58, 472, 270);
+Player.setFullscreen = function() {
+	var width      = this.plugin.GetVideoWidth();
+	var height     = this.plugin.GetVideoHeight();
+	
+	if (width && height) {
+		// Get aspect ratio from video.
+		var aspect_ratio = width/height;
+		var x = Math.round(960 / aspect_ratio);
+		
+		if (x > 540) {
+			x     = 540 * aspect_ratio;
+			var y = Math.round((960 - x) / 2);
+			this.plugin.SetDisplayArea(y, 0, x, 540);
+		} else {
+			var y  = Math.round((540 - x) / 2);
+			this.plugin.SetDisplayArea(0, y, 960, x);
+		}
+	} else {
+		this.plugin.SetDisplayArea(0, 0, 960, 540);
+	}
 }
 
-Player.setFullscreen = function()
-{
-    this.plugin.SetDisplayArea(0, 0, 960, 540);
-}
-
-Player.setVideoURL = function(url)
-{
+Player.setVideoURL = function(url) {
     this.url = url;
     alert("URL = " + this.url);
 }
 
-Player.playVideo = function()
-{
-    if (this.url == null)
-    {
-        alert("No videos to play");
-    }
-    else
-    {
+Player.playVideo = function() {
+	if (this.url == null) {
+		alert("No videos to play");
+	} else {
         this.state = this.PLAYING;
         document.getElementById("play").style.opacity = '0.2';
         document.getElementById("stop").style.opacity = '1.0';
@@ -92,14 +110,12 @@ Player.playVideo = function()
         document.getElementById("forward").style.opacity = '1.0';
         document.getElementById("rewind").style.opacity = '1.0';
         Display.status("Play");
-        this.setWindow();
         this.plugin.Play( this.url );
-        Audio.plugin.SetSystemMute(false); 
+        Audio.plugin.SetSystemMute(false);
     }
 }
 
-Player.pauseVideo = function()
-{
+Player.pauseVideo = function() {
     this.state = this.PAUSED;
     document.getElementById("play").style.opacity = '1.0';
     document.getElementById("stop").style.opacity = '1.0';
@@ -110,10 +126,8 @@ Player.pauseVideo = function()
     this.plugin.Pause();
 }
 
-Player.stopVideo = function()
-{
-    if (this.state != this.STOPPED)
-    {
+Player.stopVideo = function() {
+    if (this.state != this.STOPPED) {
         this.state = this.STOPPED;
         document.getElementById("play").style.opacity = '1.0';
         document.getElementById("stop").style.opacity = '0.2';
@@ -123,11 +137,6 @@ Player.stopVideo = function()
         Display.status("Stop");
         this.plugin.Stop();
         Display.setTime(0);
-        
-        if (this.stopCallback)
-        {
-            this.stopCallback();
-        }
     }
     else
     {
@@ -135,8 +144,7 @@ Player.stopVideo = function()
     }
 }
 
-Player.resumeVideo = function()
-{
+Player.resumeVideo = function() {
     this.state = this.PLAYING;
     document.getElementById("play").style.opacity = '0.2';
     document.getElementById("stop").style.opacity = '1.0';
@@ -147,27 +155,23 @@ Player.resumeVideo = function()
     this.plugin.Resume();
 }
 
-Player.skipForwardVideo = function()
-{
+Player.skipForwardVideo = function() {
     this.skipState = this.FORWARD;
-    this.plugin.JumpForward(5);    
+    this.plugin.JumpForward(5);
 }
 
-Player.skipBackwardVideo = function()
-{
+Player.skipBackwardVideo = function() {
     this.skipState = this.REWIND;
     this.plugin.JumpBackward(5);
 }
 
-Player.getState = function()
-{
+Player.getState = function() {
     return this.state;
 }
 
 // Global functions called directly by the player 
 
-Player.onBufferingStart = function()
-{
+Player.onBufferingStart = function() {
     Display.status("Buffering...");
     switch(this.skipState)
     {
@@ -181,8 +185,7 @@ Player.onBufferingStart = function()
     }
 }
 
-Player.onBufferingProgress = function(percent)
-{
+Player.onBufferingProgress = function(percent) {
     Display.status("Buffering:" + percent + "%");
 }
 
@@ -199,6 +202,7 @@ Player.onBufferingComplete = function()
             document.getElementById("rewind").style.opacity = '1.0';
             break;
     }
+    this.setFullscreen();
 }
 
 Player.setCurTime = function(time)

@@ -4,11 +4,6 @@ var focuslocation;
 var streaming = new Boolean();
 
 /**
- * The filesystem.
- */
-var file_system = new FileSystem();
-
-/**
  * The USB mount path.
  */
 var usb_path = "$USB_DIR" + "/sda1/";
@@ -37,10 +32,6 @@ Main.onLoad = function() {
 	if (Player.init() && Audio.init() && Display.init()) {
 		Display.setVolume( Audio.getVolume() );
 		Display.setTime(0);
-		
-		Player.stopCallback = function() {
-			Main.setWindowMode();
-		}
 		
 		// Enable key event processing
 		this.enableKeys();
@@ -98,6 +89,7 @@ Main.keyDown = function() {
 		case tvKey.KEY_STOP:
 			alert ("STOP");
 			Player.stopVideo();
+			this.setWindowMode();
 			break;
 		case tvKey.KEY_PAUSE:
 			alert ("PAUSE");
@@ -133,8 +125,6 @@ Main.keyDown = function() {
 			httpGet(isAlive, false);
 			break;
 		case tvKey.KEY_UP:
-			alert("UP");
-			Player.getVideoResolution();
 			break;
 		case tvKey.KEY_LEFT:
 			alert("LEFT");
@@ -173,8 +163,6 @@ Main.keyDown = function() {
 					buttonHandler();
 				} else if (focuslocation == 2) {
 					button2Handler();
-				} else {
-					this.toggleMode();
 				}
 			case tvKey.KEY_PANEL_ENTER:
 				alert ("ENTER");
@@ -182,6 +170,10 @@ Main.keyDown = function() {
 			case tvKey.KEY_MUTE:
 				alert ("MUTE");
 				this.muteMode();
+				break;
+			case tvKey.KEY_ASPECT:
+				if (Player.getState() != Player.STOPPED)
+					this.toggleMode();
 				break;
 			default:
 				alert ("Unhandled key");
@@ -192,6 +184,7 @@ Main.keyDown = function() {
 Main.handlePlayKey = function() {
 	switch ( Player.getState() ) {
 		case Player.STOPPED:
+			this.setFullScreenMode();
 			Player.playVideo();
 			break;
 		case Player.PAUSED:
@@ -204,18 +197,12 @@ Main.handlePlayKey = function() {
 }
 
 Main.handlePauseKey = function() {
-	switch ( Player.getState() ) {
-		case Player.PLAYING:
-			Player.pauseVideo();
-			break;
-		default:
-			alert ("Ignoring pause key, not in correct state");
-			break;
-	}
+	if (Player.getState() == Player.PLAYING)
+		Player.pauseVideo();
 }
 
 Main.setFullScreenMode = function() {
-if (this.mode != this.FULLSCREEN) {
+	if (this.mode != this.FULLSCREEN) {
 		Display.hide();
 		Player.setFullscreen();
 		this.mode = this.FULLSCREEN;
@@ -231,9 +218,6 @@ Main.setWindowMode = function() {
 }
 
 Main.toggleMode = function() {
-	if (Player.getState() == Player.PAUSED) {
-		Player.resumeVideo();
-	}
 	switch (this.mode) {
 		case this.WINDOW:
 			this.setFullScreenMode();
@@ -244,6 +228,10 @@ Main.toggleMode = function() {
 		default:
 			alert("ERROR: unexpected mode in toggleMode");
 			break;
+	}
+	
+	if (this.state == this.PAUSED) {
+		this.pauseVideo();
 	}
 }
 

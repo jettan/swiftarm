@@ -40,7 +40,7 @@ Display.setTime = function(time)
     
     document.getElementById("progressBar").style.width = timePercent + "%";
     
-    if(Player.state == Player.PLAYING)
+    if(Player.state != Player.STOPPED)
     {
         totalTimeHour = Math.floor(this.totalTime/3600000);
         timeHour = Math.floor(time/3600000);
@@ -72,9 +72,9 @@ Display.setTime = function(time)
         if(totalTimeMinute == 0)
             timeHTML += "00:";
         else if(totalTimeMinute <10)
-            timeHTML += "0" + totalTimeMinute;
+            timeHTML += "0" + totalTimeMinute + ":";
         else
-            timeHTML += totalTimeMinute;
+            timeHTML += totalTimeMinute + ":";
             
         if(totalTimeSecond == 0)
             timeHTML += "00";

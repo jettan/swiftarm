@@ -22,6 +22,8 @@
 #include "swift.h"
 
 struct event_base *base;
+struct event evcompl;
+struct event evclose;
 
 typedef struct str {
 	char* tracker;
@@ -29,16 +31,14 @@ typedef struct str {
 	char* filename;
 } DownloadArgs;
 
-volatile bool streaming = false;
-sigset_t oSignalSet;
-pthread_t thread;
-int rc;
 DownloadArgs download_args;
-struct event evcompl;
-struct event evclose;
+pthread_t thread;
+pthread_mutex_t stream_mutex = PTHREAD_MUTEX_INITIALIZER;
+
+volatile bool streaming = false;
+int rc;
 int download;
 
-pthread_mutex_t stream_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 /**
  * Define the InstallHTTPGateway method in httpgw.cpp.
@@ -220,7 +220,7 @@ static void request_handler(struct evhttp_request *req, void *arg) {
 	evb = evbuffer_new();
 	
 	if(strcmp(path, "/download") == 0) {
-		download_args.tracker  = "130.161.158.52:20000";
+		download_args.tracker  = "130.161.158.60:20000";
 		download_args.hash     = "012b5549e2622ea8bf3d694b4f55c959539ac848";
 		download_args.filename = "stream.mp4";
 		
@@ -248,7 +248,7 @@ static void request_handler(struct evhttp_request *req, void *arg) {
 		if (!readStreaming()) {
 			std::cout << "Start with: " << startStreaming() << std::endl;
 			
-			download_args.tracker = "130.161.158.52:20000";
+			download_args.tracker = "130.161.158.60:20000";
 			rc = pthread_create(&thread, NULL, Stream, (void *) &download_args);
 			
 			if (rc) {
