@@ -198,6 +198,33 @@ static void send_response(struct evhttp_request *req, struct evbuffer *buf,  con
 	std::cout << "Sent the message." << std::endl;
 }
 
+/**
+ * Send the HTTP xml response.
+ */
+static void send_xml_response(struct evhttp_request *req, struct evbuffer *buf) {
+	char speedstr[1024];
+	sprintf(speedstr,"<DOWNLOADS><DOWNLOAD><NAME>bla!</NAME><DSPEED>%f</DSPEED><USPEED>%f</USPEED><PROGRESS>%f</PROGRESS></DOWNLOAD></DOWNLOADS>", 30, 20, 90.9);
+	
+	char contlenstr[1024];
+	sprintf(contlenstr,"%i",strlen(speedstr));
+
+	// Add HTTP headers.
+	struct evkeyvalq *headers = evhttp_request_get_output_headers(req);
+	evhttp_add_header(headers, "Content-Type", "text/xml" );
+	//evhttp_add_header(headers, "Content-Length", contlenstr );
+
+	// Add the xml message with this.
+	int ret = evbuffer_add(buf, speedstr, strlen(speedstr));
+	if (ret < 0) {
+		printf("ERROR!");
+		return;
+	}
+
+	// Send the final message.
+	evhttp_send_reply(req, 200, "OK", buf);
+	std::cout << "Sent the message." << std::endl;
+}
+
 
 /**
  * The HTTP GET request handler.
@@ -220,7 +247,7 @@ static void request_handler(struct evhttp_request *req, void *arg) {
 	evb = evbuffer_new();
 	
 	if(strcmp(path, "/download") == 0) {
-		download_args.tracker  = "130.161.158.60:20000";
+		download_args.tracker  = "130.161.158.52:20000";
 		download_args.hash     = "012b5549e2622ea8bf3d694b4f55c959539ac848";
 		download_args.filename = "stream.mp4";
 		
@@ -248,7 +275,7 @@ static void request_handler(struct evhttp_request *req, void *arg) {
 		if (!readStreaming()) {
 			std::cout << "Start with: " << startStreaming() << std::endl;
 			
-			download_args.tracker = "130.161.158.60:20000";
+			download_args.tracker = "130.161.158.52:20000";
 			rc = pthread_create(&thread, NULL, Stream, (void *) &download_args);
 			
 			if (rc) {
@@ -257,6 +284,9 @@ static void request_handler(struct evhttp_request *req, void *arg) {
 		}
 		send_response(req, evb, "http://130.161.159.107:15000/012b5549e2622ea8bf3d694b4f55c959539ac848");
 		
+	} else if (strcmp(path, "/getDownloads") == 0) {
+		send_xml_response(req, evb);
+	
 	} else if (strcmp(path, "/alive") == 0) {
 		send_response(req, evb, "I'm alive!");
 		
@@ -304,9 +334,9 @@ int main(int argc, char **argv) {
 	
 	
 	// HTTP gateway address for swift to stream.
-	swift::Address httpaddr    = swift::Address("130.161.159.107:15000");
+	swift::Address httpaddr    = swift::Address("130.161.158.52:15000");
 	
-//	swift::Address httpaddr    = swift::Address("130.161.158.52:15000");
+	//swift::Address httpaddr    = swift::Address("130.161.158.52:15000");
 	double maxspeed[2] = {DBL_MAX, DBL_MAX};
 	
 	// Install the HTTP gateway to stream.
@@ -334,8 +364,8 @@ int main(int argc, char **argv) {
 	evhttp_set_gencb(http, request_handler, NULL);
 	
 	// Now we tell the evhttp what port to listen on.
-//	handle = evhttp_bind_socket_with_handle(http, "127.0.0.1", port);
-	handle = evhttp_bind_socket_with_handle(http, "130.161.159.107", port);
+	handle = evhttp_bind_socket_with_handle(http, "130.161.158.52", port);
+//	handle = evhttp_bind_socket_with_handle(http, "130.161.159.107", port);
 	if (!handle) {
 		std::cerr << "Couldn't bind to port " << (int)port << ". Exiting." << std::endl;
 		return 1;

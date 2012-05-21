@@ -80,6 +80,10 @@ static void handle_request(struct evhttp_request *req, void *arg) {
 		
 		send_response(req, evb, "file:///tmp/stream.mp4");
 		
+	} else if (strcmp(path, "/getDownloads") == 0) {
+			std::cout << "getDownloads request received." << std::endl;
+			struct evkeyvalq *headers = evhttp_request_get_output_headers(evreq);
+			evhttp_add_header(headers, "Content-Type", "application/xml" );
 	} else if (strcmp(path, "/close") == 0) {
 		if (readStreaming()) {
 			std::cout << "Close request received." << std::endl;

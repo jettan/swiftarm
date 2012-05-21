@@ -1,17 +1,17 @@
-CXX=arm-v7a8-linux-gnueabi-g++
-CPPFLAGS+= -O2 -I . -I /home/jettan/Documents/swiftarm/lib/include -I /opt/armv7a8-toolchain-lite/arm-v7a8-linux-gnueabi/include -I /opt/armv7a8-toolchain-lite/arm-v7a8-linux-gnueabi/libc/include 
-#CPPFLAGS+= -O2 -I . -I /home/jettan/Documents/swiftarm/lib2/include
+#CXX=arm-v7a8-linux-gnueabi-g++
+#CPPFLAGS+= -O2 -I . -I /home/wilson/swiftarm/lib/include -I /opt/armv7a8-toolchain-lite/arm-v7a8-linux-gnueabi/include -I /opt/armv7a8-toolchain-lite/arm-v7a8-linux-gnueabi/libc/include
+CPPFLAGS+= -O2 -I . -I /home/wilson/swiftarm/lib2/include
 CPPFLAGS +=-Wall -Wno-sign-compare -Wno-unused -g -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE 
-LD=arm-v7a8-linux-gnueabi-ld
-LDADD=$(HOME)/Documents/swiftarm/lib/lib/libevent_pthreads.a $(HOME)/Documents/swiftarm/lib/lib/libevent.a -lrt -lstdc++ -lgcc -lutil -lpthread
+#LD=arm-v7a8-linux-gnueabi-ld
+LDADD=$(HOME)/swiftarm/lib2/lib/libevent_pthreads.a $(HOME)/swiftarm/lib2/lib/libevent.a -lrt -lstdc++ -lgcc -lutil -lpthread
 
 all: eventws
 
 eventws: eventws.o sha1.o compat.o sendrecv.o send_control.o hashtree.o bin.o binmap.o binheap.o channel.o transfer.o httpgw.o statsgw.o cmdgw.o avgspeed.o availability.o
 	$(CXX) ${CPPFLAGS} -o ws *.o ${LDADD}
 
-#eventws.o: eventws.cpp swift.h
-#	$(CXX) $(CPPFLAGS) eventws.cpp -c
+eventws.o: eventws.cpp swift.h
+	$(CXX) $(CPPFLAGS) eventws.cpp -c
 
 sha1.o: sha1.cpp sha1.h 
 	$(CXX) $(CPPFLAGS) sha1.cpp -c
