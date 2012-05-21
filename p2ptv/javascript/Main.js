@@ -22,12 +22,12 @@ function init() {
 	$('#search').sfButton({text:'Search'});
 	$('#browse').sfButton({text:'Browse'});
 	$('#settings').sfButton({text:'Settings'});
-	$('#exit').sfButton({text:'Exit'});
+	$('#downloadmanager').sfButton({text:'downloadmanager'});
 	
 	$('#search').sfButton('focus');
 	$('#browse').sfButton('focus');
 	$('#settings').sfButton('focus');
-	$('#exit').sfButton('focus');
+	$('#downloadmanager').sfButton('focus');
 	
 	enableKeys();
 	widgetAPI.sendReadyEvent();
@@ -74,7 +74,7 @@ function keyDown() {
 			
 		case tvKey.KEY_BLUE:
 			alert("BLUE pressed");
-			exit();
+			gotoDownloads();
 			break;
 		default:
 			alert("Ignore Unhandled Key");
@@ -85,6 +85,11 @@ function keyDown() {
 /* Go to the search page */
 function gotoSearch(){
 	window.location = "search.html";
+}
+
+/* Go to the downloadmanager page */
+function gotoDownloads(){
+	window.location = "downloadmanager.html";
 }
 
 /* Go to the settings page */
@@ -101,5 +106,3 @@ function gotoBrowser() {
 function exit(){
 	widgetAPI.sendReturnEvent();
 }
-
-
