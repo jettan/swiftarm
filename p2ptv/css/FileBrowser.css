@@ -1,6 +1,6 @@
 
 body {
-	width: 960px; 
+	width: 960px;
 	height: 540px;
 	background-image:url('../images/background2.jpg');
 	background-position:center;
@@ -15,8 +15,14 @@ body {
 
 #rightHalf {
 	position: absolute;
-	left:420px; top: -5px;
+	left: 420px; top: 0px;
 	width: 540px; height: 540px;
+}
+
+#output {
+	position: absolute;
+	left: 430px; top: 0px
+	width: 500px; height: 540px;
 }
 
 #leftHalf {

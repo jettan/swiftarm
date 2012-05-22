@@ -33,14 +33,17 @@ function init() {
 	$('#seven').sfButton({text:'7'});
 	$('#eight').sfButton({text:'8'});
 	$('#nine').sfButton({text:'9'});
-
+	
 	$('#prevPage').sfLabel({text:"Previous Page"});
 	$('#nextPage').sfLabel({text:"Next Page"});
+	
+	$('#ouput').sfLabel({text:"-"});
 	
 	if(files){
 		for(var i = 0; i < fileObj.length; i++){
 			alert("Filename " + (i + 1) + ": " + files[i].name);
 			alert("Is a directory? " + files[i].isDir);
+			$('#ouput').sfLabel({text:file[i].name});
 		}
 	}
 	enableKeys();
