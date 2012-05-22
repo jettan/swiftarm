@@ -1,0 +1,78 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd">
+
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>p2ptv Download Manager</title>
+		
+		<!-- Common widget API -->
+		<script type='text/javascript' language='javascript' src='$MANAGER_WIDGET/Common/API/Widget.js'></script>
+		<script type='text/javascript' language='javascript' src='$MANAGER_WIDGET/Common/API/TVKeyValue.js'></script>
+		<script type='text/javascript' language='javascript' src='$MANAGER_WIDGET/Common/jquery.js'></script>
+		<script type='text/javascript' language='javascript' src='$MANAGER_WIDGET/Common/core.js'></script>
+		<script type='text/javascript' language='javascript' src='$MANAGER_WIDGET/Common/ui.js'></script>
+		
+		<!-- Widget Code -->
+		<script language="javascript" type="text/javascript" src="javascript/HttpClient.js"></script>
+		<script language="javascript" type="text/javascript" src="javascript/DownloadManager.js"></script>
+
+		<!-- Style sheets -->
+		<link rel="stylesheet" href="css/DownloadManager.css" type="text/css">
+	</head>
+	
+	<body onLoad="init()">
+		<!-- Key handler -->
+		<a href='javascript:void(0);' id='anchor' onkeydown='keyDown();'></a>
+		
+		<!-- Layout -->
+		<!--center>
+			<table>
+			
+				<tr id="descriptions">
+					<td id ="filename", class="top">Filename</td>
+					<td id ="dspeed", class="top">Download speed</td>
+					<td id ="uspeed", class="top">Upload speed</td>
+					<td id ="progress", class="top">Progress</td>
+				</tr>
+			
+				<tr id="download0">
+					<td id ="filename1", class="name"> bla</td>
+					<td id ="dspeed1", class="speed"> bla</td>
+					<td id ="uspeed1", class="speed">bla </td>
+					<td id ="progress1", class="progress"> bla</td>
+				</tr>
+			
+				<tr id="download1">
+					<td id ="filename2", class="name"> bla</td>
+					<td id ="dspeed2", class="speed"> bla</td>
+					<td id ="uspeed2", class="speed">bla </td>
+					<td id ="progress2", class="progress">bla </td>
+				</tr>
+				
+				<tr id="download2">
+					<td id ="filename3", class="name">bla </td>
+					<td id ="dspeed3", class="speed"> bla</td>
+					<td id ="uspeed3", class="speed"> bla</td>
+					<td id ="progress3", class="progress">bla </td>
+				</tr>
+
+				<tr id="download3">
+					<td id ="filename4", class="name">bla </td>
+					<td id ="dspeed4", class="speed">bla </td>
+					<td id ="uspeed4", class="speed"> bla</td>
+					<td id ="progress4", class="progress">bla </td>
+				</tr>
+
+				<tr id="download4">
+					<td id ="filename5", class="name">bla </td>
+					<td id ="dspeed5", class="speed"> bla</td>
+					<td id ="uspeed5", class="speed"> bla</td>
+					<td id ="progress5", class="progress">bla </td>
+				</tr>			
+			</table>
+		</center-->
+		<div id="Downloads"></div>
+	</body>
+</html>

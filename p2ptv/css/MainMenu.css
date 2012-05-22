@@ -32,7 +32,7 @@ body {
 	background-image:url("../images/settingsBtn.png");
 }
 
-#exit {
+#downloadmanager {
 	position: absolute;
 	left: 780px; top: 20px;
 	width: 120px; height: 60px;
