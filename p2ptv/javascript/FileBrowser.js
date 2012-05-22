@@ -33,6 +33,9 @@ function init() {
 	$('#seven').sfButton({text:'7'});
 	$('#eight').sfButton({text:'8'});
 	$('#nine').sfButton({text:'9'});
+
+	$('#prevPage').sfLabel({text:"Previous Page"});
+	$('#nextPage').sfLabel({text:"Next Page"});
 	
 	if(files){
 		for(var i = 0; i < fileObj.length; i++){
