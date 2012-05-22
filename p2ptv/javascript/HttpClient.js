@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 var request;
 var infoRequest;
 
@@ -89,3 +90,22 @@ function processRequest() {
 		response = request.responseText;
 	}
 }
+=======
+var request;
+
+HttpClient.httpGet = function(url) {
+	response = "No response";
+	request = new XMLHttpRequest();
+	
+	request.open("GET", url, true);
+	request.onreadystatechange = processRequest;
+	request.send(null);
+	return response;
+}
+
+function processRequest() {
+	if (request.readyState == 4) {
+		response = request.responseText;
+	}
+}
+>>>>>>> Stashed changes

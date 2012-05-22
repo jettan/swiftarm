@@ -1,0 +1,57 @@
+
+body {
+	width: 960px; 
+	height: 540px;
+	background-image:url('../images/background2.jpg');
+	background-position:center;
+	background-repeat:no-repeat;
+}
+
+#main {
+	position: absolute;
+	left: 0px; top: 0px;
+	width: 960px; height: 540px;
+}
+
+#rightHalf {
+	position: absolute;
+	left:420px; top: -5px;
+	width: 540px; height: 540px;
+}
+
+#leftHalf {
+	position:absolute;
+	left: 0px; top:0px;
+	width:420px; height:540px;
+	background-color: white;
+}
+
+#prevPage {
+	display:block;
+	margin-left:auto;
+	margin-right:auto;
+	position:absolute;
+	left:180px; top:80px; 
+	width: 390px; height:20px;
+}
+
+#nextPage {
+	display:block;
+	margin-left:auto;
+	margin-right:auto;
+	position:absolute;
+	left:190px; top:500px; 
+	width: 390px; height:20px;
+}
+
+#fileList {
+	position:absolute;
+	left:30px; top:100px; 
+	width: 390px; height:430px;
+}
+
+#scroll {
+	position:absolute;
+	left:30px; top:55px; 
+	width: 390px; height:430px;
+}

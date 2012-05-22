@@ -212,14 +212,19 @@ body {
 	background-color: black;
 }
 
-#videoList {
+#fileList {
 	position:absolute;
 	left:30px; top:55px; 
 	width: 390px; height:430px;
-	background-image:url("../images/listBox/listBox.png");
 }
 
-#Button {
+#scroll {
+	position:absolute;
+	left:30px; top:55px; 
+	width: 390px; height:430px;
+}
+
+/*#item1 {
 	position:absolute;
 	left:30px; top:70px;
 	width:150px; height:47px;
@@ -227,7 +232,7 @@ body {
 	padding-top:10px;
 }
 
-#video0 {
+#item2 {
 	position:absolute;
 	left:30px; top:70px;
 	width:330px; height:47px;
@@ -237,7 +242,7 @@ body {
 	padding-top:10px;
 }
 
-#video1 {
+#item3 {
 	position:absolute;
 	left:30px; top:130px;
 	width:330px; height:47px;
@@ -247,7 +252,7 @@ body {
 	padding-top:10px;
 }
 
-#video2 {
+#item4 {
 	position:absolute;
 	left:30px; top:190px;
 	width:330px; height:47px;
@@ -257,7 +262,7 @@ body {
 	padding-top:10px;
 }
 
-#video3 {
+#item5 {
 	position:absolute;
 	left:30px; top:250px;
 	width:330px; height:47px;
@@ -275,7 +280,7 @@ body {
 	text-align:left;
 	font-size:12px;
 }
-
+*/
 #previous {
 	position:absolute;
 	left:210px; top:80px;

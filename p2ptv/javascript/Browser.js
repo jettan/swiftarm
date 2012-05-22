@@ -46,24 +46,29 @@ Browser.init = function() {
 		this.enableKeys();
 		
 		widgetAPI.sendReadyEvent();
+		
+		Display.setDiscription("Display Test");
 	} else {
 		alert("Failed to initialise");
 	}
 	
-	$('#Button').sfButton({text:'Button1'});
-	$('#Button').sfButton('blur');
-	$('#Button2').sfButton({text:'Button2'});
-	$('#Button2').sfButton('blur');
+	var data = ['Item1', 'Item2', 'Item3', 'Item4', 'Item5'];
+	$('#fileList').sfList({data:data, index:'0', itemsPerPage:'5'});
+	//$('#scroll').sfScroll({page:5});
+	
 	focuslocation = 0;
 	streaming = false;
 	settable = false;
 	
 	fileSystem = new FileSystem();
-	var files = fileSystem.readDir();i
+	// '$USB_DIR'
+	var files = fileSystem.readDir('/dtv/usb/');
 	
 	if(files){
 		for(int i = 0; i < fileObj.length; i++){
-			alert(files.[i].name);
+			alert("Filename " + (i + 1) + ": " + files.[i].name);
+			alert("Is a directory? " + files.[i].isDir);
+			Display.setDiscription("Filename " + (i + 1) + ": " + files[i].name);
 		}
 	}
 }
@@ -147,54 +152,22 @@ Browser.keyDown = function() {
 			break;
 		case tvKey.KEY_LEFT:
 			alert("LEFT");
-			if (focuslocation == 0) {
-				$('#Button2').sfButton('focus');
-				focuslocation = 2;
-			} else if (focuslocation == 1) {
-				$('#Button').sfButton('blur');
-				focuslocation = 0;
-			} else {
-				$('#Button2').sfButton('blur');
-				$('#Button').sfButton('focus');
-				focuslocation = 1;
-			}
-			alert (focuslocation);
 			break;
-			case tvKey.KEY_RIGHT:
-				alert ("RIGHT");
-				if (focuslocation == 0) {
-					$('#Button').sfButton('focus');
-					focuslocation = 1;
-				} else if (focuslocation == 1) {
-					$('#Button').sfButton('blur');
-					$('#Button2').sfButton('focus');
-					focuslocation = 2;
-				} else {
-					$('#Button2').sfButton('blur');
-					focuslocation = 0;
-				}
-				alert(focuslocation);
-				break;
-			case tvKey.KEY_ENTER:
-				alert ("ENTER");
-				alert (focuslocation);
-				if (focuslocation == 1) {
-					buttonHandler();
-				} else if (focuslocation == 2) {
-					button2Handler();
-				} else {
-					this.toggleMode();
-				}
-			case tvKey.KEY_PANEL_ENTER:
-				alert ("ENTER");
-				break;
-			case tvKey.KEY_MUTE:
-				alert ("MUTE");
-				this.muteMode();
-				break;
-			default:
-				alert ("Unhandled key");
-				break;
+		case tvKey.KEY_RIGHT:
+			alert ("RIGHT");
+			break;
+		case tvKey.KEY_ENTER:
+			alert ("ENTER");
+		case tvKey.KEY_PANEL_ENTER:
+			alert ("ENTER");
+			break;
+		case tvKey.KEY_MUTE:
+			alert ("MUTE");
+			this.muteMode();
+			break;
+		default:
+			alert ("Unhandled key");
+			break;
 	}
 }
 
@@ -301,21 +274,6 @@ function selectItem() {
 	
 	//Player.setVideoURL(url3);
 	Display.setDescription(url);
-}
-
-
-function buttonHandler() {
-	alert("Button handler!");
-	settable = true;
-	HttpClient.httpGet(streamUrl);
-	streaming = true;
-	//testFileAPI();
-}
-
-function button2Handler() {
-	alert("Button2 handler!");
-	settable = true;
-	HttpClient.httpGet(downloadUrl);
 }
 
 function gotoMain(){
