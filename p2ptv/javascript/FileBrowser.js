@@ -8,7 +8,7 @@ var selected;
 var listLength;
 
 var data = ['Item1', 'Item2', 'Item3', 'Item4', 'Item5', 'Item6', 'Item7', 'Item8', 'Item9', 'Item10', 'Item11', 'Item12'];
-var data2 = ['Item1', 'Item2', 'Item3']; 
+var data2 = ['Item1', 'Item2', 'Item3'];
 
 
 function init() {
@@ -23,9 +23,16 @@ function init() {
 	
 	// Load first page of files
 	loadPage(page);
-
-	$('#prevPage').sfLabel({text:"Previous Page"});
-	$('#nextPage').sfLabel({text:"Next Page"});
+	
+	$('#one').sfButton({text:'1'});
+	$('#two').sfButton({text:'2'});
+	$('#three').sfButton({text:'3'});
+	$('#four').sfButton({text:'4'});
+	$('#five').sfButton({text:'5'});
+	$('#six').sfButton({text:'6'});
+	$('#seven').sfButton({text:'7'});
+	$('#eight').sfButton({text:'8'});
+	$('#nine').sfButton({text:'9'});
 	
 	if(files){
 		for(var i = 0; i < fileObj.length; i++){

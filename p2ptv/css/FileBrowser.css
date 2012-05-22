@@ -50,6 +50,60 @@ body {
 	width: 390px; height:430px;
 }
 
+#one {
+	position:absolute;
+	left:0px; top:100px; 
+	width: 30px; height:30px;
+}
+
+#two {
+	position:absolute;
+	left:0px; top:130px; 
+	width: 30px; height:30px;
+}
+
+#three {
+	position:absolute;
+	left:0px; top:160px; 
+	width: 30px; height:30px;
+}
+
+#four {
+	position:absolute;
+	left:0px; top:190px; 
+	width: 30px; height:30px;
+}
+
+#five {
+	position:absolute;
+	left:0px; top:210px; 
+	width: 30px; height:30px;
+}
+
+#six {
+	position:absolute;
+	left:0px; top:240px; 
+	width: 30px; height:30px;
+}
+
+#seven {
+	position:absolute;
+	left:0px; top:270px; 
+	width: 30px; height:30px;
+}
+
+#eight {
+	position:absolute;
+	left:0px; top:300px; 
+	width: 30px; height:30px;
+}
+
+#nine {
+	position:absolute;
+	left:0px; top:330px; 
+	width: 30px; height:30px;
+}
+
 #scroll {
 	position:absolute;
 	left:30px; top:55px; 
