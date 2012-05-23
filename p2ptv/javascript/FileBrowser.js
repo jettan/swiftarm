@@ -8,40 +8,44 @@ var page;
 var selected;
 var listLength;
 
-var directory = ['$USB_DIR'];
+var directory = ['$USB_DIR/sdb1'];
 var data = ['Item1', 'Item2', 'Item3', 'Item4', 'Item5', 'Item6', 'Item7', 'Item8', 'Item9', 'Item10', 'Item11', 'Item12'];
 var data2 = ['Item1', 'Item2', 'Item3'];
 var numbers = ['1', '2', '3', '4', '5', '6', '7', '8', '9'];
 
 function init() {
-	
+	/*
+	if ( Player.init() && Audio.init() && Display.init() && Server.init() ) {
+		Display.setVolume( Audio.getVolume() );
+		Display.setTime(0);
+		
+		Player.stopCallback = function() {
+			/* Return to windowed mode when video is stopped
+			(by choice or when it reaches the end) */
+			/*Main.setWindowMode();
+		}
+	}
+	*/
 	page = 0;
 	listLength = 0;
 	
 	// Create File System object
 	fileSystem = new FileSystem();
 	// '$USB_DIR'
-	files = fileSystem.readDir('$USB_DIR');
+	files = fileSystem.readDir('$USB_DIR/sdb1');
 	
-	// Load first page of files
-	loadPage(page);
+	if(files){
+		// Load first page of files
+		loadPage(page);
+	}
+	else{
+		// show error message (USB storage devide not connected)
+	}
 	
-	$('#numbers').sfList({data:numbers, index:'0', itemsPerPage:numbers.length});
 	$('#fileList').sfList('focus');
 	
 	$('#prevPage').sfLabel({text:"Previous Page"});
 	$('#nextPage').sfLabel({text:"Next Page"});
-	
-	$('#ouput').sfLabel({text:'-----------------', width:'300px'});
-	/*
-	if(files){
-		for(var i = 0; i < files.length; i++){
-			alert("Filename " + (i + 1) + ": " + files[i].name);
-			alert("Is a directory? " + files[i].isDir);
-			$('#ouput').sfLabel({text:file[i].name});
-		}
-	}
-	*/
 	
 	enableKeys();
 	widgetAPI.sendReadyEvent();
@@ -69,12 +73,14 @@ function keyDown() {
 		case tvKey.KEY_RIGHT:
 		case tvKey.KEY_ENTER:
 			alert("ENTER pressed");
+			$('#prevPage').sfLabel({text:"OPEN DIRECTORY PRESSED"});
 			enterHandler();
 			break;
 		// Previous directory
 		case tvKey.KEY_LEFT:
 		case tvKey.KEY_PRECH:
 			alert("PRECH pressed");
+			$('#prevPage').sfLabel({text:"PREVIOUS DIRECTORY PRESSED"});
 			backHandler();
 			break;
 		// Select element in list
@@ -136,22 +142,22 @@ function keyDown() {
 //What to do when enter is pressed
 function enterHandler(){
 	
-	var i = loadInfo($('#fileList').sfList('getIndex'));
-	i = (page * elementsPerPage) + i;
+	var i = $('#fileList').sfList('getIndex') + (page * elementsPerPage);
 	
 	// If the selected file is a directory, open it.
-	if(files[i].isDir()) {
+	if(files[i].isDir && files[i].name != ".." && files[i].name != ".") {
 		
-		directory.push(directory[directoro.length-1] + files[i].name);
+		directory.push(directory[directory.length-1] + "/" + files[i].name);
 		files = fileSystem.readDir(directory[directory.length-1]);
 		page = 0;
 		loadPage(page);
 	}
 	else {
-		
+		// Selected file is not a directory (play video if possible)
 	}
 }
 
+// Go to the previous directory
 function backHandler(){
 	
 	if(directory.length > 1){
@@ -194,7 +200,7 @@ function listScroll(direction){
 // Load a new page of 9 files
 function loadPage(number){
 	alert("loadPage called");
-	if(number >= 0 && number * elementsPerPage < data.length){
+	if(number >= 0 && number * elementsPerPage < files.length){
 		
 		alert("loading page...");
 		
@@ -203,16 +209,17 @@ function loadPage(number){
 		var i =  number * elementsPerPage;
 		var n = 0;
 		
-		while(i < (number * elementsPerPage) + elementsPerPage && i < data.length){
-			elements.push(data[i]);
+		while(i < (number * elementsPerPage) + elementsPerPage && i < files.length/*data.length*/){
+			//elements.push(data[i]);
+			elements.push(files[i].name);
 			buttons.push(numbers[n]);
-			alert("Pushed: " + data[i]);
+			alert("Pushed: " + files[i].name);
 			i++;
 			n++
 		}
 		
 		alert("Array Length: " + elements.length);
-		listLength = elements.length;
+		listLength = files.length;
 		
 		$('#fileList').sfList({data:elements, index:'0', itemsPerPage:elements.length});
 		$('#numbers').sfList({data:buttons, index:'0', itemsPerPage:buttons.length});

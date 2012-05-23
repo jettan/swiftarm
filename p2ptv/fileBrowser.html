@@ -14,6 +14,10 @@
 		
 		<!-- Widget code -->
 		<script language="javascript" type="text/javascript" src="javascript/FileBrowser.js"></script>
+		<script language="javascript" type="text/javascript" src="javascript/Player.js"></script>
+		<script language="javascript" type="text/javascript" src="javascript/Audio.js"></script>
+		<script language="javascript" type="text/javascript" src="javascript/Data.js"></script>
+		<script language="javascript" type="text/javascript" src="javascript/Display.js"></script>
 		
 		<!-- Style sheets -->
 		<link rel="stylesheet" href="css/FileBrowser.css" type="text/css">
@@ -28,13 +32,29 @@
 	<body onload="init()" onunload="onUnload()">
 		<!-- Key handler -->
 		<a href='javascript:void(0);' id='anchor' onkeydown='keyDown()'></a>
-		
-		<div id="prevPage"></div>
-		<div id="numbers"></div>
-		<div id="fileList"></div>
-		<div id="nextPage"></div>
-		<div id="fileinfo"></div>
-		
-		<div id="output">blah</div>
+			
+		<div id="main">
+			<div id ="rightHalf">
+				<!--
+				<div id="videoBox_top"></div>
+				<div id="videoBox_left"></div>
+				<div id="videoBox_right"></div>
+				<div id="videoBox_bottom"></div>
+				
+				<div id="description_top"></div>
+				<div id="description_bottom"></div>
+				<div id="description"></div>
+				-->
+			</div>
+			
+			<div id="leftHalf">
+				<div id="output"></div>
+				<div id="prevPage"></div>
+				<div id="numbers"></div>
+				<div id="fileList"></div>
+				<div id="nextPage"></div>
+				<div id="fileinfo"></div>
+			</div>
+		</div>
 	</body>
 </html>
