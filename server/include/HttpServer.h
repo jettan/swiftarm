@@ -14,9 +14,6 @@
 #include <signal.h>
 #include <unistd.h>
 #include <pthread.h>
-#include <ifaddrs.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
 
 #include <event2/event.h>
 #include <event2/http.h>
@@ -27,18 +24,11 @@
 
 #include "swift.h"
 
-class HttpServer {
+namespace HttpServer {
+	public:
+		static void sendXMLResponse(struct evhttp_request *req, struct evbuffer *buf);
+		static void sendResponse(struct evhttp_request *req, struct evbuffer *buf,  const char *message);
+		static void handleRequest(struct evhttp_request *req, void *arg);
+		static int init(int argc, char **argv);
 	
-	/**
-	 * Send the HTTP response.
-	 */
-	static void send_response(struct evhttp_request *req, struct evbuffer *buf,  const char *message);
-	
-	
-	/**
-	 * The HTTP GET request handler.
-	 */
-	static void handle_request(struct evhttp_request *req, void *arg);
-	
-	int init(int argc, char **argv);
 }
