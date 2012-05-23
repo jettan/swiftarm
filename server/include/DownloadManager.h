@@ -2,14 +2,12 @@
 #define _DOWNLOADMNGR_H
 
 #include "Download.h"
-#include "Upload.h"
-#include <String>
-#include <list>
 
+#include <vector>
 #include <iostream>
+
 #include <cstdio>
 #include <cstdlib>
-#include <string>
 
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -17,7 +15,6 @@
 #include <signal.h>
 #include <unistd.h>
 #include <float.h>
-#include <pthread.h>
 
 #include <event2/event.h>
 #include <event2/http.h>
@@ -26,66 +23,24 @@
 #include <event2/event-config.h>
 #include <event2/thread.h>
 #include <math.h>
-
 #include "swift.h"
-#include <String>
 
-class DownloadManager {
-public:
-	
-	static volatile bool stopStreaming();
-	
-	static volatile bool startStreaming();
-	
-	static volatile bool readStreaming();
-	
-	static void IsCompleteCallback(int fd, short event, void *arg);
-	
-	static void CloseCallback(int fd, short event, void *arg);
-	
-	static void startDownload(void *str);
-	
-	static void stopDownload(String link);
-	
-	static void* stream (void *str);
-	
-	static void pauseDownload(String link);
-	
-	static void resumeDownload(String link);
-	
-	static void startUpload(String name);
-	
-	static void stopUpload(String name);
-	
-	
+namespace DownloadManager {
 private:
+	static vector<Download> downloads;	/// Vector containing all downloads.
 	
-	static list<Download> downloads;
-	static list<Upload> uploads;
+	static double downloaded;			/// Total amount of bytes downloaded this session.
+	static double uploaded;				/// Total amount of bytes uploaded this session.
 	
-	static double downloaded;
-	static double uploaded;
+public:
+	static void startStreaming();
+	static void stopStreaming();
+	static void stream();
 	
-	struct event_base *base;
-	
-	typedef struct str {
-		char* tracker;
-		char* hash;
-		char* filename;
-	} DownloadArgs;
-	
-	volatile bool streaming = false;
-	sigset_t oSignalSet;
-	pthread_t thread;
-	int rc;
-	DownloadArgs download_args;
-	struct event evcompl;
-	struct event evclose;
-	int download;
-	
-	pthread_mutex_t stream_mutex = PTHREAD_MUTEX_INITIALIZER;
-	
-	
+	static void add(Download download);
+	static void removeFromList(const int download_id);
+	static void removeFromDisk(const int download_id);
+	static void clearList();
 }
 
 #endif // _DOWNLOADMNGR_H

@@ -57,7 +57,7 @@ class Download {
 			char *root_hash;			/// Root hash needed to start swift download.
 		};
 		
-		downloadProps _properties;		/// Properties to pass to the thread. Used to initiate swift download.
+		downloadProps *_properties;		/// Properties to pass to the thread. Used to initiate swift download.
 		
 		/// Struct for holding time data.
 		struct time {
@@ -81,7 +81,7 @@ class Download {
 		};
 		
 		
-		volatile downloadStats _stats;  /// Struct holding the statistics of the download.
+		volatile downloadStats *_stats;  /// Struct holding the statistics of the download.
 		
 	public:
 		void retry();
@@ -116,12 +116,13 @@ class Download {
 			_properties.tracker     = tracker;
 			_properties.root_hash   = root_hash;
 			_properties.status      = Status.READY;
+		
 		}
 		
 		/**
 		 * Destructor.
 		 */
 		~Download() {}
-}
+};
 
 #endif
