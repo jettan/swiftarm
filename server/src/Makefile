@@ -4,7 +4,7 @@ cppflags_for_arm= -O2 -I . -I $(SWIFTARM)/server/include -I $(SWIFTARM)/server/l
 
 ifeq ($(CXX),g++)
 	CPPFLAGS=$(cppflags_for_gpp)
-	LDADD=$(SWIFTARM)/server/lib/lib/libevent_pthreads.a $(SWIFTARM)/server/lib/lib/libevent.a $(SWIFTARM)/server/lib/libswift64.a -lrt -lstdc++ -lgcc -lutil -lpthread
+	LDADD=$(SWIFTARM)/server/lib/libswift64.a $(SWIFTARM)/server/lib/lib/libevent_pthreads.a $(SWIFTARM)/server/lib/lib/libevent.a -lrt -lstdc++ -lgcc -lutil -lpthread
 else
 	CPPFLAGS=$(cppflags_for_arm)
 	LD=arm-v7a8-linux-gnueabi-ld
