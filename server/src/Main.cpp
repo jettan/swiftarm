@@ -34,7 +34,7 @@ bool InstallHTTPGateway(struct event_base *evbase, swift::Address addr, uint32_t
 	
 	
 	// HTTP gateway address for swift to stream.
-	swift::Address httpaddr    = swift::Address("130.161.158.52:15000");
+	swift::Address httpaddr    = swift::Address("127.0.0.1:15000");
 	
 	//swift::Address httpaddr    = swift::Address("130.161.158.52:15000");
 	double maxspeed[2] = {DBL_MAX, DBL_MAX};
@@ -44,7 +44,7 @@ bool InstallHTTPGateway(struct event_base *evbase, swift::Address addr, uint32_t
 	
 	std::cout << "Initialised swift" << std::endl;
 	
-	return 1;
+	return 0;
 }
 
 /**
@@ -54,4 +54,5 @@ int main(){
 	initSwift();
 	
 	// Make httpserver loop
+	HttpServer::init();
 }

@@ -124,8 +124,8 @@ int HttpServer::init() {
 	evhttp_set_gencb(http, handleRequest, NULL);
 	
 	// Now we tell the evhttp what port to listen on.
-	// handle = evhttp_bind_socket_with_handle(http, "127.0.0.1", port);
-	handle = evhttp_bind_socket_with_handle(http, "130.161.159.107", port);
+	 handle = evhttp_bind_socket_with_handle(http, "127.0.0.1", port);
+	//handle = evhttp_bind_socket_with_handle(http, "130.161.159.107", port);
 	if (!handle) {
 		std::cerr << "Couldn't bind to port " << (int)port << ". Exiting." << std::endl;
 		return 1;
