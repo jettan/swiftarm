@@ -35,7 +35,7 @@ function init() {
 	$('#ouput').sfLabel({text:'-----------------', width:'300px'});
 	/*
 	if(files){
-		for(var i = 0; i < fileObj.length; i++){
+		for(var i = 0; i < files.length; i++){
 			alert("Filename " + (i + 1) + ": " + files[i].name);
 			alert("Is a directory? " + files[i].isDir);
 			$('#ouput').sfLabel({text:file[i].name});
@@ -55,7 +55,6 @@ function enableKeys(){
 	
 	document.getElementById("anchor").focus();
 }
-
 
 function keyDown() {
 	var keyCode = event.keyCode;
@@ -178,6 +177,8 @@ function listScroll(direction){
 	
 	if($('#fileList').sfList('getIndex') == 0 && page > 0 && direction == 'prev') {
 		loadPage(page-1);
+		$('#fileList').sfList('move', '8');
+		$('#numbers').sfList('move', '8');
 		return;
 	}
 	if($('#fileList').sfList('getIndex') == 8 && direction == 'next') {
