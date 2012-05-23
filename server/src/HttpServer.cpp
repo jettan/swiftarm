@@ -4,9 +4,9 @@
 /**
  * Send the HTTP XML response.
  */
-static void sendXMLResponse(struct evhttp_request *req, struct evbuffer *buf) {
+static void HttpServer::sendXMLResponse(struct evhttp_request *req, struct evbuffer *buf) {
 	char speedstr[1024];
-	sprintf(speedstr,"<DOWNLOADS><DOWNLOAD><NAME>bla!</NAME><DSPEED>%f</DSPEED><USPEED>%f</USPEED><PROGRESS>%f</PROGRESS></DOWNLOAD></DOWNLOADS>", 30, 20, 90.9);
+	sprintf(speedstr,"<DOWNLOADS><DOWNLOAD><NAME>bla!</NAME><DSPEED>%f</DSPEED><USPEED>%f</USPEED><PROGRESS>%f</PROGRESS></DOWNLOAD></DOWNLOADS>", 30.0, 20.0, 90.9);
 	
 	// Add HTTP headers.
 	struct evkeyvalq *headers = evhttp_request_get_output_headers(req);
@@ -27,7 +27,7 @@ static void sendXMLResponse(struct evhttp_request *req, struct evbuffer *buf) {
 /**
  * Send the HTTP response.
  */
-static void sendResponse(struct evhttp_request *req, struct evbuffer *buf,  const char *message) {
+static void HttpServer::sendResponse(struct evhttp_request *req, struct evbuffer *buf,  const char *message) {
 	
 	// Add HTTP headers.
 	evhttp_add_header(evhttp_request_get_output_headers(req), "Content-Type", "text/plain");
@@ -43,7 +43,7 @@ static void sendResponse(struct evhttp_request *req, struct evbuffer *buf,  cons
 /**
  * The HTTP GET request handler.
  */
-static void handleRequest(struct evhttp_request *req, void *arg) {
+static void HttpServer::handleRequest(struct evhttp_request *req, void *arg) {
 	
 	const char *uri = evhttp_request_get_uri(req);
 	const char *path;
@@ -74,33 +74,18 @@ static void handleRequest(struct evhttp_request *req, void *arg) {
 		sendResponse(req, evb, response);
 		
 	} else if (strcmp(path, "/getDownloads") == 0) {
-		send_xml_response(req, evb);
-		
-	} else if (strcmp(path, "/close") == 0) {
-		if (readStreaming()) {
-			std::cout << "Close request received." << std::endl;
-			std::cout << "Close to: " << stopStreaming() << std::endl;
-			
-			sendXMLResponse(req, evb, "Streaming stopped");
-			
-		} else {
-			std::cout << "No stream closed." << std::endl;
-		}
+		sendXMLResponse(req, evb);
 		
 	} else if (strcmp(path, "/stream") == 0) {
-		if (!readStreaming()) {
-			std::cout << "Start with: " << startStreaming() << std::endl;
-			
-			//TODO: Parse the stream request.
-			//TODO: Set the download properties (tracker, etc).
-			//TODO: Call downloadmanager to start streaming.
-		}
+		//TODO: Parse the stream request.
+		//TODO: Set the download properties (tracker, etc).
+		//TODO: Call downloadmanager to start streaming.
 		
 		//TODO: Construct url from which stream can be read from.
-		send_response(req, evb, "http://130.161.159.107:15000/ed29d19bc8ea69dfb5910e7e20247ee7e002f321");
+		sendResponse(req, evb, "http://130.161.159.107:15000/ed29d19bc8ea69dfb5910e7e20247ee7e002f321");
 		
 	} else if (strcmp(path, "/alive") == 0) {
-		send_response(req, evb, "I'm alive!");
+		sendResponse(req, evb, "I'm alive!");
 		
 	} else {
 		std::cout << "Bad request: " << path << std::endl;
@@ -116,7 +101,7 @@ static void handleRequest(struct evhttp_request *req, void *arg) {
 /**
  * Initialize the web server.
  */
-int init() {
+int HttpServer::init() {
 	
 	// Enable pthread use in libevent.
 	evthread_use_pthreads();
@@ -126,8 +111,6 @@ int init() {
 	
 	// The port we want to bind.
 	unsigned short port = 1337;
-	
-	std::cerr << "HTTP gateway creation returned " << res << "." << std::endl;
 	
 	// The event base.
 	base = event_base_new();

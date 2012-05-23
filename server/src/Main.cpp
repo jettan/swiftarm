@@ -1,8 +1,8 @@
 #include <iostream>
 
-#include "../swift/swift.h"
-#include "include/DownloadManager.h"
-#include "include/HttpClient.h"
+#include "../include/swift.h"
+#include "../include/DownloadManager.h"
+#include "../include/HttpServer.h"
 
 /**
  * Define the InstallHTTPGateway method in httpgw.cpp.
@@ -12,7 +12,7 @@ bool InstallHTTPGateway(struct event_base *evbase, swift::Address addr, uint32_t
 /**
  * Initialise libswift engine.
  */
- void initSwift() {
+ int initSwift() {
 	swift::Channel::evbase = event_base_new();
 	
 	evutil_socket_t sock = INVALID_SOCKET;
@@ -27,7 +27,7 @@ bool InstallHTTPGateway(struct event_base *evbase, swift::Address addr, uint32_t
 		
 		if (sock == 9) {
 			std::cerr << "Could not listen to any socket for swift." << std::endl;
-			return 1;
+			return -1;
 		}
 	}
 	std::cout << "Listening on port " << swift::BoundAddress(sock).port() << "." << std::endl;
@@ -43,6 +43,8 @@ bool InstallHTTPGateway(struct event_base *evbase, swift::Address addr, uint32_t
 	bool res = InstallHTTPGateway(swift::Channel::evbase, httpaddr, SWIFT_DEFAULT_CHUNK_SIZE, maxspeed);
 	
 	std::cout << "Initialised swift" << std::endl;
+	
+	return 1;
 }
 
 /**
@@ -52,5 +54,4 @@ int main(){
 	initSwift();
 	
 	// Make httpserver loop
-	
 }

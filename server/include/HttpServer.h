@@ -25,10 +25,13 @@
 #include "swift.h"
 
 namespace HttpServer {
-	public:
+		static struct event_base *base;
+		
 		static void sendXMLResponse(struct evhttp_request *req, struct evbuffer *buf);
 		static void sendResponse(struct evhttp_request *req, struct evbuffer *buf,  const char *message);
 		static void handleRequest(struct evhttp_request *req, void *arg);
-		static int init(int argc, char **argv);
+		static int init();
 	
 }
+
+#endif

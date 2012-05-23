@@ -1,4 +1,4 @@
-#include "include/Download.h"
+#include "../include/Download.h"
 
 // Return code of the thread.
 int return_code;
@@ -6,14 +6,24 @@ int return_code;
 /**
  * Callback to check if a download is completed.
  */
-void isCompleteCallback(int fd, short event, void *arg) {
-	if (swift::SeqComplete(download) != swift::Size(download)) {
-		std::cout << "Percentage downloaded: " << floorf(((swift::Complete(download) * 10000.0) / swift::Size(download) * 1.0) + 0.5) / 100 << std::endl;
-		evtimer_add(&evcompl, swift::tint2tv(TINT_SEC));
+void Download::isCompleteCallback(int fd, short event, void *arg) {
+	if (swift::SeqComplete(getID()) != swift::Size(getID())) {
+		std::cout << "Percentage downloaded: " << floorf(((swift::Complete(getID()) * 10000.0) / swift::Size(getID()) * 1.0) + 0.5) / 100 << std::endl;
+		evtimer_add(&_evcompl, swift::tint2tv(TINT_SEC));
 	}
 	else
 		event_base_loopexit(swift::Channel::evbase, NULL);
 }
+
+/**
+ * Initialises id and mutex of Download.
+ */
+void Download::init() {
+	_id     = NOT_INITIALISED;
+	_mutex  = PTHREAD_MUTEX_INITIALIZER;
+	_status = READY;
+}
+
 /**
  * Clear the download and starts over downloading it.
  */
@@ -45,12 +55,24 @@ void Download::resume() {
 /**
  * Getter for the download statistics.
  */
-struct *downloadStats Download::getStatistics() {
+Download::downloadStats Download::getStatistics() {
+	struct downloadStats returnValue;
+	
 	if(getID() < 0)
-		return NULL;
+		return returnValue;
 		
 	pthread_mutex_lock( &_mutex );
-	struct downloadStats returnValue = _stats;
+	returnValue.download_speed      = _stats.download_speed;
+	returnValue.upload_speed        = _stats.upload_speed;
+	returnValue.ratio               = _stats.ratio;
+	returnValue.download_percentage = _stats.download_percentage;
+	returnValue.upload_amount       = _stats.upload_amount;
+	returnValue.seeders             = _stats.seeders;
+	returnValue.peers               = _stats.peers;
+	returnValue.estimated.days      = _stats.estimated.days;
+	returnValue.estimated.hours     = _stats.estimated.hours;
+	returnValue.estimated.seconds   = _stats.estimated.seconds;
+	returnValue.estimated.minutes   = _stats.estimated.minutes;
 	pthread_mutex_unlock( &_mutex);
 	
 	return returnValue;
@@ -59,7 +81,7 @@ struct *downloadStats Download::getStatistics() {
 /**
  * Getter for the download properties.
  */
-struct *downloadStats Download::getProperties() {
+Download::downloadProps Download::getProperties() {
 	return _properties;
 }
 
@@ -71,7 +93,7 @@ void Download::setDownloadSpeed(double speed) {
 		return;
 		
 	pthread_mutex_lock( &_mutex );
-	_stats->download_speed = speed;
+	_stats.download_speed = speed;
 	pthread_mutex_unlock( &_mutex);
 }
 
@@ -83,7 +105,7 @@ void Download::setUploadSpeed(double speed) {
 		return;
 		
 	pthread_mutex_lock( &_mutex );
-	_stats->upload_speed = speed;
+	_stats.upload_speed = speed;
 	pthread_mutex_unlock( &_mutex);
 }
 
@@ -94,12 +116,12 @@ void Download::calculateRatio() {
 	if(getID() < 0)
 		return;
 		
-	double download_speed = getStats()->download_speed;
-	double upload_speed = getStats()->upload_speed;
+	double download_speed = getStatistics().download_speed;
+	double upload_speed = getStatistics().upload_speed;
 	
 	pthread_mutex_lock( &_mutex );
 	if(download_speed != 0)
-		_stats->ratio = upload_speed/download_speed;
+		_stats.ratio = upload_speed/download_speed;
 	else
 		_stats.ratio = 0;
 	pthread_mutex_unlock( &_mutex);
@@ -113,7 +135,7 @@ void Download::setProgress(double percentage) {
 		return;
 		
 	pthread_mutex_lock( &_mutex );
-	_stats->download_percentage = percentage;
+	_stats.download_percentage = percentage;
 	pthread_mutex_unlock( &_mutex);
 }
 
@@ -137,7 +159,7 @@ void Download::setSeeders(int amount) {
 		return;
 		
 	pthread_mutex_lock( &_mutex );
-	_stats->seeders = amount;
+	_stats.seeders = amount;
 	pthread_mutex_unlock( &_mutex);
 }
 
@@ -149,7 +171,7 @@ void Download::setPeers(int amount) {
 		return;
 		
 	pthread_mutex_lock( &_mutex );
-	_stats->peers = amount;
+	_stats.peers = amount;
 	pthread_mutex_unlock( &_mutex);
 }
 
@@ -160,8 +182,8 @@ void Download::calculateEstimatedTime() {
 	if(getID() < 0)
 		return;
 	
-	struct *time estimated_time;
-	double speed            = getStatistics()->download_speed;
+	struct time *estimated_time;
+	double speed            = getStatistics().download_speed;
 	double time_in_seconds  = ( _size - swift::Complete(getID()) ) / speed;
 	double time_left        = time_in_seconds;
 	
@@ -180,14 +202,23 @@ void Download::calculateEstimatedTime() {
 	estimated_time->seconds = time_left;
 	
 	pthread_mutex_lock( &_mutex );
-	_stats->estimated = estimated_time;
+	_stats.estimated.days      = estimated_time->days;
+	_stats.estimated.hours     = estimated_time->hours;
+	_stats.estimated.minutes   = estimated_time->minutes;
+	_stats.estimated.seconds   = estimated_time->seconds;
 	pthread_mutex_unlock( &_mutex);
 }
 
 /**
  * Setter for status
  */
-void setStatus(Status status) {
+void Download::setStatus(Status status) {
 	_status = status;
 }
 
+/**
+ * Get the download ID.
+ */
+int Download::getID() {
+	return _id;
+}

@@ -1,9 +1,13 @@
 #ifndef _DOWNLOAD_H
 #define _DOWNLOAD_H
 
+#define NOT_INITIALISED -1
+#define SECONDS_PER_MINUTE (60)
+#define SECONDS_PER_HOUR (SECONDS_PER_MINUTE * SECONDS_PER_MINUTE)
+#define SECONDS_PER_DAY (SECONDS_PER_HOUR * 24)
+
 #include <iostream>
 #include <ctime>
-#include <pthread>
 
 #include <cstdio>
 #include <cstdlib>
@@ -24,40 +28,34 @@
 #include <event2/event-config.h>
 #include <event2/thread.h>
 
-#include "swift.h"
+#include "../include/swift.h"
 
-#define SECONDS_PER_MINUTE (60)
-#define SECONDS_PER_HOUR (SECONDS_PER_MINUTE * SECONDS_PER_MINUTE)
-#define SECONDS_PER_DAY (SECONDS_PER_HOUR * 24)
+enum Status {
+	READY,
+	PAUSED,
+	DOWNLOADING,
+	UPLOADING,
+};
 
 class Download {
-	
-	enum Status {
-		READY,
-		PAUSED,
-		DOWNLOADING,
-		UPLOADING,
-	};
-	
 	protected:
-		struct _event_base *base;
-		struct _event evcompl;
-		struct _event evclose;
+		struct event _evcompl;
+		struct event _evclose;
 		
-		pthread_t _thread;										/// Thread to start download.
-		pthread_mutex_t _mutex = PTHREAD_MUTEX_INITIALIZER;		/// Mutex to prevent download thread and main thread from accessing same data at the same time.
+		pthread_t _thread;			/// Thread to start download.
+		pthread_mutex_t _mutex;		/// Mutex to prevent download thread and main thread from accessing same data at the same time.
 			
-		int _id = -1;					/// Download id.
-		double _size					/// Download size.
-		Status _status;					/// Current status of the download.
+		int _id;					/// Download id.
+		double _size;				/// Download size.
+		Status _status;				/// Current status of the download.
 		
 		struct downloadProps {
-			char *filename;				/// Name of the download.
-			char *tracker;				/// Trackers seeding this download.
-			char *root_hash;			/// Root hash needed to start swift download.
+			char *filename;			/// Name of the download.
+			char *tracker;			/// Trackers seeding this download.
+			char *root_hash;		/// Root hash needed to start swift download.
 		};
 		
-		downloadProps *_properties;		/// Properties to pass to the thread. Used to initiate swift download.
+		downloadProps _properties;		/// Properties to pass to the thread. Used to initiate swift download.
 		
 		/// Struct for holding time data.
 		struct time {
@@ -81,7 +79,7 @@ class Download {
 		};
 		
 		
-		volatile downloadStats *_stats;  /// Struct holding the statistics of the download.
+		volatile downloadStats _stats;  /// Struct holding the statistics of the download.
 		
 	public:
 		void retry();
@@ -93,12 +91,14 @@ class Download {
 		double getSize();
 		Status getStatus();
 		
+		void isCompleteCallback(int fd, short event, void *arg);
+		
 		struct downloadStats getStatistics();
 		struct downloadProps getProperties();
 		
 		void setDownloadSpeed(double speed);
 		void setUploadSpeed(double speed);
-		void calculateRatio(double ratio);
+		void calculateRatio();
 		void setProgress(double percentage);
 		void setUploadAmount(double amount);
 		
@@ -108,15 +108,16 @@ class Download {
 		void calculateEstimatedTime();
 		
 		void setStatus(Status status);
+		void init();
 		
 		/**
 		 * Constructor.
 		 */
 		Download(char *tracker, char *root_hash, char *filename) {
+			init();
 			_properties.tracker     = tracker;
 			_properties.root_hash   = root_hash;
-			_properties.status      = Status.READY;
-		
+			_properties.filename    = filename;
 		}
 		
 		/**
