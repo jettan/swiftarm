@@ -22,6 +22,7 @@ void Download::init() {
 	_id     = NOT_INITIALISED;
 	_mutex  = PTHREAD_MUTEX_INITIALIZER;
 	_status = READY;
+	
 }
 
 /**
@@ -182,7 +183,7 @@ void Download::calculateEstimatedTime() {
 	if(getID() < 0)
 		return;
 	
-	struct time *estimated_time;
+	struct time estimated_time;
 	double speed            = getStatistics().download_speed;
 	double time_in_seconds  = ( _size - swift::Complete(getID()) ) / speed;
 	double time_left        = time_in_seconds;
@@ -196,16 +197,16 @@ void Download::calculateEstimatedTime() {
 	int minutes  = (int) floor(time_left / SECONDS_PER_MINUTE);
 	time_left   -= minutes * SECONDS_PER_MINUTE;
 	
-	estimated_time->days    = days;
-	estimated_time->hours   = hours;
-	estimated_time->minutes = minutes;
-	estimated_time->seconds = time_left;
+	estimated_time.days    = days;
+	estimated_time.hours   = hours;
+	estimated_time.minutes = minutes;
+	estimated_time.seconds = time_left;
 	
 	pthread_mutex_lock( &_mutex );
-	_stats.estimated.days      = estimated_time->days;
-	_stats.estimated.hours     = estimated_time->hours;
-	_stats.estimated.minutes   = estimated_time->minutes;
-	_stats.estimated.seconds   = estimated_time->seconds;
+	_stats.estimated.days      = estimated_time.days;
+	_stats.estimated.hours     = estimated_time.hours;
+	_stats.estimated.minutes   = estimated_time.minutes;
+	_stats.estimated.seconds   = estimated_time.seconds;
 	pthread_mutex_unlock( &_mutex);
 }
 
