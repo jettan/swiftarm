@@ -5,8 +5,10 @@
  */
 void isCompleteCallback(int fd, short event, void* arg) {
 	Download *self = (Download*) arg;
+	std::cout << "ID: " << self->getID() << std::endl;
+	
 	if (swift::SeqComplete(self->getID()) != swift::Size(self->getID())) {
-	//	std::cout << "Percentage downloaded: " << floorf(((swift::Complete(stats->id) * 10000.0) / swift::Size(stats->id) * 1.0) + 0.5) / 100 << std::endl;
+		std::cout << "Percentage downloaded: " << floorf(((swift::Complete(self->getID()) * 10000.0) / swift::Size(self->getID()) * 1.0) + 0.5) / 100 << std::endl;
 		evtimer_add(self->getEvent(), swift::tint2tv(TINT_SEC));
 	}
 	else
@@ -17,38 +19,52 @@ void isCompleteCallback(int fd, short event, void* arg) {
  * Download a file using libswift.
  * @param str: Struct containing all necessary data for downloads.
  */
-void* Download::startThread(void) {
+void* Download::startThread(void *arg) {
+	Download *download = (Download *) arg;
+	
 	std::cout << "Entered download thread." << std::endl;
 	
 	// Change the directory to Downloads folder.
-	int change = chdir("/dtv/usb/sda1/Downloads"); 
-	swift::Address trackeraddr = swift::Address(getProperties().tracker);
-	swift::Sha1Hash root_hash  = swift::Sha1Hash(true, getProperties().root_hash);
+	int change = chdir("/dtv/usb/sda1/Downloads");
+	std::cout << "Changed directory." << std::endl;
+	
+	swift::Address trackeraddr = swift::Address(download->getProperties().tracker);
+	std::cout << "Set the tracker address." << std::endl;
+	
+	swift::Sha1Hash roothash  = swift::Sha1Hash(true, download->getProperties().root_hash);
 	
 	// Set the tracker.
 	std::cout << "Setting the tracker..." << std::endl;
-	swift::SetTracker(getProperties().tracker);
+	swift::SetTracker(download->getProperties().tracker);
+	
+	std::cout << "Filename = " << download->getProperties().filename << std::endl;
 	
 	// Download the file.
-	setID(swift::Open(getProperties().filename, getProperties().root_hash));
+	int id = swift::Open(download->getProperties().filename, roothash);
+	std::cout << "ID = " << id << std::endl;
 	
-	if (getID() < 0 ) {
-		std::cerr << "Could not download " << getProperties().filename << "!" << std::endl;
+	download->setID(id);
+	
+	std::cout << "ID = " << download->getID() << std::endl;
+
+	
+	if (download->getID() < 0 ) {
+		std::cerr << "Could not download " << download->getProperties().filename << "!" << std::endl;
 	} else {
 		// Assign callbacks to the event base.
 		std::cout << "Now dispatching event base." << std::endl;
-		evtimer_assign(&_evcompl, swift::Channel::evbase, isCompleteCallback, this);
-		evtimer_add(&_evcompl, swift::tint2tv(TINT_SEC));
+		evtimer_assign(download->getEvent(), swift::Channel::evbase, isCompleteCallback, this);
+		evtimer_add(download->getEvent(), swift::tint2tv(TINT_SEC));
 		
 		// Dispatch the event base to enter the swift loop.
 		event_base_dispatch(swift::Channel::evbase);
 		
-		std::cout << "Download of " << getProperties().filename << " completed." << std::endl;
+		std::cout << "Download of " << download->getProperties().filename << " completed." << std::endl;
 		
 		// Close the file.
-		swift::Close(getID());
+		swift::Close(download->getID());
 	}
-	
+	/**/
 	std::cout << "Exiting download thread." << std::endl;
 	// Exit the download thread when the download is finished.
 	pthread_exit(NULL);
@@ -104,16 +120,23 @@ Download::downloadStats Download::getStatistics() {
 	returnValue.estimated.hours     = _stats.estimated.hours;
 	returnValue.estimated.seconds   = _stats.estimated.seconds;
 	returnValue.estimated.minutes   = _stats.estimated.minutes;
-	pthread_mutex_unlock( &_mutex);
+	pthread_mutex_unlock( &_mutex );
 	
 	return returnValue;
 }
 
-/**
- * Getter for the download properties.
- */
 Download::downloadProps Download::getProperties() {
-	return _properties;
+	struct downloadProps returnValue;
+	std::cout << "Entering critical section." << std::endl;
+	pthread_mutex_lock( &_mutex );
+	std::cout << "Entered critical section." << std::endl;
+	returnValue.tracker   = _properties.tracker;
+	returnValue.root_hash = _properties.root_hash;
+	returnValue.filename  = _properties.filename;
+	pthread_mutex_unlock( &_mutex );
+	
+	std::cout << "Exited critical section." << std::endl;
+	return returnValue;
 }
 
 /**
@@ -263,7 +286,7 @@ int Download::getID() {
 void Download::setID(int id) {
 	pthread_mutex_lock( &_mutex );
 	_stats.id = id;
-	pthread_mutex_lock( &_mutex );
+	pthread_mutex_unlock( &_mutex );
 }
 
 
@@ -280,5 +303,4 @@ void Download::setStatus(int status) {
 int Download::getStatus() {
 	return _status;
 }
-
 

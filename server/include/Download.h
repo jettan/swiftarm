@@ -52,7 +52,7 @@ class Download {
 			char *root_hash;		/// Root hash needed to start swift download.
 		};
 		
-		downloadProps _properties;		/// Properties to pass to the thread. Used to initiate swift download.
+		volatile downloadProps _properties;		/// Properties to pass to the thread. Used to initiate swift download.
 		
 		/// Struct for holding time data.
 		struct time {
@@ -85,12 +85,12 @@ class Download {
 		void pause();
 		void resume();
 		
-		static void*  callStartThread(void *arg) { return ((Download*)arg)->startThread(); }
-		void* startThread(void);
+		static void*  callStartThread(void *arg) { return ((Download*)arg)->startThread(arg); }
+		void* startThread(void *arg);
 		
 		int getID();
-		double getSize();
 		int getStatus();
+		double getSize();
 		struct event *getEvent();
 		
 		//void isCompleteCallback(int fd, short event, void* arg);
