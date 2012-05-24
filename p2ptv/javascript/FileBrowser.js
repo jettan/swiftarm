@@ -8,6 +8,17 @@ var page;
 var selected;
 var listLength;
 
+var videoPos = {
+	left: 700,
+	top: 100,
+	width: 500,
+	height: 400
+}
+
+var videoState = sf.service.VideoPlayer.STATE_STOPPED;
+var errorString = ['NoError', 'Network', 'Not Supported'];
+var stateString = ['Playing', 'Stopped', 'Paused', 'Buffering', 'Scanning'];
+
 var directory = ['$USB_DIR/sdb1'];
 var data = ['Item1', 'Item2', 'Item3', 'Item4', 'Item5', 'Item6', 'Item7', 'Item8', 'Item9', 'Item10', 'Item11', 'Item12'];
 var data2 = ['Item1', 'Item2', 'Item3'];
@@ -32,7 +43,7 @@ function init() {
 	// Create File System object
 	fileSystem = new FileSystem();
 	// '$USB_DIR'
-	files = fileSystem.readDir('$USB_DIR/sdb1');
+	files = fileSystem.readDir(directory[directory.length-1]);
 	
 	if(files){
 		// Load first page of files
@@ -49,6 +60,30 @@ function init() {
 	
 	enableKeys();
 	widgetAPI.sendReadyEvent();
+	
+	var opt = {};
+	opt.onerror = function(error, info){
+		
+		alert("Video Error: " + errorString[error] + " " + info);
+	};
+	
+	opt.onend = function(){
+		alert("Video END");
+	};
+	
+	opt.onstatechange = function(state, info){
+		videoState = state;
+		setKeyHelp();
+	}
+	
+	sf.service.VideoPlayer.init(opt);
+	
+	sf.service.VideoPlayer.setKeyHandler(sf.key.RETURN, function() {
+		sf.service.VideoPlayer.setFullScreen(false);
+	});
+	
+	sf.service.VideoPlayer.setPosition(videoPos);
+	sf.service.VideoPlayer.show();
 }
 
 function onUnload() {
@@ -73,14 +108,12 @@ function keyDown() {
 		case tvKey.KEY_RIGHT:
 		case tvKey.KEY_ENTER:
 			alert("ENTER pressed");
-			$('#prevPage').sfLabel({text:"OPEN DIRECTORY PRESSED"});
 			enterHandler();
 			break;
 		// Previous directory
 		case tvKey.KEY_LEFT:
 		case tvKey.KEY_PRECH:
 			alert("PRECH pressed");
-			$('#prevPage').sfLabel({text:"PREVIOUS DIRECTORY PRESSED"});
 			backHandler();
 			break;
 		// Select element in list
@@ -136,6 +169,29 @@ function keyDown() {
 		case tvKey.KEY_CH_DOWN:
 			loadPage(page+1);
 			break;
+		case tvKey.KEY_PLAY:
+			if(sf.service.VideoPlayer.Skip.isInProgress()){
+				sf.service.VideoPLayer.pause();
+			}
+			else{
+				sf.service.VideoPlayer.resume();
+			}
+			break;
+		case tvKey.KEY_STOP:
+			if(sf.service.VideoPlayer.Skip.inProgress()){
+				sf.service.VideoPLayer.Skip.cancel();
+			}
+			sf.service.VideoPlayer.stop();
+			break;
+		case tvKey.KEY_PAUSE:
+			sf.service.VideoPlayer.pause();
+			break;
+		case tvKey.KEY_FF:
+			sf.service.VideoPlayer.Skip.start(10);
+			break;
+		case tvKey.KEY_REW:
+			sf.service.VideoPlayer.Skip.start(-10);
+			break;
 	}
 }
 
@@ -153,8 +209,28 @@ function enterHandler(){
 		loadPage(page);
 	}
 	else {
-		// Selected file is not a directory (play video if possible)
+		// Selected file is not a directory (play video if possible)i
+		if(sf.service.VideoPlayer.Skip.isInProgress()){
+			sf.service.VideoPlayer.Skip.stop();
+		}
+		else{
+			if(videoSelected()){
+				
+				sf.VideoPlayer.stop();
+				var url = getVideoUrl();
+				sf.service.VideoPlayer.play(url);
+			}
+		}
 	}
+}
+
+function videoSelected(){
+	
+	return files[i].name == "stream.mp4";
+}
+
+function getVideoUrl(){
+	
 }
 
 // Go to the previous directory
@@ -210,7 +286,6 @@ function loadPage(number){
 		var n = 0;
 		
 		while(i < (number * elementsPerPage) + elementsPerPage && i < files.length/*data.length*/){
-			//elements.push(data[i]);
 			elements.push(files[i].name);
 			buttons.push(numbers[n]);
 			alert("Pushed: " + files[i].name);
@@ -230,6 +305,31 @@ function loadPage(number){
 // Load the information of a certain file and show on screen
 function loadInfo(fileName){
 	
+}
+
+function setKeyHelp(state){
+	
+	var oKeyMap = {};
+	
+	if(videoState == sf.service.VideoPlayer.STATE_PLAYING ||
+		videoState == sf.service.VideoPlayer.STATE_PAUSED ||
+		videoState == sf.service.Video>player.STATE_BUFFERING){
+		
+		oKeyMap.RED = 'Fullscreen'
+	}
+	
+	if(sf.service.VideoPlayer.Skip.isInProgress()){
+		
+		oKeyMap.ENTER = 'Play';
+		oKeyMap.RETURN = 'Cancel';
+	}
+	else{
+		oKeyMap.UPDOWN = 'Move Item';
+		oKeyMap.ENTER = 'Play';
+		oKeyMap.RETURN = 'Return';
+	}
+	
+	$("#keyhelp").sfKeyHelp(oKeyMap);
 }
 
 function gotoMain(){
