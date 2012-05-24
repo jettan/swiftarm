@@ -39,12 +39,10 @@ enum Status {
 class Download {
 	protected:
 		struct event _evcompl;
-		struct event _evclose;
 		
 		pthread_t _thread;			/// Thread to start download.
 		pthread_mutex_t _mutex;		/// Mutex to prevent download thread and main thread from accessing same data at the same time.
 			
-		int _id;					/// Download id.
 		double _size;				/// Download size.
 		int _status;				/// Current status of the download.
 		
@@ -65,6 +63,7 @@ class Download {
 		};
 		
 		struct downloadStats {
+			int  id;					/// Download id needed to check the stats.
 			double download_speed;		/// Current download speed.
 			double upload_speed;		/// Current upload speed.
 			double ratio;				/// Download speed divided by upload speed
@@ -86,11 +85,15 @@ class Download {
 		void pause();
 		void resume();
 		
+		static void*  callStartThread(void *arg) { return ((Download*)arg)->startThread(); }
+		void* startThread(void);
+		
 		int getID();
 		double getSize();
 		int getStatus();
+		struct event *getEvent();
 		
-		void isCompleteCallback(int fd, short event, void *arg);
+		//void isCompleteCallback(int fd, short event, void* arg);
 		
 		struct downloadStats getStatistics();
 		struct downloadProps getProperties();
@@ -106,23 +109,26 @@ class Download {
 		
 		void calculateEstimatedTime();
 		
+		void setID(int id);
 		void setStatus(int status);
-		void init();
 		
 		/**
 		 * Constructor.
 		 */
 		Download(char *tracker, char *root_hash, char *filename) {
-			init();
+			_stats.id               = -1;
 			_properties.tracker     = tracker;
 			_properties.root_hash   = root_hash;
 			_properties.filename    = filename;
+			pthread_mutex_init(&_mutex, NULL);
+			setStatus(READY);
 		}
 		
 		/**
 		 * Destructor.
 		 */
-		~Download() {}
+		~Download() {
+		}
 };
 
 #endif
