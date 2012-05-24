@@ -1,7 +1,6 @@
 #ifndef _DOWNLOAD_H
 #define _DOWNLOAD_H
 
-#define NOT_INITIALISED -1
 #define SECONDS_PER_MINUTE (60)
 #define SECONDS_PER_HOUR (SECONDS_PER_MINUTE * SECONDS_PER_MINUTE)
 #define SECONDS_PER_DAY (SECONDS_PER_HOUR * 24)
@@ -47,7 +46,7 @@ class Download {
 			
 		int _id;					/// Download id.
 		double _size;				/// Download size.
-		Status _status;				/// Current status of the download.
+		int _status;				/// Current status of the download.
 		
 		struct downloadProps {
 			char *filename;			/// Name of the download.
@@ -89,7 +88,7 @@ class Download {
 		
 		int getID();
 		double getSize();
-		Status getStatus();
+		int getStatus();
 		
 		void isCompleteCallback(int fd, short event, void *arg);
 		
@@ -107,7 +106,7 @@ class Download {
 		
 		void calculateEstimatedTime();
 		
-		void setStatus(Status status);
+		void setStatus(int status);
 		void init();
 		
 		/**

@@ -19,10 +19,9 @@ void Download::isCompleteCallback(int fd, short event, void *arg) {
  * Initialises id and mutex of Download.
  */
 void Download::init() {
-	_id     = NOT_INITIALISED;
-	_mutex  = PTHREAD_MUTEX_INITIALIZER;
-	_status = READY;
-	
+	pthread_mutex_init(&_mutex, NULL);
+	setStatus(READY);
+	_id     = -1;
 }
 
 /**
@@ -213,7 +212,7 @@ void Download::calculateEstimatedTime() {
 /**
  * Setter for status
  */
-void Download::setStatus(Status status) {
+void Download::setStatus(int status) {
 	_status = status;
 }
 
@@ -222,4 +221,11 @@ void Download::setStatus(Status status) {
  */
 int Download::getID() {
 	return _id;
+}
+
+/**
+ * Get the status.
+ */
+int Download::getStatus() {
+	return _status;
 }
