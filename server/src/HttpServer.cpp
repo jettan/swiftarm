@@ -65,7 +65,7 @@ static void HttpServer::handleRequest(struct evhttp_request *req, void *arg) {
 		//TODO: Parse the http request.
 		
 		char tracker[]   = "127.0.0.1:20000";
-		char root_hash[] = "012b5549e2622ea8bf3d694b4f55c959539ac848";
+		char root_hash[] = "ed29d19bc8ea69dfb5910e7e20247ee7e002f321";
 		char name[]      = "bla.mp4";
 		Download test(tracker, root_hash, name);
 		

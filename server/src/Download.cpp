@@ -4,12 +4,13 @@
  * Callback to check if a download is completed.
  */
 void isCompleteCallback(int fd, short event, void* arg) {
-	Download *self = (Download*) arg;
-	std::cout << "ID: " << self->getID() << std::endl;
-	
-	if (swift::SeqComplete(self->getID()) != swift::Size(self->getID())) {
-		std::cout << "Percentage downloaded: " << floorf(((swift::Complete(self->getID()) * 10000.0) / swift::Size(self->getID()) * 1.0) + 0.5) / 100 << std::endl;
-		evtimer_add(self->getEvent(), swift::tint2tv(TINT_SEC));
+	Download *download = (Download*) arg;
+	std::cout << swift::Size(download->getID()) << std::endl;
+	if ((swift::SeqComplete(download->getID()) != swift::Size(download->getID()))) {
+		
+		std::cout << "Percentage downloaded: " << floorf(((swift::Complete(download->getID()) * 10000.0) / 
+		swift::Size(download->getID()) * 1.0) + 0.5) / 100 << std::endl;
+		evtimer_add(download->getEvent(), swift::tint2tv(TINT_SEC));
 	}
 	else
 		event_base_loopexit(swift::Channel::evbase, NULL);
@@ -40,7 +41,8 @@ void* Download::startThread(void *arg) {
 	std::cout << "Filename = " << download->getProperties().filename << std::endl;
 	
 	// Download the file.
-	int id = swift::Open(download->getProperties().filename, roothash);
+	//int id = swift::Open(download->getProperties().filename, roothash);
+	int id = swift::Open("blabla.mp4", roothash);
 	std::cout << "ID = " << id << std::endl;
 	
 	download->setID(id);
@@ -108,7 +110,7 @@ Download::downloadStats Download::getStatistics() {
 	if(getID() < 0)
 		return returnValue;
 		
-	pthread_mutex_lock( &_mutex );
+//	pthread_mutex_lock( &_mutex );
 	returnValue.download_speed      = _stats.download_speed;
 	returnValue.upload_speed        = _stats.upload_speed;
 	returnValue.ratio               = _stats.ratio;
@@ -120,22 +122,22 @@ Download::downloadStats Download::getStatistics() {
 	returnValue.estimated.hours     = _stats.estimated.hours;
 	returnValue.estimated.seconds   = _stats.estimated.seconds;
 	returnValue.estimated.minutes   = _stats.estimated.minutes;
-	pthread_mutex_unlock( &_mutex );
+//	pthread_mutex_unlock( &_mutex );
 	
 	return returnValue;
 }
 
 Download::downloadProps Download::getProperties() {
 	struct downloadProps returnValue;
-	std::cout << "Entering critical section." << std::endl;
-	pthread_mutex_lock( &_mutex );
-	std::cout << "Entered critical section." << std::endl;
+//	std::cout << "Entering critical section." << std::endl;
+//	pthread_mutex_lock( &_mutex );
+//	std::cout << "Entered critical section." << std::endl;
 	returnValue.tracker   = _properties.tracker;
 	returnValue.root_hash = _properties.root_hash;
 	returnValue.filename  = _properties.filename;
-	pthread_mutex_unlock( &_mutex );
+//	pthread_mutex_unlock( &_mutex );
 	
-	std::cout << "Exited critical section." << std::endl;
+//	std::cout << "Exited critical section." << std::endl;
 	return returnValue;
 }
 
@@ -146,9 +148,9 @@ void Download::setDownloadSpeed(double speed) {
 	if(getID() < 0)
 		return;
 		
-	pthread_mutex_lock( &_mutex );
+//	pthread_mutex_lock( &_mutex );
 	_stats.download_speed = speed;
-	pthread_mutex_unlock( &_mutex);
+//	pthread_mutex_unlock( &_mutex);
 }
 
 /**
@@ -158,9 +160,9 @@ void Download::setUploadSpeed(double speed) {
 	if(getID() < 0)
 		return;
 		
-	pthread_mutex_lock( &_mutex );
+//	pthread_mutex_lock( &_mutex );
 	_stats.upload_speed = speed;
-	pthread_mutex_unlock( &_mutex);
+//	pthread_mutex_unlock( &_mutex);
 }
 
 /**
@@ -173,12 +175,12 @@ void Download::calculateRatio() {
 	double download_speed = getStatistics().download_speed;
 	double upload_speed   = getStatistics().upload_speed;
 	
-	pthread_mutex_lock( &_mutex );
+//	pthread_mutex_lock( &_mutex );
 	if(download_speed != 0)
 		_stats.ratio = upload_speed/download_speed;
 	else
 		_stats.ratio = 0;
-	pthread_mutex_unlock( &_mutex);
+//	pthread_mutex_unlock( &_mutex);
 }
 
 /**
@@ -188,9 +190,9 @@ void Download::setProgress(double percentage) {
 	if(getID() < 0)
 		return;
 		
-	pthread_mutex_lock( &_mutex );
+//	pthread_mutex_lock( &_mutex );
 	_stats.download_percentage = percentage;
-	pthread_mutex_unlock( &_mutex);
+//	pthread_mutex_unlock( &_mutex);
 }
 
 /**
@@ -200,9 +202,9 @@ void Download::setUploadAmount(double amount) {
 	if(getID() < 0)
 		return;
 		
-	pthread_mutex_lock( &_mutex );
+//	pthread_mutex_lock( &_mutex );
 	_stats.upload_amount = amount;
-	pthread_mutex_unlock( &_mutex);
+//	pthread_mutex_unlock( &_mutex);
 }
 
 /**
@@ -212,9 +214,9 @@ void Download::setSeeders(int amount) {
 	if(getID() < 0)
 		return;
 		
-	pthread_mutex_lock( &_mutex );
+//	pthread_mutex_lock( &_mutex );
 	_stats.seeders = amount;
-	pthread_mutex_unlock( &_mutex);
+//	pthread_mutex_unlock( &_mutex);
 }
 
 /**
@@ -224,9 +226,9 @@ void Download::setPeers(int amount) {
 	if(getID() < 0)
 		return;
 		
-	pthread_mutex_lock( &_mutex );
+//	pthread_mutex_lock( &_mutex );
 	_stats.peers = amount;
-	pthread_mutex_unlock( &_mutex);
+//	pthread_mutex_unlock( &_mutex);
 }
 
 /**
@@ -255,12 +257,12 @@ void Download::calculateEstimatedTime() {
 	estimated_time.minutes = minutes;
 	estimated_time.seconds = time_left;
 	
-	pthread_mutex_lock( &_mutex );
+//	pthread_mutex_lock( &_mutex );
 	_stats.estimated.days      = estimated_time.days;
 	_stats.estimated.hours     = estimated_time.hours;
 	_stats.estimated.minutes   = estimated_time.minutes;
 	_stats.estimated.seconds   = estimated_time.seconds;
-	pthread_mutex_unlock( &_mutex);
+//	pthread_mutex_unlock( &_mutex);
 }
 
 /**
@@ -274,9 +276,9 @@ event *Download::getEvent() {
  * Get the download ID.
  */
 int Download::getID() {
-	pthread_mutex_lock( &_mutex );
+//	pthread_mutex_lock( &_mutex );
 	int id = _stats.id;
-	pthread_mutex_unlock( &_mutex );
+//	pthread_mutex_unlock( &_mutex );
 	return id;
 }
 
@@ -284,9 +286,9 @@ int Download::getID() {
  * Setter for download ID.
  */
 void Download::setID(int id) {
-	pthread_mutex_lock( &_mutex );
+//	pthread_mutex_lock( &_mutex );
 	_stats.id = id;
-	pthread_mutex_unlock( &_mutex );
+//	pthread_mutex_unlock( &_mutex );
 }
 
 
