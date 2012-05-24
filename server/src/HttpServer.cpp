@@ -85,7 +85,7 @@ static void HttpServer::handleRequest(struct evhttp_request *req, void *arg) {
 		sendResponse(req, evb, "http://130.161.159.107:15000/ed29d19bc8ea69dfb5910e7e20247ee7e002f321");
 		
 	} else if (strcmp(path, "/alive") == 0) {
-		sendResponse(req, evb, "I'm alive!");
+		sendResponse(req, evb, "Alive");
 		
 	} else {
 		std::cout << "Bad request: " << path << std::endl;
