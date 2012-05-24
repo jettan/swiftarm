@@ -22,6 +22,8 @@
 #include <event2/event-config.h>
 #include <event2/thread.h>
 
+#include "Download.h"
+#include "DownloadManager.h"
 #include "swift.h"
 
 namespace HttpServer {

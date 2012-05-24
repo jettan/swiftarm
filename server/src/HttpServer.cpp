@@ -1,5 +1,4 @@
 #include "../include/HttpServer.h"
-#include "../include/Download.h"
 
 
 /**
@@ -86,8 +85,11 @@ static void HttpServer::handleRequest(struct evhttp_request *req, void *arg) {
 		//TODO: Set the download properties (tracker, etc).
 		//TODO: Call downloadmanager to start streaming.
 		
+		char tracker[]   = "127.0.0.1:20000";
+		DownloadManager::startStreaming(tracker);
+		
 		//TODO: Construct url from which stream can be read from.
-		sendResponse(req, evb, "http://130.161.159.107:15000/ed29d19bc8ea69dfb5910e7e20247ee7e002f321");
+		sendResponse(req, evb, "http://127.0.0.1:15000/012b5549e2622ea8bf3d694b4f55c959539ac848");
 		
 	} else if (strcmp(path, "/alive") == 0) {
 		sendResponse(req, evb, "Alive");

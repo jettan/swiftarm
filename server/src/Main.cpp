@@ -41,6 +41,7 @@ bool InstallHTTPGateway(struct event_base *evbase, swift::Address addr, uint32_t
 	
 	// Install the HTTP gateway to stream.
 	bool res = InstallHTTPGateway(swift::Channel::evbase, httpaddr, SWIFT_DEFAULT_CHUNK_SIZE, maxspeed);
+	std::cout << "HTTP gateway installation returned: " << res << std::endl;
 	
 	std::cout << "Initialised swift" << std::endl;
 	
