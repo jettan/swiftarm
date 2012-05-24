@@ -33,7 +33,7 @@ static void HttpServer::sendResponse(struct evhttp_request *req, struct evbuffer
 	evhttp_add_header(evhttp_request_get_output_headers(req), "Content-Type", "text/plain");
 	
 	// Add the plaintext message with this.
-	evbuffer_add_printf(buf, message);
+	evbuffer_add_printf(buf,"%s", message);
 	
 	// Send the final message.
 	evhttp_send_reply(req, 200, "OK", buf);

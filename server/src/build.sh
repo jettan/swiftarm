@@ -8,5 +8,4 @@ if [ ${args[0]} ]; then
 	fi
 fi
 
-
-make
+make -j8
