@@ -1,9 +1,15 @@
 cppflags_for_gpp= -O2 -I . -I $(SWIFTARM)/server/include -I $(SWIFTARM)/server/lib/include
+cppflags_for_x86_64= -O2 -I . -I $(SWIFTARM)/server/include -I $(SWIFTARM)/server/lib/include64
 cppflags_for_arm= -O2 -I . -I $(SWIFTARM)/server/include -I $(SWIFTARM)/server/lib-arm/include -I /opt/armv7a8-toolchain-lite/arm-v7a8-linux-gnueabi/include -I /opt/armv7a8-toolchain-lite/arm-v7a8-linux-gnueabi/libc/include
 
 ifeq ($(CXX),g++)
-	CPPFLAGS=$(cppflags_for_gpp)
-	LDADD=$(SWIFTARM)/server/lib/libswift64.a $(SWIFTARM)/server/lib/lib/libevent_pthreads.a $(SWIFTARM)/server/lib/lib/libevent.a -lrt -lstdc++ -lgcc -lutil -lpthread
+	ifeq ($(system),x86_64)
+		CPPFLAGS=$(cppflags_for_x86_64)
+		LDADD=$(SWIFTARM)/server/lib/libswift64.a $(SWIFTARM)/server/lib/lib64/libevent_pthreads.a $(SWIFTARM)/server/lib/lib64/libevent.a -lrt -lstdc++ -lgcc -lutil -lpthread
+	else
+		CPPFLAGS=$(cppflags_for_gpp)
+		LDADD=$(SWIFTARM)/server/lib/libswift.a $(SWIFTARM)/server/lib/lib/libevent_pthreads.a $(SWIFTARM)/server/lib/lib/libevent.a -lrt -lstdc++ -lgcc -lutil -lpthread
+	endif
 else
 	CPPFLAGS=$(cppflags_for_arm)
 	LD=arm-v7a8-linux-gnueabi-ld
