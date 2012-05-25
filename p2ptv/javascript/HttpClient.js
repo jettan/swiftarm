@@ -1,14 +1,29 @@
 var request;
 var infoRequest;
+boolean alive = false;
 
 function httpGet(url) {
-	response = "No response";
+	var response = "No response";
 	request = new XMLHttpRequest();
 	
 	request.open("GET", url, true);
 	request.onreadystatechange = processRequest;
 	request.send(null);
 	return response;
+}
+
+function serverIsAlive(){
+	alive = false;
+	request = new XMLHttpRequest();
+	
+	request.onreadystatechange = checkAlive;
+	request.open("GET", "http://localhost:1337/alive", true);
+	request.send(null);
+	return alive;
+}
+
+function checkAlive(){
+	alive = request.response == "Alive";
 }
 
 function getDownloadInfo() {

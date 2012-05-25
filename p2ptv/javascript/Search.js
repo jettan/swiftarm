@@ -36,8 +36,6 @@ function init() {
 	}
 	
 	resetLetters();
-
-
 	/*
 	$('#one').sfButton({text:'1'});
 	$('#two').sfButton({text:'2'});
@@ -66,6 +64,12 @@ function init() {
 	
 	this.enableKeys();
 	widgetAPI.sendReadyEvent();
+	
+	var fileSystem = new FileSystem();
+	if(!fileSystem.isValidCommonPath("$USB_DIR/sdb1/TVDownloads")){
+		fileSystem.createCommonDir("USB_DIR/sdb1/TVDownloads");
+	}
+	
 	alert("Search init() completed");
 }
 

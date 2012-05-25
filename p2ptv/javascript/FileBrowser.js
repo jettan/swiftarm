@@ -13,9 +13,9 @@ var videoPos = {
 	top: 100,
 	width: 500,
 	height: 400
-}
+};
 
-var videoState = sf.service.VideoPlayer.STATE_STOPPED;
+//var videoState = $.sf.service.VideoPlayer.STATE_STOPPED;
 var errorString = ['NoError', 'Network', 'Not Supported'];
 var stateString = ['Playing', 'Stopped', 'Paused', 'Buffering', 'Scanning'];
 
@@ -25,25 +25,20 @@ var data2 = ['Item1', 'Item2', 'Item3'];
 var numbers = ['1', '2', '3', '4', '5', '6', '7', '8', '9'];
 
 function init() {
-	/*
-	if ( Player.init() && Audio.init() && Display.init() && Server.init() ) {
-		Display.setVolume( Audio.getVolume() );
-		Display.setTime(0);
-		
-		Player.stopCallback = function() {
-			/* Return to windowed mode when video is stopped
-			(by choice or when it reaches the end) */
-			/*Main.setWindowMode();
-		}
-	}
-	*/
+	
 	page = 0;
 	listLength = 0;
 	
 	// Create File System object
 	fileSystem = new FileSystem();
-	// '$USB_DIR'
-	files = fileSystem.readDir(directory[directory.length-1]);
+	
+	if(fileSystem.isValidCommonPath(directory[directory.length - 1] == 1){
+		// '$USB_DIR'
+		files = fileSystem.readDir(directory[directory.length-1]);
+	}
+	else{
+		// Tell user to connect USB storage device.
+	}
 	
 	if(files){
 		// Load first page of files
@@ -60,7 +55,7 @@ function init() {
 	
 	enableKeys();
 	widgetAPI.sendReadyEvent();
-	
+	/*
 	var opt = {};
 	opt.onerror = function(error, info){
 		
@@ -76,14 +71,15 @@ function init() {
 		setKeyHelp();
 	}
 	
-	sf.service.VideoPlayer.init(opt);
+	$.sf.service.VideoPlayer.init(opt);
 	
-	sf.service.VideoPlayer.setKeyHandler(sf.key.RETURN, function() {
+	$.sf.service.VideoPlayer.setKeyHandler(sf.key.RETURN, function() {
 		sf.service.VideoPlayer.setFullScreen(false);
 	});
 	
-	sf.service.VideoPlayer.setPosition(videoPos);
-	sf.service.VideoPlayer.show();
+	$.sf.service.VideoPlayer.setPosition(videoPos);
+	$.sf.service.VideoPlayer.show();
+	*/
 }
 
 function onUnload() {
@@ -169,29 +165,30 @@ function keyDown() {
 		case tvKey.KEY_CH_DOWN:
 			loadPage(page+1);
 			break;
+			/*
 		case tvKey.KEY_PLAY:
-			if(sf.service.VideoPlayer.Skip.isInProgress()){
-				sf.service.VideoPLayer.pause();
+			if($.sf.service.VideoPlayer.Skip.isInProgress()){
+				$.sf.service.VideoPLayer.pause();
 			}
 			else{
-				sf.service.VideoPlayer.resume();
+				$.sf.service.VideoPlayer.resume();
 			}
 			break;
 		case tvKey.KEY_STOP:
-			if(sf.service.VideoPlayer.Skip.inProgress()){
-				sf.service.VideoPLayer.Skip.cancel();
+			if($.sf.service.VideoPlayer.Skip.inProgress()){
+				$.sf.service.VideoPLayer.Skip.cancel();
 			}
-			sf.service.VideoPlayer.stop();
+			$.sf.service.VideoPlayer.stop();
 			break;
 		case tvKey.KEY_PAUSE:
-			sf.service.VideoPlayer.pause();
+			$.sf.service.VideoPlayer.pause();
 			break;
 		case tvKey.KEY_FF:
-			sf.service.VideoPlayer.Skip.start(10);
+			$.sf.service.VideoPlayer.Skip.start(10);
 			break;
 		case tvKey.KEY_REW:
-			sf.service.VideoPlayer.Skip.start(-10);
-			break;
+			$.sf.service.VideoPlayer.Skip.start(-10);
+			break;*/
 	}
 }
 
@@ -209,18 +206,19 @@ function enterHandler(){
 		loadPage(page);
 	}
 	else {
+		/*
 		// Selected file is not a directory (play video if possible)i
-		if(sf.service.VideoPlayer.Skip.isInProgress()){
-			sf.service.VideoPlayer.Skip.stop();
+		if($.sf.service.VideoPlayer.Skip.isInProgress()){
+			$.sf.service.VideoPlayer.Skip.stop();
 		}
 		else{
 			if(videoSelected()){
 				
-				sf.VideoPlayer.stop();
+				$.sf.VideoPlayer.stop();
 				var url = getVideoUrl();
-				sf.service.VideoPlayer.play(url);
+				$.sf.service.VideoPlayer.play(url);
 			}
-		}
+		}*/
 	}
 }
 
@@ -308,17 +306,17 @@ function loadInfo(fileName){
 }
 
 function setKeyHelp(state){
-	
+	/*
 	var oKeyMap = {};
 	
-	if(videoState == sf.service.VideoPlayer.STATE_PLAYING ||
-		videoState == sf.service.VideoPlayer.STATE_PAUSED ||
-		videoState == sf.service.Video>player.STATE_BUFFERING){
+	if(videoState == $.sf.service.VideoPlayer.STATE_PLAYING ||
+		videoState == $.sf.service.VideoPlayer.STATE_PAUSED ||
+		videoState == $.sf.service.Video>player.STATE_BUFFERING){
 		
 		oKeyMap.RED = 'Fullscreen'
 	}
 	
-	if(sf.service.VideoPlayer.Skip.isInProgress()){
+	if($.sf.service.VideoPlayer.Skip.isInProgress()){
 		
 		oKeyMap.ENTER = 'Play';
 		oKeyMap.RETURN = 'Cancel';
@@ -330,6 +328,7 @@ function setKeyHelp(state){
 	}
 	
 	$("#keyhelp").sfKeyHelp(oKeyMap);
+	*/
 }
 
 function gotoMain(){

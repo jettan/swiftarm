@@ -29,6 +29,13 @@ function init() {
 	$('#settings').sfButton('focus');
 	$('#downloadmanager').sfButton('focus');
 	
+	if(serverIsAlive()){
+		// Everything is fine
+	}
+	else{
+		// Tell user to run SamyGo first
+	}
+	
 	enableKeys();
 	widgetAPI.sendReadyEvent();
 	
