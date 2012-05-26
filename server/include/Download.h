@@ -42,17 +42,13 @@ class Download {
 		
 		pthread_t _thread;			/// Thread to start download.
 		pthread_mutex_t _mutex;		/// Mutex to prevent download thread and main thread from accessing same data at the same time.
-			
+		
 		double _size;				/// Download size.
-		int _status;				/// Current status of the download.
+		volatile int _status;		/// Current status of the download.
 		
-		struct downloadProps {
-			char *filename;			/// Name of the download.
-			char *tracker;			/// Trackers seeding this download.
-			char *root_hash;		/// Root hash needed to start swift download.
-		};
-		
-		volatile downloadProps _properties;		/// Properties to pass to the thread. Used to initiate swift download.
+		char *_filename;			/// Name of the download.
+		char *_tracker;				/// Trackers seeding this download.
+		char *_root_hash;			/// Root hash needed to start swift download.
 		
 		/// Struct for holding time data.
 		struct time {
@@ -85,18 +81,17 @@ class Download {
 		void pause();
 		void resume();
 		
-		static void*  callStartThread(void *arg) { return ((Download*)arg)->startThread(arg); }
-		void* startThread(void *arg);
-		
-		int getID();
-		int getStatus();
-		double getSize();
+		const int getID();
+		const int getStatus();
+		const char* getTrackerAddress();
+		const char* getFilename();
+		const char* getRootHash(); 
+		const double getSize();
 		struct event *getEvent();
 		
 		//void isCompleteCallback(int fd, short event, void* arg);
 		
 		struct downloadStats getStatistics();
-		struct downloadProps getProperties();
 		
 		void setDownloadSpeed(double speed);
 		void setUploadSpeed(double speed);
@@ -116,10 +111,10 @@ class Download {
 		 * Constructor.
 		 */
 		Download(char *tracker, char *root_hash, char *filename) {
-			_stats.id               = -1;
-			_properties.tracker     = tracker;
-			_properties.root_hash   = root_hash;
-			_properties.filename    = filename;
+			_stats.id        = -1;
+			_tracker     = tracker;
+			_root_hash   = root_hash;
+			_filename    = filename;
 			pthread_mutex_init(&_mutex, NULL);
 			setStatus(READY);
 		}

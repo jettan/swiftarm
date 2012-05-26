@@ -40,6 +40,12 @@ static void HttpServer::sendResponse(struct evhttp_request *req, struct evbuffer
 	std::cout << "Sent the message." << std::endl;
 }
 
+void* startThread(void *arg) {
+	Download *download = (Download*) arg;
+	download->start();
+	pthread_exit(NULL);
+}
+
 /**
  * The HTTP GET request handler.
  */
@@ -65,12 +71,16 @@ static void HttpServer::handleRequest(struct evhttp_request *req, void *arg) {
 		//TODO: Parse the http request.
 		
 		char tracker[]   = "127.0.0.1:20000";
-		char root_hash[] = "ed29d19bc8ea69dfb5910e7e20247ee7e002f321";
+		char root_hash[] = "012b5549e2622ea8bf3d694b4f55c959539ac848";
 		char name[]      = "bla.mp4";
-		Download test(tracker, root_hash, name);
+		Download* test   = new Download(tracker, root_hash, name);
 		
-		//TODO: Call method to start download.
-		test.start();
+		//Wait until download object is actually created before starting the thread.
+		sleep(1);
+		
+		//Start thread to start download loop.
+		pthread_t thread;
+		int result_code = pthread_create(&thread, NULL, startThread, (void*) test);
 		
 		//TODO: Construct the path where the file will be downloaded.
 		char response[] = "file:///dtv/usb/sda1/Downloads/stream.mp4\n";
