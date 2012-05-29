@@ -1,5 +1,8 @@
 #include "../include/HttpServer.h"
 
+namespace HttpServer {
+	struct event_base *base;
+}
 
 /**
  * Send the HTTP XML response.
@@ -123,10 +126,6 @@ static void HttpServer::handleRequest(struct evhttp_request *req, void *arg) {
  * Initialize the web server.
  */
 int HttpServer::init() {
-	
-	// Enable pthread use in libevent.
-	evthread_use_pthreads();
-	
 	struct evhttp *http;
 	struct evhttp_bound_socket *handle;
 	

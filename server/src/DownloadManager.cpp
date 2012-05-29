@@ -75,5 +75,3 @@ void DownloadManager::startStreaming(char *tracker_address) {
 		}
 	}
 }
-
-

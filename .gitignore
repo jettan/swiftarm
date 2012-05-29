@@ -4,4 +4,4 @@
 bin
 *.swp
 *.pc
-
+server/srs/ws

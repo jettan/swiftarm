@@ -27,7 +27,6 @@
 #include "swift.h"
 
 namespace HttpServer {
-		static struct event_base *base;
 		
 		static void sendXMLResponse(struct evhttp_request *req, struct evbuffer *buf);
 		static void sendResponse(struct evhttp_request *req, struct evbuffer *buf,  const char *message);

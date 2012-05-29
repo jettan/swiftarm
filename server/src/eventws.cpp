@@ -22,7 +22,7 @@
 #include "swift.h"
 
 namespace HttpServer {
-	static struct event_base *base;
+	struct event_base *base;
 }
 
 namespace DownloadManager {
@@ -98,16 +98,16 @@ namespace DownloadManager {
 	 * Callback needed to close streams.
 	 */
 	void CloseCallback(int fd, short event, void *arg) {
-		std::cout << "Callback value of streaming: " << readStreaming() << std::endl;
-		if (readStreaming()) {
+//		std::cout << "Callback value of streaming: " << readStreaming() << std::endl;
+//		if (readStreaming()) {
 			evtimer_add(&evclose, swift::tint2tv(TINT_SEC));
 			std::cout << "Busy streaming..." << std::endl;
 		
-		} else {
+/*		} else {
 			std::cerr << "Calling loopexit of HTTPgw." << std::endl;
 			event_base_loopexit(swift::Channel::evbase, NULL);
 			std::cout << "loopexit called." << std::endl;
-		}
+		}*/
 	}
 	
 	/**
@@ -279,7 +279,7 @@ namespace HttpServer {
 			}
 			
 		} else if (strcmp(path, "/stream") == 0) {
-			if (!DownloadManager::readStreaming()) {
+//			if (!DownloadManager::readStreaming()) {
 				std::cout << "Start with: " << DownloadManager::startStreaming() << std::endl;
 				
 				DownloadManager::download_args.tracker = "127.0.0.1:20000";
@@ -288,8 +288,8 @@ namespace HttpServer {
 				if (rc) {
 					std::cerr << "ERROR: failed to create stream thread. Code: " << rc << "." << std::endl;
 				}	
-			}
-			send_response(req, evb, "http://130.161.159.107:15000/012b5549e2622ea8bf3d694b4f55c959539ac848");
+//			}
+			send_response(req, evb, "http://127.0.0.1:15000/012b5549e2622ea8bf3d694b4f55c959539ac848");
 			
 		} else if (strcmp(path, "/getDownloads") == 0) {
 			send_xml_response(req, evb);

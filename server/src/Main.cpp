@@ -10,9 +10,12 @@
 bool InstallHTTPGateway(struct event_base *evbase, swift::Address addr, uint32_t chunk_size, double *maxspeed);
 
 /**
- * Initialise libswift engine.
+ * Application main loop.
  */
- int initSwift() {
+int main(){
+	
+	// Enable pthread use in libevent.
+	evthread_use_pthreads();
 	swift::Channel::evbase = event_base_new();
 	
 	evutil_socket_t sock = INVALID_SOCKET;
@@ -44,15 +47,6 @@ bool InstallHTTPGateway(struct event_base *evbase, swift::Address addr, uint32_t
 	std::cout << "HTTP gateway installation returned: " << res << std::endl;
 	
 	std::cout << "Initialised swift" << std::endl;
-	
-	return 0;
-}
-
-/**
- * Application main loop.
- */
-int main(){
-	initSwift();
 	
 	// Make httpserver loop
 	HttpServer::init();
