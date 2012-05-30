@@ -73,10 +73,10 @@ static void HttpServer::handleRequest(struct evhttp_request *req, void *arg) {
 	if(strcmp(path, "/download") == 0) {
 		//TODO: Parse the http request.
 		
-		char tracker[]   = "127.0.0.1:20000";
-		char root_hash[] = "012b5549e2622ea8bf3d694b4f55c959539ac848";
-		char name[]      = "bla.mp4";
-		Download* test   = new Download(tracker, root_hash, name);
+		std::string tracker     = "127.0.0.1:20000";
+		std::string root_hash   = "012b5549e2622ea8bf3d694b4f55c959539ac848";
+		std::string name        = "bla.mp4";
+		Download* test          = new Download(tracker, root_hash, name);
 		
 		//Wait until download object is actually created before starting the thread.
 		sleep(1);

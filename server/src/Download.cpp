@@ -33,19 +33,19 @@ void Download::start() {
 	int change = chdir("/dtv/usb/sda1/Downloads");
 	std::cout << "Changed directory." << std::endl;
 	
-	swift::Address trackeraddr = swift::Address(getTrackerAddress());
+	swift::Address trackeraddr = swift::Address(getTrackerAddress().c_str());
 	std::cout << "Set the tracker address." << std::endl;
 	
-	swift::Sha1Hash roothash  = swift::Sha1Hash(true, getRootHash());
+	swift::Sha1Hash roothash  = swift::Sha1Hash(true, getRootHash().c_str());
 	
 	// Set the tracker.
 	std::cout << "Setting the tracker..." << std::endl;
-	swift::SetTracker(getTrackerAddress());
+	swift::SetTracker(getTrackerAddress().c_str());
 	
 	std::cout << "Filename = " << getFilename() << std::endl;
 	
 	// Download the file.
-	int id = swift::Open(getFilename(), roothash);
+	int id = swift::Open(getFilename().c_str(), roothash);
 	std::cout << "ID = " << id << std::endl;
 	
 	setID(id);
@@ -288,25 +288,25 @@ Download::downloadStats Download::getStatistics() {
 /**
  * Get the tracker address.
  */
-const char* Download::getTrackerAddress() {
-	const char* tracker = _tracker;
+std::string Download::getTrackerAddress() {
 	return _tracker;
 }
 
 /**
  * Get the filename.
  */
-const char* Download::getFilename() {
-	const char* filename = _filename;
-	return filename;
+std::string Download::getFilename() {
+	pthread_mutex_lock( &_mutex );
+	std::string name = _filename;
+	pthread_mutex_unlock( &_mutex );
+	
+	return name;
 }
 
 /**
  * Get the root hash.
  */
-const char* Download::getRootHash() {
-	const char* root_hash = _root_hash;
-	
-	return root_hash;
+std::string Download::getRootHash() {
+	return _root_hash;
 }
 

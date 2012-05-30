@@ -7,6 +7,7 @@
 
 #include <iostream>
 #include <ctime>
+#include <string>
 
 #include <cstdio>
 #include <cstdlib>
@@ -46,9 +47,9 @@ class Download {
 		double _size;				/// Download size.
 		volatile int _status;		/// Current status of the download.
 		
-		char *_filename;			/// Name of the download.
-		char *_tracker;				/// Trackers seeding this download.
-		char *_root_hash;			/// Root hash needed to start swift download.
+		std::string _filename;			/// Name of the download.
+		std::string _tracker;			/// Trackers seeding this download.
+		std::string _root_hash;			/// Root hash needed to start swift download.
 		
 		/// Struct for holding time data.
 		struct time {
@@ -83,9 +84,9 @@ class Download {
 		
 		const int getID();
 		const int getStatus();
-		const char* getTrackerAddress();
-		const char* getFilename();
-		const char* getRootHash(); 
+		std::string getTrackerAddress();
+		std::string getFilename();
+		std::string getRootHash(); 
 		const double getSize();
 		struct event *getEvent();
 		
@@ -110,8 +111,8 @@ class Download {
 		/**
 		 * Constructor.
 		 */
-		Download(char *tracker, char *root_hash, char *filename) {
-			_stats.id        = -1;
+		Download(std::string tracker, std::string root_hash, std::string filename) {
+			_stats.id    = -1;
 			_tracker     = tracker;
 			_root_hash   = root_hash;
 			_filename    = filename;
