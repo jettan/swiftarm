@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<widget>
+	<ThumbIcon itemtype="string">icon/icon_af_106.png</ThumbIcon>
+	<BigThumbIcon itemtype="string">icon/icon_af_115.png</BigThumbIcon>
+	<ListIcon itemtype="string">icon/icon_af_85.png</ListIcon>
+	<BigListIcon itemtype="string">icon/icon_af_95.png</BigListIcon>
+	<category itemtype="string"></category>
+	<autoUpdate itemtype="string">n</autoUpdate>
+	<cpname itemtype="string">Samsung</cpname>
+	<cpauthjs itemtype="string"></cpauthjs>
+	<login itemtype="string">n</login>
+	<ver itemtype="string">1.000</ver>
+	<mgrver itemtype="string">2.000</mgrver>
+	<fullwidget itemtype="string">y</fullwidget>
+	<srcctl itemtype="string">y</srcctl>
+	<ticker itemtype="string">n</ticker>
+	<childlock itemtype="string">n</childlock>
+	<audiomute itemtype="string">y</audiomute>
+	<videomute itemtype="string">y</videomute>
+	<dcont itemtype="string">y</dcont>
+	<movie itemtype="string">y</movie>
+	<widgetname itemtype="string">P2PTV_Scenes</widgetname>
+	<description itemtype="string">P2PTV with scenes</description>
+	<width itemtype="number">960</width>
+	<height itemtype="number">540</height>
+	<author itemtype="group">
+		<name itemtype="string">Samsung Electronics Co. Ltd.</name>
+		<email itemtype="string"></email>
+		<link itemtype="string">http://www.sec.co.kr/</link>
+		<organization itemtype="string">Samsung Electronics Co. Ltd.</organization>
+	</author>
+</widget>

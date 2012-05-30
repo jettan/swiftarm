@@ -1,0 +1,174 @@
+/* Layout */
+
+#SceneSearch {
+	position : absolute;
+	left : 0px;
+	top : 0px;
+	width : 960px;
+	height : 540px;
+	background-color : #ffffff;
+}
+
+#SceneSearch #searchbar {
+	position: absolute;
+	left: 100px; top: 20px;
+	width: 760px; height: 60px;
+}
+
+#SceneSearch #one {
+	position: absolute;
+	left: 90px; top: 180px;
+	width: 60px; height: 60px;
+}
+#SceneSearch #oneletters {
+	position: absolute;
+	left: 90px; top: 215px;
+	width: 60px; height: 20px;
+	font-size : 14pt;
+	color : #FFFFFF;
+	background-color:#0000FF;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+#SceneSearch #two {
+	position: absolute;
+	left: 330px; top: 180px;
+	width: 60px; height: 60px;
+}
+#SceneSearch #twoletters {
+	position: absolute;
+	left: 330px; top: 215px;
+	width: 60px; height: 20px;
+	font-size : 14pt;
+	color : #FFFFFF;
+	background-color:#0000FF;
+}
+
+#SceneSearch #three {
+	position: absolute;
+	left: 570px; top: 180px;
+	width: 60px; height: 60px;
+}
+#SceneSearch #threeletters {
+	position: absolute;
+	left: 570px; top: 215px;
+	width: 60px; height: 20px;
+	font-size : 14pt;
+	color : #FFFFFF;
+	background-color:#0000FF;
+}
+
+#SceneSearch #four {
+	position: absolute;
+	left: 90px; top: 290px;
+	width: 60px; height: 60px;
+}
+#SceneSearch #fourletters {
+	position: absolute;
+	left: 90px; top: 325px;
+	width: 60px; height: 20px;
+	font-size : 14pt;
+	color : #FFFFFF;
+	background-color:#0000FF;
+}
+
+#SceneSearch #five {
+	position: absolute;
+	left: 330px; top: 290px;
+	width: 60px; height: 60px;
+}
+#SceneSearch #fiveletters {
+	position: absolute;
+	left: 330px; top: 325px;
+	width: 60px; height: 20px;
+	font-size : 14pt;
+	color : #FFFFFF;
+	background-color:#0000FF;
+}
+
+#SceneSearch #six {
+	position: absolute;
+	left: 570px; top: 290px;
+	width: 60px; height: 60px;
+}
+#SceneSearch #sixletters {
+	position: absolute;
+	left: 570px; top: 325px;
+	width: 60px; height: 20px;
+	font-size : 14pt;
+	color : #FFFFFF;
+	background-color:#0000FF;
+}
+
+#SceneSearch #seven {
+	position: absolute;
+	left: 90px; top: 400px;
+	width: 60px; height: 60px;
+}
+#SceneSearch #sevenletters {
+	position: absolute;
+	left: 90px; top: 435px;
+	width: 60px; height: 20px;
+	font-size : 14pt;
+	color : #FFFFFF;
+	background-color:#0000FF;
+}
+
+#SceneSearch #eight {
+	position: absolute;
+	left: 330px; top: 400px;
+	width: 60px; height: 60px;
+}
+#SceneSearch #eightletters {
+	position: absolute;
+	left: 330px; top: 435px;
+	width: 60px; height: 20px;
+	font-size : 14pt;
+	color : #FFFFFF;
+	background-color:#0000FF;
+}
+
+#SceneSearch #nine {
+	position: absolute;
+	left: 570px; top: 400px;
+	width: 60px; height: 60px;
+}
+#SceneSearch #nineletters {
+	position: absolute;
+	left: 570px; top: 435px;
+	width: 60px; height: 20px;
+	font-size : 14pt;
+	color : #FFFFFF;
+	background-color:#0000FF;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+#SceneSearch #zero {
+	position: absolute;
+	left: 810px; top: 180px;
+	width: 60px; height: 60px;
+}
+#SceneSearch #zeroletters {
+	position: absolute;
+	left: 810px; top: 215px;
+	width: 100px; height: 20px;
+	font-size : 14pt;
+	color : #FFFFFF;
+	background-color:#0000FF;
+}
+
+#SceneSearch #shift {
+	position: absolute;
+	left: 810px; top: 290px;
+	width: 100px; height: 60px;
+}
+
+#SceneSearch #type {
+	position: absolute;
+	left: 810px; top: 400px;
+	width: 100px; height: 60px;
+}
+
+

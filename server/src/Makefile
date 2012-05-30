@@ -1,4 +1,4 @@
-cppflags_for_gpp= -O2 -I . -I $(SWIFTARM)/server/include -I $(SWIFTARM)/server/lib/include
+cppflags_for_gpp= -I $(SWIFTARM)/server/include -I $(SWIFTARM)/server/lib/include
 cppflags_for_x86_64= -O2 -I . -I $(SWIFTARM)/server/include -I $(SWIFTARM)/server/lib/include64
 cppflags_for_arm= -O2 -I . -I $(SWIFTARM)/server/include -I $(SWIFTARM)/server/lib-arm/include -I /opt/armv7a8-toolchain-lite/arm-v7a8-linux-gnueabi/include -I /opt/armv7a8-toolchain-lite/arm-v7a8-linux-gnueabi/libc/include
 

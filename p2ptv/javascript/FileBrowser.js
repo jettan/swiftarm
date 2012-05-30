@@ -7,14 +7,14 @@ var files;
 var page;
 var selected;
 var listLength;
-
+/*
 var videoPos = {
 	left: 700,
 	top: 100,
 	width: 500,
 	height: 400
 };
-
+*/
 //var videoState = $.sf.service.VideoPlayer.STATE_STOPPED;
 var errorString = ['NoError', 'Network', 'Not Supported'];
 var stateString = ['Playing', 'Stopped', 'Paused', 'Buffering', 'Scanning'];

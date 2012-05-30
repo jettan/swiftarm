@@ -1,0 +1,8 @@
+{
+	"scenes" : [
+		"Main, Search, FileBrowser, Settings, DownloadManager"
+	],
+	"files" : [],
+	"theme" : "base",
+	"modules": ["ime"]
+}

@@ -73,6 +73,7 @@
 				</tr>			
 			</table>
 		</center-->
-		<div id="Downloads"></div>
+		<div id="Downloads">
+		</div>
 	</body>
 </html>

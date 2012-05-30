@@ -1,17 +1,6 @@
 var widgetAPI = new Common.API.Widget();
 var tvKey     = new Common.API.TVKeyValue();
 
-// Variables that keep track of the focus
-var xFocus = 0;
-var yFocus = 0;
-
-var MaxXFocus = 4;
-var MaxYFocus = 0;
-
-var contentFrame;
-var search;
-var browse;
-var settings;
 
 /* Function called when the app is initialised
  * Creates the buttons and starts key handler */
@@ -28,14 +17,14 @@ function init() {
 	$('#browse').sfButton('focus');
 	$('#settings').sfButton('focus');
 	$('#downloadmanager').sfButton('focus');
-	
+	/*
 	if(serverIsAlive()){
 		// Everything is fine
 	}
 	else{
 		// Tell user to run SamyGo first
 	}
-	
+	*/
 	enableKeys();
 	widgetAPI.sendReadyEvent();
 	

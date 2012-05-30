@@ -1,0 +1,40 @@
+#SceneFileBrowser {
+	position : absolute;
+	left : 0px;
+	top : 0px;
+	width : 960px;
+	height : 540px;
+	background-color : #1f1f20;
+}
+
+#VideoPlayerPartialTitle {
+	position: absolute;
+	left: 0px;
+	top: 0px;
+}
+
+#lstVideoPlayerPartial {
+    position : absolute;
+    left: 40px;
+	top: 100px;
+    width: 400px;
+	height: 375px;
+}
+
+#VideoPlayerPartialEventTitle {
+    position : absolute;
+    left: 525px;
+    top: 390px;
+    width: 375px;
+	height: 22px;
+}
+#VideoPlayerPartialEvent {
+    position : absolute;
+    left: 525px;
+    top: 412px;
+    width: 375px;
+	height: 75px;
+	border: 1px solid #0000ff;
+	overflow: hidden;
+	font-size: 12px;
+}

@@ -1,0 +1,44 @@
+/* Layout */
+
+#SceneMain {
+	position : absolute;
+	left : 0px;
+	top : 0px;
+	width : 960px;
+	height : 540px;
+	background-color : #ffffff;
+}
+
+#SceneMain #menu {
+	position: absolute;
+	left: 0px; top: 0px;
+	width: 960px; height: 180px;
+}
+
+#SceneMain #search {
+	position: absolute;
+	left: 60px; top: 20px;
+	width: 120px; height: 60px;
+	background-image:url("../images/searchBtn.png");
+}
+
+#SceneMain #browse {
+	position: absolute;
+	left: 300px; top: 20px;
+	width: 120px; height: 60px;
+	background-image:url("../images/browseBtn.png");
+}
+
+#SceneMain #settings {
+	position: absolute;
+	left: 540px; top: 20px;
+	width: 120px; height: 60px;
+	background-image:url("../images/settingsBtn.png");
+}
+
+#SceneMain #downloadmanager {
+	position: absolute;
+	left: 780px; top: 20px;
+	width: 120px; height: 60px;
+	background-image:url("../images/exitBtn.png");
+}
