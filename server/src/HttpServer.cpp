@@ -44,8 +44,10 @@ static void HttpServer::sendResponse(struct evhttp_request *req, struct evbuffer
 }
 
 void* startThread(void *arg) {
+	std::cout << "Entered thread" << std::endl;
 	Download *download = (Download*) arg;
 	download->start();
+	std::cout << "Exiting thread" << std::endl;
 	pthread_exit(NULL);
 }
 
@@ -73,7 +75,7 @@ static void HttpServer::handleRequest(struct evhttp_request *req, void *arg) {
 	if(strcmp(path, "/download") == 0) {
 		//TODO: Parse the http request.
 		
-		std::string tracker     = "127.0.0.1:20000";
+		std::string tracker     = "130.161.158.52:20000";
 		std::string root_hash   = "012b5549e2622ea8bf3d694b4f55c959539ac848";
 		std::string name        = "bla.mp4";
 		Download* test          = new Download(tracker, root_hash, name);
@@ -86,7 +88,7 @@ static void HttpServer::handleRequest(struct evhttp_request *req, void *arg) {
 		int result_code = pthread_create(&thread, NULL, startThread, (void*) test);
 		
 		//TODO: Construct the path where the file will be downloaded.
-		char response[] = "file:///dtv/usb/sda1/Downloads/stream.mp4\n";
+		char response[] = "file:///dtv/usb/sda1/Downloads/bla.mp4";
 		
 		sendResponse(req, evb, response);
 		
@@ -98,15 +100,17 @@ static void HttpServer::handleRequest(struct evhttp_request *req, void *arg) {
 		//TODO: Set the download properties (tracker, etc).
 		//TODO: Call downloadmanager to start streaming.
 		
-		char tracker[]   = "127.0.0.1:20000";
+		char tracker[]   = "130.161.158.52:20000";
 		DownloadManager::startStreaming(tracker);
 		
 		//TODO: Construct url from which stream can be read from.
-		sendResponse(req, evb, "http://127.0.0.1:15000/012b5549e2622ea8bf3d694b4f55c959539ac848");
+		sendResponse(req, evb, "http://130.161.159.107:15000/012b5549e2622ea8bf3d694b4f55c959539ac848");
 		
 	} else if (strcmp(path, "/alive") == 0) {
 		sendResponse(req, evb, "Alive");
-		
+	} else if (strcmp(path, "/close") == 0) {
+		DownloadManager::stopStreaming();
+		sendResponse(req, evb, "Not streaming anymore.");
 	} else {
 		std::cout << "Bad request: " << path << std::endl;
 	}
@@ -144,8 +148,8 @@ int HttpServer::init() {
 	evhttp_set_gencb(http, handleRequest, NULL);
 	
 	// Now we tell the evhttp what port to listen on.
-	 handle = evhttp_bind_socket_with_handle(http, "127.0.0.1", port);
-	//handle = evhttp_bind_socket_with_handle(http, "130.161.159.107", port);
+	//handle = evhttp_bind_socket_with_handle(http, "130.161.158.52", port);
+	handle = evhttp_bind_socket_with_handle(http, "130.161.159.107", port);
 	if (!handle) {
 		std::cerr << "Couldn't bind to port " << (int)port << ". Exiting." << std::endl;
 		return 1;

@@ -9,7 +9,7 @@ void beginStreaming() {
 	pthread_mutex_unlock( &stream_mutex );
 }
 
-void stopStreaming() {
+void DownloadManager::stopStreaming() {
 	pthread_mutex_lock( &stream_mutex );
 	streaming = false;
 	pthread_mutex_unlock( &stream_mutex );
@@ -39,7 +39,7 @@ void *DownloadManager::stream(void *str) {
 	std::cout << "Entered the stream thread." << std::endl;
 	
 	// Change the directory to Downloads folder.
-	int change = chdir("/home/jettan/Downloads");
+	int change = chdir("/dtv/usb/sda1/Downloads");
 	
 	char *tracker = (char *) str;
 	
