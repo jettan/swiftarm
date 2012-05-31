@@ -40,7 +40,7 @@ void Download::start() {
 	
 	// Set the tracker.
 	std::cout << "Setting the tracker..." << std::endl;
-	swift::SetTracker(getTrackerAddress().c_str());
+	swift::SetTracker(trackeraddr);
 	
 	std::cout << "Filename = " << getFilename() << std::endl;
 	

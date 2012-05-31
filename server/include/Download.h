@@ -86,7 +86,7 @@ class Download {
 		const int getStatus();
 		std::string getTrackerAddress();
 		std::string getFilename();
-		std::string getRootHash(); 
+		std::string getRootHash();
 		const double getSize();
 		struct event *getEvent();
 		
@@ -116,7 +116,7 @@ class Download {
 			_tracker     = tracker;
 			_root_hash   = root_hash;
 			_filename    = filename;
-			pthread_mutex_init(&_mutex, NULL);
+			int rc = pthread_mutex_init(&_mutex, NULL);
 			setStatus(READY);
 		}
 		
