@@ -5,7 +5,7 @@
 class DownloadManagerTest : public ::testing::Test {
 	protected:
 	
-	virtual ~DownloadTest() {}
+	virtual ~DownloadManagerTest() {}
 	
 	virtual void SetUp(){
 		

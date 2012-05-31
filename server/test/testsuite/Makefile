@@ -8,7 +8,7 @@ SOURCE = ../../src
 
 all: testsuite
 
-testsuite: Main.o DownloadTest.o DownloadManagerTest.o HTTPServerTest.o Download.o DownloadManager.o HttpServer.o
+testsuite: Main.o DownloadTest.o DownloadManagerTest.o HTTPServerTest.o Download.o DownloadManager.o HttpServer.o Stream.o
 	$(CXX) $(CPPFLAGS) -o testsuite *.o ${GTESTLIB} ${LDADD}
 
 Main.o: Main.cpp
@@ -25,6 +25,9 @@ HTTPServerTest.o: HTTPServerTest.cpp
 
 Download.o: $(SOURCE)/Download.cpp
 	$(CXX) $(CPPFLAGS) $(SOURCE)/Download.cpp -c
+
+Stream.o: $(SOURCE)/Stream.cpp
+	$(CXX) $(CPPFLAGS) $(SOURCE)/Stream.cpp -c
 
 DownloadManager.o: $(SOURCE)/DownloadManager.cpp
 	$(CXX) $(CPPFLAGS) $(SOURCE)/DownloadManager.cpp -c
