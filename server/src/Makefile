@@ -20,11 +20,14 @@ CPPFLAGS +=-Wall -Wno-sign-compare -Wno-unused -g -D_FILE_OFFSET_BITS=64 -D_LARG
 
 all: main
 
-main: Main.o Download.o DownloadManager.o HttpServer.o
+main: Main.o Download.o Stream.o DownloadManager.o HttpServer.o
 	$(CXX) ${CPPFLAGS} -o ws *.o ${LDADD}
 
 Main.o: Main.cpp
 	$(CXX) $(CPPFLAGS) Main.cpp -c
+
+Stream.o: Stream.cpp
+	$(CXX) $(CPPFLAGS) Stream.cpp -c
 
 Download.o: Download.cpp
 	$(CXX) $(CPPFLAGS) Download.cpp -c

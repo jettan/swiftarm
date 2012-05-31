@@ -97,11 +97,9 @@ static void HttpServer::handleRequest(struct evhttp_request *req, void *arg) {
 		
 	} else if (strcmp(path, "/stream") == 0) {
 		//TODO: Parse the stream request.
-		//TODO: Set the download properties (tracker, etc).
-		//TODO: Call downloadmanager to start streaming.
 		
-		char tracker[]   = "130.161.158.52:20000";
-		DownloadManager::startStreaming(tracker);
+		std::string tracker     = "130.161.158.52:20000";
+		DownloadManager::startStream(tracker);
 		
 		//TODO: Construct url from which stream can be read from.
 		sendResponse(req, evb, "http://130.161.159.107:15000/012b5549e2622ea8bf3d694b4f55c959539ac848");
@@ -109,7 +107,7 @@ static void HttpServer::handleRequest(struct evhttp_request *req, void *arg) {
 	} else if (strcmp(path, "/alive") == 0) {
 		sendResponse(req, evb, "Alive");
 	} else if (strcmp(path, "/close") == 0) {
-		DownloadManager::stopStreaming();
+		DownloadManager::stopStream();
 		sendResponse(req, evb, "Not streaming anymore.");
 	} else {
 		std::cout << "Bad request: " << path << std::endl;

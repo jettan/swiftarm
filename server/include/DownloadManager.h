@@ -4,6 +4,7 @@
 #include "Download.h"
 
 #include <vector>
+#include <string>
 #include <iostream>
 #include <cstdio>
 #include <cstdlib>
@@ -24,22 +25,22 @@
 #include <event2/event-config.h>
 #include <event2/thread.h>
 
+#include "Stream.h"
 #include "swift.h"
 
 namespace DownloadManager {
 	static std::vector<Download> downloads;	/// Vector containing all downloads.
 	static pthread_t streaming_thread;
-	static pthread_mutex_t stream_mutex = PTHREAD_MUTEX_INITIALIZER;
-	
-	static volatile bool streaming;
-	static struct event evclose;
+	static Stream *stream;
 	
 	static double downloaded;			/// Total amount of bytes downloaded this session.
 	static double uploaded;			/// Total amount of bytes uploaded this session.
 	
-	void startStreaming(char* tracker);
-	void stopStreaming();
-	void *stream(void *str);
+	void init();
+	
+	void startStream(std::string tracker);
+	void stopStream();
+	void *startThread(void *arg);
 	
 	void add(Download download);
 	void removeFromList(const int download_id);

@@ -23,6 +23,7 @@
 #include <event2/thread.h>
 
 #include "Download.h"
+#include "Stream.h"
 #include "DownloadManager.h"
 #include "swift.h"
 
