@@ -1,24 +1,37 @@
-#include "../include/Stream.h"
+#include "Stream.h"
 
+Stream* Stream::_instance;
+
+/**
+ * Initialise stream state and mutex.
+ */
 void Stream::init() {
-	streaming = false;
+	_streaming = false;
 	pthread_mutex_init( &_mutex, NULL);
 }
 
+/**
+ * Set stream state to "begin streaming".
+ */
 void Stream::beginStreaming() {
 	pthread_mutex_lock( &_mutex );
-	streaming = true;
+	_streaming = true;
 	pthread_mutex_unlock( &_mutex );
 }
 
-
+/**
+ * Get stream state.
+ */
 bool Stream::readStreaming() {
 	pthread_mutex_lock( &_mutex );
-	bool result = streaming;
+	bool result = _streaming;
 	pthread_mutex_unlock( &_mutex );
 	return result;
 }
 
+/**
+ * Libevent loop for streaming files.
+ */
 void closeCallback(int fd, short event, void *arg) {
 	Stream* stream = (Stream*) arg;
 	if (stream->readStreaming()) {
@@ -34,19 +47,34 @@ void Stream::setTracker(std::string tracker) {
 }
 
 /**
- * Get the event to start loop.
+ * Get the event to start the libevent loop.
  */
 event *Stream::getEvent() {
-	event *evclose = &_evclose;
-	return evclose;
+	return &_evclose;
 }
 
+/**
+ * Get Singleton instance of own class.
+ */
+Stream *Stream::getInstance() {
+	if (!_instance)
+		_instance = new Stream;
+		
+	return _instance;
+}
+
+/**
+ * Stop the stream.
+ */
 void Stream::stop() {
 	pthread_mutex_lock( &_mutex );
-	streaming = false;
+	_streaming = false;
 	pthread_mutex_unlock( &_mutex );
 }
 
+/**
+ * Start the stream.
+ */
 void Stream::start() {
 	
 	//Change the directory to Downloads folder.

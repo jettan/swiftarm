@@ -31,9 +31,19 @@ class Stream {
 		std::string _tracker;		/// Trackers seeding this stream.
 		pthread_mutex_t _mutex;		/// Mutex to prevent download thread and main thread from accessing same data at the same time.
 		struct event _evclose;
-		volatile bool streaming;
+		volatile bool _streaming;
+
+	private:
+		static Stream *_instance;
+		
+		Stream() {
+			init();
+		}
 		
 	public:
+		static Stream *getInstance();
+		
+		~Stream() {}
 		
 		void start();
 		void stop();
@@ -49,11 +59,6 @@ class Stream {
 		
 		void setStatus(int status);
 		
-		Stream() {
-			init();
-		}
-		
-		~Stream() {}
 };
 
 #endif

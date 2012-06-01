@@ -2,15 +2,10 @@
 
 using namespace DownloadManager;
 
-void DownloadManager::init() {
-	stream = new Stream();
-}
-
 void *DownloadManager::startThread(void* arg) {
 	std::cout << "Entering stream thread" << std::endl;
 	
-	Stream *stream = (Stream*) arg;
-	stream->start();
+	Stream::getInstance()->start();
 	
 	std::cout << "Exiting stream thread" << std::endl;
 	
@@ -18,16 +13,16 @@ void *DownloadManager::startThread(void* arg) {
 }
 
 void DownloadManager::stopStream() {
-	stream->stop();
+	Stream::getInstance()->stop();
 }
 
 void DownloadManager::startStream(std::string tracker) {
 	
-	if (!stream->readStreaming()) {
-		stream->setTracker(tracker);
+	if (!Stream::getInstance()->readStreaming()) {
+		Stream::getInstance()->setTracker(tracker);
 		
 		std::cout << "Spawning new thread..." << std::endl;
-		int return_code = pthread_create(&streaming_thread, NULL, startThread, (void *) stream);
+		int return_code = pthread_create(&streaming_thread, NULL, startThread, NULL);
 		
 		if (return_code) {
 			std::cerr << "ERROR: failed to create stream thread. Code: " << return_code << "." << std::endl;
@@ -35,6 +30,6 @@ void DownloadManager::startStream(std::string tracker) {
 	} else {
 		std::cout << "Already Streaming!" <<std::endl;
 	}
-		
+	
 }
 

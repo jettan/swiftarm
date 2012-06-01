@@ -31,12 +31,9 @@
 namespace DownloadManager {
 	static std::vector<Download> downloads;	/// Vector containing all downloads.
 	static pthread_t streaming_thread;
-	static Stream *stream;
 	
 	static double downloaded;			/// Total amount of bytes downloaded this session.
 	static double uploaded;			/// Total amount of bytes uploaded this session.
-	
-	void init();
 	
 	void startStream(std::string tracker);
 	void stopStream();
