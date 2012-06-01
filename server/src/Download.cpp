@@ -1,34 +1,59 @@
-#include "../include/Download.h"
+#include "Download.h"
 
 /**
  * Callback to check if a download is completed.
  */
 void isCompleteCallback(int fd, short event, void* arg) {
 	Download *download = (Download*) arg;
-	if ((swift::SeqComplete(download->getID()) != swift::Size(download->getID()))) {
-		
-		std::cout << "Percentage downloaded: " << floorf(((swift::Complete(download->getID()) * 10000.0) / 
-		swift::Size(download->getID()) * 1.0) + 0.5) / 100 << std::endl;
-		evtimer_add(download->getEvent(), swift::tint2tv(TINT_SEC));
+	
+	if(download->getStatus() == DOWNLOADING) {
+		if ((swift::SeqComplete(download->getID()) != swift::Size(download->getID()))) {
+			
+			std::cout << "Percentage downloaded: " << floorf(((swift::Complete(download->getID()) * 10000.0) / 
+			swift::Size(download->getID()) * 1.0) + 0.5) / 100 << std::endl;
+			evtimer_add(download->getEvent(), swift::tint2tv(TINT_SEC));
+		}
+		else {
+			download->setStatus(UPLOADING);
+		}
 	}
-	else {
-		//TODO: Don't close download until it is removed
-		download->setStatus(UPLOADING);
+	
+	if(download->getStatus() == DOWNLOADING || download->getStatus() == UPLOADING) {
+		//TODO: Update download statistics.
+	}
+	
+	if(download->getStatus() == STOPPED)
 		event_base_loopexit(swift::Channel::evbase, NULL);
-	}
+}
+
+/**
+ * Stop the download.
+ */
+void Download::stop() {
+	setStatus(STOPPED);
 }
 
 /**
  * Clear the download and starts over downloading it.
  */
 void Download::retry() {
-	
+	stop();
+	usleep(200000);
+	start();
 }
 
 /**
  * Starts downloading and uploading.
  */
 void Download::start() {
+	if(getStatus() != READY) {
+		std::cout << "Download not ready!" << std::endl;
+		return;
+	}
+	
+	// Set status to DOWNLOADING
+	setStatus(DOWNLOADING);
+	
 	// Change the directory to Downloads folder.
 	int change = chdir("/dtv/usb/sda1/Downloads");
 	std::cout << "Changed directory." << std::endl;
@@ -46,12 +71,10 @@ void Download::start() {
 	
 	// Download the file.
 	int id = swift::Open(getFilename().c_str(), roothash);
-	std::cout << "ID = " << id << std::endl;
 	
 	setID(id);
 	
 	std::cout << "ID = " << getID() << std::endl;
-	
 	
 	if (getID() < 0 ) {
 		std::cerr << "Could not download " << getFilename() << "!" << std::endl;
@@ -61,7 +84,6 @@ void Download::start() {
 		evtimer_assign(getEvent(), swift::Channel::evbase, isCompleteCallback, this);
 		evtimer_add(getEvent(), swift::tint2tv(TINT_SEC));
 		
-		setStatus(DOWNLOADING);
 		// Dispatch the event base to enter the swift loop.
 		event_base_dispatch(swift::Channel::evbase);
 		

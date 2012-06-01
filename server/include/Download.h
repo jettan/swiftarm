@@ -28,13 +28,14 @@
 #include <event2/event-config.h>
 #include <event2/thread.h>
 
-#include "../include/swift.h"
+#include "swift.h"
 
 enum Status {
 	READY,
 	PAUSED,
 	DOWNLOADING,
 	UPLOADING,
+	STOPPED,
 };
 
 class Download {
@@ -79,6 +80,7 @@ class Download {
 	public:
 		void retry();
 		void start();
+		void stop();
 		void pause();
 		void resume();
 		
