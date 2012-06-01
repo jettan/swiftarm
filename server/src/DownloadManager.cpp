@@ -2,14 +2,25 @@
 
 using namespace DownloadManager;
 
-void *DownloadManager::startThread(void* arg) {
-	std::cout << "Entering stream thread" << std::endl;
+void add(Download download){
 	
-	Stream::getInstance()->start();
+	downloads.push_back(download);
 	
-	std::cout << "Exiting stream thread" << std::endl;
+	if(downloads.size() == 1){
+		downloads.front()->start();
+	}
+}
+
+void removeFromList(const int download_id){
 	
-	pthread_exit(NULL);
+	for(int i = 0; i < downloads.size(); i++){
+		if(downloads.at(i)->getID() == download_id){
+			if(downloads.at(i)->getStatus() == DOWNLOADING){
+				downloads.at(i)->stop();
+			}
+		downloads.erase(i);
+		}
+	}
 }
 
 void DownloadManager::stopStream() {

@@ -29,6 +29,7 @@
 #include "swift.h"
 
 namespace DownloadManager {
+	static Download *activeDownload;
 	static std::vector<Download> downloads;	/// Vector containing all downloads.
 	static pthread_t streaming_thread;
 	
