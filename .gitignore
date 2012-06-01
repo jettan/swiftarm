@@ -5,3 +5,4 @@ bin
 *.swp
 *.pc
 server/src/ws
+server/test/testsuite/testsuite
