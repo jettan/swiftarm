@@ -7,14 +7,12 @@ void isCompleteCallback(int fd, short event, void* arg) {
 	Download *download = (Download*) arg;
 	
 	if(download->getStatus() == DOWNLOADING) {
+		download->setProgress(floorf(((swift::Complete(download->getID()) * 10000.0) / swift::Size(download->getID()) * 1.0) + 0.5) / 100 );
 		if ((swift::SeqComplete(download->getID()) != swift::Size(download->getID()))) {
-			
-			std::cout << "Percentage downloaded: " << floorf(((swift::Complete(download->getID()) * 10000.0) / 
-			swift::Size(download->getID()) * 1.0) + 0.5) / 100 << std::endl;
 			evtimer_add(download->getEvent(), swift::tint2tv(TINT_SEC));
-		}
-		else {
-			download->setStatus(UPLOADING);
+		} else {
+			std::cout << "Download completed!" << std::endl;
+			download->setStatus(STOPPED);
 		}
 	}
 	
@@ -55,7 +53,8 @@ void Download::start() {
 	setStatus(DOWNLOADING);
 	
 	// Change the directory to Downloads folder.
-	int change = chdir("/dtv/usb/sda1/Downloads");
+	//int change = chdir("/dtv/usb/sda1/Downloads");
+	int change = chdir("/tmp");
 	std::cout << "Changed directory." << std::endl;
 	
 	swift::Address trackeraddr = swift::Address(getTrackerAddress().c_str());

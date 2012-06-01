@@ -2,6 +2,7 @@
 
 namespace HttpServer {
 	struct event_base *base;
+	Download *test;
 }
 
 /**
@@ -75,10 +76,10 @@ static void HttpServer::handleRequest(struct evhttp_request *req, void *arg) {
 	if(strcmp(path, "/download") == 0) {
 		//TODO: Parse the http request.
 		
-		std::string tracker     = "127.0.0.1:20000";
+		std::string tracker     = "130.161.158.52:20000";
 		std::string root_hash   = "012b5549e2622ea8bf3d694b4f55c959539ac848";
 		std::string name        = "bla.mp4";
-		Download* test          = new Download(tracker, root_hash, name);
+		test                    = new Download(tracker, root_hash, name);
 		
 		//Wait until download object is actually created before starting the thread.
 		sleep(1);
@@ -104,6 +105,12 @@ static void HttpServer::handleRequest(struct evhttp_request *req, void *arg) {
 		//TODO: Construct url from which stream can be read from.
 		sendResponse(req, evb, "http://127.0.0.1:15000/012b5549e2622ea8bf3d694b4f55c959539ac848");
 		
+	} else if (strcmp(path, "/progress") == 0) {
+		double progress = test->getStatistics().download_percentage;
+		char response[8];
+		sprintf(response, "%f", progress);
+		
+		sendResponse(req, evb, response);
 	} else if (strcmp(path, "/alive") == 0) {
 		sendResponse(req, evb, "Alive");
 	} else if (strcmp(path, "/close") == 0) {
@@ -147,7 +154,7 @@ int HttpServer::init() {
 	
 	// Now we tell the evhttp what port to listen on.
 	//handle = evhttp_bind_socket_with_handle(http, "130.161.158.52", port);
-	handle = evhttp_bind_socket_with_handle(http, "127.0.0.1", port);
+	handle = evhttp_bind_socket_with_handle(http, "130.161.159.107", port);
 	if (!handle) {
 		std::cerr << "Couldn't bind to port " << (int)port << ". Exiting." << std::endl;
 		return 1;

@@ -75,7 +75,7 @@ class Download {
 		};
 		
 		
-		volatile downloadStats _stats;  /// Struct holding the statistics of the download.
+		downloadStats _stats;  /// Struct holding the statistics of the download.
 		
 	public:
 		void retry();

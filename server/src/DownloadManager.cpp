@@ -30,8 +30,7 @@ void DownloadManager::startDownload(const int download_id) {
 // Add a download to the list
 void DownloadManager::add(Download *download) {
 	
-	Download *test = new Download("bla", "bla", "bla");
-//	downloads.push_back(*test);
+	downloads.push_back(*download);
 	
 	if(downloads.size() == 1) {
 		downloadFirstInList();
