@@ -1,30 +1,109 @@
 #include "../include/DownloadManager.h"
 
-using namespace DownloadManager;
+void DownloadManager::setDownloadDirectory(std::string dir) {
+	downloadDirectory = dir;
+}
 
-void add(Download download){
+// Download first element in the download list
+void DownloadManager::downloadFirstInList(){
 	
-	downloads.push_back(download);
-	
-	if(downloads.size() == 1){
-		downloads.front()->start();
+	if(downloads.size() > 0) {
+		downloads.front().start();
+		activeDownload = &downloads.front();
 	}
 }
 
-void removeFromList(const int download_id){
+void DownloadManager::startDownload(const int download_id) {
+	if(activeDownload) {
+		activeDownload->pause();
+	}
+	int index = getIndexFromID(download_id);
+	if(index >= 0) {
+		activeDownload = &downloads.at(index);
+		activeDownload->start();
+	} else if(activeDownload) {
+		activeDownload->resume();
+	}
+}
+
+
+// Add a download to the list
+void DownloadManager::add(Download *download) {
 	
-	for(int i = 0; i < downloads.size(); i++){
-		if(downloads.at(i)->getID() == download_id){
-			if(downloads.at(i)->getStatus() == DOWNLOADING){
-				downloads.at(i)->stop();
-			}
-		downloads.erase(i);
+	Download *test = new Download("bla", "bla", "bla");
+//	downloads.push_back(*test);
+	
+	if(downloads.size() == 1) {
+		downloadFirstInList();
+	}
+}
+
+
+// Find the index of a download in the list based on the download ID
+int DownloadManager::getIndexFromID(const int download_id) {
+	
+	for(int i = 0; i < downloads.size(); i++) {
+		if(downloads.at(i).getID() == download_id) {
+			return i;
+		}
+	}
+	return -1;
+}
+
+// Remove a download from the list based on the download ID
+void DownloadManager::removeFromList(const int download_id) {
+	
+	int index = getIndexFromID(download_id);
+	if(index >= 0) {
+		if(downloads.at(index).getStatus() == DOWNLOADING) {
+			downloads.at(index).stop();
+			downloadFirstInList();
+		}
+		
+		//downloads.erase(downloads.begin() + index);
+	
+	}
+}
+
+// Remove a download from the hard disk based on download ID
+void DownloadManager::removeFromDisk(const int download_id) {
+	
+	int index = getIndexFromID(download_id);
+	
+	if(index >= 0) {
+		
+		std::string filename = downloads.at(index).getFilename();
+		removeFromList(download_id);
+		
+		filename = downloadDirectory + "/" + filename;
+		
+		if(filename.c_str() == 0) {
+			// File removed successfully
+			
+		} else {
+			// File not found
 		}
 	}
 }
 
+// Remove all downloads from the list
+void DownloadManager::clearList() {
+	
+	if(activeDownload != NULL){
+		activeDownload->stop();
+	}
+	downloads.clear();
+}
+
+
+
 void DownloadManager::stopStream() {
 	Stream::getInstance()->stop();
+}
+
+void* DownloadManager::startStreamThread(void* arg) {
+	Stream::getInstance()->start();
+	pthread_exit(NULL);
 }
 
 void DownloadManager::startStream(std::string tracker) {
@@ -33,7 +112,7 @@ void DownloadManager::startStream(std::string tracker) {
 		Stream::getInstance()->setTracker(tracker);
 		
 		std::cout << "Spawning new thread..." << std::endl;
-		int return_code = pthread_create(&streaming_thread, NULL, startThread, NULL);
+		int return_code = pthread_create(&streaming_thread, NULL, startStreamThread, NULL);
 		
 		if (return_code) {
 			std::cerr << "ERROR: failed to create stream thread. Code: " << return_code << "." << std::endl;

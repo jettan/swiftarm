@@ -123,6 +123,35 @@ class Download {
 		}
 		
 		/**
+		 * Copy constructor.
+		 */
+		 /*
+		Download(const Download &download) {
+			
+			//_stats.id    = download._stats.id;
+			//_stats.download_speed		= download._stats.download_speed;
+			//_stats.upload_speed			= download._stats.upload_speed;
+			//_stats.ratio				= download._stats.ratio;
+			//_stats.download_percentage	= download._stats.download_percentage;
+			//_stats.upload_amount		= download._stats.upload_amount;
+			//_stats.seeders				= download._stats.seeders;
+			//_stats.peers				= download._stats.peers;
+			//_stats.estimated.days		= download._stats.estimated.days;
+			//_stats.estimated.hours		= download._stats.estimated.hours;
+			//_stats.estimated.minutes	= download._stats.estimated.minutes;
+			//_stats.estimated.seconds	= download._stats.estimated.seconds;
+			_status						= download._status;
+			_size						= download._size;
+			_tracker					= download._tracker;
+			_root_hash					= download._root_hash;
+			_filename					= download._filename;
+			_thread						= download._thread;
+			_mutex						= download._mutex;
+			//_evcompl					= download._evcompl;
+			// TODO: Copy event _evcompl properly
+		}*/
+		
+		/**
 		 * Destructor.
 		 */
 		~Download() {

@@ -1,8 +1,6 @@
 #ifndef _DOWNLOADMANAGER_H
 #define _DOWNLOADMANAGER_H
 
-#include "Download.h"
-
 #include <vector>
 #include <string>
 #include <iostream>
@@ -26,21 +24,31 @@
 #include <event2/thread.h>
 
 #include "Stream.h"
+#include "Download.h"
 #include "swift.h"
 
 namespace DownloadManager {
-	static Download *activeDownload;
+	
 	static std::vector<Download> downloads;	/// Vector containing all downloads.
+	
+	static std::string downloadDirectory;
+	
+	static Download *activeDownload;
 	static pthread_t streaming_thread;
 	
 	static double downloaded;			/// Total amount of bytes downloaded this session.
 	static double uploaded;			/// Total amount of bytes uploaded this session.
 	
+	void setDownloadDirectory(std::string dir);
+	
 	void startStream(std::string tracker);
 	void stopStream();
-	void *startThread(void *arg);
+	void *startStreamThread(void *arg);
 	
-	void add(Download download);
+	void downloadFirstInList();
+	void startDownload(const int download_id);
+	void add(Download *download);
+	int getIndexFromID(const int download_id);
 	void removeFromList(const int download_id);
 	void removeFromDisk(const int download_id);
 	void clearList();
