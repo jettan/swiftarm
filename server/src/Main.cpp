@@ -1,8 +1,8 @@
 #include <iostream>
 
-#include "../include/swift.h"
-#include "../include/DownloadManager.h"
-#include "../include/HttpServer.h"
+#include "swift.h"
+#include "DownloadManager.h"
+#include "HttpServer.h"
 
 /**
  * Define the InstallHTTPGateway method in httpgw.cpp.
@@ -16,6 +16,7 @@ int main(){
 	
 	// Enable pthread use in libevent.
 	evthread_use_pthreads();
+	
 	swift::Channel::evbase = event_base_new();
 	
 	evutil_socket_t sock = INVALID_SOCKET;

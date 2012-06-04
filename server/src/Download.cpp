@@ -1,30 +1,6 @@
 #include "Download.h"
 
 /**
- * Callback to check if a download is completed.
- */
-void isCompleteCallback(int fd, short event, void* arg) {
-	Download *download = (Download*) arg;
-	
-	if(download->getStatus() == DOWNLOADING) {
-		download->setProgress(floorf(((swift::Complete(download->getID()) * 10000.0) / swift::Size(download->getID()) * 1.0) + 0.5) / 100 );
-		if ((swift::SeqComplete(download->getID()) != swift::Size(download->getID()))) {
-			evtimer_add(download->getEvent(), swift::tint2tv(TINT_SEC));
-		} else {
-			std::cout << "Download completed!" << std::endl;
-			download->setStatus(STOPPED);
-		}
-	}
-	
-	if(download->getStatus() == DOWNLOADING || download->getStatus() == UPLOADING) {
-		//TODO: Update download statistics.
-	}
-	
-	if(download->getStatus() == STOPPED)
-		event_base_loopexit(swift::Channel::evbase, NULL);
-}
-
-/**
  * Stop the download.
  */
 void Download::stop() {
@@ -54,7 +30,7 @@ void Download::start() {
 	
 	// Change the directory to Downloads folder.
 	//int change = chdir("/dtv/usb/sda1/Downloads");
-	int change = chdir("/tmp");
+	int change = chdir("/dtv/usb/sda1/Downloads");
 	std::cout << "Changed directory." << std::endl;
 	
 	
@@ -72,35 +48,18 @@ void Download::start() {
 	std::cout << "Filename = " << getFilename() << std::endl;
 	
 	// Download the file.
-	int id = swift::Open(getFilename().c_str(), roothash);
+	int id  = swift::Open(getFilename().c_str(), roothash);
 	
 	setID(id);
 	
 	std::cout << "ID = " << getID() << std::endl;
-	
-	if (getID() < 0 ) {
-		std::cerr << "Could not download " << getFilename() << "!" << std::endl;
-	} else {
-		// Assign callbacks to the event base.
-		std::cout << "Now dispatching event base." << std::endl;
-		evtimer_assign(getEvent(), swift::Channel::evbase, isCompleteCallback, this);
-		evtimer_add(getEvent(), swift::tint2tv(TINT_SEC));
-		
-		// Dispatch the event base to enter the swift loop.
-		event_base_dispatch(swift::Channel::evbase);
-		
-		std::cout << "Download of " << getFilename() << " completed." << std::endl;
-		
-		// Close the file.
-		swift::Close(getID());
-	}
 }
 
 /**
  *  Pauses downloading and uploading.
  */
 void Download::pause(){
-	
+	swift::Close(getID());
 }
 
 /**
@@ -256,14 +215,6 @@ void Download::setStatus(int status) {
 	pthread_mutex_unlock( &_mutex );
 }
 
-/**
- * Get the event to start loop.
- */
-event *Download::getEvent() {
-	event *evcompl = &_evcompl;
-	return evcompl;
-}
- 
 /**
  * Get the download ID.
  */

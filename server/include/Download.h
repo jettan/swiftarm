@@ -40,13 +40,11 @@ enum Status {
 
 class Download {
 	protected:
-		struct event _evcompl;
 		
-		pthread_t _thread;			/// Thread to start download.
-		pthread_mutex_t _mutex;		/// Mutex to prevent download thread and main thread from accessing same data at the same time.
+		pthread_mutex_t _mutex;			/// Mutex to prevent download thread and main thread from accessing same data at the same time.
 		
-		double _size;				/// Download size.
-		volatile int _status;		/// Current status of the download.
+		double _size;					/// Download size.
+		volatile int _status;			/// Current status of the download.
 		
 		std::string _filename;			/// Name of the download.
 		std::string _tracker;			/// Trackers seeding this download.
@@ -60,6 +58,7 @@ class Download {
 			int seconds;
 		};
 		
+		/// Struct for holding download statistics.
 		struct downloadStats {
 			int  id;					/// Download id needed to check the stats.
 			double download_speed;		/// Current download speed.
@@ -74,8 +73,7 @@ class Download {
 			struct time estimated;		/// Estimated time left for download to finish.
 		};
 		
-		
-		downloadStats _stats;  /// Struct holding the statistics of the download.
+		downloadStats _stats;			/// Struct holding the statistics of the download.
 		
 	public:
 		void retry();
@@ -90,9 +88,6 @@ class Download {
 		std::string getFilename();
 		std::string getRootHash();
 		const double getSize();
-		struct event *getEvent();
-		
-		//void isCompleteCallback(int fd, short event, void* arg);
 		
 		struct downloadStats getStatistics();
 		
@@ -118,38 +113,9 @@ class Download {
 			_tracker     = tracker;
 			_root_hash   = root_hash;
 			_filename    = filename;
-			int rc = pthread_mutex_init(&_mutex, NULL);
+			int rc       = pthread_mutex_init(&_mutex, NULL);
 			setStatus(READY);
 		}
-		
-		/**
-		 * Copy constructor.
-		 */
-		 /*
-		Download(const Download &download) {
-			
-			//_stats.id    = download._stats.id;
-			//_stats.download_speed		= download._stats.download_speed;
-			//_stats.upload_speed			= download._stats.upload_speed;
-			//_stats.ratio				= download._stats.ratio;
-			//_stats.download_percentage	= download._stats.download_percentage;
-			//_stats.upload_amount		= download._stats.upload_amount;
-			//_stats.seeders				= download._stats.seeders;
-			//_stats.peers				= download._stats.peers;
-			//_stats.estimated.days		= download._stats.estimated.days;
-			//_stats.estimated.hours		= download._stats.estimated.hours;
-			//_stats.estimated.minutes	= download._stats.estimated.minutes;
-			//_stats.estimated.seconds	= download._stats.estimated.seconds;
-			_status						= download._status;
-			_size						= download._size;
-			_tracker					= download._tracker;
-			_root_hash					= download._root_hash;
-			_filename					= download._filename;
-			_thread						= download._thread;
-			_mutex						= download._mutex;
-			//_evcompl					= download._evcompl;
-			// TODO: Copy event _evcompl properly
-		}*/
 		
 		/**
 		 * Destructor.

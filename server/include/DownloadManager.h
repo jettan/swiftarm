@@ -29,15 +29,19 @@
 
 namespace DownloadManager {
 	
+	
 	static std::vector<Download> downloads;	/// Vector containing all downloads.
 	
 	static std::string downloadDirectory;
 	
+	static struct event evcompl;
 	static Download *activeDownload;
 	static pthread_t streaming_thread;
+	static pthread_t thread;
 	
 	static double downloaded;			/// Total amount of bytes downloaded this session.
-	static double uploaded;			/// Total amount of bytes uploaded this session.
+	static double uploaded;				/// Total amount of bytes uploaded this session.
+	static int d_pid;					/// Download thread pid.
 	
 	void setDownloadDirectory(std::string dir);
 	std::string getDownloadDirectory();
@@ -47,6 +51,7 @@ namespace DownloadManager {
 	void startStream(std::string tracker);
 	void stopStream();
 	void *startStreamThread(void *arg);
+	void *dispatch(void* arg);
 	
 	void downloadFirstInList();
 	void startDownload(const int download_id);

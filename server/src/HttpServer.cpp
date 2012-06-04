@@ -1,4 +1,4 @@
-#include "../include/HttpServer.h"
+#include "HttpServer.h"
 
 namespace HttpServer {
 	struct event_base *base;
@@ -44,14 +44,6 @@ static void HttpServer::sendResponse(struct evhttp_request *req, struct evbuffer
 	std::cout << "Sent the message." << std::endl;
 }
 
-void* startThread(void *arg) {
-	std::cout << "Entered thread" << std::endl;
-	Download *download = (Download*) arg;
-	download->start();
-	std::cout << "Exiting thread" << std::endl;
-	pthread_exit(NULL);
-}
-
 /**
  * The HTTP GET request handler.
  */
@@ -76,17 +68,13 @@ static void HttpServer::handleRequest(struct evhttp_request *req, void *arg) {
 	
 	if(strcmp(path, "/download") == 0) {
 		
-		std::string tracker     = "130.161.158.52:20000";
+		//std::string tracker     = "130.161.158.52:20000";
+		std::string tracker     = "127.0.0.1:20000";
 		std::string root_hash   = "012b5549e2622ea8bf3d694b4f55c959539ac848";
 		std::string name        = "bla.mp4";
 		test                    = new Download(tracker, root_hash, name);
 		
-		//Wait until download object is actually created before starting the thread.
-		sleep(1);
-		
-		//Start thread to start download loop.
-		pthread_t thread;
-		int result_code = pthread_create(&thread, NULL, startThread, (void*) test);
+		DownloadManager::add(test);
 		
 		//TODO: Construct the path where the file will be downloaded.
 		char response[] = "file:///dtv/usb/sda1/Downloads/bla.mp4";
@@ -179,8 +167,8 @@ int HttpServer::init() {
 	evhttp_set_gencb(http, handleRequest, NULL);
 	
 	// Now we tell the evhttp what port to listen on.
-	//handle = evhttp_bind_socket_with_handle(http, "130.161.158.52", port);
-	handle = evhttp_bind_socket_with_handle(http, "130.161.159.107", port);
+	handle = evhttp_bind_socket_with_handle(http, "127.0.0.1", port);
+	//handle = evhttp_bind_socket_with_handle(http, "130.161.159.107", port);
 	if (!handle) {
 		std::cerr << "Couldn't bind to port " << (int)port << ". Exiting." << std::endl;
 		return 1;
