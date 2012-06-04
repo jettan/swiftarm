@@ -1,2 +1,0 @@
-/home/wilson/swiftarm/server/test/gtest-1.6.0/gtest_build/CMakeFiles/gtest.dir
-/home/wilson/swiftarm/server/test/gtest-1.6.0/gtest_build/CMakeFiles/gtest_main.dir

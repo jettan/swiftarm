@@ -30,7 +30,7 @@ class DownloadTest : public ::testing::Test {
 
 /* Constructor */
 
-TEST_F(DownloadTest, constructor){
+TEST_F(DownloadTest, constructor) {
 	
 	EXPECT_EQ(tracker, download->getTrackerAddress());
 	EXPECT_EQ(root_hash, download->getRootHash());
