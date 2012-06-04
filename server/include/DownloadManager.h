@@ -44,9 +44,9 @@ namespace DownloadManager {
 	static int d_pid;					/// Download thread pid.
 	
 	void setDownloadDirectory(std::string dir);
-	std::string getDownloadDirectory();
 	Download* getActiveDownload();
 	Download* getDownloadWithID(const int download_id);
+	std::string getDownloadDirectory();
 	
 	void startStream(std::string tracker);
 	void stopStream();
@@ -55,7 +55,7 @@ namespace DownloadManager {
 	
 	void downloadFirstInList();
 	void startDownload(const int download_id);
-	void add(Download download);
+	void add(Download *download);
 	int getIndexFromID(const int download_id);
 	void removeFromList(const int download_id);
 	void removeFromDisk(const int download_id);
