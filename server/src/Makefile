@@ -20,7 +20,7 @@ CPPFLAGS +=-Wall -Wno-sign-compare -Wno-unused -g -D_FILE_OFFSET_BITS=64 -D_LARG
 
 all: main
 
-main: Main.o Download.o Stream.o DownloadManager.o HttpServer.o
+main: Main.o Download.o Stream.o DownloadManager.o HttpServer.o SearchEngine.o
 	$(CXX) ${CPPFLAGS} -o ws *.o ${LDADD}
 
 Main.o: Main.cpp
@@ -37,6 +37,9 @@ DownloadManager.o: DownloadManager.cpp
 
 HttpServer.o: HttpServer.cpp
 	$(CXX) $(CPPFLAGS) HttpServer.cpp -c
+
+SearchEngine.o: SearchEngine.cpp
+	$(CXX) $(CPPFLAGS) SearchEngine.cpp -c
 
 clean:
 	rm -f *.o ws 2>/dev/null

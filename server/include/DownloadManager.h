@@ -40,6 +40,9 @@ namespace DownloadManager {
 	static double uploaded;			/// Total amount of bytes uploaded this session.
 	
 	void setDownloadDirectory(std::string dir);
+	std::string getDownloadDirectory();
+	Download* getActiveDownload();
+	Download* getDownloadWithID(const int download_id);
 	
 	void startStream(std::string tracker);
 	void stopStream();
@@ -47,7 +50,7 @@ namespace DownloadManager {
 	
 	void downloadFirstInList();
 	void startDownload(const int download_id);
-	void add(Download *download);
+	void add(Download download);
 	int getIndexFromID(const int download_id);
 	void removeFromList(const int download_id);
 	void removeFromDisk(const int download_id);

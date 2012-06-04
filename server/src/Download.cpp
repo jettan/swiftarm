@@ -57,8 +57,11 @@ void Download::start() {
 	int change = chdir("/tmp");
 	std::cout << "Changed directory." << std::endl;
 	
+	
+	std::cout << "Tracker Address: " << getTrackerAddress()  << std::endl;
 	swift::Address trackeraddr = swift::Address(getTrackerAddress().c_str());
 	std::cout << "Set the tracker address." << std::endl;
+	std::cout << "Hash: " << getRootHash().c_str()  << std::endl;
 	
 	swift::Sha1Hash roothash  = swift::Sha1Hash(true, getRootHash().c_str());
 	

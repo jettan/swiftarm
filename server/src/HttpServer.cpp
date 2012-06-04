@@ -69,12 +69,12 @@ static void HttpServer::handleRequest(struct evhttp_request *req, void *arg) {
 	
 	// This is the string we want to compare.
 	path = evhttp_uri_get_path(decoded);
+	std::string path_str = path;
 	
 	// This holds the content we want to send.
 	evb = evbuffer_new();
 	
 	if(strcmp(path, "/download") == 0) {
-		//TODO: Parse the http request.
 		
 		std::string tracker     = "130.161.158.52:20000";
 		std::string root_hash   = "012b5549e2622ea8bf3d694b4f55c959539ac848";
@@ -93,17 +93,43 @@ static void HttpServer::handleRequest(struct evhttp_request *req, void *arg) {
 		
 		sendResponse(req, evb, response);
 		
+	// This will be the real (not hard coded) version of /download
+	// Message will look like: "/download:filename"
+	} else if(path_str.size() >= 9 && path_str.substr(0, 9).compare("/download") == 0) {
+		
+		if(path_str.size() > 10 && path_str.at(9) == ':'){
+			
+			std::string filename = path_str.substr(10, path_str.size());
+			
+			// TODO: Get hash somehow
+			
+			// TODO: Get tracker somehow
+			
+		}
+		
 	} else if (strcmp(path, "/getDownloads") == 0) {
 		sendXMLResponse(req, evb);
 		
 	} else if (strcmp(path, "/stream") == 0) {
-		//TODO: Parse the stream request.
 		
 		std::string tracker     = "127.0.0.1:20000";
 		DownloadManager::startStream(tracker);
 		
 		//TODO: Construct url from which stream can be read from.
 		sendResponse(req, evb, "http://127.0.0.1:15000/012b5549e2622ea8bf3d694b4f55c959539ac848");
+		
+	// This will be the real (not hard coded) version of /stream
+	// Message will look like: "/stream:filename"
+	} else if (path_str.size() >= 7 && path_str.substr(0,7).compare("/stream") == 0) {
+		
+		if(path_str.size() > 8 && path_str.at(7) == ':') {
+			
+			std::string filename = path_str.substr(8, path_str.size());
+			
+			// TODO: Get tracker somehow
+			
+			// TODO: Get hash somehow
+		}
 		
 	} else if (strcmp(path, "/progress") == 0) {
 		double progress = test->getStatistics().download_percentage;
