@@ -8,12 +8,12 @@ ifeq ($(CXX),g++)
 		LDADD=$(SWIFTARM)/server/lib/libswift64.a $(SWIFTARM)/server/lib/lib64/libevent_pthreads.a $(SWIFTARM)/server/lib/lib64/libevent.a -lrt -lstdc++ -lgcc -lutil -lpthread
 	else
 		CPPFLAGS=$(cppflags_for_gpp)
-		LDADD=$(SWIFTARM)/server/lib/libswift.a $(SWIFTARM)/server/lib/lib/libevent_pthreads.a $(SWIFTARM)/server/lib/lib/libevent.a -lrt -lstdc++ -lgcc -lutil -lpthread
+		LDADD=$(SWIFTARM)/server/lib/libswift.a $(SWIFTARM)/server/lib/lib/libevent_pthreads.a $(SWIFTARM)/server/lib/lib/libevent.a $(SWIFTARM)/server/lib/tinyxml2.a -lrt -lstdc++ -lgcc -lutil -lpthread
 	endif
 else
 	CPPFLAGS=$(cppflags_for_arm)
 	LD=arm-v7a8-linux-gnueabi-ld
-	LDADD=$(SWIFTARM)/server/lib-arm/libswift.a $(SWIFTARM)/server/lib-arm/lib/libevent_pthreads.a $(SWIFTARM)/server/lib-arm/lib/libevent.a -lrt -lstdc++ -lgcc -lutil -lpthread
+	LDADD=$(SWIFTARM)/server/lib-arm/libswift.a $(SWIFTARM)/server/lib-arm/lib/libevent_pthreads.a $(SWIFTARM)/server/lib-arm/lib/libevent.a $(SWIFTARM)/server/lib-arm/tinyxml2.a -lrt -lstdc++ -lgcc -lutil -lpthread
 endif
 
 CPPFLAGS +=-Wall -Wno-sign-compare -Wno-unused -g -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE 
