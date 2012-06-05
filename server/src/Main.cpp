@@ -36,7 +36,6 @@ int main(){
 	}
 	std::cout << "Listening on port " << swift::BoundAddress(sock).port() << "." << std::endl;
 	
-	
 	// HTTP gateway address for swift to stream.
 	swift::Address httpaddr = swift::Address("127.0.0.1:15000");
 	
@@ -48,6 +47,9 @@ int main(){
 	std::cout << "HTTP gateway installation returned: " << res << std::endl;
 	
 	std::cout << "Initialised swift" << std::endl;
+	
+	// Set Download directory
+	DownloadManager::setDownloadDirectory("/dtv/usb/sda1/Downloads");
 	
 	// Make httpserver loop
 	HttpServer::init();

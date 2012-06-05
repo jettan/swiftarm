@@ -5,6 +5,8 @@
  */
 void Download::stop() {
 	setStatus(STOPPED);
+	swift::Close(getID());
+	remove(getFilename().c_str());
 }
 
 /**
@@ -59,6 +61,10 @@ void Download::start() {
  *  Pauses downloading and uploading.
  */
 void Download::pause(){
+	if(getStatus() == PAUSED)
+		return;
+		
+	setStatus(PAUSED);
 	swift::Close(getID());
 }
 
@@ -66,7 +72,12 @@ void Download::pause(){
  * Resumes a paused download.
  */
 void Download::resume() {
-	
+	if(getStatus() != PAUSED)
+		return;
+		
+	setStatus(DOWNLOADING);
+	swift::Sha1Hash roothash = swift::Sha1Hash(true, getRootHash().c_str());
+	swift::Open(getFilename().c_str(), roothash);
 }
 
 /**
@@ -76,9 +87,9 @@ void Download::setDownloadSpeed(double speed) {
 	if(getID() < 0)
 		return;
 		
-	pthread_mutex_lock( &_mutex );
+	pthread_mutex_lock(&_mutex);
 	_stats.download_speed = speed;
-	pthread_mutex_unlock( &_mutex);
+	pthread_mutex_unlock(&_mutex);
 }
 
 /**
@@ -88,9 +99,9 @@ void Download::setUploadSpeed(double speed) {
 	if(getID() < 0)
 		return;
 		
-	pthread_mutex_lock( &_mutex );
+	pthread_mutex_lock(&_mutex);
 	_stats.upload_speed = speed;
-	pthread_mutex_unlock( &_mutex);
+	pthread_mutex_unlock(&_mutex);
 }
 
 /**
@@ -103,12 +114,12 @@ void Download::calculateRatio() {
 	double download_speed = getStatistics().download_speed;
 	double upload_speed   = getStatistics().upload_speed;
 	
-	pthread_mutex_lock( &_mutex );
+	pthread_mutex_lock(&_mutex);
 	if(download_speed != 0)
 		_stats.ratio = upload_speed/download_speed;
 	else
 		_stats.ratio = 0;
-	pthread_mutex_unlock( &_mutex);
+	pthread_mutex_unlock(&_mutex);
 }
 
 /**
@@ -118,9 +129,9 @@ void Download::setProgress(double percentage) {
 	if(getID() < 0)
 		return;
 		
-	pthread_mutex_lock( &_mutex );
+	pthread_mutex_lock(&_mutex);
 	_stats.download_percentage = percentage;
-	pthread_mutex_unlock( &_mutex);
+	pthread_mutex_unlock(&_mutex);
 }
 
 /**
@@ -130,9 +141,9 @@ void Download::setUploadAmount(double amount) {
 	if(getID() < 0)
 		return;
 		
-	pthread_mutex_lock( &_mutex );
+	pthread_mutex_lock(&_mutex);
 	_stats.upload_amount = amount;
-	pthread_mutex_unlock( &_mutex);
+	pthread_mutex_unlock(&_mutex);
 }
 
 /**
@@ -142,9 +153,9 @@ void Download::setSeeders(int amount) {
 	if(getID() < 0)
 		return;
 		
-	pthread_mutex_lock( &_mutex );
+	pthread_mutex_lock(&_mutex);
 	_stats.seeders = amount;
-	pthread_mutex_unlock( &_mutex);
+	pthread_mutex_unlock(&_mutex);
 }
 
 /**
@@ -154,9 +165,9 @@ void Download::setPeers(int amount) {
 	if(getID() < 0)
 		return;
 		
-	pthread_mutex_lock( &_mutex );
+	pthread_mutex_lock(&_mutex);
 	_stats.peers = amount;
-	pthread_mutex_unlock( &_mutex);
+	pthread_mutex_unlock(&_mutex);
 }
 
 /**
@@ -185,21 +196,21 @@ void Download::calculateEstimatedTime() {
 	estimated_time.minutes = minutes;
 	estimated_time.seconds = time_left;
 	
-	pthread_mutex_lock( &_mutex );
+	pthread_mutex_lock(&_mutex);
 	_stats.estimated.days      = estimated_time.days;
 	_stats.estimated.hours     = estimated_time.hours;
 	_stats.estimated.minutes   = estimated_time.minutes;
 	_stats.estimated.seconds   = estimated_time.seconds;
-	pthread_mutex_unlock( &_mutex);
+	pthread_mutex_unlock(&_mutex);
 }
 
 /**
  * Setter for download ID.
  */
 void Download::setID(int id) {
-	pthread_mutex_lock( &_mutex );
+	pthread_mutex_lock(&_mutex);
 	_stats.id = id;
-	pthread_mutex_unlock( &_mutex );
+	pthread_mutex_unlock(&_mutex);
 }
 
 
@@ -210,27 +221,27 @@ void Download::setStatus(int status) {
 	if(_status == status)
 		return;
 		
-	pthread_mutex_lock( &_mutex );
+	pthread_mutex_lock(&_mutex);
 	_status = status;
-	pthread_mutex_unlock( &_mutex );
+	pthread_mutex_unlock(&_mutex);
 }
 
 /**
  * Get the download ID.
  */
 const int Download::getID() {
-	pthread_mutex_lock( &_mutex );
+	pthread_mutex_lock(&_mutex);
 	const int id = _stats.id;
-	pthread_mutex_unlock( &_mutex );
+	pthread_mutex_unlock(&_mutex);
 	return id;
 }
 /**
  * Get the status.
  */
 const int Download::getStatus() {
-	pthread_mutex_lock( &_mutex );
+	pthread_mutex_lock(&_mutex);
 	const int status = _status;
-	pthread_mutex_unlock( &_mutex );
+	pthread_mutex_unlock(&_mutex);
 	return status;
 }
 
@@ -243,7 +254,7 @@ Download::downloadStats Download::getStatistics() {
 	if(getID() < 0)
 		return statistics;
 		
-	pthread_mutex_lock( &_mutex );
+	pthread_mutex_lock(&_mutex);
 	statistics.download_speed      = _stats.download_speed;
 	statistics.upload_speed        = _stats.upload_speed;
 	statistics.ratio               = _stats.ratio;
@@ -271,11 +282,7 @@ std::string Download::getTrackerAddress() {
  * Get the filename.
  */
 std::string Download::getFilename() {
-	pthread_mutex_lock( &_mutex );
-	std::string name = _filename;
-	pthread_mutex_unlock( &_mutex );
-	
-	return name;
+	return _filename;
 }
 
 /**

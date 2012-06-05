@@ -1,15 +1,16 @@
 #include "DownloadManager.h"
 
 void DownloadManager::setDownloadDirectory(std::string dir) {
-	downloadDirectory = dir;
+	download_directory = dir;
+	chdir(download_directory.c_str());
 }
 
 std::string DownloadManager::getDownloadDirectory(){
-	return downloadDirectory;
+	return download_directory;
 }
 
 Download* DownloadManager::getActiveDownload(){
-	return activeDownload;
+	return active_download;
 }
 
 Download* DownloadManager::getDownloadWithID(const int download_id){
@@ -23,7 +24,7 @@ void DownloadManager::downloadFirstInList(){
 	
 	if(downloads.size() > 0) {
 		startDownload(downloads.front().getID());
-		activeDownload = &downloads.front();
+		active_download = &downloads.front();
 	}
 }
 
@@ -31,9 +32,9 @@ void DownloadManager::downloadFirstInList(){
  * Callback to check if a download is completed.
  */
 void downloadCallback(int fd, short event, void* arg) {
-	std::cout << "SeqComplete " << swift::SeqComplete(DownloadManager::activeDownload->getID()) << std::endl;
+	std::cout << "SeqComplete " << swift::SeqComplete(DownloadManager::active_download->getID()) << std::endl;
 	
-	std::cout << "Size " << swift::Size(DownloadManager::activeDownload->getID()) << std::endl;
+	std::cout << "Size " << swift::Size(DownloadManager::active_download->getID()) << std::endl;
 	
 	evtimer_add(&DownloadManager::evcompl, swift::tint2tv(TINT_SEC));
 }
@@ -57,29 +58,29 @@ void* DownloadManager::dispatch(void* arg) {
  * Start a download with a specific download ID.
  */
 void DownloadManager::startDownload(const int download_id) {
-	if (activeDownload) {
-		activeDownload->pause();
+	if (active_download) {
+		active_download->pause();
 	}
 	
 	int index = getIndexFromID(download_id);
 	if (index >= 0) {
-		activeDownload = &downloads.at(index);
-		activeDownload->start();
+		active_download = &downloads.at(index);
+		active_download->start();
 		
-		if (activeDownload->getID() < 0 ) {
-			std::cerr << "Could not download " << activeDownload->getFilename() << "!" << std::endl;
+		if (active_download->getID() < 0 ) {
+			std::cerr << "Could not download " << active_download->getFilename() << "!" << std::endl;
 			return;
 		}
-			
+		
 		if(d_pid) {
 			return;
 		} else {
 			d_pid = pthread_create(&thread, NULL, dispatch, NULL);
 		}
 	}
-//else if(activeDownload) {
-	//	activeDownload->resume();
-//	}
+	else if(active_download) {
+		active_download->resume();
+	}
 }
 
 /**
@@ -135,7 +136,7 @@ void DownloadManager::removeFromDisk(const int download_id) {
 		std::string filename = downloads.at(index).getFilename();
 		removeFromList(download_id);
 		
-		filename = downloadDirectory + "/" + filename;
+		filename = download_directory + "/" + filename;
 		
 		if(filename.c_str() == 0) {
 			// File removed successfully
@@ -153,8 +154,8 @@ void DownloadManager::removeFromDisk(const int download_id) {
  */
 void DownloadManager::clearList() {
 	
-	if(activeDownload != NULL){
-		activeDownload->stop();
+	if(active_download != NULL){
+		active_download->stop();
 	}
 	downloads.clear();
 }
