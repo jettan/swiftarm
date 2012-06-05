@@ -110,9 +110,9 @@ static void HttpServer::handleRequest(struct evhttp_request *req, void *arg) {
 				DownloadManager::startDownload(test->getFilename());
 				sendResponse(req, evb, "Download Started");
 			}
-			catch(int e) {
+			catch(FileNotFoundException e) {
 				std::cout << "Exception Caught In HttpServer" << std::endl;
-				sendResponse(req, evb, "Could not find file");
+				sendResponse(req, evb, e.what());
 				
 			}
 		}
@@ -163,9 +163,9 @@ static void HttpServer::handleRequest(struct evhttp_request *req, void *arg) {
 				sendResponse(req, evb, address.c_str());
 				
 			}
-			catch(int e) {
+			catch(FileNotFoundException e) {
 				std::cout << "Exception Caught In HttpServer" << std::endl;
-				sendResponse(req, evb, "Could not find file");
+				sendResponse(req, evb, e.what());
 				
 			}
 		}

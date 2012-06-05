@@ -53,5 +53,6 @@ struct SearchEngine::result SearchEngine::getResultWithName(std::string filename
 	}
 	
 	// Throw exception if file can't be found
-	throw 1;
+	FileNotFoundException *e = new FileNotFoundException();
+	throw *e;
 }

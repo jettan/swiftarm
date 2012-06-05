@@ -4,9 +4,9 @@
 #include <vector>
 #include <string>
 #include <iostream>
-#include <exception>
 
 #include "HttpServer.h"
+#include "Exceptions.h"
 
 
 namespace SearchEngine {

@@ -22,6 +22,7 @@
 #include <event2/event-config.h>
 #include <event2/thread.h>
 
+#include "Exceptions.h"
 #include "Download.h"
 #include "Stream.h"
 #include "DownloadManager.h"
