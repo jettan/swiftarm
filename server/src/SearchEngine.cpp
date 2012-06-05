@@ -5,7 +5,7 @@
 std::vector<struct SearchEngine::result> SearchEngine::search(std::string searchTerm) {
 	
 	// For now search results will be hard coded
-	// Once dispersie works we can do the real deal
+	// Once dispersy works we can do the real deal
 	
 	searchResults.clear();
 	
@@ -14,6 +14,16 @@ std::vector<struct SearchEngine::result> SearchEngine::search(std::string search
 	std::string name        = "bla.mp4";
 	
 	struct SearchEngine::result r;
+	r.tracker = tracker;
+	r.hash = root_hash;
+	r.filename = name;
+	
+	searchResults.push_back(r);
+	
+	root_hash = "367d26a6ce626e049a21921100e24eac86dbcd32";
+	name      = "SG.mkv";
+	
+	struct SearchEngine::result r2;
 	r.tracker = tracker;
 	r.hash = root_hash;
 	r.filename = name;
