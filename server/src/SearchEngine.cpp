@@ -7,6 +7,19 @@ std::vector<struct SearchEngine::result> SearchEngine::search(std::string search
 	// For now search results will be hard coded
 	// Once dispersie works we can do the real deal
 	
+	searchResults.clear();
+	
+	std::string tracker     = "127.0.0.1:20000";
+	std::string root_hash   = "012b5549e2622ea8bf3d694b4f55c959539ac848";
+	std::string name        = "bla.mp4";
+	
+	struct SearchEngine::result r;
+	r.tracker = tracker;
+	r.hash = root_hash;
+	r.filename = name;
+	
+	searchResults.push_back(r);
+	
 	return searchResults;
 }
 
@@ -20,17 +33,15 @@ std::vector<struct SearchEngine::result> SearchEngine::getResults() {
 }
 
 // Returns the result with a certain filename
-struct SearchEngine::result SearchEngine::getResultWithName(std::string filename){
+struct SearchEngine::result SearchEngine::getResultWithName(std::string filename) {
 	
 	for(int i = 0; i < searchResults.size(); i++) {
 		
-		if(searchResults.at(i).filename.compare(filename) == 0){
+		if(searchResults.at(i).filename.compare(filename) == 0) {
 			return searchResults.at(i);
 		}
 	}
-	struct SearchEngine::result failed;
-	failed.filename = "failed";
-	failed.tracker = "failed";
-	failed.hash = "failed";
-	return failed;
+	
+	// Throw exception if file can't be found
+	throw 1;
 }

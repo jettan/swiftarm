@@ -25,6 +25,7 @@
 #include "Download.h"
 #include "Stream.h"
 #include "DownloadManager.h"
+#include "SearchEngine.h"
 #include "swift.h"
 
 namespace HttpServer {

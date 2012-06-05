@@ -69,6 +69,7 @@ static void HttpServer::handleRequest(struct evhttp_request *req, void *arg) {
 	
 	if(strcmp(path, "/download") == 0) {
 		
+		std::cout << "THE WRONG /DOWNLOAD" << std::endl;
 		//std::string tracker     = "130.161.158.52:20000";
 		std::string tracker     = "127.0.0.1:20000";
 		std::string root_hash   = "012b5549e2622ea8bf3d694b4f55c959539ac848";
@@ -101,11 +102,36 @@ static void HttpServer::handleRequest(struct evhttp_request *req, void *arg) {
 		if(path_str.size() > 10 && path_str.at(9) == ':'){
 			
 			std::string filename = path_str.substr(10, path_str.size());
+			try {
+				struct SearchEngine::result res = SearchEngine::getResultWithName(filename);
+				test = new Download(res.tracker, res.hash, res.filename);
+				
+				DownloadManager::add(test);
+				DownloadManager::startDownload(test->getFilename());
+				sendResponse(req, evb, "Download Started");
+			}
+			catch(int e) {
+				std::cout << "Exception Caught In HttpServer" << std::endl;
+				sendResponse(req, evb, "Could not find file");
+				
+			}
+		}
+		
+		/**
+		 * SEARCH
+		 */
+	} else if(path_str.size() >= 7 && path_str.substr(0, 7).compare("/search") == 0) {
+		
+		if(path_str.size() > 8 && path_str.at(7) == ':') {
 			
-			// TODO: Get hash somehow
+			std::string searchTerm = path_str.substr(8, path_str.size());
 			
-			// TODO: Get tracker somehow
+			SearchEngine::search(searchTerm);
 			
+			sendResponse(req, evb, "Search Complete");
+			
+		} else {
+			sendResponse(req, evb, "Invalid Search Term");
 		}
 		
 	} else if (strcmp(path, "/getDownloads") == 0) {
