@@ -153,9 +153,21 @@ static void HttpServer::handleRequest(struct evhttp_request *req, void *arg) {
 			
 			std::string filename = path_str.substr(8, path_str.size());
 			
-			// TODO: Get tracker somehow
-			
-			// TODO: Get hash somehow
+			try {
+				struct SearchEngine::result res = SearchEngine::getResultWithName(filename);
+				
+				DownloadManager::startStream(res.tracker);
+				
+				std::string address = "http://127.0.0.1:15000/" + res.hash;
+				
+				sendResponse(req, evb, address.c_str());
+				
+			}
+			catch(int e) {
+				std::cout << "Exception Caught In HttpServer" << std::endl;
+				sendResponse(req, evb, "Could not find file");
+				
+			}
 		}
 		
 	} else if (strcmp(path, "/progress") == 0) {
@@ -164,11 +176,14 @@ static void HttpServer::handleRequest(struct evhttp_request *req, void *arg) {
 		sprintf(response, "%f", progress);
 		
 		sendResponse(req, evb, response);
+		
 	} else if (strcmp(path, "/alive") == 0) {
 		sendResponse(req, evb, "Alive");
+		
 	} else if (strcmp(path, "/close") == 0) {
 		DownloadManager::stopStream();
 		sendResponse(req, evb, "Not streaming anymore.");
+		
 	} else {
 		std::cout << "Bad request: " << path << std::endl;
 	}
