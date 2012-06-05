@@ -1,5 +1,6 @@
 #include <iostream>
 
+#include "ticpp.h"
 #include "swift.h"
 #include "DownloadManager.h"
 #include "HttpServer.h"
@@ -13,7 +14,6 @@ bool InstallHTTPGateway(struct event_base *evbase, swift::Address addr, uint32_t
  * Application main loop.
  */
 int main(){
-	
 	// Enable pthread use in libevent.
 	evthread_use_pthreads();
 	
@@ -53,5 +53,21 @@ int main(){
 	
 	// Make httpserver loop
 	HttpServer::init();
+	
+/*
+Simple xml build example
+
+	ticpp::Document doc("test");
+	ticpp::Declaration dec( "1.0", "", "");
+	
+	doc.LinkEndChild(&dec);
+	ticpp::Element em("Hello");
+	doc.LinkEndChild(&em);
+	
+	ticpp::Text txt("World");
+	
+	em.LinkEndChild(&txt);
+	doc.SaveFile( "madeByHand.xml" );
+*/	
 }
 
