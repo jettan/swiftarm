@@ -41,11 +41,10 @@ namespace DownloadManager {
 	
 	static double downloaded;			/// Total amount of bytes downloaded this session.
 	static double uploaded;				/// Total amount of bytes uploaded this session.
-	static int d_pid;					/// Download thread pid.
+	static int d_pid = -1;				/// Download thread pid.
 	
 	void setDownloadDirectory(std::string dir);
 	Download* getActiveDownload();
-	Download* getDownloadWithID(const int download_id);
 	std::string getDownloadDirectory();
 	
 	void startStream(std::string tracker);
@@ -54,11 +53,11 @@ namespace DownloadManager {
 	void *dispatch(void* arg);
 	
 	void downloadFirstInList();
-	void startDownload(const int download_id);
+	void startDownload(const std::string download_name);
 	void add(Download *download);
-	int getIndexFromID(const int download_id);
-	void removeFromList(const int download_id);
-	void removeFromDisk(const int download_id);
+	int getIndexFromName(const std::string download_name);
+	void removeFromList(const std::string download_name);
+	void removeFromDisk(const std::string download_name);
 	void clearList();
 }
 

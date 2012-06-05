@@ -3,6 +3,7 @@
 namespace HttpServer {
 	struct event_base *base;
 	Download *test;
+	Download *sg;
 }
 
 /**
@@ -75,6 +76,18 @@ static void HttpServer::handleRequest(struct evhttp_request *req, void *arg) {
 		test                    = new Download(tracker, root_hash, name);
 		
 		DownloadManager::add(test);
+		
+		root_hash = "367d26a6ce626e049a21921100e24eac86dbcd32";
+		name      = "SG.mkv";
+		sg        = new Download(tracker, root_hash, name);
+		
+		DownloadManager::add(sg);
+		
+		DownloadManager::startDownload(test->getFilename());
+		sleep(3);
+		DownloadManager::startDownload(sg->getFilename());
+		sleep(10);
+		DownloadManager::startDownload(test->getFilename());
 		
 		//TODO: Construct the path where the file will be downloaded.
 		char response[] = "file:///dtv/usb/sda1/Downloads/bla.mp4";

@@ -63,9 +63,9 @@ void Download::start() {
 void Download::pause(){
 	if(getStatus() == PAUSED)
 		return;
-		
+	std::string mhash = getFilename() + ".mhash";
+	remove(mhash.c_str());
 	setStatus(PAUSED);
-	swift::Close(getID());
 }
 
 /**
@@ -77,7 +77,9 @@ void Download::resume() {
 		
 	setStatus(DOWNLOADING);
 	swift::Sha1Hash roothash = swift::Sha1Hash(true, getRootHash().c_str());
-	swift::Open(getFilename().c_str(), roothash);
+	int id = swift::Open(getFilename().c_str(), roothash);
+	std::cout << "ID is suddenly: " << id << std::endl;
+	setID(id);
 }
 
 /**

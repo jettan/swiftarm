@@ -13,17 +13,11 @@ Download* DownloadManager::getActiveDownload(){
 	return active_download;
 }
 
-Download* DownloadManager::getDownloadWithID(const int download_id){
-	
-	int index = getIndexFromID(download_id);
-	return &downloads.at(download_id);
-}
-
 // Download first element in the download list
 void DownloadManager::downloadFirstInList(){
 	
 	if(downloads.size() > 0) {
-		startDownload(downloads.front().getID());
+		startDownload(downloads.front().getFilename());
 		active_download = &downloads.front();
 	}
 }
@@ -32,9 +26,9 @@ void DownloadManager::downloadFirstInList(){
  * Callback to check if a download is completed.
  */
 void downloadCallback(int fd, short event, void* arg) {
-	std::cout << "SeqComplete " << swift::SeqComplete(DownloadManager::active_download->getID()) << std::endl;
-	
-	std::cout << "Size " << swift::Size(DownloadManager::active_download->getID()) << std::endl;
+	std::cout << "Download ID: " << DownloadManager::active_download->getID() << std::endl;
+	std::cout << "Percentage downloaded: " << floorf(((swift::Complete(DownloadManager::active_download->getID()) * 10000.0) / 
+	        swift::Size(DownloadManager::active_download->getID()) * 1.0) + 0.5) / 100 << std::endl;
 	
 	evtimer_add(&DownloadManager::evcompl, swift::tint2tv(TINT_SEC));
 }
@@ -57,25 +51,35 @@ void* DownloadManager::dispatch(void* arg) {
 /**
  * Start a download with a specific download ID.
  */
-void DownloadManager::startDownload(const int download_id) {
+void DownloadManager::startDownload(const std::string download_name) {
 	if (active_download) {
+		std::cout << "Pausing current download.\n";
 		active_download->pause();
+		std::cout << "Paused active download.\n";
 	}
 	
-	int index = getIndexFromID(download_id);
+	int index = getIndexFromName(download_name);
+	std::cout << "Index = " << index << std::endl;
 	if (index >= 0) {
 		active_download = &downloads.at(index);
-		active_download->start();
+		if (active_download->getID() > -1) {
+			active_download->resume();
+		} else {
+			active_download->start();
+		}
 		
 		if (active_download->getID() < 0 ) {
 			std::cerr << "Could not download " << active_download->getFilename() << "!" << std::endl;
 			return;
 		}
 		
-		if(d_pid) {
-			return;
-		} else {
+		if(d_pid != 0) {
 			d_pid = pthread_create(&thread, NULL, dispatch, NULL);
+			if (d_pid) {
+				std::cerr << "Could not create download thread!" << std::endl;
+				return;
+			}
+			std::cout << "Download pid = " << d_pid << std::endl;
 		}
 	}
 	else if(active_download) {
@@ -87,20 +91,27 @@ void DownloadManager::startDownload(const int download_id) {
  * Add a download to the list
  */
 void DownloadManager::add(Download *download) {
+	std::cout << "Adding download to vector.\n";
 	downloads.push_back(*download);
+	std::cout << "Added download.\n";
 	
-	if(downloads.size() == 1) {
-		downloadFirstInList();
+	for (int i = 0; i < downloads.size(); i++) {
+		std::cout << "Element " << i << " of vector: " << downloads.at(i).getFilename() << std::endl;
 	}
+	
+	//if(downloads.size() == 1) {
+	//	downloadFirstInList();
+	//}
 }
 
 /**
  * Find the index of a download in the list based on the download ID
  */
-int DownloadManager::getIndexFromID(const int download_id) {
+int DownloadManager::getIndexFromName(const std::string download_name) {
 	
-	for(int i = 0; i < downloads.size(); i++) {
-		if(downloads.at(i).getID() == download_id) {
+	for (int i = 0; i < downloads.size(); i++) {
+		if (downloads.at(i).getFilename().compare(download_name) == 0) {
+			std::cout << "Name found: " << downloads.at(i).getFilename() << std::endl;
 			return i;
 		}
 	}
@@ -110,9 +121,9 @@ int DownloadManager::getIndexFromID(const int download_id) {
 /**
  * Remove a download from the list based on the download ID
  */
-void DownloadManager::removeFromList(const int download_id) {
+void DownloadManager::removeFromList(const std::string download_name) {
 	
-	int index = getIndexFromID(download_id);
+	int index = getIndexFromName(download_name);
 	if(index >= 0) {
 		if(downloads.at(index).getStatus() == DOWNLOADING) {
 			downloads.at(index).stop();
@@ -127,14 +138,14 @@ void DownloadManager::removeFromList(const int download_id) {
 /** 
  * Remove a download from the hard disk based on download ID
  */
-void DownloadManager::removeFromDisk(const int download_id) {
+void DownloadManager::removeFromDisk(const std::string download_name) {
 	
-	int index = getIndexFromID(download_id);
+	int index = getIndexFromName(download_name);
 	
 	if(index >= 0) {
 		
 		std::string filename = downloads.at(index).getFilename();
-		removeFromList(download_id);
+		removeFromList(download_name);
 		
 		filename = download_directory + "/" + filename;
 		
