@@ -32,10 +32,10 @@ namespace DownloadManager {
 	
 	static std::vector<Download> downloads;	/// Vector containing all downloads.
 	
-	static std::string downloadDirectory;
+	static std::string download_directory;
 	
 	static struct event evcompl;
-	static Download *activeDownload;
+	static Download *active_download;
 	static pthread_t streaming_thread;
 	static pthread_t thread;
 	
