@@ -54,8 +54,10 @@ void Download::start() {
  *  Pauses downloading and uploading.
  */
 void Download::pause() {
-	if (getStatus() == PAUSED)
+	if (getStatus() == PAUSED) {
+		std::cout << "Already Paused" << std::endl;
 		return;
+	}
 	
 	// Let swift save the progress and close the file.
 	swift::Checkpoint(getID());
@@ -70,6 +72,7 @@ void Download::resume() {
 	if (getStatus() != PAUSED)
 		return;
 		
+	//TODO: If already completed, set status to UPLOADING.
 	setStatus(DOWNLOADING);
 	
 	swift::Address trackeraddr = swift::Address(getTrackerAddress().c_str());

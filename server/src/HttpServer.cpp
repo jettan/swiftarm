@@ -76,18 +76,41 @@ static void HttpServer::handleRequest(struct evhttp_request *req, void *arg) {
 		std::string name        = "bla.mp4";
 		test                    = new Download(tracker, root_hash, name);
 		
-		DownloadManager::add(test);
+		if (DownloadManager::getActiveDownload()) {
+			std::cout << "Pausing current download to start new one" << std::endl;
+			DownloadManager::pauseDownload(root_hash);
+			DownloadManager::add(test);
+			DownloadManager::startDownload(test->getRootHash());
+		} else {
+			DownloadManager::add(test);
+		}
 		
 		root_hash = "367d26a6ce626e049a21921100e24eac86dbcd32";
 		name      = "SG.mkv";
 		sg        = new Download(tracker, root_hash, name);
 		
-		DownloadManager::add(sg);
+		//DownloadManager::add(sg);
 		
-		DownloadManager::startDownload(test->getRootHash());
+		//DownloadManager::startDownload(test->getRootHash());
 		//TODO: Construct the path where the file will be downloaded.
 		char response[] = "file:///dtv/usb/sda1/Downloads/bla.mp4";
 		
+		sendResponse(req, evb, response);
+	
+	//Temporarily hard coded.
+	} else if (strcmp(path, "/resume") == 0) {
+		std::string root_hash   = "012b5549e2622ea8bf3d694b4f55c959539ac848";
+		std::cout << "Resuming Download: " << DownloadManager::resumeDownload(root_hash) << std::endl;
+		
+		char response[] = "Resumed Download";
+		sendResponse(req, evb, response);
+		
+	//Temporarily hard coded.
+	} else if (strcmp(path, "/pause") == 0) {
+		std::string root_hash   = "012b5549e2622ea8bf3d694b4f55c959539ac848";
+		DownloadManager::pauseDownload(root_hash);
+		
+		char response[] = "Paused Current Download.";
 		sendResponse(req, evb, response);
 		
 	// This will be the real (not hard coded) version of /download
@@ -102,7 +125,9 @@ static void HttpServer::handleRequest(struct evhttp_request *req, void *arg) {
 				test = new Download(res.tracker, res.hash, res.filename);
 				
 				DownloadManager::add(test);
+				
 				DownloadManager::startDownload(test->getFilename());
+				
 				sendResponse(req, evb, "Download Started");
 			}
 			catch(FileNotFoundException e) {
@@ -110,8 +135,8 @@ static void HttpServer::handleRequest(struct evhttp_request *req, void *arg) {
 				sendResponse(req, evb, e.what());
 				
 			}
-		}
-		
+	}
+	
 		/**
 		 * SEARCH
 		 */

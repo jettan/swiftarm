@@ -18,7 +18,6 @@ void DownloadManager::downloadFirstInList(){
 	
 	if(downloads.size() > 0) {
 		startDownload(downloads.front().getRootHash());
-		active_download = &downloads.front();
 	}
 }
 
@@ -134,7 +133,7 @@ void downloadCallback(int fd, short event, void* arg) {
 		std::cout << "Download ID: " << DownloadManager::active_download->getID() << std::endl;
 		std::cout << "Percentage downloaded: " << floorf(((swift::Complete(DownloadManager::active_download->getID()) * 10000.0) / 
 			swift::Size(DownloadManager::active_download->getID()) * 1.0) + 0.5) / 100 << std::endl;
-	
+	/*
 	if (swift::SeqComplete(DownloadManager::active_download->getID()) == swift::Size(DownloadManager::active_download->getID())) {
 		
 		if (DownloadManager::active_download->getStatus() != UPLOADING) {
@@ -145,7 +144,7 @@ void downloadCallback(int fd, short event, void* arg) {
 				DownloadManager::startDownload(DownloadManager::downloads.at(index + 1).getRootHash());
 			}
 		}
-	}
+	}*/
 		
 	evtimer_add(&DownloadManager::evcompl, swift::tint2tv(TINT_SEC));
 }
@@ -166,44 +165,68 @@ void* DownloadManager::dispatch(void* arg) {
 }
 
 /**
- * Start a download with a specific download ID.
+ * Pauses the currently active download.
  */
-void DownloadManager::startDownload(const std::string download_hash) {
-	//Pause current download, only one download allowed at the same time.
-	if (active_download) {
-		std::cout << "Pausing current download.\n";
-		active_download->pause();
-		std::cout << "Paused active download.\n";
-	}
-	
+void DownloadManager::pauseDownload(const std::string download_hash) {
 	int index = getIndexFromHash(download_hash);
 	std::cout << "Index = " << index << std::endl;
+	
+	if (index >= 0) {
+		downloads.at(index).pause();
+	}
+}
+
+/**
+ * Resumes a paused download.
+ */
+int DownloadManager::resumeDownload(std::string download_hash) {
+	int index = getIndexFromHash(download_hash);
+	std::cout << "Index = " << index << std::endl;
+	
 	if (index >= 0) {
 		active_download = &downloads.at(index);
 		if (active_download->getID() > -1) {
 			active_download->resume();
+		} else {
+			return -1;
+		}
+	}
+	return 0;
+}
+
+/**
+ * Start a download with a specific download ID.
+ */
+int DownloadManager::startDownload(const std::string download_hash) {
+	
+	int index = getIndexFromHash(download_hash);
+	std::cout << "Index = " << index << std::endl;
+	
+	if (index >= 0) {
+		active_download = &downloads.at(index);
+		
+		if (active_download->getID() > -1) {
+			return -1;
 		} else {
 			active_download->start();
 		}
 		
 		if (active_download->getID() < 0 ) {
 			std::cerr << "Could not download " << active_download->getFilename() << "!" << std::endl;
-			return;
+			return -1;
 		}
 		
 		if (d_pid != 0) {
 			d_pid = pthread_create(&thread, NULL, dispatch, NULL);
 			if (d_pid) {
 				std::cerr << "Could not create download thread!" << std::endl;
-				return;
+				return -1;
 			}
 			std::cout << "Download pid = " << d_pid << std::endl;
 		}
 	}
-	//Resume download if no other download was found to start.
-	else if (active_download) {
-		active_download->resume();
-	}
+	
+	return 0;
 }
 
 /**
@@ -211,16 +234,24 @@ void DownloadManager::startDownload(const std::string download_hash) {
  */
 void DownloadManager::add(Download *download) {
 	std::cout << "Adding download to vector.\n";
+	
+	for (int i = 0; i < downloads.size(); i++) {
+		if (downloads.at(i).getRootHash().compare(download->getRootHash()) == 0) {
+			return;
+		}
+	}
+	
 	downloads.push_back(*download);
 	std::cout << "Added download.\n";
 	
+	/*
 	for (int i = 0; i < downloads.size(); i++) {
 		std::cout << "Element " << i << " of vector: " << downloads.at(i).getFilename() << std::endl;
-	}
+	}*/
 	
-	//if (downloads.size() == 1) {
-	//	downloadFirstInList();
-	//}
+	if (downloads.size() == 1) {
+		downloadFirstInList();
+	}
 }
 
 /**

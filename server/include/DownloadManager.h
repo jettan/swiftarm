@@ -57,10 +57,13 @@ namespace DownloadManager {
 	std::string buildXML();
 	void *dispatch(void* arg);
 	
-	void downloadFirstInList();
-	void startDownload(const std::string download_hash);
-	void add(Download *download);
+	int resumeDownload(std::string download_hash);
+	int startDownload(const std::string download_hash);
 	int getIndexFromHash(const std::string download_hash);
+	
+	void downloadFirstInList();
+	void add(Download *download);
+	void pauseDownload(const std::string download_hash);
 	void removeFromList(const std::string download_hash);
 	void removeFromDisk(const std::string download_hash);
 	void clearList();
