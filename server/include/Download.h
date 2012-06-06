@@ -66,6 +66,7 @@ class Download {
 			double ratio;				/// Download speed divided by upload speed
 			double download_percentage; /// Download progress in percentage.
 			double upload_amount;		/// Uploaded amount in bytes.
+			double download_amount;		/// Downloaded amount in bytes.
 			
 			int seeders;				/// Number of seeders uploading this file.
 			int peers;					/// Number of peers connected to us for this file.
@@ -96,6 +97,7 @@ class Download {
 		void calculateRatio();
 		void setProgress(double percentage);
 		void setUploadAmount(double amount);
+		void setDownloadAmount(double amount);
 		
 		void setSeeders(int amount);
 		void setPeers(int amount);

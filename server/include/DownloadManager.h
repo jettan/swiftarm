@@ -26,6 +26,7 @@
 #include "Stream.h"
 #include "Download.h"
 #include "swift.h"
+#include "ticpp.h"
 
 namespace DownloadManager {
 	
@@ -39,6 +40,8 @@ namespace DownloadManager {
 	static pthread_t streaming_thread;
 	static pthread_t thread;
 	
+	static ticpp::Document *doc;
+	
 	static double downloaded;			/// Total amount of bytes downloaded this session.
 	static double uploaded;				/// Total amount of bytes uploaded this session.
 	static int d_pid = -1;				/// Download thread pid.
@@ -50,6 +53,8 @@ namespace DownloadManager {
 	void startStream(std::string tracker);
 	void stopStream();
 	void *startStreamThread(void *arg);
+	void updateDownloadStatistics();
+	std::string buildXML();
 	void *dispatch(void* arg);
 	
 	void downloadFirstInList();

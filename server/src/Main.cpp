@@ -53,28 +53,5 @@ int main(){
 	
 	// Make httpserver loop
 	HttpServer::init();
-	
-	
-
-//Simple xml build example
-/*
-	ticpp::Document doc("test");
-	ticpp::Declaration dec( "1.0", "", "");
-	
-	doc.LinkEndChild(&dec);
-	ticpp::Element em("Hello");
-	doc.LinkEndChild(&em);
-	
-	ticpp::Text txt("World");
-	
-	em.LinkEndChild(&txt);
-	//doc.SaveFile( "madeByHand.xml" );
-	TiXmlPrinter printer;
-	//printer.SetIndent("\t");
-	
-	doc.Accept(&printer);
-	std::string s = printer.Str();
-	std::cout << s << std::endl;
-	*/
 }
 

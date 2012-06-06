@@ -124,15 +124,19 @@ void Download::calculateRatio() {
 		return;
 	
 	// Should be uploaded amount / downloaded amount
-	double download_speed = getStatistics().download_speed;
-	double upload_speed   = getStatistics().upload_speed;
+	double download_amount = getStatistics().download_amount;
+	double upload_amount   = getStatistics().upload_amount;
 	
 	pthread_mutex_lock(&_mutex);
-	if (download_speed != 0) {
-		_stats.ratio = upload_speed/download_speed;
+	if (download_amount > 0) {
+		_stats.ratio = upload_amount/download_amount;
 	} else {
 		_stats.ratio = 0;
 	}
+	
+	std::cout << "UPLOAD: " << upload_amount << std::endl;
+	std::cout << "DOWNLOAD: " << download_amount << std::endl;
+	std::cout << "RATIO: " << _stats.ratio << std::endl;
 	pthread_mutex_unlock(&_mutex);
 }
 
@@ -159,6 +163,19 @@ void Download::setUploadAmount(double amount) {
 		
 	pthread_mutex_lock(&_mutex);
 	_stats.upload_amount = amount;
+	pthread_mutex_unlock(&_mutex);
+}
+
+/**
+ * Setter for download amount.
+ * @param amount: Amount to be set in Kb.
+ */
+void Download::setDownloadAmount(double amount) {
+	if (getID() < 0 || amount < 0)
+		return;
+		
+	pthread_mutex_lock(&_mutex);
+	_stats.download_amount = amount;
 	pthread_mutex_unlock(&_mutex);
 }
 
@@ -282,6 +299,7 @@ Download::downloadStats Download::getStatistics() {
 	statistics.ratio               = _stats.ratio;
 	statistics.download_percentage = _stats.download_percentage;
 	statistics.upload_amount       = _stats.upload_amount;
+	statistics.download_amount     = _stats.download_amount;
 	statistics.seeders             = _stats.seeders;
 	statistics.peers               = _stats.peers;
 	statistics.estimated.days      = _stats.estimated.days;
