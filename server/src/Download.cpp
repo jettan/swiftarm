@@ -41,14 +41,10 @@ void Download::start() {
 	swift::Address trackeraddr = swift::Address(getTrackerAddress().c_str());
 	swift::Sha1Hash roothash   = swift::Sha1Hash(true, getRootHash().c_str());
 	
-	// Set the tracker.
-	std::cout << "Setting the tracker..." << std::endl;
-	swift::SetTracker(trackeraddr);
-	
 	std::cout << "Filename = " << getFilename() << std::endl;
 	
 	// Open the file with swift.
-	int id  = swift::Open(getFilename().c_str(), roothash);	
+	int id  = swift::Open(getFilename().c_str(), roothash, trackeraddr);	
 	setID(id);
 	
 	std::cout << "ID = " << getID() << std::endl;
@@ -61,9 +57,8 @@ void Download::pause() {
 	if (getStatus() == PAUSED)
 		return;
 	
-	//TODO: Call swift::Checkpoint and something with swift::addProgressCallback?
-	
-	// Let swift close the file.
+	// Let swift save the progress and close the file.
+	swift::Checkpoint(getID());
 	swift::Close(getID());
 	setStatus(PAUSED);
 }
@@ -79,12 +74,8 @@ void Download::resume() {
 	
 	swift::Address trackeraddr = swift::Address(getTrackerAddress().c_str());
 	swift::Sha1Hash roothash   = swift::Sha1Hash(true, getRootHash().c_str());
-	swift::SetTracker(trackeraddr);
 	
-	// TODO: swift::Open is not the right way to resume a download, use swift::Find + something...
-	int id = swift::Open(getFilename().c_str(), roothash);
-	
-	std::cout << "ID is suddenly: " << id << std::endl;
+	int id = swift::Open(getFilename().c_str(), roothash, trackeraddr, false);
 	
 	// Not sure if this has to be called...
 	setID(id);
@@ -331,3 +322,4 @@ std::string Download::getFilename() {
 std::string Download::getRootHash() {
 	return _root_hash;
 }
+

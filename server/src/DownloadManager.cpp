@@ -26,9 +26,9 @@ void DownloadManager::downloadFirstInList(){
  * Callback to check if a download is completed.
  */
 void downloadCallback(int fd, short event, void* arg) {
-//	std::cout << "Download ID: " << DownloadManager::active_download->getID() << std::endl;
-//	std::cout << "Percentage downloaded: " << floorf(((swift::Complete(DownloadManager::active_download->getID()) * 10000.0) / 
-//	        swift::Size(DownloadManager::active_download->getID()) * 1.0) + 0.5) / 100 << std::endl;
+	std::cout << "Download ID: " << DownloadManager::active_download->getID() << std::endl;
+	std::cout << "Percentage downloaded: " << floorf(((swift::Complete(DownloadManager::active_download->getID()) * 10000.0) / 
+	        swift::Size(DownloadManager::active_download->getID()) * 1.0) + 0.5) / 100 << std::endl;
 	
 	evtimer_add(&DownloadManager::evcompl, swift::tint2tv(TINT_SEC));
 }
@@ -295,6 +295,5 @@ void DownloadManager::startStream(std::string tracker) {
 	} else {
 		std::cout << "Already Streaming!" <<std::endl;
 	}
-	
 }
 
