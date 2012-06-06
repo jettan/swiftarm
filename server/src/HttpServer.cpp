@@ -84,12 +84,7 @@ static void HttpServer::handleRequest(struct evhttp_request *req, void *arg) {
 		
 		DownloadManager::add(sg);
 		
-		DownloadManager::startDownload(test->getFilename());
-		sleep(3);
-		DownloadManager::startDownload(sg->getFilename());
-		sleep(10);
-		DownloadManager::startDownload(test->getFilename());
-		
+		DownloadManager::startDownload(test->getRootHash());
 		//TODO: Construct the path where the file will be downloaded.
 		char response[] = "file:///dtv/usb/sda1/Downloads/bla.mp4";
 		

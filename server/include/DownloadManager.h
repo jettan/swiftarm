@@ -58,11 +58,11 @@ namespace DownloadManager {
 	void *dispatch(void* arg);
 	
 	void downloadFirstInList();
-	void startDownload(const std::string download_name);
+	void startDownload(const std::string download_hash);
 	void add(Download *download);
-	int getIndexFromName(const std::string download_name);
-	void removeFromList(const std::string download_name);
-	void removeFromDisk(const std::string download_name);
+	int getIndexFromHash(const std::string download_hash);
+	void removeFromList(const std::string download_hash);
+	void removeFromDisk(const std::string download_hash);
 	void clearList();
 }
 

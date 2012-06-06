@@ -17,21 +17,11 @@ Download* DownloadManager::getActiveDownload(){
 void DownloadManager::downloadFirstInList(){
 	
 	if(downloads.size() > 0) {
-		startDownload(downloads.front().getFilename());
+		startDownload(downloads.front().getRootHash());
 		active_download = &downloads.front();
 	}
 }
 
-/**
- * Callback to check if a download is completed.
- */
-void downloadCallback(int fd, short event, void* arg) {
-	std::cout << "Download ID: " << DownloadManager::active_download->getID() << std::endl;
-	std::cout << "Percentage downloaded: " << floorf(((swift::Complete(DownloadManager::active_download->getID()) * 10000.0) / 
-	        swift::Size(DownloadManager::active_download->getID()) * 1.0) + 0.5) / 100 << std::endl;
-	
-	evtimer_add(&DownloadManager::evcompl, swift::tint2tv(TINT_SEC));
-}
 
 void DownloadManager::updateDownloadStatistics() {
 	
@@ -53,76 +43,79 @@ std::string DownloadManager::buildXML() {
 	
 	for(int i = 0; i < downloads.size(); i++) {
 		
-		ticpp::Element download("DOWNLOAD");
+		ticpp::Element download_tag("DOWNLOAD");
 		
-		downloads_tag.LinkEndChild(&download);
+		downloads_tag.LinkEndChild(&download_tag);
 		
-		ticpp::Element name("NAME");
-		download.LinkEndChild(&name);
+		ticpp::Element status_tag("STATUS");
+		download_tag.LinkEndChild(&status_tag);
+		ticpp::Text status_value(downloads.at(i).getStatus());
+		status_tag.LinkEndChild(&status_value);
+		
+		ticpp::Element name_tag("NAME");
+		download_tag.LinkEndChild(&name_tag);
 		ticpp::Text name_value(downloads.at(i).getFilename());
-		name.LinkEndChild(&name_value);
+		name_tag.LinkEndChild(&name_value);
 		
-		ticpp::Element dspeed("DSPEED");
-		download.LinkEndChild(&dspeed);
+		ticpp::Element dspeed_tag("DSPEED");
+		download_tag.LinkEndChild(&dspeed_tag);
 		ticpp::Text dspeed_value(downloads.at(i).getStatistics().download_speed);
-		dspeed.LinkEndChild(&dspeed_value);
+		dspeed_tag.LinkEndChild(&dspeed_value);
 		
-		ticpp::Element uspeed("USPEED");
-		download.LinkEndChild(&uspeed);
+		ticpp::Element uspeed_tag("USPEED");
+		download_tag.LinkEndChild(&uspeed_tag);
 		ticpp::Text uspeed_value(downloads.at(i).getStatistics().upload_speed);
-		uspeed.LinkEndChild(&uspeed_value);
+		uspeed_tag.LinkEndChild(&uspeed_value);
 		
-		ticpp::Element progress("PROGRESS");
-		download.LinkEndChild(&progress);
+		ticpp::Element progress_tag("PROGRESS");
+		download_tag.LinkEndChild(&progress_tag);
 		ticpp::Text progress_value(downloads.at(i).getStatistics().download_percentage);
-		progress.LinkEndChild(&progress_value);
+		progress_tag.LinkEndChild(&progress_value);
 		
-		ticpp::Element ratio("RATIO");
-		download.LinkEndChild(&ratio);
+		ticpp::Element ratio_tag("RATIO");
+		download_tag.LinkEndChild(&ratio_tag);
 		ticpp::Text ratio_value(downloads.at(i).getStatistics().ratio);
-		ratio.LinkEndChild(&ratio_value);
+		ratio_tag.LinkEndChild(&ratio_value);
 		
-		ticpp::Element upload_amount("UPLOADAMOUNT");
-		download.LinkEndChild(&upload_amount);
+		ticpp::Element upload_amount_tag("UPLOADAMOUNT");
+		download_tag.LinkEndChild(&upload_amount_tag);
 		ticpp::Text upload_amount_value(downloads.at(i).getStatistics().upload_amount);
-		upload_amount.LinkEndChild(&upload_amount_value);
+		upload_amount_tag.LinkEndChild(&upload_amount_value);
 		
-		ticpp::Element download_amount("DOWNLOADAMOUNT");
-		download.LinkEndChild(&download_amount);
+		ticpp::Element download_amount_tag("DOWNLOADAMOUNT");
+		download_tag.LinkEndChild(&download_amount_tag);
 		ticpp::Text download_amount_value(downloads.at(i).getStatistics().download_amount);
-		download_amount.LinkEndChild(&download_amount_value);
+		download_amount_tag.LinkEndChild(&download_amount_value);
 		
-		ticpp::Element seeders("SEEDERS");
-		download.LinkEndChild(&seeders);
+		ticpp::Element seeders_tag("SEEDERS");
+		download_tag.LinkEndChild(&seeders_tag);
 		ticpp::Text seeders_value(downloads.at(i).getStatistics().seeders);
-		seeders.LinkEndChild(&seeders_value);
+		seeders_tag.LinkEndChild(&seeders_value);
 		
-		ticpp::Element peers("PEERS");
-		download.LinkEndChild(&peers);
+		ticpp::Element peers_tag("PEERS");
+		download_tag.LinkEndChild(&peers_tag);
 		ticpp::Text peers_value(downloads.at(i).getStatistics().peers);
-		peers.LinkEndChild(&peers_value);
+		peers_tag.LinkEndChild(&peers_value);
 		
-		ticpp::Element timedays("TIMEDAYS");
-		download.LinkEndChild(&timedays);
+		ticpp::Element timedays_tag("TIMEDAYS");
+		download_tag.LinkEndChild(&timedays_tag);
 		ticpp::Text timedays_value(downloads.at(i).getStatistics().estimated.days);
-		timedays.LinkEndChild(&timedays_value);
+		timedays_tag.LinkEndChild(&timedays_value);
 		
-		ticpp::Element timehours("TIMEHOURS");
-		download.LinkEndChild(&timehours);
+		ticpp::Element timehours_tag("TIMEHOURS");
+		download_tag.LinkEndChild(&timehours_tag);
 		ticpp::Text timehours_value(downloads.at(i).getStatistics().estimated.hours);
-		timehours.LinkEndChild(&timehours_value);
+		timehours_tag.LinkEndChild(&timehours_value);
 		
-		ticpp::Element timeminutes("TIMEMINUTES");
-		download.LinkEndChild(&timeminutes);
+		ticpp::Element timeminutes_tag("TIMEMINUTES");
+		download_tag.LinkEndChild(&timeminutes_tag);
 		ticpp::Text timeminutes_value(downloads.at(i).getStatistics().estimated.minutes);
-		timeminutes.LinkEndChild(&timeminutes_value);
+		timeminutes_tag.LinkEndChild(&timeminutes_value);
 		
-		ticpp::Element timeseconds("TIMESECONDS");
-		download.LinkEndChild(&timeseconds);
+		ticpp::Element timeseconds_tag("TIMESECONDS");
+		download_tag.LinkEndChild(&timeseconds_tag);
 		ticpp::Text timeseconds_value(downloads.at(i).getStatistics().estimated.seconds);
-		timeseconds.LinkEndChild(&timeseconds_value);
-		
-		
+		timeseconds_tag.LinkEndChild(&timeseconds_value);
 	}
 	
 	TiXmlPrinter printer;
@@ -132,6 +125,29 @@ std::string DownloadManager::buildXML() {
 	
 	return xml_stats;
 	
+}
+
+/**
+ * Callback to check if a download is completed.
+ */
+void downloadCallback(int fd, short event, void* arg) {
+		std::cout << "Download ID: " << DownloadManager::active_download->getID() << std::endl;
+		std::cout << "Percentage downloaded: " << floorf(((swift::Complete(DownloadManager::active_download->getID()) * 10000.0) / 
+			swift::Size(DownloadManager::active_download->getID()) * 1.0) + 0.5) / 100 << std::endl;
+	
+	if (swift::SeqComplete(DownloadManager::active_download->getID()) == swift::Size(DownloadManager::active_download->getID())) {
+		
+		if (DownloadManager::active_download->getStatus() != UPLOADING) {
+			DownloadManager::active_download->setStatus(UPLOADING);
+			int index = DownloadManager::getIndexFromHash(DownloadManager::active_download->getRootHash());
+			
+			if (index != DownloadManager::downloads.size() - 1) {
+				DownloadManager::startDownload(DownloadManager::downloads.at(index + 1).getRootHash());
+			}
+		}
+	}
+		
+	evtimer_add(&DownloadManager::evcompl, swift::tint2tv(TINT_SEC));
 }
 
 void* DownloadManager::dispatch(void* arg) {
@@ -152,14 +168,15 @@ void* DownloadManager::dispatch(void* arg) {
 /**
  * Start a download with a specific download ID.
  */
-void DownloadManager::startDownload(const std::string download_name) {
+void DownloadManager::startDownload(const std::string download_hash) {
+	//Pause current download, only one download allowed at the same time.
 	if (active_download) {
 		std::cout << "Pausing current download.\n";
 		active_download->pause();
 		std::cout << "Paused active download.\n";
 	}
 	
-	int index = getIndexFromName(download_name);
+	int index = getIndexFromHash(download_hash);
 	std::cout << "Index = " << index << std::endl;
 	if (index >= 0) {
 		active_download = &downloads.at(index);
@@ -174,7 +191,7 @@ void DownloadManager::startDownload(const std::string download_name) {
 			return;
 		}
 		
-		if(d_pid != 0) {
+		if (d_pid != 0) {
 			d_pid = pthread_create(&thread, NULL, dispatch, NULL);
 			if (d_pid) {
 				std::cerr << "Could not create download thread!" << std::endl;
@@ -183,7 +200,8 @@ void DownloadManager::startDownload(const std::string download_name) {
 			std::cout << "Download pid = " << d_pid << std::endl;
 		}
 	}
-	else if(active_download) {
+	//Resume download if no other download was found to start.
+	else if (active_download) {
 		active_download->resume();
 	}
 }
@@ -200,7 +218,7 @@ void DownloadManager::add(Download *download) {
 		std::cout << "Element " << i << " of vector: " << downloads.at(i).getFilename() << std::endl;
 	}
 	
-	//if(downloads.size() == 1) {
+	//if (downloads.size() == 1) {
 	//	downloadFirstInList();
 	//}
 }
@@ -208,11 +226,11 @@ void DownloadManager::add(Download *download) {
 /**
  * Find the index of a download in the list based on the download ID
  */
-int DownloadManager::getIndexFromName(const std::string download_name) {
+int DownloadManager::getIndexFromHash(const std::string download_hash) {
 	
 	for (int i = 0; i < downloads.size(); i++) {
-		if (downloads.at(i).getFilename().compare(download_name) == 0) {
-			std::cout << "Name found: " << downloads.at(i).getFilename() << std::endl;
+		if (downloads.at(i).getRootHash().compare(download_hash) == 0) {
+			std::cout << "Hash found: " << downloads.at(i).getRootHash() << std::endl;
 			return i;
 		}
 	}
@@ -222,9 +240,9 @@ int DownloadManager::getIndexFromName(const std::string download_name) {
 /**
  * Remove a download from the list based on the download ID
  */
-void DownloadManager::removeFromList(const std::string download_name) {
+void DownloadManager::removeFromList(const std::string download_hash) {
 	
-	int index = getIndexFromName(download_name);
+	int index = getIndexFromHash(download_hash);
 	if(index >= 0) {
 		if(downloads.at(index).getStatus() == DOWNLOADING) {
 			downloads.at(index).stop();
@@ -239,14 +257,14 @@ void DownloadManager::removeFromList(const std::string download_name) {
 /** 
  * Remove a download from the hard disk based on download ID
  */
-void DownloadManager::removeFromDisk(const std::string download_name) {
+void DownloadManager::removeFromDisk(const std::string download_hash) {
 	
-	int index = getIndexFromName(download_name);
+	int index = getIndexFromHash(download_hash);
 	
 	if(index >= 0) {
 		
 		std::string filename = downloads.at(index).getFilename();
-		removeFromList(download_name);
+		removeFromList(download_hash);
 		
 		filename = download_directory + "/" + filename;
 		

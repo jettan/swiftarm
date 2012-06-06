@@ -11,7 +11,6 @@ void Download::stop() {
 	std::string mbinmap = getFilename() + ".mbinmap";
 	remove(mhash.c_str());
 	remove(mbinmap.c_str());
-	remove(getFilename().c_str());
 }
 
 /**
@@ -19,6 +18,7 @@ void Download::stop() {
  */
 void Download::retry() {
 	stop();
+	remove(getFilename().c_str());
 	usleep(200000);
 	start();
 }
