@@ -1,14 +1,9 @@
 #ifndef _DOWNLOAD_H
 #define _DOWNLOAD_H
 
-#define SECONDS_PER_MINUTE (60)
-#define SECONDS_PER_HOUR (SECONDS_PER_MINUTE * SECONDS_PER_MINUTE)
-#define SECONDS_PER_DAY (SECONDS_PER_HOUR * 24)
-
 #include <iostream>
 #include <ctime>
 #include <string>
-
 #include <cstdio>
 #include <cstdlib>
 
@@ -30,6 +25,10 @@
 
 #include "swift.h"
 
+#define SECONDS_PER_MINUTE (60)
+#define SECONDS_PER_HOUR (SECONDS_PER_MINUTE * SECONDS_PER_MINUTE)
+#define SECONDS_PER_DAY (SECONDS_PER_HOUR * 24)
+
 enum Status {
 	READY,
 	PAUSED,
@@ -37,6 +36,7 @@ enum Status {
 	UPLOADING,
 	STOPPED,
 };
+
 
 class Download {
 	protected:

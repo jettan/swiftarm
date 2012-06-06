@@ -1,16 +1,21 @@
 #include "Download.h"
 
 /**
- * Stop the download.
+ * Stop the download and removes all content from disk.
  */
 void Download::stop() {
 	setStatus(STOPPED);
 	swift::Close(getID());
+	
+	std::string mhash = getFilename() + ".mhash";
+	std::string mbinmap = getFilename() + ".mbinmap";
+	remove(mhash.c_str());
+	remove(mbinmap.c_str());
 	remove(getFilename().c_str());
 }
 
 /**
- * Clear the download and starts over downloading it.
+ * Delete the downloaded content and try again from the beginning.
  */
 void Download::retry() {
 	stop();
@@ -22,7 +27,7 @@ void Download::retry() {
  * Starts downloading and uploading.
  */
 void Download::start() {
-	if(getStatus() != READY) {
+	if (getStatus() != READY) {
 		std::cout << "Download not ready!" << std::endl;
 		return;
 	}
@@ -31,17 +36,10 @@ void Download::start() {
 	setStatus(DOWNLOADING);
 	
 	// Change the directory to Downloads folder.
-	//int change = chdir("/dtv/usb/sda1/Downloads");
 	int change = chdir("/dtv/usb/sda1/Downloads");
-	std::cout << "Changed directory." << std::endl;
 	
-	
-	std::cout << "Tracker Address: " << getTrackerAddress()  << std::endl;
 	swift::Address trackeraddr = swift::Address(getTrackerAddress().c_str());
-	std::cout << "Set the tracker address." << std::endl;
-	std::cout << "Hash: " << getRootHash().c_str()  << std::endl;
-	
-	swift::Sha1Hash roothash  = swift::Sha1Hash(true, getRootHash().c_str());
+	swift::Sha1Hash roothash   = swift::Sha1Hash(true, getRootHash().c_str());
 	
 	// Set the tracker.
 	std::cout << "Setting the tracker..." << std::endl;
@@ -49,9 +47,8 @@ void Download::start() {
 	
 	std::cout << "Filename = " << getFilename() << std::endl;
 	
-	// Download the file.
-	int id  = swift::Open(getFilename().c_str(), roothash);
-	
+	// Open the file with swift.
+	int id  = swift::Open(getFilename().c_str(), roothash);	
 	setID(id);
 	
 	std::cout << "ID = " << getID() << std::endl;
@@ -60,11 +57,14 @@ void Download::start() {
 /**
  *  Pauses downloading and uploading.
  */
-void Download::pause(){
-	if(getStatus() == PAUSED)
+void Download::pause() {
+	if (getStatus() == PAUSED)
 		return;
-	std::string mhash = getFilename() + ".mhash";
-	remove(mhash.c_str());
+	
+	//TODO: Call swift::Checkpoint and something with swift::addProgressCallback?
+	
+	// Let swift close the file.
+	swift::Close(getID());
 	setStatus(PAUSED);
 }
 
@@ -72,23 +72,32 @@ void Download::pause(){
  * Resumes a paused download.
  */
 void Download::resume() {
-	if(getStatus() != PAUSED)
+	if (getStatus() != PAUSED)
 		return;
 		
 	setStatus(DOWNLOADING);
-	swift::Sha1Hash roothash = swift::Sha1Hash(true, getRootHash().c_str());
+	
+	swift::Address trackeraddr = swift::Address(getTrackerAddress().c_str());
+	swift::Sha1Hash roothash   = swift::Sha1Hash(true, getRootHash().c_str());
+	swift::SetTracker(trackeraddr);
+	
+	// TODO: swift::Open is not the right way to resume a download, use swift::Find + something...
 	int id = swift::Open(getFilename().c_str(), roothash);
+	
 	std::cout << "ID is suddenly: " << id << std::endl;
+	
+	// Not sure if this has to be called...
 	setID(id);
 }
 
 /**
  * Setter for download speed.
+ * @param speed: The speed in Kb/sec.
  */
 void Download::setDownloadSpeed(double speed) {
-	if(getID() < 0)
+	if (getID() < 0 || speed < 0)
 		return;
-		
+	
 	pthread_mutex_lock(&_mutex);
 	_stats.download_speed = speed;
 	pthread_mutex_unlock(&_mutex);
@@ -96,39 +105,43 @@ void Download::setDownloadSpeed(double speed) {
 
 /**
  * Setter for upload speed.
+ * @param speed: The speed in Kb/sec.
  */
 void Download::setUploadSpeed(double speed) {
-	if(getID() < 0)
+	if (getID() < 0 || speed < 0)
 		return;
-		
+	
 	pthread_mutex_lock(&_mutex);
 	_stats.upload_speed = speed;
 	pthread_mutex_unlock(&_mutex);
 }
 
 /**
- * Setter for ratio.
+ * Calculate upload/download ratio.
  */
 void Download::calculateRatio() {
-	if(getID() < 0)
+	if (getID() < 0)
 		return;
-		
+	
+	// Should be uploaded amount / downloaded amount
 	double download_speed = getStatistics().download_speed;
 	double upload_speed   = getStatistics().upload_speed;
 	
 	pthread_mutex_lock(&_mutex);
-	if(download_speed != 0)
+	if (download_speed != 0) {
 		_stats.ratio = upload_speed/download_speed;
-	else
+	} else {
 		_stats.ratio = 0;
+	}
 	pthread_mutex_unlock(&_mutex);
 }
 
 /**
  * Setter for download progress.
+ * @param percentage: The percentage to be set between 0 and 100.
  */
 void Download::setProgress(double percentage) {
-	if(getID() < 0)
+	if (getID() < 0 || percentage < 0 || percentage > 100)
 		return;
 		
 	pthread_mutex_lock(&_mutex);
@@ -138,9 +151,10 @@ void Download::setProgress(double percentage) {
 
 /**
  * Setter for upload amount.
+ * @param amount: Amount to be set in Kb.
  */
 void Download::setUploadAmount(double amount) {
-	if(getID() < 0)
+	if (getID() < 0 || amount < 0)
 		return;
 		
 	pthread_mutex_lock(&_mutex);
@@ -150,9 +164,11 @@ void Download::setUploadAmount(double amount) {
 
 /**
  * Setter for amount of seeders.
+ * @param amount: The amount of seeders to be set.
  */
 void Download::setSeeders(int amount) {
-	if(getID() < 0)
+	// TODO: or amount > max connections - the rest of peers we got already.
+	if (getID() < 0 || amount < 0)
 		return;
 		
 	pthread_mutex_lock(&_mutex);
@@ -162,9 +178,10 @@ void Download::setSeeders(int amount) {
 
 /**
  * Setter for amount of peers.
+ * @param amount: The amount of peers to be set.
  */
 void Download::setPeers(int amount) {
-	if(getID() < 0)
+	if (getID() < 0 || amount < 0)
 		return;
 		
 	pthread_mutex_lock(&_mutex);
@@ -173,10 +190,10 @@ void Download::setPeers(int amount) {
 }
 
 /**
- * Setter for estimated download time.
+ * Calculate estimated download time.
  */
 void Download::calculateEstimatedTime() {
-	if(getID() < 0)
+	if (getID() < 0)
 		return;
 	
 	struct time estimated_time;
@@ -208,6 +225,7 @@ void Download::calculateEstimatedTime() {
 
 /**
  * Setter for download ID.
+ * @param id: The download id given by swift::Open.
  */
 void Download::setID(int id) {
 	pthread_mutex_lock(&_mutex);
@@ -218,9 +236,10 @@ void Download::setID(int id) {
 
 /**
  * Setter for status
+ * @param status: The new status to be set.
  */
 void Download::setStatus(int status) {
-	if(_status == status)
+	if (getStatus() == status)
 		return;
 		
 	pthread_mutex_lock(&_mutex);
@@ -237,6 +256,7 @@ const int Download::getID() {
 	pthread_mutex_unlock(&_mutex);
 	return id;
 }
+
 /**
  * Get the status.
  */
@@ -268,7 +288,7 @@ Download::downloadStats Download::getStatistics() {
 	statistics.estimated.hours     = _stats.estimated.hours;
 	statistics.estimated.seconds   = _stats.estimated.seconds;
 	statistics.estimated.minutes   = _stats.estimated.minutes;
-	pthread_mutex_unlock( &_mutex );
+	pthread_mutex_unlock(&_mutex);
 	
 	return statistics;
 }
@@ -293,4 +313,3 @@ std::string Download::getFilename() {
 std::string Download::getRootHash() {
 	return _root_hash;
 }
-
