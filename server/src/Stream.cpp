@@ -94,8 +94,6 @@ void Stream::start() {
 	beginStreaming();
 	std::cout << "Dispatching the event base." <<std::endl;
 	
-	evtimer_assign(getEvent(), swift::Channel::evbase, closeCallback, NULL);
-	evtimer_add(getEvent(), swift::tint2tv(TINT_SEC));
 	event_base_dispatch(swift::Channel::evbase);
 }
 
