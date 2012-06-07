@@ -70,24 +70,21 @@ static void HttpServer::handleRequest(struct evhttp_request *req, void *arg) {
 	if(strcmp(path, "/download") == 0) {
 		
 		std::cout << "THE WRONG /DOWNLOAD" << std::endl;
-		//std::string tracker     = "130.161.158.52:20000";
+		/*
+		//std::string tracker   = "130.161.158.52:20000";
 		std::string tracker     = "127.0.0.1:20000";
 		std::string root_hash   = "012b5549e2622ea8bf3d694b4f55c959539ac848";
 		std::string name        = "bla.mp4";
 		test                    = new Download(tracker, root_hash, name);
+		*/
 		
-		if (DownloadManager::getActiveDownload()) {
 			std::cout << "Pausing current download to start new one" << std::endl;
-			DownloadManager::pauseDownload(root_hash);
-			DownloadManager::add(test);
-			DownloadManager::startDownload(test->getRootHash());
-		} else {
-			DownloadManager::add(test);
-		}
+			//DownloadManager::add(test);
+			DownloadManager::startDownload("367d26a6ce626e049a21921100e24eac86dbcd32");
 		
-		root_hash = "367d26a6ce626e049a21921100e24eac86dbcd32";
-		name      = "SG.mkv";
-		sg        = new Download(tracker, root_hash, name);
+		//else {
+			//DownloadManager::add(test);
+		//}
 		
 		//DownloadManager::add(sg);
 		
@@ -98,7 +95,40 @@ static void HttpServer::handleRequest(struct evhttp_request *req, void *arg) {
 		sendResponse(req, evb, response);
 	
 	//Temporarily hard coded.
-	} else if (strcmp(path, "/resume") == 0) {
+	} else if(strcmp(path, "/add2") == 0) {
+		std::string tracker     = "127.0.0.1:20000";
+		std::string root_hash   = "367d26a6ce626e049a21921100e24eac86dbcd32";
+		std::string name        = "SG.mkv";
+		sg        = new Download(tracker, root_hash, name);
+		
+		DownloadManager::add(sg);
+		
+		//DownloadManager::startDownload(test->getRootHash());
+		//TODO: Construct the path where the file will be downloaded.
+		char response[] = "Added SG download";
+		
+		sendResponse(req, evb, response);
+	
+	//Temporarily hard coded.
+	} else if(strcmp(path, "/add1") == 0) {
+		std::string tracker     = "127.0.0.1:20000";
+		std::string root_hash   = "012b5549e2622ea8bf3d694b4f55c959539ac848";
+		std::string name        = "bla.mp4";
+		test                    = new Download(tracker, root_hash, name);
+		
+		DownloadManager::add(test);
+		
+		//DownloadManager::startDownload(test->getRootHash());
+		//TODO: Construct the path where the file will be downloaded.
+		char response[] = "Added test download";
+		
+		sendResponse(req, evb, response);
+	
+	//Temporarily hard coded.
+	}
+	
+
+	else if (strcmp(path, "/resume") == 0) {
 		std::string root_hash   = "012b5549e2622ea8bf3d694b4f55c959539ac848";
 		std::cout << "Resuming Download: " << DownloadManager::resumeDownload(root_hash) << std::endl;
 		

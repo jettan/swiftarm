@@ -50,6 +50,7 @@ int main(){
 	
 	// Set Download directory
 	DownloadManager::setDownloadDirectory("/dtv/usb/sda1/Downloads");
+	DownloadManager::init();
 	
 	//swift::Channel::debug_file = stdout;
 	// Make httpserver loop

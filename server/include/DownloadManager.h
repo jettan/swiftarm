@@ -39,6 +39,8 @@ namespace DownloadManager {
 	static Download *active_download;
 	static pthread_t streaming_thread;
 	static pthread_t thread;
+	static pthread_mutex_t mutex;					/// Mutex to make downloads vector thread safe.
+	static pthread_mutex_t active_download_mutex;	/// Mutex to make active_download thread safe.
 	
 	static ticpp::Document *doc;
 	
@@ -47,9 +49,11 @@ namespace DownloadManager {
 	static int d_pid = -1;				/// Download thread pid.
 	
 	void setDownloadDirectory(std::string dir);
-	Download* getActiveDownload();
+	void setActiveDownload(Download *download);
+	std::vector<Download> getDownloads();
 	std::string getDownloadDirectory();
 	
+	void init();
 	void startStream(std::string tracker);
 	void stopStream();
 	void *startStreamThread(void *arg);

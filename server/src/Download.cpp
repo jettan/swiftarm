@@ -58,7 +58,6 @@ void Download::pause() {
 		std::cout << "Already Paused" << std::endl;
 		return;
 	}
-	
 	// Let swift save the progress and close the file.
 	swift::Checkpoint(getID());
 	swift::Close(getID());
