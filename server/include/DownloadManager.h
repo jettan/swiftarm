@@ -27,6 +27,7 @@
 #include "Download.h"
 #include "swift.h"
 #include "ticpp.h"
+#include "Exceptions.h"
 
 namespace DownloadManager {
 	
@@ -68,6 +69,7 @@ namespace DownloadManager {
 	void downloadFirstInList();
 	void add(Download *download);
 	void pauseDownload(const std::string download_hash);
+	void switchDownload(std::string hash);
 	void removeFromList(const std::string download_hash);
 	void removeFromDisk(const std::string download_hash);
 	void clearList();

@@ -124,6 +124,11 @@ std::string DownloadManager::buildXML() {
 		download_tag.LinkEndChild(&timeseconds_tag);
 		ticpp::Text timeseconds_value(getDownloads().at(i).getStatistics().estimated.seconds);
 		timeseconds_tag.LinkEndChild(&timeseconds_value);
+		
+		ticpp::Element hash_tag("HASH");
+		download_tag.LinkEndChild(&hash_tag);
+		ticpp::Text hash_value(getDownloads().at(i).getRootHash());
+		hash_tag.LinkEndChild(&hash_value);
 	}
 	
 	TiXmlPrinter printer;
@@ -138,29 +143,46 @@ std::string DownloadManager::buildXML() {
  * Callback to check if a download is completed.
  */
 void downloadCallback(int fd, short event, void* arg) {
-		pthread_mutex_lock(&DownloadManager::active_download_mutex);
-		
-		std::cout << "Download ID: " << DownloadManager::active_download->getID() << std::endl;
-		std::cout << "Download Name: " << DownloadManager::active_download->getFilename() << std::endl;
-		std::cout << "Percentage downloaded: " << floorf(((swift::Complete(DownloadManager::active_download->getID()) * 10000.0) / 
-			swift::Size(DownloadManager::active_download->getID()) * 1.0) + 0.5) / 100 << std::endl;
-		
+	pthread_mutex_lock(&DownloadManager::active_download_mutex);
 	
-	/*
-	if (swift::SeqComplete(DownloadManager::getActiveDownload()->getID()) == swift::Size(DownloadManager::getActiveDownload()->getID())) {
+	std::cout << "Download ID: " << DownloadManager::active_download->getID() << std::endl;
+	std::cout << "Download Name: " << DownloadManager::active_download->getFilename() << std::endl;
+	std::cout << "Status: " << DownloadManager::active_download->getStatus() << std::endl;
+	std::cout << "Percentage downloaded: " << floorf(((swift::Complete(DownloadManager::active_download->getID()) * 10000.0) / 
+		swift::Size(DownloadManager::active_download->getID()) * 1.0) + 0.5) / 100 << std::endl;
+	
+	bool is_unlocked = false;
 		
-		if (DownloadManager::getActiveDownload()->getStatus() != UPLOADING) {
-			DownloadManager::getActiveDownload()->setStatus(UPLOADING);
-			int index = DownloadManager::getIndexFromHash(DownloadManager::getActiveDownload()->getRootHash());
+	if (swift::SeqComplete(DownloadManager::active_download->getID()) == swift::Size(DownloadManager::active_download->getID()) ||
+		DownloadManager::active_download->getStatus() == PAUSED) {
+		
+		if (DownloadManager::active_download->getStatus() != UPLOADING && DownloadManager::active_download->getStatus() != PAUSED) {
+			DownloadManager::active_download->setStatus(UPLOADING);
+		}
+		
+		int i = 0;
+		while (i < DownloadManager::getDownloads().size() && 
+				DownloadManager::getDownloads().at(i).getStatus() != READY && 
+				DownloadManager::getDownloads().at(i).getStatus() != PAUSED) {
 			
-			if (index != DownloadManager::getDownloads().size() - 1) {
-				DownloadManager::startDownload(DownloadManager::getDownloads().at(index + 1).getRootHash());
+			i++;
+		}
+		
+		if (DownloadManager::getDownloads().size() > 0 && i < DownloadManager::getDownloads().size()) {
+			
+			if (DownloadManager::getDownloads().at(i).getStatus() == READY) {
+				pthread_mutex_unlock(&DownloadManager::active_download_mutex);
+				is_unlocked = true;
+				DownloadManager::startDownload(DownloadManager::getDownloads().at(i).getRootHash());
 			}
 		}
-	}*/
-		
+	}
+	
+	if (!is_unlocked) {
+		pthread_mutex_unlock(&DownloadManager::active_download_mutex);
+	}
+	
 	evtimer_add(&DownloadManager::evcompl, swift::tint2tv(TINT_SEC));
-	pthread_mutex_unlock(&DownloadManager::active_download_mutex);
 }
 
 void* DownloadManager::dispatch(void* arg) {
@@ -233,23 +255,11 @@ int DownloadManager::startDownload(const std::string download_hash) {
 	if (index >= 0) {
 		pthread_mutex_lock(&mutex);
 		setActiveDownload(&downloads.at(index));
+		
 		pthread_mutex_unlock(&mutex);
 		
 		pthread_mutex_lock(&active_download_mutex);
-		if (active_download->getID() > -1) {
-			pthread_mutex_unlock(&active_download_mutex);
-			return -1;
-		} else {
-			active_download->start();
-			pthread_mutex_unlock(&active_download_mutex);
-		}
-		
-		pthread_mutex_lock(&active_download_mutex);
-		if (active_download->getID() < 0 ) {
-			std::cerr << "Could not download " << active_download->getFilename() << "!" << std::endl;
-			pthread_mutex_unlock(&active_download_mutex);
-			return -1;
-		}
+		active_download->start();
 		pthread_mutex_unlock(&active_download_mutex);
 		
 		if (d_pid != 0) {
@@ -263,6 +273,24 @@ int DownloadManager::startDownload(const std::string download_hash) {
 	}
 	
 	return 0;
+}
+
+void DownloadManager::switchDownload(std::string hash) {
+	
+	//int index = getIndexFromHash(hash);
+	pthread_mutex_lock(&active_download_mutex);
+	std::string previous_hash = active_download->getRootHash();
+	active_download->setStatus(SWITCHING);
+	pthread_mutex_unlock(&active_download_mutex);
+	startDownload(hash);
+	
+	/*
+	pthread_mutex_lock(&mutex);
+	downloads.at(index).pause();
+	pthread_mutex_unlock(&mutex);
+	*/
+	
+	pauseDownload(previous_hash);
 }
 
 /**
@@ -336,7 +364,8 @@ int DownloadManager::getIndexFromHash(const std::string download_hash) {
 			return i;
 		}
 	}
-	return -1;
+	FileNotFoundException *e = new FileNotFoundException();
+	throw *e;
 }
 
 /**

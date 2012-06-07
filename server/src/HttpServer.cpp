@@ -70,30 +70,21 @@ static void HttpServer::handleRequest(struct evhttp_request *req, void *arg) {
 	if(strcmp(path, "/download") == 0) {
 		
 		std::cout << "THE WRONG /DOWNLOAD" << std::endl;
-		/*
+		
 		//std::string tracker   = "130.161.158.52:20000";
-		std::string tracker     = "127.0.0.1:20000";
-		std::string root_hash   = "012b5549e2622ea8bf3d694b4f55c959539ac848";
-		std::string name        = "bla.mp4";
-		test                    = new Download(tracker, root_hash, name);
-		*/
+		std::string hash   = "367d26a6ce626e049a21921100e24eac86dbcd32";
 		
-			std::cout << "Pausing current download to start new one" << std::endl;
-			//DownloadManager::add(test);
-			DownloadManager::startDownload("367d26a6ce626e049a21921100e24eac86dbcd32");
+		try {
+			DownloadManager::switchDownload(hash);
+			sendResponse(req, evb, "Download Started");
+		}
+		catch(FileNotFoundException e) {
+			std::cout << "Exception Caught In HttpServer" << std::endl;
+			std::cout << e.what() << std::endl;
+			sendResponse(req, evb, "-1");
+			
+		}
 		
-		//else {
-			//DownloadManager::add(test);
-		//}
-		
-		//DownloadManager::add(sg);
-		
-		//DownloadManager::startDownload(test->getRootHash());
-		//TODO: Construct the path where the file will be downloaded.
-		char response[] = "file:///dtv/usb/sda1/Downloads/bla.mp4";
-		
-		sendResponse(req, evb, response);
-	
 	//Temporarily hard coded.
 	} else if(strcmp(path, "/add2") == 0) {
 		std::string tracker     = "127.0.0.1:20000";
@@ -124,11 +115,31 @@ static void HttpServer::handleRequest(struct evhttp_request *req, void *arg) {
 		
 		sendResponse(req, evb, response);
 	
-	//Temporarily hard coded.
-	}
+	// The realm not hard coded version of /add.
+	} else if(path_str.size() >= 4 && path_str.substr(0, 5).compare("/add") == 0) {
+		
+		if(path_str.size() > 5 && path_str.at(4) == ':'){
+			
+			std::string filename = path_str.substr(5, path_str.size());
+			
+			try {
+				struct SearchEngine::result res = SearchEngine::getResultWithName(filename);
+				test = new Download(res.tracker, res.hash, res.filename);
+				
+				DownloadManager::add(test);
+				
+				sendResponse(req, evb, "Download Added");
+			}
+			catch(FileNotFoundException e) {
+				std::cout << "Exception Caught In HttpServer" << std::endl;
+				std::cout << e.what() << std::endl;
+				sendResponse(req, evb, "-1");
+				
+			}
+		}
 	
-
-	else if (strcmp(path, "/resume") == 0) {
+	//Temporarily hard coded.
+	} else if (strcmp(path, "/resume") == 0) {
 		std::string root_hash   = "012b5549e2622ea8bf3d694b4f55c959539ac848";
 		std::cout << "Resuming Download: " << DownloadManager::resumeDownload(root_hash) << std::endl;
 		
@@ -149,24 +160,19 @@ static void HttpServer::handleRequest(struct evhttp_request *req, void *arg) {
 		
 		if(path_str.size() > 10 && path_str.at(9) == ':'){
 			
-			std::string filename = path_str.substr(10, path_str.size());
+			std::string hash = path_str.substr(10, path_str.size());
 			try {
-				struct SearchEngine::result res = SearchEngine::getResultWithName(filename);
-				test = new Download(res.tracker, res.hash, res.filename);
-				
-				DownloadManager::add(test);
-				
-				DownloadManager::startDownload(test->getFilename());
-				
+				DownloadManager::switchDownload(hash);
 				sendResponse(req, evb, "Download Started");
 			}
 			catch(FileNotFoundException e) {
 				std::cout << "Exception Caught In HttpServer" << std::endl;
-				sendResponse(req, evb, e.what());
+				std::cout << e.what() << std::endl;
+				sendResponse(req, evb, "-1");
 				
 			}
-	}
-	
+		}
+		
 		/**
 		 * SEARCH
 		 */

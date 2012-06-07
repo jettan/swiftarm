@@ -71,7 +71,6 @@ void Download::resume() {
 	if (getStatus() != PAUSED)
 		return;
 		
-	//TODO: If already completed, set status to UPLOADING.
 	setStatus(DOWNLOADING);
 	
 	swift::Address trackeraddr = swift::Address(getTrackerAddress().c_str());

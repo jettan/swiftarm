@@ -35,6 +35,7 @@ enum Status {
 	DOWNLOADING,
 	UPLOADING,
 	STOPPED,
+	SWITCHING,
 };
 
 
