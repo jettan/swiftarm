@@ -1,5 +1,4 @@
 #include "SearchEngine.h"
-tebobs17
 
 /**
  * Generates a new list of result based on the search term
