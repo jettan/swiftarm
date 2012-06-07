@@ -1,7 +1,10 @@
 #include "SearchEngine.h"
+tebobs17
 
-// Generates a new list of results based on the search term
-// and returns the list
+/**
+ * Generates a new list of result based on the search term
+ * and returns the list
+ */
 std::vector<struct SearchEngine::result> SearchEngine::search(std::string searchTerm) {
 	
 	// For now search results will be hard coded
@@ -29,20 +32,25 @@ std::vector<struct SearchEngine::result> SearchEngine::search(std::string search
 	r.filename = name;
 	
 	searchResults.push_back(r);
+	searchResults.push_back(r2);
 	
 	return searchResults;
 }
 
-// Returns the current list of results
+/**
+ * Returns the current list of results
+ */
 std::vector<struct SearchEngine::result> SearchEngine::getResults() {
 	
 	// For now search results will be hard coded
-	// Once dispersie works we can do the real deal
+	// Once dispersy works we can do the real deal
 	
 	return searchResults;
 }
 
-// Returns the result with a certain filename
+/**
+ * Returns the result with a cetain filename
+ */
 struct SearchEngine::result SearchEngine::getResultWithName(std::string filename) {
 	
 	for(int i = 0; i < searchResults.size(); i++) {
@@ -56,3 +64,4 @@ struct SearchEngine::result SearchEngine::getResultWithName(std::string filename
 	FileNotFoundException *e = new FileNotFoundException();
 	throw *e;
 }
+
