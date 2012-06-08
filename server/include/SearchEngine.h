@@ -24,7 +24,7 @@ namespace SearchEngine {
 	
 	std::vector<struct result> getResults();
 	
-	struct result getResultWithName(std::string filename);
+	struct result getResultWithHash(std::string hash);
 }
 
 #endif //_SEARCHENGINE_H
