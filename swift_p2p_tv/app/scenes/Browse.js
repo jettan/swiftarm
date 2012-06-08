@@ -1,31 +1,29 @@
 function SceneBrowse() {
-    this.row = 0;
+	this.row    = 0;
 	this.column = 0;
 	var buttons;
-	var but = 3;
+	var but     = 0;
 }
 
-var downloadURL = "http://130.161.159.107:1337/add:012b5549e2622ea8bf3d694b4f55c959539ac848";
-var progressURL = "http://130.161.159.107:1337/progress";
-var searchURL = "http://130.161.159.107:1337/search:bla";
-var streamURL = "http://130.161.159.107:1337/stream";
+var downloadURL   = "http://130.161.159.107:1337/add:012b5549e2622ea8bf3d694b4f55c959539ac848";
+var progressURL   = "http://130.161.159.107:1337/progress";
+var searchURL 	  = "http://130.161.159.107:1337/search:bla";
+var streamURL	  = "http://130.161.159.107:1337/stream";
 var stopStreamURL = "http://130.161.159.107:1337/stopStream";
 
+/**
+ * Function called at scene init
+ */
 SceneBrowse.prototype.initialize = function () {
-	alert('SceneBrowse.initialize()');
 	
 	// List with available files for download/stream
 	// In future release a search function will be included
 	this.data = [
 		'stream.mp4',
-		'bla.mp4',
-		'3',
-		'4',
-		'5',
-		'6',
-		'7'
+		'bla.mp4'
 	];
     
+    // Create list of div:list0 with previous defined data
 	$('#list0').sfList({
 		data: this.data,
 		index: 0,
@@ -37,12 +35,14 @@ SceneBrowse.prototype.initialize = function () {
 	});
 	$('#labelList').sfLabel('show');
 	
+	// Usb buttons starts service api file browser when pressed
 	$('#usbButton').sfButton({
         text: 'Browse USB'
     }).sfButton('addCallback', 'clicked', function (event, index) {
 		alert("USB button clicked: " + index);
 	});
 	
+	// Player button returns the focus to the main scene with the redirect label set to Player when pressed
 	$('#playerButton').sfButton({
         text: 'Go to player'
     }).sfButton('addCallback', 'clicked', function (event, index) {
@@ -55,20 +55,28 @@ SceneBrowse.prototype.initialize = function () {
     $('#labelUSB').sfLabel({text: "Click button to browse usb device"});
 }
 
+/**
+ * Function called at scene show
+ */
 SceneBrowse.prototype.handleShow = function () {
-	alert('SceneBrowse.handleShow()');
+
 }
 
+/**
+ * Function called at scene hide
+ */
 SceneBrowse.prototype.handleHide = function () {
-	alert('SceneBrowse.handleHide()');
+
 }
 
+/**
+ * Function called at scene focus
+ */
 SceneBrowse.prototype.handleFocus = function () {
-	alert('SceneBrowse.handleFocus()');
 	
-	this.row = 0;
+	this.row    = 0;
 	this.column = 0;
-	but = 0;
+	but 	    = 0;
 	
 	$('#labelList').sfLabel('show');
 	$('#list0').sfList('show');
@@ -81,8 +89,10 @@ SceneBrowse.prototype.handleFocus = function () {
 	});
 }
 
+/**
+ * Function called at scene blur
+ */
 SceneBrowse.prototype.handleBlur = function () {
-	alert('SceneBrowse.handleBlur()');
 	
 	$('#button0').sfButton('blur');
 	$('#labelList').sfLabel('hide');
@@ -90,8 +100,10 @@ SceneBrowse.prototype.handleBlur = function () {
 	$('#list0').sfList('hide');
 }
 
+/**
+ * Function called at scene key down
+ */
 SceneBrowse.prototype.handleKeyDown = function (keyCode) {
-	alert('SceneBrowse.handleKeyDown(' + keyCode + ')');
 	switch (keyCode) {
 		case sf.key.LEFT:
 		case sf.key.RIGHT:
@@ -125,58 +137,58 @@ SceneBrowse.prototype.handleKeyDown = function (keyCode) {
 			}
 			break;
 		case sf.key.ENTER:
-		if (this.column == 0) {
-			var index = $('#list0').sfList('getIndex');
-			$('#labelUSB').sfLabel("option", "text", 'Selected file: ' + this.data[index]);
-			var _THIS_ = this;
-			$('#popupUD').sfPopup({
-					text:"Do you want to download or stream this file?",
-					buttons: ["Download", "Stream"],
-					defaultFocus: 1,
-					keyhelp: {'return' : 'Return'},
-					callback : function(selectedIndex){
-						if (selectedIndex == -1)
-							$('#labelUSB').sfLabel("option", "text", 'Operation canceled');
-						else if (selectedIndex == 0) {
-							// Start download
-							httpGet(downloadURL);
-							downloads.push(this.data[index]);
-							$('#labelDownloading').sfLabel('option','text','Downloading');
-						} else {
-							//Start streaming and redirect to player
-							httpGet(streamURL + ":" + _THIS_.data[index]);
-							$('#labelRedirect').sfLabel('option','text','PlayerStream');
-							sf.scene.focus('Main');
+			if (this.column == 0) {
+				var index = $('#list0').sfList('getIndex');
+				$('#labelUSB').sfLabel("option", "text", 'Selected file: ' + this.data[index]);
+				
+				var _THIS_ = this;
+				$('#popupUD').sfPopup({
+						text:"Do you want to download or stream this file?",
+						buttons: ["Download", "Stream"],
+						defaultFocus: 1,
+						keyhelp: {'return' : 'Return'},
+						callback : function(selectedIndex){
+							if (selectedIndex == -1)
+								$('#labelUSB').sfLabel("option", "text", 'Operation canceled');
+							else if (selectedIndex == 0) {
+								// Start download
+								httpGet(downloadURL);
+								downloads.push(this.data[index]);
+								$('#labelDownloading').sfLabel('option','text','Downloading');
+							} else {
+								//Start streaming and redirect to player
+								httpGet(streamURL + ":" + _THIS_.data[index]);
+								$('#labelRedirect').sfLabel('option','text','PlayerStream');
+								sf.scene.focus('Main');
+							}
 						}
-					}
-				}).sfPopup('show');
-		} else if (this.row == 0 && this.column == 1) {
-			$("#usbButton").sfButton('blur');
-			var _THIS_ = this;
-			sf.service.USB.show({
-				callback: function(result){
-					alert("Callback of USB module: " + result);
-					 $('#labelVideo').sfLabel("option", "text", result[0]); 
-					 $('#labelUSB').sfLabel("option", "text", 'Selected file: ' + result[0]); 
-					//_THIS_.setResult(result?getObjString(result, 'result'):'null');
-					but = 1;
-					$('#playerButton').sfButton('show');
-					$("#playerButton").sfButton('focus');
-				},
-				fileType: 'all'
-			});
-			this.row = 3;
-		} else if (this.row == 1 && this.column == 1) {
-			$('#labelRedirect').sfLabel('option','text','Player');
-			sf.scene.focus('Main');
-		}
+					}).sfPopup('show');
+			} else if (this.row == 0 && this.column == 1) {
+				$("#usbButton").sfButton('blur');
+				var _THIS_ = this;
+				sf.service.USB.show({
+					callback: function(result){
+						alert("Callback of USB module: " + result);
+						 $('#labelVideo').sfLabel("option", "text", result[0]); 
+						 $('#labelUSB').sfLabel("option", "text", 'Selected file: ' + result[0]); 
+						but = 1;
+						$('#playerButton').sfButton('show');
+						$("#playerButton").sfButton('focus');
+					},
+					fileType: 'all'
+				});
+				this.row = 1;
+			} else if (this.row == 1 && this.column == 1) {
+				$('#labelRedirect').sfLabel('option','text','Player');
+				sf.scene.focus('Main');
+			}
 			break;
 		case sf.key.RETURN:
 			$('#category').sfList('show');
 			$('#image').sfImage('show');
 			$('#label').sfLabel('show');
 			sf.scene.focus('Main');
-            sf.key.preventDefault();
+            		sf.key.preventDefault();
 			break;
 		case sf.key.RED:
 			httpGet(searchURL);
@@ -190,14 +202,20 @@ SceneBrowse.prototype.handleKeyDown = function (keyCode) {
 	}
 }
 
+/**
+ * Function to send http request to server
+ */
 function httpGet(url) {
 	request = new XMLHttpRequest();
 	request.open("GET", url, true);
-	request.onreadystatechange = processRequest;
+	request.onreadystatechange = processResponse;
 	request.send(null);
 }
 
-function processRequest() {
+/**
+ * Function to process response received from server after request
+ */
+function processResponse() {
 	if (request.readyState == 4) {
 		var result = request.responseText;
 		$('#labelUSB').sfLabel("option", "text", result);
