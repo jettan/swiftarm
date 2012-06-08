@@ -17,10 +17,10 @@ namespace SearchEngine {
 		std::string hash;
 	};
 	
-	static std::vector<struct result> searchResults;
+	static std::vector<struct result> search_results;
 	
 	
-	std::vector<struct result> search(std::string searchTerm);
+	std::vector<struct result> search(std::string search_term);
 	
 	std::vector<struct result> getResults();
 	

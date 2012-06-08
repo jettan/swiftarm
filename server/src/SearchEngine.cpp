@@ -2,14 +2,15 @@
 
 /**
  * Generates a new list of result based on the search term
- * and returns the list
+ * and returns the list.
+ * @param search_term: Keyword used to find files.
  */
-std::vector<struct SearchEngine::result> SearchEngine::search(std::string searchTerm) {
+std::vector<struct SearchEngine::result> SearchEngine::search(std::string search_term) {
 	
 	// For now search results will be hard coded
 	// Once dispersy works we can do the real deal
 	
-	searchResults.clear();
+	search_results.clear();
 	
 	std::string tracker     = "130.161.158.52:20000";
 	std::string root_hash   = "012b5549e2622ea8bf3d694b4f55c959539ac848";
@@ -20,7 +21,7 @@ std::vector<struct SearchEngine::result> SearchEngine::search(std::string search
 	r.hash = root_hash;
 	r.filename = name;
 	
-	searchResults.push_back(r);
+	search_results.push_back(r);
 	
 	root_hash = "367d26a6ce626e049a21921100e24eac86dbcd32";
 	name      = "SG.mkv";
@@ -30,53 +31,53 @@ std::vector<struct SearchEngine::result> SearchEngine::search(std::string search
 	r.hash = root_hash;
 	r.filename = name;
 	
-	searchResults.push_back(r);
-	searchResults.push_back(r2);
+	search_results.push_back(r);
+	search_results.push_back(r2);
 	
-	return searchResults;
+	return search_results;
 }
 
 /**
- * Returns the current list of results
+ * Returns the current list of results.
  */
 std::vector<struct SearchEngine::result> SearchEngine::getResults() {
 	
-	// For now search results will be hard coded
-	// Once dispersy works we can do the real deal
+	// For now search results will be hard coded.
+	// Once dispersy works we can do the real deal.
 	
-	return searchResults;
+	return search_results;
 }
 
 /**
- * Returns the result with a cetain hash
+ * Returns the result with a cetain hash.
  */
 struct SearchEngine::result SearchEngine::getResultWithHash(std::string hash) {
 	
-	for (int i = 0; i < searchResults.size(); i++) {
+	for (int i = 0; i < search_results.size(); i++) {
 		
-		if (searchResults.at(i).hash.compare(hash) == 0) {
-			return searchResults.at(i);
+		if (search_results.at(i).hash.compare(hash) == 0) {
+			return search_results.at(i);
 		}
 	}
 	
-	// Throw exception if file can't be found
+	// Throw exception if file can't be found.
 	FileNotFoundException *e = new FileNotFoundException();
 	throw *e;
 }
 
 /**
- * Returns the result with a cetain filename
+ * Returns the result with a cetain filename.
  */
 struct SearchEngine::result SearchEngine::getResultWithName(std::string name) {
 	
-	for(int i = 0; i < searchResults.size(); i++) {
+	for(int i = 0; i < search_results.size(); i++) {
 		
-		if(searchResults.at(i).filename.compare(name) == 0) {
-			return searchResults.at(i);
+		if(search_results.at(i).filename.compare(name) == 0) {
+			return search_results.at(i);
 		}
 	}
 	
-	// Throw exception if file can't be found
+	// Throw exception if file can't be found.
 	FileNotFoundException *e = new FileNotFoundException();
 	throw *e;
 }

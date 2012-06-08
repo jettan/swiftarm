@@ -4,25 +4,8 @@
 #include <iostream>
 #include <string>
 #include <ctime>
-
 #include <cstdio>
 #include <cstdlib>
-
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <sys/socket.h>
-#include <signal.h>
-#include <unistd.h>
-#include <float.h>
-#include <pthread.h>
-#include <math.h>
-
-#include <event2/event.h>
-#include <event2/http.h>
-#include <event2/buffer.h>
-#include <event2/util.h>
-#include <event2/event-config.h>
-#include <event2/thread.h>
 
 #include "swift.h"
 
@@ -30,12 +13,15 @@ class Stream {
 	protected:
 		std::string _tracker;		/// Trackers seeding this stream.
 		pthread_mutex_t _mutex;		/// Mutex to prevent download thread and main thread from accessing same data at the same time.
-		struct event _evclose;
-		volatile bool _streaming;
+		struct event _evclose;		/// Event used by libevent to stop a stream.
+		volatile bool _streaming;	/// Boolean to determine whether a stream is opened or not.
 
 	private:
-		static Stream *_instance;
+		static Stream *_instance;	/// Singleton instance of Stream class.
 		
+		/**
+		 * Constructor, made private to implement Singleton pattern.
+		 */
 		Stream() {
 			init();
 		}
@@ -43,6 +29,9 @@ class Stream {
 	public:
 		static Stream *getInstance();
 		
+		/**
+		 * Destructor.
+		 */
 		~Stream() {}
 		
 		void start();

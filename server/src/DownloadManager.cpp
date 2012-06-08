@@ -159,7 +159,7 @@ std::string DownloadManager::buildXML() {
 /**
  * Callback to keep all downloads and uploads running.
  * @param fd: The file descriptor used by swift.
- * @param event: The event it get from libevent.
+ * @param event: The event it gets from libevent.
  * @param arg: Unused argument from libevent.
  */
 void downloadCallback(int fd, short event, void* arg) {
@@ -210,7 +210,7 @@ void downloadCallback(int fd, short event, void* arg) {
  * Dispatch swift::Channel::evbase to get into the main loop of downloads.
  * @param arg: Unused argument of pthread_create.
  */
-void* DownloadManager::dispatch(void* arg) {
+void *DownloadManager::dispatch(void* arg) {
 	// Assign callbacks to the event base.
 	std::cout << "Entered thread." << std::endl;
 	evtimer_assign(&evcompl, swift::Channel::evbase, downloadCallback, NULL);

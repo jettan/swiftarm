@@ -36,6 +36,7 @@ void Download::start() {
 	setStatus(DOWNLOADING);
 	
 	// Change the directory to Downloads folder.
+	// Temporarily hard coded.
 	int change = chdir("/dtv/usb/sda1/Downloads");
 	
 	swift::Address trackeraddr = swift::Address(getTrackerAddress().c_str());
@@ -115,7 +116,6 @@ void Download::calculateRatio() {
 	if (getID() < 0)
 		return;
 	
-	// Should be uploaded amount / downloaded amount
 	double download_amount = getStatistics().download_amount;
 	double upload_amount   = getStatistics().upload_amount;
 	

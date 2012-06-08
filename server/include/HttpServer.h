@@ -2,18 +2,9 @@
 #define _HTTPSERVER_H
 
 #include <iostream>
+#include <string>
 #include <cstdio>
 #include <cstdlib>
-#include <string>
-
-#include <math.h>
-#include <float.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <sys/socket.h>
-#include <signal.h>
-#include <unistd.h>
-#include <pthread.h>
 
 #include <event2/event.h>
 #include <event2/http.h>
@@ -30,11 +21,11 @@
 #include "swift.h"
 
 namespace HttpServer {
-		
-		static void sendXMLResponse(std::string msg, struct evhttp_request *req, struct evbuffer *buf);
-		static void sendResponse(struct evhttp_request *req, struct evbuffer *buf,  const char *message);
-		static void handleRequest(struct evhttp_request *req, void *arg);
-		int init();
+	
+	static void sendXMLResponse(std::string msg, struct evhttp_request *req, struct evbuffer *buf);
+	static void sendResponse(struct evhttp_request *req, struct evbuffer *buf,  const char *message);
+	static void handleRequest(struct evhttp_request *req, void *arg);
+	int init();
 	
 }
 

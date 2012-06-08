@@ -7,21 +7,7 @@
 #include <cstdio>
 #include <cstdlib>
 
-#include <math.h>
-#include <pthread.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <sys/socket.h>
-#include <signal.h>
-#include <unistd.h>
 #include <float.h>
-
-#include <event2/event.h>
-#include <event2/http.h>
-#include <event2/buffer.h>
-#include <event2/util.h>
-#include <event2/event-config.h>
-#include <event2/thread.h>
 
 #include "Stream.h"
 #include "Download.h"

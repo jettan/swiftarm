@@ -6,6 +6,9 @@ namespace HttpServer {
 
 /**
  * Send the HTTP XML response.
+ * @param msg: The xml message to be sent.
+ * @param req: The received HTTP request.
+ * @param buf: Buffer used to send the reply.
  */
 static void HttpServer::sendXMLResponse(std::string msg, struct evhttp_request *req, struct evbuffer *buf) {
 	// Add HTTP headers.
@@ -26,9 +29,11 @@ static void HttpServer::sendXMLResponse(std::string msg, struct evhttp_request *
 
 /**
  * Send the HTTP response.
+ * @param req: The received HTTP request.
+ * @param buf: Buffer used to send the reply.
+ * @param message: The message to be sent.
  */
 static void HttpServer::sendResponse(struct evhttp_request *req, struct evbuffer *buf,  const char *message) {
-	
 	// Add HTTP headers.
 	evhttp_add_header(evhttp_request_get_output_headers(req), "Content-Type", "text/plain");
 	
@@ -46,7 +51,6 @@ static void HttpServer::sendResponse(struct evhttp_request *req, struct evbuffer
  * @param arg: Ignored argument.
  */
 static void HttpServer::handleRequest(struct evhttp_request *req, void *arg) {
-	
 	const char *uri = evhttp_request_get_uri(req);
 	const char *path;
 	struct evbuffer *evb;
@@ -186,7 +190,7 @@ static void HttpServer::handleRequest(struct evhttp_request *req, void *arg) {
 }
 
 /**
- * Initialize the web server.
+ * Initialise the web server.
  */
 int HttpServer::init() {
 	struct evhttp *http;
@@ -207,8 +211,8 @@ int HttpServer::init() {
 	evhttp_set_gencb(http, handleRequest, NULL);
 	
 	// Now we tell the evhttp what port to listen on.
-	//handle = evhttp_bind_socket_with_handle(http, "130.161.158.52", port);
-	handle = evhttp_bind_socket_with_handle(http, "130.161.159.107", port);
+	// handle = evhttp_bind_socket_with_handle(http, "130.161.158.52", port);
+	handle = evhttp_bind_socket_with_handle(http, "127.0.0.1", port);
 	if (!handle) {
 		std::cerr << "Couldn't bind to port " << (int)port << ". Exiting." << std::endl;
 		return 1;

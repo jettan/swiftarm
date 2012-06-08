@@ -31,7 +31,10 @@ bool Stream::readStreaming() {
 }
 
 /**
- * Libevent loop for streaming files.
+ * Libevent loop for streaming files, also used to close stream.
+ * @param fd: The file descriptor used by swift.
+ * @param event: The event it gets from libevent.
+ * @param arg: Argument taken by callback.
  */
 void closeCallback(int fd, short event, void *arg) {
 	Stream* stream = (Stream*) arg;
@@ -42,6 +45,10 @@ void closeCallback(int fd, short event, void *arg) {
 		event_base_loopexit(swift::Channel::evbase, NULL);
 }
 
+/**
+ * Sets the tracker address of the stream.
+ * @param tracker: The tracker address to be set.
+ */
 void Stream::setTracker(std::string tracker) {
 	_tracker = (std::string) tracker;
 }
@@ -77,7 +84,8 @@ void Stream::stop() {
  * Start the stream.
  */
 void Stream::start() {
-	//Change the directory to Downloads folder.
+	// Change the directory to Downloads folder.
+	// Temporarily hard coded.
 	int change = chdir("/dtv/usb/sda1/Downloads");
 	
 	std::cout << "Tracker = " << _tracker <<std::endl;
