@@ -1,8 +1,8 @@
 #include "DownloadManager.h"
 
 void DownloadManager::init() {
-pthread_mutex_init(&mutex, NULL);
-pthread_mutex_init(&active_download_mutex, NULL);
+	pthread_mutex_init(&mutex, NULL);
+	pthread_mutex_init(&active_download_mutex, NULL);
 }
 
 void DownloadManager::setDownloadDirectory(std::string dir) {
@@ -48,19 +48,15 @@ std::string DownloadManager::buildXML() {
 	for(int i = 0; i < getDownloads().size(); i++) {
 		
 		ticpp::Element download_tag("DOWNLOAD");
-		
 		downloads_tag.LinkEndChild(&download_tag);
 		
 		ticpp::Element status_tag("STATUS");
 		download_tag.LinkEndChild(&status_tag);
-		
 		ticpp::Text status_value(getDownloads().at(i).getStatus());
-		
 		status_tag.LinkEndChild(&status_value);
 		
 		ticpp::Element name_tag("NAME");
 		download_tag.LinkEndChild(&name_tag);
-		
 		ticpp::Text name_value(getDownloads().at(i).getFilename());
 		name_tag.LinkEndChild(&name_value);
 		
@@ -147,13 +143,14 @@ void downloadCallback(int fd, short event, void* arg) {
 	std::cout << "Download ID: " << DownloadManager::active_download->getID() << std::endl;
 	std::cout << "Download Name: " << DownloadManager::active_download->getFilename() << std::endl;
 	std::cout << "Status: " << DownloadManager::active_download->getStatus() << std::endl;
-	std::cout << "Percentage downloaded: " << floorf(((swift::Complete(DownloadManager::active_download->getID()) * 10000.0) / 
-		swift::Size(DownloadManager::active_download->getID()) * 1.0) + 0.5) / 100 << std::endl;
+	if (DownloadManager::active_download->getStatus() == UPLOADING || DownloadManager::active_download->getStatus() == DOWNLOADING)
+		std::cout << "Percentage downloaded: " << floorf(((swift::Complete(DownloadManager::active_download->getID()) * 10000.0) /
+		  swift::Size(DownloadManager::active_download->getID()) * 1.0) + 0.5) / 100 << std::endl;
 	
 	bool is_unlocked = false;
 		
 	if (swift::SeqComplete(DownloadManager::active_download->getID()) == swift::Size(DownloadManager::active_download->getID()) ||
-		DownloadManager::active_download->getStatus() == PAUSED) {
+	  DownloadManager::active_download->getStatus() == PAUSED) {
 		
 		if (DownloadManager::active_download->getStatus() != UPLOADING && DownloadManager::active_download->getStatus() != PAUSED) {
 			DownloadManager::active_download->setStatus(UPLOADING);
@@ -161,14 +158,12 @@ void downloadCallback(int fd, short event, void* arg) {
 		
 		int i = 0;
 		while (i < DownloadManager::getDownloads().size() && 
-				DownloadManager::getDownloads().at(i).getStatus() != READY && 
-				DownloadManager::getDownloads().at(i).getStatus() != PAUSED) {
-			
+		  DownloadManager::getDownloads().at(i).getStatus() != READY &&
+		  DownloadManager::getDownloads().at(i).getStatus() != PAUSED) {
 			i++;
 		}
 		
 		if (DownloadManager::getDownloads().size() > 0 && i < DownloadManager::getDownloads().size()) {
-			
 			if (DownloadManager::getDownloads().at(i).getStatus() == READY) {
 				pthread_mutex_unlock(&DownloadManager::active_download_mutex);
 				is_unlocked = true;
@@ -185,7 +180,6 @@ void downloadCallback(int fd, short event, void* arg) {
 }
 
 void* DownloadManager::dispatch(void* arg) {
-	
 	// Assign callbacks to the event base.
 	std::cout << "Entered thread." << std::endl;
 	evtimer_assign(&evcompl, swift::Channel::evbase, downloadCallback, NULL);
@@ -200,7 +194,8 @@ void* DownloadManager::dispatch(void* arg) {
 }
 
 /**
- * Pauses the currently active download.
+ * Pauses a download with the given root hash.
+ * @param download_hash: The root hash of the download.
  */
 void DownloadManager::pauseDownload(const std::string download_hash) {
 	int index = getIndexFromHash(download_hash);
@@ -208,19 +203,18 @@ void DownloadManager::pauseDownload(const std::string download_hash) {
 	
 	if (index >= 0) {
 		pthread_mutex_lock(&mutex);
-		
 		pthread_mutex_lock(&active_download_mutex);
-		std::cout << "Found filename is: " << downloads.at(index).getFilename() << std::endl;
+		
 		downloads.at(index).pause();
 		
 		pthread_mutex_unlock(&active_download_mutex);
-		
 		pthread_mutex_unlock(&mutex);
 	}
 }
 
 /**
- * Resumes a paused download.
+ * Resumes a paused download given a root hash.
+ * @param download_hash: The root hash of the download.
  */
 int DownloadManager::resumeDownload(std::string download_hash) {
 	int index = getIndexFromHash(download_hash);
@@ -237,7 +231,6 @@ int DownloadManager::resumeDownload(std::string download_hash) {
 			pthread_mutex_unlock(&active_download_mutex);
 			return -1;
 		}
-		
 		pthread_mutex_unlock(&active_download_mutex);
 	}
 	return 0;
@@ -247,14 +240,12 @@ int DownloadManager::resumeDownload(std::string download_hash) {
  * Start a download with a specific download ID.
  */
 int DownloadManager::startDownload(const std::string download_hash) {
-	
 	int index = getIndexFromHash(download_hash);
 	std::cout << "Index = " << index << std::endl;
 	
 	if (index >= 0) {
 		pthread_mutex_lock(&mutex);
 		setActiveDownload(&downloads.at(index));
-		
 		pthread_mutex_unlock(&mutex);
 		
 		pthread_mutex_lock(&active_download_mutex);
@@ -270,25 +261,16 @@ int DownloadManager::startDownload(const std::string download_hash) {
 			std::cout << "Download pid = " << d_pid << std::endl;
 		}
 	}
-	
 	return 0;
 }
 
 void DownloadManager::switchDownload(std::string hash) {
-	
-	//int index = getIndexFromHash(hash);
 	pthread_mutex_lock(&active_download_mutex);
 	std::string previous_hash = active_download->getRootHash();
 	active_download->setStatus(SWITCHING);
 	pthread_mutex_unlock(&active_download_mutex);
+	
 	startDownload(hash);
-	
-	/*
-	pthread_mutex_lock(&mutex);
-	downloads.at(index).pause();
-	pthread_mutex_unlock(&mutex);
-	*/
-	
 	pauseDownload(previous_hash);
 }
 
@@ -433,6 +415,7 @@ void DownloadManager::stopStream() {
 
 void* DownloadManager::startStreamThread(void* arg) {
 	Stream::getInstance()->start();
+	std::cout << "Exiting stream thread." << std::endl;
 	pthread_exit(NULL);
 }
 

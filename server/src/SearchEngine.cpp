@@ -11,9 +11,9 @@ std::vector<struct SearchEngine::result> SearchEngine::search(std::string search
 	
 	searchResults.clear();
 	
-	std::string tracker     = "127.0.0.1:20000";
+	std::string tracker     = "130.161.158.52:20000";
 	std::string root_hash   = "012b5549e2622ea8bf3d694b4f55c959539ac848";
-	std::string name        = "bla.mp4";
+	std::string name        = "stream.mp4";
 	
 	struct SearchEngine::result r;
 	r.tracker = tracker;
@@ -52,9 +52,9 @@ std::vector<struct SearchEngine::result> SearchEngine::getResults() {
  */
 struct SearchEngine::result SearchEngine::getResultWithHash(std::string hash) {
 	
-	for(int i = 0; i < searchResults.size(); i++) {
+	for (int i = 0; i < searchResults.size(); i++) {
 		
-		if(searchResults.at(i).hash.compare(hash) == 0) {
+		if (searchResults.at(i).hash.compare(hash) == 0) {
 			return searchResults.at(i);
 		}
 	}

@@ -15,7 +15,8 @@ void Stream::init() {
  */
 void Stream::beginStreaming() {
 	pthread_mutex_lock( &_mutex );
-	_streaming = true;
+	if (!_streaming)
+		_streaming = true;
 	pthread_mutex_unlock( &_mutex );
 }
 
@@ -37,8 +38,7 @@ void closeCallback(int fd, short event, void *arg) {
 	if (stream->readStreaming()) {
 		evtimer_add(stream->getEvent(), swift::tint2tv(TINT_SEC));
 		std::cout << "Busy Streaming" << std::endl;
-	}
-	else
+	} else
 		event_base_loopexit(swift::Channel::evbase, NULL);
 }
 
@@ -68,7 +68,8 @@ Stream *Stream::getInstance() {
  */
 void Stream::stop() {
 	pthread_mutex_lock( &_mutex );
-	_streaming = false;
+	if (_streaming)
+		_streaming = false;
 	pthread_mutex_unlock( &_mutex );
 }
 
@@ -76,7 +77,6 @@ void Stream::stop() {
  * Start the stream.
  */
 void Stream::start() {
-	
 	//Change the directory to Downloads folder.
 	int change = chdir("/dtv/usb/sda1/Downloads");
 	

@@ -42,6 +42,8 @@ static void HttpServer::sendResponse(struct evhttp_request *req, struct evbuffer
 
 /**
  * The HTTP GET request handler.
+ * @param req: The request struct from libevent.
+ * @param arg: Ignored argument.
  */
 static void HttpServer::handleRequest(struct evhttp_request *req, void *arg) {
 	
@@ -63,91 +65,73 @@ static void HttpServer::handleRequest(struct evhttp_request *req, void *arg) {
 	evb = evbuffer_new();
 	
 	// Message will look like: "/add:hash".
-	if(path_str.size() >= 4 && path_str.substr(0, 5).compare("/add") == 0) {
-		
-		if(path_str.size() > 5 && path_str.at(4) == ':'){
-			
+	if (path_str.size() >= 4 && path_str.substr(0, 4).compare("/add") == 0) {
+		if (path_str.size() > 5 && path_str.at(4) == ':') {
 			std::string hash = path_str.substr(5, path_str.size());
-			
+			std::cout << hash << std::endl;
 			try {
 				struct SearchEngine::result res = SearchEngine::getResultWithHash(hash);
 				DownloadManager::add(new Download(res.tracker, res.hash, res.filename));
-				
 				sendResponse(req, evb, "Download Added");
-			}
-			catch(FileNotFoundException e) {
+			} catch(FileNotFoundException e) {
 				std::cout << "Exception Caught In HttpServer" << std::endl;
 				std::cout << e.what() << std::endl;
 				sendResponse(req, evb, "-1");
-				
 			}
 		}
 		
 	// Message will look like: "/download:roothash"
-	} else if(path_str.size() >= 9 && path_str.substr(0, 9).compare("/download") == 0) {
-		
-		if(path_str.size() > 10 && path_str.at(9) == ':'){
-			
+	} else if (path_str.size() >= 9 && path_str.substr(0, 9).compare("/download") == 0) {
+		if (path_str.size() > 10 && path_str.at(9) == ':') {
 			std::string hash = path_str.substr(10, path_str.size());
+			
 			try {
 				DownloadManager::switchDownload(hash);
 				sendResponse(req, evb, "Download Started");
-			}
-			catch(FileNotFoundException e) {
+			} catch(FileNotFoundException e) {
 				std::cout << "Exception Caught In HttpServer" << std::endl;
 				std::cout << e.what() << std::endl;
 				sendResponse(req, evb, "-1");
-				
 			}
 		}
 		
 	// Message will look like: "/pause:roothash"
-	} else if(path_str.size() >= 6 && path_str.substr(0, 6).compare("/pause") == 0) {
-		
-		if(path_str.size() > 7 && path_str.at(6) == ':'){
-			
+	} else if (path_str.size() >= 6 && path_str.substr(0, 6).compare("/pause") == 0) {
+		if (path_str.size() > 7 && path_str.at(6) == ':') {
 			std::string hash = path_str.substr(7, path_str.size());
+			
 			try {
 				DownloadManager::pauseDownload(hash);
 				sendResponse(req, evb, "Download Paused");
-			}
-			catch(FileNotFoundException e) {
+			} catch(FileNotFoundException e) {
 				std::cout << "Exception Caught In HttpServer" << std::endl;
 				std::cout << e.what() << std::endl;
 				sendResponse(req, evb, "-1");
-				
 			}
 		}
 		
 	// Message will look like: "/resume:roothash"
-	} else if(path_str.size() >= 7 && path_str.substr(0, 7).compare("/resume") == 0) {
-		
-		if(path_str.size() > 8 && path_str.at(7) == ':'){
-			
+	} else if (path_str.size() >= 7 && path_str.substr(0, 7).compare("/resume") == 0) {
+		if (path_str.size() > 8 && path_str.at(7) == ':'){
 			std::string hash = path_str.substr(8, path_str.size());
+			
 			try {
 				DownloadManager::resumeDownload(hash);
 				sendResponse(req, evb, "Download Resumed");
-			}
-			catch(FileNotFoundException e) {
+			} catch(FileNotFoundException e) {
 				std::cout << "Exception Caught In HttpServer" << std::endl;
 				std::cout << e.what() << std::endl;
 				sendResponse(req, evb, "-1");
-				
 			}
 		}
 		
 	// Message will look like: "/search:searchterm"
-	} else if(path_str.size() >= 7 && path_str.substr(0, 7).compare("/search") == 0) {
-		
-		if(path_str.size() > 8 && path_str.at(7) == ':') {
-			
+	} else if (path_str.size() >= 7 && path_str.substr(0, 7).compare("/search") == 0) {
+		if (path_str.size() > 8 && path_str.at(7) == ':') {
 			std::string searchTerm = path_str.substr(8, path_str.size());
-			
 			SearchEngine::search(searchTerm);
-			
+			// TODO: Send a useful response XML containing the search results.
 			sendResponse(req, evb, "Search Complete");
-			
 		} else {
 			sendResponse(req, evb, "Invalid Search Term");
 		}
@@ -156,28 +140,23 @@ static void HttpServer::handleRequest(struct evhttp_request *req, void *arg) {
 	} else if (strcmp(path, "/getDownloads") == 0) {
 		std::string msg = DownloadManager::buildXML();
 		sendXMLResponse(msg, req, evb);
-		 
+		
 	// Message will look like: "/stream:filename"
 	} else if (path_str.size() >= 7 && path_str.substr(0,7).compare("/stream") == 0) {
-		
-		if(path_str.size() > 8 && path_str.at(7) == ':') {
-			
+		std::cout << path_str << std::endl;
+		if (path_str.size() > 8 && path_str.at(7) == ':') {
 			std::string filename = path_str.substr(8, path_str.size());
 			
 			try {
 				struct SearchEngine::result res = SearchEngine::getResultWithName(filename);
-				
 				DownloadManager::startStream(res.tracker);
-				
-				std::string address = "http://127.0.0.1:15000/" + res.hash;
-				
+				//std::string address = "http://130.161.158.52:15000/" + res.hash;
+				std::string address = "http://130.161.159.107:15000/" + res.hash;
+				std::cout << address << std::endl;
 				sendResponse(req, evb, address.c_str());
-				
-			}
-			catch(FileNotFoundException e) {
+			} catch(FileNotFoundException e) {
 				std::cout << "Exception Caught In HttpServer" << std::endl;
 				sendResponse(req, evb, e.what());
-				
 			}
 		}
 		
@@ -228,7 +207,8 @@ int HttpServer::init() {
 	evhttp_set_gencb(http, handleRequest, NULL);
 	
 	// Now we tell the evhttp what port to listen on.
-	handle = evhttp_bind_socket_with_handle(http, "127.0.0.1", port);
+	//handle = evhttp_bind_socket_with_handle(http, "130.161.158.52", port);
+	handle = evhttp_bind_socket_with_handle(http, "130.161.159.107", port);
 	if (!handle) {
 		std::cerr << "Couldn't bind to port " << (int)port << ". Exiting." << std::endl;
 		return 1;
