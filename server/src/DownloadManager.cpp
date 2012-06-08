@@ -30,7 +30,6 @@ void DownloadManager::setActiveDownload(Download *download) {
 
 void DownloadManager::updateDownloadStatistics() {
 	
-	
 }
 
 std::string DownloadManager::buildXML() {
@@ -213,7 +212,7 @@ void DownloadManager::pauseDownload(const std::string download_hash) {
 		pthread_mutex_lock(&active_download_mutex);
 		std::cout << "Found filename is: " << downloads.at(index).getFilename() << std::endl;
 		downloads.at(index).pause();
-
+		
 		pthread_mutex_unlock(&active_download_mutex);
 		
 		pthread_mutex_unlock(&mutex);

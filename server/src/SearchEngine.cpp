@@ -48,13 +48,30 @@ std::vector<struct SearchEngine::result> SearchEngine::getResults() {
 }
 
 /**
- * Returns the result with a cetain filename
+ * Returns the result with a cetain hash
  */
 struct SearchEngine::result SearchEngine::getResultWithHash(std::string hash) {
 	
 	for(int i = 0; i < searchResults.size(); i++) {
 		
 		if(searchResults.at(i).hash.compare(hash) == 0) {
+			return searchResults.at(i);
+		}
+	}
+	
+	// Throw exception if file can't be found
+	FileNotFoundException *e = new FileNotFoundException();
+	throw *e;
+}
+
+/**
+ * Returns the result with a cetain filename
+ */
+struct SearchEngine::result SearchEngine::getResultWithName(std::string name) {
+	
+	for(int i = 0; i < searchResults.size(); i++) {
+		
+		if(searchResults.at(i).filename.compare(name) == 0) {
 			return searchResults.at(i);
 		}
 	}
