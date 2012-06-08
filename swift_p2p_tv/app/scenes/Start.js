@@ -1,24 +1,32 @@
-function SceneStart() {
-  
-}
+/**
+ * Constructor of the scene Start.
+ */
+function SceneStart() {}
 
+/**
+ * Function called at scene init.
+ */
 SceneStart.prototype.initialize = function () {
-	alert('SceneStart.initialize()');
-	
 	$('#startimage').sfImage({src:'images/logobg22.png'});
-	
 }
 
+/**
+ * Function called at scene show.
+ */
 SceneStart.prototype.handleShow = function () {
-	alert('SceneStart.handleShow()');
 	$('#startimage').sfImage('show');
 }
 
+/**
+ * Function called at scene hide.
+ */
 SceneStart.prototype.handleHide = function () {
-	alert('SceneStart.handleHide()');
 	$('#startimage').sfImage('hide');
 }
 
+/**
+ * Function called at scene focus.
+ */
 SceneStart.prototype.handleFocus = function () {
 	alert('SceneStart.handleFocus()');
     
@@ -31,7 +39,6 @@ SceneStart.prototype.handleFocus = function () {
 	$('#category').sfList('show');
 	
 	$('#startimage').sfImage('show');
-	//startProgress();
 	
 	$("#Main_keyhelp").sfKeyHelp({
 		'user': 'Help',		
@@ -40,15 +47,20 @@ SceneStart.prototype.handleFocus = function () {
 	});
 }
 
+/**
+ * Function called at scene blur.
+ */
 SceneStart.prototype.handleBlur = function () {
 	alert('SceneStart.handleBlur()');
 }
 
+/**
+ * The remote control key handler of this scene.
+ */
 SceneStart.prototype.handleKeyDown = function (keyCode) {
-	alert('SceneStart.handleKeyDown(' + keyCode + ')');
 	switch (keyCode) {
 		case sf.key.LEFT:
-                sf.scene.focus('Main');       
+			sf.scene.focus('Main');       
 			break;
 		case sf.key.RIGHT:
 			break;
@@ -60,6 +72,7 @@ SceneStart.prototype.handleKeyDown = function (keyCode) {
 			break;
 		case sf.key.RETURN:
 		sf.scene.focus('Main');
+		// Prevent widget from exiting.
         sf.key.preventDefault();
 			break;
 		case sf.key.RED:			
@@ -72,4 +85,3 @@ SceneStart.prototype.handleKeyDown = function (keyCode) {
 			break;
 	}
 }
-
