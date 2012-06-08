@@ -2,15 +2,16 @@ function SceneMain() {
 	
 }
 
-var downloads = [];
-var stream = '';
+var downloads    = [];
+var stream       = '';
 var downloadPath = '/dtv/usb/sda1';
 
+/**
+ * Function called at scene init
+ */
 SceneMain.prototype.initialize = function () {
-	alert('SceneMain.initialize()');
 	this.itemPerPage = 8;
 	this.data = [
-		// UI Components
 		'Browse',
 		'Downloads',
 		'Player',
@@ -22,6 +23,7 @@ SceneMain.prototype.initialize = function () {
 		listdata.push(this.data[i]);
 	}
 	
+	// Initialize left column menu with scenes
 	$('#category').sfList({
 		data: listdata,
 		index: 0,
@@ -53,20 +55,27 @@ SceneMain.prototype.initialize = function () {
     }
 }
 
-SceneMain.prototype.handleShow = function (data) {
-	alert('SceneMain.handleShow()');	
-	//var index = $('#category').sfList('getIndex');
+/**
+ * Function called at scene show
+ */
+SceneMain.prototype.handleShow = function (data) {	
 	sf.scene.show('Start');
 }
 
+/**
+ * Function called at scene hide
+ */
 SceneMain.prototype.handleHide = function () {
-	alert('SceneMain.handleHide()');
+
 }
 
+/**
+ * Function called at scene focus
+ */
 SceneMain.prototype.handleFocus = function () {
-	alert('SceneMain.handleFocus()');
 	var index = $('#category').sfList('getIndex');
 	sf.scene.hide(this.data[index]);
+	// If this scene was focused with the redirection label filled in, don't load elements just redirect to Player
 	if ($('#labelRedirect').sfLabel("get").text()) {
 		$('#category').sfList('move',2);
 		sf.scene.show('Player');
@@ -95,29 +104,33 @@ SceneMain.prototype.handleFocus = function () {
 
 }
 
+/**
+ * Function called at scene blur
+ */
 SceneMain.prototype.handleBlur = function () {
-	alert('SceneMain.handleBlur()');
 	$('#image').sfImage('hide');
 	$('#label').sfLabel('hide');
 	$('#MainBG').sfBackground(this.defaultOpts);
 }
 
+/**
+ * Function called at scene key down
+ */
 SceneMain.prototype.handleKeyDown = function (keyCode) {
-	alert('SceneMain.handleKeyDown(' + keyCode + ')');
 	switch (keyCode) {
 		case sf.key.LEFT:
 			break;
 		case sf.key.RIGHT:
 		case sf.key.ENTER:
 			$('#startimage').sfImage('hide');
-			var index = $('#category').sfList('getIndex');
-			sf.scene.show(this.data[index]);
 			$('#category').sfList('blur');            
-			var index = $('#category').sfList('getIndex');
 			$('#category').sfList('hide');
 			$('#image').sfImage('hide');
 			$('#label').sfLabel('hide');
 			$('#MainBG').sfBackground(this.defaultOpts);
+			
+			var index = $('#category').sfList('getIndex');
+			sf.scene.show(this.data[index]);
 			sf.scene.focus(this.data[index]);
 			break;
 		case sf.key.UP:
