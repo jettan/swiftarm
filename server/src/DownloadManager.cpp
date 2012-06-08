@@ -1,15 +1,25 @@
 #include "DownloadManager.h"
 
+/**
+ * Initialise the download manager.
+ */
 void DownloadManager::init() {
 	pthread_mutex_init(&mutex, NULL);
 	pthread_mutex_init(&active_download_mutex, NULL);
 }
 
+/**
+ * Set the directory where swift will download files to.
+ * @param dir: The directory where swift will download files to. 
+ */
 void DownloadManager::setDownloadDirectory(std::string dir) {
 	download_directory = dir;
 	chdir(download_directory.c_str());
 }
 
+/**
+ * Get a copy of the vector downloads.
+ */
 std::vector<Download> DownloadManager::getDownloads() {
 	pthread_mutex_lock(&mutex);
 	std::vector<Download> return_value = downloads;
@@ -18,22 +28,34 @@ std::vector<Download> DownloadManager::getDownloads() {
 	return return_value;
 }
 
+/**
+ * Get the download directory as string.
+ */
 std::string DownloadManager::getDownloadDirectory() {
 	return download_directory;
 }
 
+/**
+ * Set the active download.
+ * @param download: The download to be the active download.
+ */
 void DownloadManager::setActiveDownload(Download *download) {
 	pthread_mutex_lock(&active_download_mutex);
 	active_download = download;
 	pthread_mutex_unlock(&active_download_mutex);
 }
 
+/**
+ * Update the download statistics.
+ */
 void DownloadManager::updateDownloadStatistics() {
 	
 }
 
+/**
+ * Build the XML response for the HTTP server providing statistics.
+ */
 std::string DownloadManager::buildXML() {
-	
 	updateDownloadStatistics();
 	
 	doc = new ticpp::Document("doc");
@@ -135,14 +157,19 @@ std::string DownloadManager::buildXML() {
 }
 
 /**
- * Callback to check if a download is completed.
+ * Callback to keep all downloads and uploads running.
+ * @param fd: The file descriptor used by swift.
+ * @param event: The event it get from libevent.
+ * @param arg: Unused argument from libevent.
  */
 void downloadCallback(int fd, short event, void* arg) {
 	pthread_mutex_lock(&DownloadManager::active_download_mutex);
 	
+	// Temporary debug prints.
 	std::cout << "Download ID: " << DownloadManager::active_download->getID() << std::endl;
 	std::cout << "Download Name: " << DownloadManager::active_download->getFilename() << std::endl;
 	std::cout << "Status: " << DownloadManager::active_download->getStatus() << std::endl;
+	
 	if (DownloadManager::active_download->getStatus() == UPLOADING || DownloadManager::active_download->getStatus() == DOWNLOADING)
 		std::cout << "Percentage downloaded: " << floorf(((swift::Complete(DownloadManager::active_download->getID()) * 10000.0) /
 		  swift::Size(DownloadManager::active_download->getID()) * 1.0) + 0.5) / 100 << std::endl;
@@ -157,7 +184,7 @@ void downloadCallback(int fd, short event, void* arg) {
 		}
 		
 		int i = 0;
-		while (i < DownloadManager::getDownloads().size() && 
+		while (i < DownloadManager::getDownloads().size() &&
 		  DownloadManager::getDownloads().at(i).getStatus() != READY &&
 		  DownloadManager::getDownloads().at(i).getStatus() != PAUSED) {
 			i++;
@@ -179,6 +206,10 @@ void downloadCallback(int fd, short event, void* arg) {
 	evtimer_add(&DownloadManager::evcompl, swift::tint2tv(TINT_SEC));
 }
 
+/**
+ * Dispatch swift::Channel::evbase to get into the main loop of downloads.
+ * @param arg: Unused argument of pthread_create.
+ */
 void* DownloadManager::dispatch(void* arg) {
 	// Assign callbacks to the event base.
 	std::cout << "Entered thread." << std::endl;
@@ -225,19 +256,22 @@ int DownloadManager::resumeDownload(std::string download_hash) {
 		pthread_mutex_unlock(&mutex);
 		
 		pthread_mutex_lock(&active_download_mutex);
+		
 		if (active_download->getID() > -1) {
 			active_download->resume();
 		} else {
 			pthread_mutex_unlock(&active_download_mutex);
 			return -1;
 		}
+		
 		pthread_mutex_unlock(&active_download_mutex);
 	}
 	return 0;
 }
 
 /**
- * Start a download with a specific download ID.
+ * Start a download given a root hash.
+ * @param download_hash: The root hash of the download.
  */
 int DownloadManager::startDownload(const std::string download_hash) {
 	int index = getIndexFromHash(download_hash);
@@ -264,6 +298,10 @@ int DownloadManager::startDownload(const std::string download_hash) {
 	return 0;
 }
 
+/**
+ * Switch active download to another download with the given root hash.
+ * @param hash: The root hash of the download to be switched to.
+ */
 void DownloadManager::switchDownload(std::string hash) {
 	pthread_mutex_lock(&active_download_mutex);
 	std::string previous_hash = active_download->getRootHash();
@@ -275,11 +313,11 @@ void DownloadManager::switchDownload(std::string hash) {
 }
 
 /**
- * Add a download to the list
+ * Add a download to the list.
+ * @param download: The download to be added.
  */
 void DownloadManager::add(Download *download) {
-	std::cout << "Adding download to vector.\n";
-	
+	// Only add a new download that is not alredy in the list.
 	for (int i = 0; i < getDownloads().size(); i++) {
 		if (getDownloads().at(i).getRootHash().compare(download->getRootHash()) == 0) {
 			return;
@@ -288,8 +326,7 @@ void DownloadManager::add(Download *download) {
 	
 	int active_index = 0;
 	
-	if(active_download) {
-	
+	if (active_download) {
 		pthread_mutex_lock(&active_download_mutex);
 		active_index = getIndexFromHash(active_download->getRootHash());
 		pthread_mutex_unlock(&active_download_mutex);
@@ -299,7 +336,7 @@ void DownloadManager::add(Download *download) {
 	downloads.push_back(*download);
 	pthread_mutex_unlock(&mutex);
 	
-	if(active_download) {
+	if (active_download) {
 		pthread_mutex_lock(&active_download_mutex);
 		std::cout << "Active Index is: " << getIndexFromHash(active_download->getRootHash()) << std::endl;
 		pthread_mutex_unlock(&active_download_mutex);
@@ -327,18 +364,17 @@ void DownloadManager::add(Download *download) {
 /**
  * Download first element in the download list.
  */
-void DownloadManager::downloadFirstInList(){
-	
-	if(getDownloads().size() > 0) {
+void DownloadManager::downloadFirstInList() {
+	if (getDownloads().size() > 0) {
 		startDownload(getDownloads().front().getRootHash());
 	}
 }
 
 /**
- * Find the index of a download in the list based on the download ID.
+ * Find the index of a download in the list given a root hash.
+ * @param download_hash: The root hash of a download to be searched.
  */
 int DownloadManager::getIndexFromHash(const std::string download_hash) {
-	
 	for (int i = 0; i < getDownloads().size(); i++) {
 		if (getDownloads().at(i).getRootHash().compare(download_hash) == 0) {
 			std::cout << "Hash found: " << getDownloads().at(i).getRootHash() << std::endl;
@@ -350,13 +386,14 @@ int DownloadManager::getIndexFromHash(const std::string download_hash) {
 }
 
 /**
- * Remove a download from the list based on the download ID
+ * Remove a download from the list given a root hash.
+ * @param download_hash: The root hash of the download to be removed.
  */
 void DownloadManager::removeFromList(const std::string download_hash) {
-	
 	int index = getIndexFromHash(download_hash);
-	if(index >= 0) {
-		if(getDownloads().at(index).getStatus() == DOWNLOADING) {
+	
+	if (index >= 0) {
+		if (getDownloads().at(index).getStatus() == DOWNLOADING) {
 			getDownloads().at(index).stop();
 			downloadFirstInList();
 		}
@@ -364,28 +401,26 @@ void DownloadManager::removeFromList(const std::string download_hash) {
 		pthread_mutex_lock(&mutex);
 		downloads.erase(downloads.begin() + index);
 		pthread_mutex_unlock(&mutex);
-	
 	}
 }
 
-/** 
- * Remove a download from the hard disk based on download ID
+/**
+ * Remove a download from the hard disk given a root hash.
+ * @param download_hash: The root hash of the download to be removed.
  */
 void DownloadManager::removeFromDisk(const std::string download_hash) {
 	
 	int index = getIndexFromHash(download_hash);
 	
-	if(index >= 0) {
-		
+	if (index >= 0) {
 		std::string filename = getDownloads().at(index).getFilename();
 		removeFromList(download_hash);
 		
 		filename = download_directory + "/" + filename;
 		
-		if(filename.c_str() == 0) {
+		if (filename.c_str() == 0) {
 			// File removed successfully
 			std::cout << "File at directory: " << filename << " has been removed" <<std::endl;
-			
 		} else {
 			// File not found
 			std::cout << "Could not find file at directory: " << filename <<std::endl;
@@ -393,13 +428,12 @@ void DownloadManager::removeFromDisk(const std::string download_hash) {
 	}
 }
 
-/** 
+/**
  * Remove all downloads from the list
  */
 void DownloadManager::clearList() {
-	
 	pthread_mutex_lock(&active_download_mutex);
-	if(active_download != NULL){
+	if (active_download != NULL) {
 		active_download->stop();
 	}
 	pthread_mutex_unlock(&active_download_mutex);
@@ -409,18 +443,28 @@ void DownloadManager::clearList() {
 	pthread_mutex_unlock(&mutex);
 }
 
+/**
+ * Stop streaming.
+ */
 void DownloadManager::stopStream() {
 	Stream::getInstance()->stop();
 }
 
+/**
+ * Start streaming.
+ * @param arg: Unused argument of pthread_create.
+ */
 void* DownloadManager::startStreamThread(void* arg) {
 	Stream::getInstance()->start();
 	std::cout << "Exiting stream thread." << std::endl;
 	pthread_exit(NULL);
 }
 
+/**
+ * Start the streaming thread.
+ * @param tracker: The tracker from which we stream content.
+ */
 void DownloadManager::startStream(std::string tracker) {
-	
 	if (!Stream::getInstance()->readStreaming()) {
 		Stream::getInstance()->setTracker(tracker);
 		
@@ -431,7 +475,7 @@ void DownloadManager::startStream(std::string tracker) {
 			std::cerr << "ERROR: failed to create stream thread. Code: " << return_code << "." << std::endl;
 		}
 	} else {
-		std::cout << "Already Streaming!" <<std::endl;
+		std::cout << "Already Streaming!" << std::endl;
 	}
 }
 
