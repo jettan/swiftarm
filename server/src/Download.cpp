@@ -207,7 +207,7 @@ void Download::calculateEstimatedTime() {
 	
 	struct time estimated_time;
 	double speed            = getStatistics().download_speed;
-	double time_in_seconds  = ( _size - swift::Complete(getID()) ) / speed;
+	double time_in_seconds  = ( swift::Size(getID()) - swift::Complete(getID()) ) / speed;
 	double time_left        = time_in_seconds;
 	
 	int days     = (int) floor(time_left / SECONDS_PER_DAY);

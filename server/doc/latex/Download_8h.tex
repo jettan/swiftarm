@@ -1,0 +1,113 @@
+\hypertarget{Download_8h}{
+\section{include/Download.h File Reference}
+\label{Download_8h}\index{include/Download.h@{include/Download.h}}
+}
+{\ttfamily \#include $<$iostream$>$}\par
+{\ttfamily \#include $<$ctime$>$}\par
+{\ttfamily \#include $<$string$>$}\par
+{\ttfamily \#include $<$cstdio$>$}\par
+{\ttfamily \#include $<$cstdlib$>$}\par
+{\ttfamily \#include \char`\"{}swift.h\char`\"{}}\par
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \hyperlink{classDownload}{Download}
+\item 
+struct \hyperlink{structDownload_1_1time}{Download::time}
+\begin{DoxyCompactList}\small\item\em Root hash needed to start swift download. \end{DoxyCompactList}\item 
+struct \hyperlink{structDownload_1_1downloadStats}{Download::downloadStats}
+\begin{DoxyCompactList}\small\item\em Struct for holding download statistics. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Defines}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{Download_8h_ae5e089b553f791f79d02046ff63f3cdb}{SECONDS\_\-PER\_\-MINUTE}~(60)
+\item 
+\#define \hyperlink{Download_8h_aa868c51ff000e5ecd19bcb90bd757490}{SECONDS\_\-PER\_\-HOUR}~(SECONDS\_\-PER\_\-MINUTE $\ast$ SECONDS\_\-PER\_\-MINUTE)
+\item 
+\#define \hyperlink{Download_8h_a427ffe4394306d962b8972b3bc952e1c}{SECONDS\_\-PER\_\-DAY}~(SECONDS\_\-PER\_\-HOUR $\ast$ 24)
+\end{DoxyCompactItemize}
+\subsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \hyperlink{Download_8h_a67a0db04d321a74b7e7fcfd3f1a3f70b}{Status} \{ \par
+\hyperlink{Download_8h_a67a0db04d321a74b7e7fcfd3f1a3f70ba6564f2f3e15be06b670547bbcaaf0798}{READY}, 
+\hyperlink{Download_8h_a67a0db04d321a74b7e7fcfd3f1a3f70bad4bb05915de3c370d3a33d4f51389655}{PAUSED}, 
+\hyperlink{Download_8h_a67a0db04d321a74b7e7fcfd3f1a3f70baf5e325ce6c324ba3658cdd6e2f649f5f}{DOWNLOADING}, 
+\hyperlink{Download_8h_a67a0db04d321a74b7e7fcfd3f1a3f70ba168a4a80689e54be7249fa0af44e8169}{UPLOADING}, 
+\par
+\hyperlink{Download_8h_a67a0db04d321a74b7e7fcfd3f1a3f70ba948b2aee15f52b421fa4770c47bcfe8c}{STOPPED}, 
+\hyperlink{Download_8h_a67a0db04d321a74b7e7fcfd3f1a3f70ba1f4d93755659240ce5b202ccbbdac30f}{SWITCHING}
+ \}
+\end{DoxyCompactItemize}
+
+
+\subsection{Define Documentation}
+\hypertarget{Download_8h_a427ffe4394306d962b8972b3bc952e1c}{
+\index{Download.h@{Download.h}!SECONDS\_\-PER\_\-DAY@{SECONDS\_\-PER\_\-DAY}}
+\index{SECONDS\_\-PER\_\-DAY@{SECONDS\_\-PER\_\-DAY}!Download.h@{Download.h}}
+\subsubsection[{SECONDS\_\-PER\_\-DAY}]{\setlength{\rightskip}{0pt plus 5cm}\#define SECONDS\_\-PER\_\-DAY~(SECONDS\_\-PER\_\-HOUR $\ast$ 24)}}
+\label{Download_8h_a427ffe4394306d962b8972b3bc952e1c}
+
+
+Definition at line 14 of file Download.h.
+
+\hypertarget{Download_8h_aa868c51ff000e5ecd19bcb90bd757490}{
+\index{Download.h@{Download.h}!SECONDS\_\-PER\_\-HOUR@{SECONDS\_\-PER\_\-HOUR}}
+\index{SECONDS\_\-PER\_\-HOUR@{SECONDS\_\-PER\_\-HOUR}!Download.h@{Download.h}}
+\subsubsection[{SECONDS\_\-PER\_\-HOUR}]{\setlength{\rightskip}{0pt plus 5cm}\#define SECONDS\_\-PER\_\-HOUR~(SECONDS\_\-PER\_\-MINUTE $\ast$ SECONDS\_\-PER\_\-MINUTE)}}
+\label{Download_8h_aa868c51ff000e5ecd19bcb90bd757490}
+
+
+Definition at line 13 of file Download.h.
+
+\hypertarget{Download_8h_ae5e089b553f791f79d02046ff63f3cdb}{
+\index{Download.h@{Download.h}!SECONDS\_\-PER\_\-MINUTE@{SECONDS\_\-PER\_\-MINUTE}}
+\index{SECONDS\_\-PER\_\-MINUTE@{SECONDS\_\-PER\_\-MINUTE}!Download.h@{Download.h}}
+\subsubsection[{SECONDS\_\-PER\_\-MINUTE}]{\setlength{\rightskip}{0pt plus 5cm}\#define SECONDS\_\-PER\_\-MINUTE~(60)}}
+\label{Download_8h_ae5e089b553f791f79d02046ff63f3cdb}
+
+
+Definition at line 12 of file Download.h.
+
+
+
+\subsection{Enumeration Type Documentation}
+\hypertarget{Download_8h_a67a0db04d321a74b7e7fcfd3f1a3f70b}{
+\index{Download.h@{Download.h}!Status@{Status}}
+\index{Status@{Status}!Download.h@{Download.h}}
+\subsubsection[{Status}]{\setlength{\rightskip}{0pt plus 5cm}enum {\bf Status}}}
+\label{Download_8h_a67a0db04d321a74b7e7fcfd3f1a3f70b}
+\begin{Desc}
+\item[Enumerator: ]\par
+\begin{description}
+\index{READY@{READY}!Download.h@{Download.h}}\index{Download.h@{Download.h}!READY@{READY}}\item[{\em 
+\hypertarget{Download_8h_a67a0db04d321a74b7e7fcfd3f1a3f70ba6564f2f3e15be06b670547bbcaaf0798}{
+READY}
+\label{Download_8h_a67a0db04d321a74b7e7fcfd3f1a3f70ba6564f2f3e15be06b670547bbcaaf0798}
+}]\index{PAUSED@{PAUSED}!Download.h@{Download.h}}\index{Download.h@{Download.h}!PAUSED@{PAUSED}}\item[{\em 
+\hypertarget{Download_8h_a67a0db04d321a74b7e7fcfd3f1a3f70bad4bb05915de3c370d3a33d4f51389655}{
+PAUSED}
+\label{Download_8h_a67a0db04d321a74b7e7fcfd3f1a3f70bad4bb05915de3c370d3a33d4f51389655}
+}]\index{DOWNLOADING@{DOWNLOADING}!Download.h@{Download.h}}\index{Download.h@{Download.h}!DOWNLOADING@{DOWNLOADING}}\item[{\em 
+\hypertarget{Download_8h_a67a0db04d321a74b7e7fcfd3f1a3f70baf5e325ce6c324ba3658cdd6e2f649f5f}{
+DOWNLOADING}
+\label{Download_8h_a67a0db04d321a74b7e7fcfd3f1a3f70baf5e325ce6c324ba3658cdd6e2f649f5f}
+}]\index{UPLOADING@{UPLOADING}!Download.h@{Download.h}}\index{Download.h@{Download.h}!UPLOADING@{UPLOADING}}\item[{\em 
+\hypertarget{Download_8h_a67a0db04d321a74b7e7fcfd3f1a3f70ba168a4a80689e54be7249fa0af44e8169}{
+UPLOADING}
+\label{Download_8h_a67a0db04d321a74b7e7fcfd3f1a3f70ba168a4a80689e54be7249fa0af44e8169}
+}]\index{STOPPED@{STOPPED}!Download.h@{Download.h}}\index{Download.h@{Download.h}!STOPPED@{STOPPED}}\item[{\em 
+\hypertarget{Download_8h_a67a0db04d321a74b7e7fcfd3f1a3f70ba948b2aee15f52b421fa4770c47bcfe8c}{
+STOPPED}
+\label{Download_8h_a67a0db04d321a74b7e7fcfd3f1a3f70ba948b2aee15f52b421fa4770c47bcfe8c}
+}]\index{SWITCHING@{SWITCHING}!Download.h@{Download.h}}\index{Download.h@{Download.h}!SWITCHING@{SWITCHING}}\item[{\em 
+\hypertarget{Download_8h_a67a0db04d321a74b7e7fcfd3f1a3f70ba1f4d93755659240ce5b202ccbbdac30f}{
+SWITCHING}
+\label{Download_8h_a67a0db04d321a74b7e7fcfd3f1a3f70ba1f4d93755659240ce5b202ccbbdac30f}
+}]\end{description}
+\end{Desc}
+
+
+
+Definition at line 16 of file Download.h.
+

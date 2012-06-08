@@ -1,0 +1,536 @@
+\hypertarget{classDownload}{
+\section{Download Class Reference}
+\label{classDownload}\index{Download@{Download}}
+}
+
+
+{\ttfamily \#include $<$Download.h$>$}
+
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structDownload_1_1downloadStats}{downloadStats}
+\begin{DoxyCompactList}\small\item\em Struct for holding download statistics. \end{DoxyCompactList}\item 
+struct \hyperlink{structDownload_1_1time}{time}
+\begin{DoxyCompactList}\small\item\em Root hash needed to start swift download. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{classDownload_a99a1589ee0906a366165c66c19847731}{retry} ()
+\begin{DoxyCompactList}\small\item\em Struct holding the statistics of the download. \end{DoxyCompactList}\item 
+void \hyperlink{classDownload_a0bc88cfbfadb55895ddebc82de870fcb}{start} ()
+\item 
+void \hyperlink{classDownload_aeca037d7cdb6c9eea45d6b6af73c0178}{stop} ()
+\item 
+void \hyperlink{classDownload_a5aa20de69b9efadb5e53cd7a1b3958fb}{pause} ()
+\item 
+void \hyperlink{classDownload_a4a69b04a8a04d4f8189b8bc2c6dee089}{resume} ()
+\item 
+const int \hyperlink{classDownload_a95546aa8f4cda5d6ffac2953554574a0}{getID} ()
+\item 
+const int \hyperlink{classDownload_a56547b8fc462711844c8c9563cd37f17}{getStatus} ()
+\item 
+std::string \hyperlink{classDownload_a604525e2d21ace401b8b431530f29fe4}{getTrackerAddress} ()
+\item 
+std::string \hyperlink{classDownload_a46a8a8f77f0ffdb4d08b4c54c16c0ba1}{getFilename} ()
+\item 
+std::string \hyperlink{classDownload_a4820d9e567818192a45acd8da30a1c51}{getRootHash} ()
+\item 
+struct \hyperlink{structDownload_1_1downloadStats}{downloadStats} \hyperlink{classDownload_a4e8dd13e8db63c4af6e447eb6197a69c}{getStatistics} ()
+\item 
+void \hyperlink{classDownload_aa948713f8d655f6acb9eee77d7ffc738}{setDownloadSpeed} (double speed)
+\item 
+void \hyperlink{classDownload_a24f4c58a1bcfca51e0266a7641fd8675}{setUploadSpeed} (double speed)
+\item 
+void \hyperlink{classDownload_ab17441df2532bf2b31072917cd718c6e}{calculateRatio} ()
+\item 
+void \hyperlink{classDownload_a582a90c7b16dda1f10e28820fca1d0ec}{setProgress} (double percentage)
+\item 
+void \hyperlink{classDownload_aed65f7b7ed3f376a523276ef730533a0}{setUploadAmount} (double amount)
+\item 
+void \hyperlink{classDownload_a3a05a45f983fcb09b8dbb41a8e329fee}{setDownloadAmount} (double amount)
+\item 
+void \hyperlink{classDownload_a5c1916b705f784476de6af532fd6f8b6}{setSeeders} (int amount)
+\item 
+void \hyperlink{classDownload_ab4f8aeb520296d4a92a8385e9f5e8465}{setPeers} (int amount)
+\item 
+void \hyperlink{classDownload_af70a0bffe0a3b6e3b5ceea8bc580caad}{calculateEstimatedTime} ()
+\item 
+void \hyperlink{classDownload_ad8b091c43ea6186eaabcbffb9ac64964}{setID} (int id)
+\item 
+void \hyperlink{classDownload_a8e9fc85664ce8647bdd99cae8aa3d4e6}{setStatus} (int status)
+\item 
+\hyperlink{classDownload_ad9edab4ad8449438e8e6c17669d5b864}{Download} (std::string tracker, std::string root\_\-hash, std::string filename)
+\item 
+\hyperlink{classDownload_a57f3bb355e0f7b0cd10996c7e78b67b8}{$\sim$Download} ()
+\end{DoxyCompactItemize}
+\subsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+pthread\_\-mutex\_\-t \hyperlink{classDownload_ab73d857fa4f5082ea72a91d1df0c769f}{\_\-mutex}
+\item 
+volatile int \hyperlink{classDownload_a562511e0630169011935c79ba0367872}{\_\-status}
+\begin{DoxyCompactList}\small\item\em Mutex to prevent download thread and main thread from accessing same data at the same time. \end{DoxyCompactList}\item 
+std::string \hyperlink{classDownload_ad752e7e42378b43549ac3378802c9220}{\_\-filename}
+\begin{DoxyCompactList}\small\item\em Current status of the download. \end{DoxyCompactList}\item 
+std::string \hyperlink{classDownload_a22071fe4126b403c73bf2290348a4bb1}{\_\-tracker}
+\begin{DoxyCompactList}\small\item\em Name of the download. \end{DoxyCompactList}\item 
+std::string \hyperlink{classDownload_a3e7db6fe59ed31d8e69b365e117a9847}{\_\-root\_\-hash}
+\begin{DoxyCompactList}\small\item\em Trackers seeding this download. \end{DoxyCompactList}\item 
+\hyperlink{structDownload_1_1downloadStats}{downloadStats} \hyperlink{classDownload_a7bf716e1095fd5dcd0157b8d846debc0}{\_\-stats}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+
+
+Definition at line 25 of file Download.h.
+
+
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classDownload_ad9edab4ad8449438e8e6c17669d5b864}{
+\index{Download@{Download}!Download@{Download}}
+\index{Download@{Download}!Download@{Download}}
+\subsubsection[{Download}]{\setlength{\rightskip}{0pt plus 5cm}Download::Download (
+\begin{DoxyParamCaption}
+\item[{std::string}]{tracker, }
+\item[{std::string}]{root\_\-hash, }
+\item[{std::string}]{filename}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline\mbox{]}}}}
+\label{classDownload_ad9edab4ad8449438e8e6c17669d5b864}
+Constructor. 
+
+Definition at line 95 of file Download.h.
+
+\hypertarget{classDownload_a57f3bb355e0f7b0cd10996c7e78b67b8}{
+\index{Download@{Download}!$\sim$Download@{$\sim$Download}}
+\index{$\sim$Download@{$\sim$Download}!Download@{Download}}
+\subsubsection[{$\sim$Download}]{\setlength{\rightskip}{0pt plus 5cm}Download::$\sim$Download (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}inline\mbox{]}}}}
+\label{classDownload_a57f3bb355e0f7b0cd10996c7e78b67b8}
+Destructor. 
+
+Definition at line 107 of file Download.h.
+
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classDownload_af70a0bffe0a3b6e3b5ceea8bc580caad}{
+\index{Download@{Download}!calculateEstimatedTime@{calculateEstimatedTime}}
+\index{calculateEstimatedTime@{calculateEstimatedTime}!Download@{Download}}
+\subsubsection[{calculateEstimatedTime}]{\setlength{\rightskip}{0pt plus 5cm}void Download::calculateEstimatedTime (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}
+\label{classDownload_af70a0bffe0a3b6e3b5ceea8bc580caad}
+Calculates estimated download time. 
+
+Definition at line 204 of file Download.cpp.
+
+\hypertarget{classDownload_ab17441df2532bf2b31072917cd718c6e}{
+\index{Download@{Download}!calculateRatio@{calculateRatio}}
+\index{calculateRatio@{calculateRatio}!Download@{Download}}
+\subsubsection[{calculateRatio}]{\setlength{\rightskip}{0pt plus 5cm}void Download::calculateRatio (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}
+\label{classDownload_ab17441df2532bf2b31072917cd718c6e}
+Calculates upload/download ratio. 
+
+Definition at line 115 of file Download.cpp.
+
+\hypertarget{classDownload_a46a8a8f77f0ffdb4d08b4c54c16c0ba1}{
+\index{Download@{Download}!getFilename@{getFilename}}
+\index{getFilename@{getFilename}!Download@{Download}}
+\subsubsection[{getFilename}]{\setlength{\rightskip}{0pt plus 5cm}std::string Download::getFilename (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}
+\label{classDownload_a46a8a8f77f0ffdb4d08b4c54c16c0ba1}
+Getter for the filename. 
+
+Definition at line 316 of file Download.cpp.
+
+\hypertarget{classDownload_a95546aa8f4cda5d6ffac2953554574a0}{
+\index{Download@{Download}!getID@{getID}}
+\index{getID@{getID}!Download@{Download}}
+\subsubsection[{getID}]{\setlength{\rightskip}{0pt plus 5cm}const int Download::getID (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}
+\label{classDownload_a95546aa8f4cda5d6ffac2953554574a0}
+Getter for the download ID. 
+
+Definition at line 262 of file Download.cpp.
+
+\hypertarget{classDownload_a4820d9e567818192a45acd8da30a1c51}{
+\index{Download@{Download}!getRootHash@{getRootHash}}
+\index{getRootHash@{getRootHash}!Download@{Download}}
+\subsubsection[{getRootHash}]{\setlength{\rightskip}{0pt plus 5cm}std::string Download::getRootHash (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}
+\label{classDownload_a4820d9e567818192a45acd8da30a1c51}
+Getter for the root hash. 
+
+Definition at line 323 of file Download.cpp.
+
+\hypertarget{classDownload_a4e8dd13e8db63c4af6e447eb6197a69c}{
+\index{Download@{Download}!getStatistics@{getStatistics}}
+\index{getStatistics@{getStatistics}!Download@{Download}}
+\subsubsection[{getStatistics}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Download::downloadStats} Download::getStatistics (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}read\mbox{]}}}}
+\label{classDownload_a4e8dd13e8db63c4af6e447eb6197a69c}
+Getter for the download statistics. 
+
+Definition at line 282 of file Download.cpp.
+
+\hypertarget{classDownload_a56547b8fc462711844c8c9563cd37f17}{
+\index{Download@{Download}!getStatus@{getStatus}}
+\index{getStatus@{getStatus}!Download@{Download}}
+\subsubsection[{getStatus}]{\setlength{\rightskip}{0pt plus 5cm}const int Download::getStatus (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}
+\label{classDownload_a56547b8fc462711844c8c9563cd37f17}
+Getter for the status. 
+
+Definition at line 272 of file Download.cpp.
+
+\hypertarget{classDownload_a604525e2d21ace401b8b431530f29fe4}{
+\index{Download@{Download}!getTrackerAddress@{getTrackerAddress}}
+\index{getTrackerAddress@{getTrackerAddress}!Download@{Download}}
+\subsubsection[{getTrackerAddress}]{\setlength{\rightskip}{0pt plus 5cm}std::string Download::getTrackerAddress (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}
+\label{classDownload_a604525e2d21ace401b8b431530f29fe4}
+Getter for the tracker address. 
+
+Definition at line 309 of file Download.cpp.
+
+\hypertarget{classDownload_a5aa20de69b9efadb5e53cd7a1b3958fb}{
+\index{Download@{Download}!pause@{pause}}
+\index{pause@{pause}!Download@{Download}}
+\subsubsection[{pause}]{\setlength{\rightskip}{0pt plus 5cm}void Download::pause (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}
+\label{classDownload_a5aa20de69b9efadb5e53cd7a1b3958fb}
+Pauses downloading and uploading. 
+
+Definition at line 57 of file Download.cpp.
+
+\hypertarget{classDownload_a4a69b04a8a04d4f8189b8bc2c6dee089}{
+\index{Download@{Download}!resume@{resume}}
+\index{resume@{resume}!Download@{Download}}
+\subsubsection[{resume}]{\setlength{\rightskip}{0pt plus 5cm}void Download::resume (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}
+\label{classDownload_a4a69b04a8a04d4f8189b8bc2c6dee089}
+Resumes a paused download. 
+
+Definition at line 71 of file Download.cpp.
+
+\hypertarget{classDownload_a99a1589ee0906a366165c66c19847731}{
+\index{Download@{Download}!retry@{retry}}
+\index{retry@{retry}!Download@{Download}}
+\subsubsection[{retry}]{\setlength{\rightskip}{0pt plus 5cm}void Download::retry (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}
+\label{classDownload_a99a1589ee0906a366165c66c19847731}
+
+
+Struct holding the statistics of the download. 
+
+Deletes the downloaded content and try again from the beginning. 
+
+Definition at line 19 of file Download.cpp.
+
+\hypertarget{classDownload_a3a05a45f983fcb09b8dbb41a8e329fee}{
+\index{Download@{Download}!setDownloadAmount@{setDownloadAmount}}
+\index{setDownloadAmount@{setDownloadAmount}!Download@{Download}}
+\subsubsection[{setDownloadAmount}]{\setlength{\rightskip}{0pt plus 5cm}void Download::setDownloadAmount (
+\begin{DoxyParamCaption}
+\item[{double}]{amount}
+\end{DoxyParamCaption}
+)}}
+\label{classDownload_a3a05a45f983fcb09b8dbb41a8e329fee}
+Setter for download amount. 
+\begin{DoxyParams}{Parameters}
+{\em amount,:} & Amount to be set in Kb. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 165 of file Download.cpp.
+
+\hypertarget{classDownload_aa948713f8d655f6acb9eee77d7ffc738}{
+\index{Download@{Download}!setDownloadSpeed@{setDownloadSpeed}}
+\index{setDownloadSpeed@{setDownloadSpeed}!Download@{Download}}
+\subsubsection[{setDownloadSpeed}]{\setlength{\rightskip}{0pt plus 5cm}void Download::setDownloadSpeed (
+\begin{DoxyParamCaption}
+\item[{double}]{speed}
+\end{DoxyParamCaption}
+)}}
+\label{classDownload_aa948713f8d655f6acb9eee77d7ffc738}
+Setter for download speed. 
+\begin{DoxyParams}{Parameters}
+{\em speed,:} & The speed in Kb/sec. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 90 of file Download.cpp.
+
+\hypertarget{classDownload_ad8b091c43ea6186eaabcbffb9ac64964}{
+\index{Download@{Download}!setID@{setID}}
+\index{setID@{setID}!Download@{Download}}
+\subsubsection[{setID}]{\setlength{\rightskip}{0pt plus 5cm}void Download::setID (
+\begin{DoxyParamCaption}
+\item[{int}]{id}
+\end{DoxyParamCaption}
+)}}
+\label{classDownload_ad8b091c43ea6186eaabcbffb9ac64964}
+Setter for download ID. 
+\begin{DoxyParams}{Parameters}
+{\em id,:} & The download id given by swift::Open. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 239 of file Download.cpp.
+
+\hypertarget{classDownload_ab4f8aeb520296d4a92a8385e9f5e8465}{
+\index{Download@{Download}!setPeers@{setPeers}}
+\index{setPeers@{setPeers}!Download@{Download}}
+\subsubsection[{setPeers}]{\setlength{\rightskip}{0pt plus 5cm}void Download::setPeers (
+\begin{DoxyParamCaption}
+\item[{int}]{amount}
+\end{DoxyParamCaption}
+)}}
+\label{classDownload_ab4f8aeb520296d4a92a8385e9f5e8465}
+Setter for amount of peers. 
+\begin{DoxyParams}{Parameters}
+{\em amount,:} & The amount of peers to be set. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 192 of file Download.cpp.
+
+\hypertarget{classDownload_a582a90c7b16dda1f10e28820fca1d0ec}{
+\index{Download@{Download}!setProgress@{setProgress}}
+\index{setProgress@{setProgress}!Download@{Download}}
+\subsubsection[{setProgress}]{\setlength{\rightskip}{0pt plus 5cm}void Download::setProgress (
+\begin{DoxyParamCaption}
+\item[{double}]{percentage}
+\end{DoxyParamCaption}
+)}}
+\label{classDownload_a582a90c7b16dda1f10e28820fca1d0ec}
+Setter for download progress. 
+\begin{DoxyParams}{Parameters}
+{\em percentage,:} & The percentage to be set between 0 and 100. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 139 of file Download.cpp.
+
+\hypertarget{classDownload_a5c1916b705f784476de6af532fd6f8b6}{
+\index{Download@{Download}!setSeeders@{setSeeders}}
+\index{setSeeders@{setSeeders}!Download@{Download}}
+\subsubsection[{setSeeders}]{\setlength{\rightskip}{0pt plus 5cm}void Download::setSeeders (
+\begin{DoxyParamCaption}
+\item[{int}]{amount}
+\end{DoxyParamCaption}
+)}}
+\label{classDownload_a5c1916b705f784476de6af532fd6f8b6}
+Setter for amount of seeders. 
+\begin{DoxyParams}{Parameters}
+{\em amount,:} & The amount of seeders to be set. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 178 of file Download.cpp.
+
+\hypertarget{classDownload_a8e9fc85664ce8647bdd99cae8aa3d4e6}{
+\index{Download@{Download}!setStatus@{setStatus}}
+\index{setStatus@{setStatus}!Download@{Download}}
+\subsubsection[{setStatus}]{\setlength{\rightskip}{0pt plus 5cm}void Download::setStatus (
+\begin{DoxyParamCaption}
+\item[{int}]{status}
+\end{DoxyParamCaption}
+)}}
+\label{classDownload_a8e9fc85664ce8647bdd99cae8aa3d4e6}
+Setter for status 
+\begin{DoxyParams}{Parameters}
+{\em status,:} & The new status to be set. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 250 of file Download.cpp.
+
+\hypertarget{classDownload_aed65f7b7ed3f376a523276ef730533a0}{
+\index{Download@{Download}!setUploadAmount@{setUploadAmount}}
+\index{setUploadAmount@{setUploadAmount}!Download@{Download}}
+\subsubsection[{setUploadAmount}]{\setlength{\rightskip}{0pt plus 5cm}void Download::setUploadAmount (
+\begin{DoxyParamCaption}
+\item[{double}]{amount}
+\end{DoxyParamCaption}
+)}}
+\label{classDownload_aed65f7b7ed3f376a523276ef730533a0}
+Setter for upload amount. 
+\begin{DoxyParams}{Parameters}
+{\em amount,:} & Amount to be set in Kb. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 152 of file Download.cpp.
+
+\hypertarget{classDownload_a24f4c58a1bcfca51e0266a7641fd8675}{
+\index{Download@{Download}!setUploadSpeed@{setUploadSpeed}}
+\index{setUploadSpeed@{setUploadSpeed}!Download@{Download}}
+\subsubsection[{setUploadSpeed}]{\setlength{\rightskip}{0pt plus 5cm}void Download::setUploadSpeed (
+\begin{DoxyParamCaption}
+\item[{double}]{speed}
+\end{DoxyParamCaption}
+)}}
+\label{classDownload_a24f4c58a1bcfca51e0266a7641fd8675}
+Setter for upload speed. 
+\begin{DoxyParams}{Parameters}
+{\em speed,:} & The speed in Kb/sec. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 103 of file Download.cpp.
+
+\hypertarget{classDownload_a0bc88cfbfadb55895ddebc82de870fcb}{
+\index{Download@{Download}!start@{start}}
+\index{start@{start}!Download@{Download}}
+\subsubsection[{start}]{\setlength{\rightskip}{0pt plus 5cm}void Download::start (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}
+\label{classDownload_a0bc88cfbfadb55895ddebc82de870fcb}
+Starts downloading and uploading. 
+
+Definition at line 29 of file Download.cpp.
+
+\hypertarget{classDownload_aeca037d7cdb6c9eea45d6b6af73c0178}{
+\index{Download@{Download}!stop@{stop}}
+\index{stop@{stop}!Download@{Download}}
+\subsubsection[{stop}]{\setlength{\rightskip}{0pt plus 5cm}void Download::stop (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}
+\label{classDownload_aeca037d7cdb6c9eea45d6b6af73c0178}
+Stops the download and removes all content from disk. 
+
+Definition at line 6 of file Download.cpp.
+
+
+
+\subsection{Member Data Documentation}
+\hypertarget{classDownload_ad752e7e42378b43549ac3378802c9220}{
+\index{Download@{Download}!\_\-filename@{\_\-filename}}
+\index{\_\-filename@{\_\-filename}!Download@{Download}}
+\subsubsection[{\_\-filename}]{\setlength{\rightskip}{0pt plus 5cm}std::string {\bf Download::\_\-filename}\hspace{0.3cm}{\ttfamily  \mbox{[}protected\mbox{]}}}}
+\label{classDownload_ad752e7e42378b43549ac3378802c9220}
+
+
+Current status of the download. 
+
+
+
+Definition at line 32 of file Download.h.
+
+\hypertarget{classDownload_ab73d857fa4f5082ea72a91d1df0c769f}{
+\index{Download@{Download}!\_\-mutex@{\_\-mutex}}
+\index{\_\-mutex@{\_\-mutex}!Download@{Download}}
+\subsubsection[{\_\-mutex}]{\setlength{\rightskip}{0pt plus 5cm}pthread\_\-mutex\_\-t {\bf Download::\_\-mutex}\hspace{0.3cm}{\ttfamily  \mbox{[}protected\mbox{]}}}}
+\label{classDownload_ab73d857fa4f5082ea72a91d1df0c769f}
+
+
+Definition at line 28 of file Download.h.
+
+\hypertarget{classDownload_a3e7db6fe59ed31d8e69b365e117a9847}{
+\index{Download@{Download}!\_\-root\_\-hash@{\_\-root\_\-hash}}
+\index{\_\-root\_\-hash@{\_\-root\_\-hash}!Download@{Download}}
+\subsubsection[{\_\-root\_\-hash}]{\setlength{\rightskip}{0pt plus 5cm}std::string {\bf Download::\_\-root\_\-hash}\hspace{0.3cm}{\ttfamily  \mbox{[}protected\mbox{]}}}}
+\label{classDownload_a3e7db6fe59ed31d8e69b365e117a9847}
+
+
+Trackers seeding this download. 
+
+
+
+Definition at line 34 of file Download.h.
+
+\hypertarget{classDownload_a7bf716e1095fd5dcd0157b8d846debc0}{
+\index{Download@{Download}!\_\-stats@{\_\-stats}}
+\index{\_\-stats@{\_\-stats}!Download@{Download}}
+\subsubsection[{\_\-stats}]{\setlength{\rightskip}{0pt plus 5cm}{\bf downloadStats} {\bf Download::\_\-stats}\hspace{0.3cm}{\ttfamily  \mbox{[}protected\mbox{]}}}}
+\label{classDownload_a7bf716e1095fd5dcd0157b8d846debc0}
+
+
+Definition at line 60 of file Download.h.
+
+\hypertarget{classDownload_a562511e0630169011935c79ba0367872}{
+\index{Download@{Download}!\_\-status@{\_\-status}}
+\index{\_\-status@{\_\-status}!Download@{Download}}
+\subsubsection[{\_\-status}]{\setlength{\rightskip}{0pt plus 5cm}volatile int {\bf Download::\_\-status}\hspace{0.3cm}{\ttfamily  \mbox{[}protected\mbox{]}}}}
+\label{classDownload_a562511e0630169011935c79ba0367872}
+
+
+Mutex to prevent download thread and main thread from accessing same data at the same time. 
+
+
+
+Definition at line 30 of file Download.h.
+
+\hypertarget{classDownload_a22071fe4126b403c73bf2290348a4bb1}{
+\index{Download@{Download}!\_\-tracker@{\_\-tracker}}
+\index{\_\-tracker@{\_\-tracker}!Download@{Download}}
+\subsubsection[{\_\-tracker}]{\setlength{\rightskip}{0pt plus 5cm}std::string {\bf Download::\_\-tracker}\hspace{0.3cm}{\ttfamily  \mbox{[}protected\mbox{]}}}}
+\label{classDownload_a22071fe4126b403c73bf2290348a4bb1}
+
+
+Name of the download. 
+
+
+
+Definition at line 33 of file Download.h.
+
+
+
+The documentation for this class was generated from the following files:\begin{DoxyCompactItemize}
+\item 
+include/\hyperlink{Download_8h}{Download.h}\item 
+src/\hyperlink{Download_8cpp}{Download.cpp}\end{DoxyCompactItemize}

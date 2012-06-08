@@ -1,0 +1,267 @@
+\indexentry{DownloadManager@{DownloadManager}|hyperpage}{7}
+\indexentry{DownloadManager@{DownloadManager}!add@{add}|hyperpage}{8}
+\indexentry{add@{add}!DownloadManager@{DownloadManager}|hyperpage}{8}
+\indexentry{DownloadManager@{DownloadManager}!buildXML@{buildXML}|hyperpage}{8}
+\indexentry{buildXML@{buildXML}!DownloadManager@{DownloadManager}|hyperpage}{8}
+\indexentry{DownloadManager@{DownloadManager}!clearList@{clearList}|hyperpage}{8}
+\indexentry{clearList@{clearList}!DownloadManager@{DownloadManager}|hyperpage}{8}
+\indexentry{DownloadManager@{DownloadManager}!dispatch@{dispatch}|hyperpage}{8}
+\indexentry{dispatch@{dispatch}!DownloadManager@{DownloadManager}|hyperpage}{8}
+\indexentry{DownloadManager@{DownloadManager}!downloadFirstInList@{downloadFirstInList}|hyperpage}{9}
+\indexentry{downloadFirstInList@{downloadFirstInList}!DownloadManager@{DownloadManager}|hyperpage}{9}
+\indexentry{DownloadManager@{DownloadManager}!getDownloadDirectory@{getDownloadDirectory}|hyperpage}{9}
+\indexentry{getDownloadDirectory@{getDownloadDirectory}!DownloadManager@{DownloadManager}|hyperpage}{9}
+\indexentry{DownloadManager@{DownloadManager}!getDownloads@{getDownloads}|hyperpage}{9}
+\indexentry{getDownloads@{getDownloads}!DownloadManager@{DownloadManager}|hyperpage}{9}
+\indexentry{DownloadManager@{DownloadManager}!getIndexFromHash@{getIndexFromHash}|hyperpage}{9}
+\indexentry{getIndexFromHash@{getIndexFromHash}!DownloadManager@{DownloadManager}|hyperpage}{9}
+\indexentry{DownloadManager@{DownloadManager}!init@{init}|hyperpage}{9}
+\indexentry{init@{init}!DownloadManager@{DownloadManager}|hyperpage}{9}
+\indexentry{DownloadManager@{DownloadManager}!pauseDownload@{pauseDownload}|hyperpage}{9}
+\indexentry{pauseDownload@{pauseDownload}!DownloadManager@{DownloadManager}|hyperpage}{9}
+\indexentry{DownloadManager@{DownloadManager}!removeFromDisk@{removeFromDisk}|hyperpage}{10}
+\indexentry{removeFromDisk@{removeFromDisk}!DownloadManager@{DownloadManager}|hyperpage}{10}
+\indexentry{DownloadManager@{DownloadManager}!removeFromList@{removeFromList}|hyperpage}{10}
+\indexentry{removeFromList@{removeFromList}!DownloadManager@{DownloadManager}|hyperpage}{10}
+\indexentry{DownloadManager@{DownloadManager}!resumeDownload@{resumeDownload}|hyperpage}{10}
+\indexentry{resumeDownload@{resumeDownload}!DownloadManager@{DownloadManager}|hyperpage}{10}
+\indexentry{DownloadManager@{DownloadManager}!setActiveDownload@{setActiveDownload}|hyperpage}{10}
+\indexentry{setActiveDownload@{setActiveDownload}!DownloadManager@{DownloadManager}|hyperpage}{10}
+\indexentry{DownloadManager@{DownloadManager}!setDownloadDirectory@{setDownloadDirectory}|hyperpage}{10}
+\indexentry{setDownloadDirectory@{setDownloadDirectory}!DownloadManager@{DownloadManager}|hyperpage}{10}
+\indexentry{DownloadManager@{DownloadManager}!startDownload@{startDownload}|hyperpage}{11}
+\indexentry{startDownload@{startDownload}!DownloadManager@{DownloadManager}|hyperpage}{11}
+\indexentry{DownloadManager@{DownloadManager}!startStream@{startStream}|hyperpage}{11}
+\indexentry{startStream@{startStream}!DownloadManager@{DownloadManager}|hyperpage}{11}
+\indexentry{DownloadManager@{DownloadManager}!startStreamThread@{startStreamThread}|hyperpage}{11}
+\indexentry{startStreamThread@{startStreamThread}!DownloadManager@{DownloadManager}|hyperpage}{11}
+\indexentry{DownloadManager@{DownloadManager}!stopStream@{stopStream}|hyperpage}{11}
+\indexentry{stopStream@{stopStream}!DownloadManager@{DownloadManager}|hyperpage}{11}
+\indexentry{DownloadManager@{DownloadManager}!switchDownload@{switchDownload}|hyperpage}{11}
+\indexentry{switchDownload@{switchDownload}!DownloadManager@{DownloadManager}|hyperpage}{11}
+\indexentry{DownloadManager@{DownloadManager}!updateDownloadStatistics@{updateDownloadStatistics}|hyperpage}{12}
+\indexentry{updateDownloadStatistics@{updateDownloadStatistics}!DownloadManager@{DownloadManager}|hyperpage}{12}
+\indexentry{DownloadManager@{DownloadManager}!active\_\discretionary {-}{}{}download@{active\_\discretionary {-}{}{}download}|hyperpage}{12}
+\indexentry{active\_\discretionary {-}{}{}download@{active\_\discretionary {-}{}{}download}!DownloadManager@{DownloadManager}|hyperpage}{12}
+\indexentry{DownloadManager@{DownloadManager}!active\_\discretionary {-}{}{}download\_\discretionary {-}{}{}mutex@{active\_\discretionary {-}{}{}download\_\discretionary {-}{}{}mutex}|hyperpage}{12}
+\indexentry{active\_\discretionary {-}{}{}download\_\discretionary {-}{}{}mutex@{active\_\discretionary {-}{}{}download\_\discretionary {-}{}{}mutex}!DownloadManager@{DownloadManager}|hyperpage}{12}
+\indexentry{DownloadManager@{DownloadManager}!d\_\discretionary {-}{}{}pid@{d\_\discretionary {-}{}{}pid}|hyperpage}{12}
+\indexentry{d\_\discretionary {-}{}{}pid@{d\_\discretionary {-}{}{}pid}!DownloadManager@{DownloadManager}|hyperpage}{12}
+\indexentry{DownloadManager@{DownloadManager}!doc@{doc}|hyperpage}{12}
+\indexentry{doc@{doc}!DownloadManager@{DownloadManager}|hyperpage}{12}
+\indexentry{DownloadManager@{DownloadManager}!download\_\discretionary {-}{}{}directory@{download\_\discretionary {-}{}{}directory}|hyperpage}{12}
+\indexentry{download\_\discretionary {-}{}{}directory@{download\_\discretionary {-}{}{}directory}!DownloadManager@{DownloadManager}|hyperpage}{12}
+\indexentry{DownloadManager@{DownloadManager}!downloaded@{downloaded}|hyperpage}{12}
+\indexentry{downloaded@{downloaded}!DownloadManager@{DownloadManager}|hyperpage}{12}
+\indexentry{DownloadManager@{DownloadManager}!downloads@{downloads}|hyperpage}{13}
+\indexentry{downloads@{downloads}!DownloadManager@{DownloadManager}|hyperpage}{13}
+\indexentry{DownloadManager@{DownloadManager}!evcompl@{evcompl}|hyperpage}{13}
+\indexentry{evcompl@{evcompl}!DownloadManager@{DownloadManager}|hyperpage}{13}
+\indexentry{DownloadManager@{DownloadManager}!mutex@{mutex}|hyperpage}{13}
+\indexentry{mutex@{mutex}!DownloadManager@{DownloadManager}|hyperpage}{13}
+\indexentry{DownloadManager@{DownloadManager}!streaming\_\discretionary {-}{}{}thread@{streaming\_\discretionary {-}{}{}thread}|hyperpage}{13}
+\indexentry{streaming\_\discretionary {-}{}{}thread@{streaming\_\discretionary {-}{}{}thread}!DownloadManager@{DownloadManager}|hyperpage}{13}
+\indexentry{DownloadManager@{DownloadManager}!thread@{thread}|hyperpage}{13}
+\indexentry{thread@{thread}!DownloadManager@{DownloadManager}|hyperpage}{13}
+\indexentry{DownloadManager@{DownloadManager}!uploaded@{uploaded}|hyperpage}{13}
+\indexentry{uploaded@{uploaded}!DownloadManager@{DownloadManager}|hyperpage}{13}
+\indexentry{HttpServer@{HttpServer}|hyperpage}{13}
+\indexentry{HttpServer@{HttpServer}!handleRequest@{handleRequest}|hyperpage}{14}
+\indexentry{handleRequest@{handleRequest}!HttpServer@{HttpServer}|hyperpage}{14}
+\indexentry{HttpServer@{HttpServer}!init@{init}|hyperpage}{14}
+\indexentry{init@{init}!HttpServer@{HttpServer}|hyperpage}{14}
+\indexentry{HttpServer@{HttpServer}!sendResponse@{sendResponse}|hyperpage}{14}
+\indexentry{sendResponse@{sendResponse}!HttpServer@{HttpServer}|hyperpage}{14}
+\indexentry{HttpServer@{HttpServer}!sendXMLResponse@{sendXMLResponse}|hyperpage}{14}
+\indexentry{sendXMLResponse@{sendXMLResponse}!HttpServer@{HttpServer}|hyperpage}{14}
+\indexentry{HttpServer@{HttpServer}!base@{base}|hyperpage}{15}
+\indexentry{base@{base}!HttpServer@{HttpServer}|hyperpage}{15}
+\indexentry{SearchEngine@{SearchEngine}|hyperpage}{15}
+\indexentry{SearchEngine@{SearchEngine}!getResults@{getResults}|hyperpage}{15}
+\indexentry{getResults@{getResults}!SearchEngine@{SearchEngine}|hyperpage}{15}
+\indexentry{SearchEngine@{SearchEngine}!getResultWithHash@{getResultWithHash}|hyperpage}{15}
+\indexentry{getResultWithHash@{getResultWithHash}!SearchEngine@{SearchEngine}|hyperpage}{15}
+\indexentry{SearchEngine@{SearchEngine}!getResultWithName@{getResultWithName}|hyperpage}{15}
+\indexentry{getResultWithName@{getResultWithName}!SearchEngine@{SearchEngine}|hyperpage}{15}
+\indexentry{SearchEngine@{SearchEngine}!search@{search}|hyperpage}{16}
+\indexentry{search@{search}!SearchEngine@{SearchEngine}|hyperpage}{16}
+\indexentry{SearchEngine@{SearchEngine}!search\_\discretionary {-}{}{}results@{search\_\discretionary {-}{}{}results}|hyperpage}{16}
+\indexentry{search\_\discretionary {-}{}{}results@{search\_\discretionary {-}{}{}results}!SearchEngine@{SearchEngine}|hyperpage}{16}
+\indexentry{Download@{Download}|hyperpage}{17}
+\indexentry{Download@{Download}!Download@{Download}|hyperpage}{18}
+\indexentry{Download@{Download}!Download@{Download}|hyperpage}{18}
+\indexentry{Download@{Download}!$\sim $Download@{$\sim $Download}|hyperpage}{18}
+\indexentry{$\sim $Download@{$\sim $Download}!Download@{Download}|hyperpage}{18}
+\indexentry{Download@{Download}!calculateEstimatedTime@{calculateEstimatedTime}|hyperpage}{19}
+\indexentry{calculateEstimatedTime@{calculateEstimatedTime}!Download@{Download}|hyperpage}{19}
+\indexentry{Download@{Download}!calculateRatio@{calculateRatio}|hyperpage}{19}
+\indexentry{calculateRatio@{calculateRatio}!Download@{Download}|hyperpage}{19}
+\indexentry{Download@{Download}!getFilename@{getFilename}|hyperpage}{19}
+\indexentry{getFilename@{getFilename}!Download@{Download}|hyperpage}{19}
+\indexentry{Download@{Download}!getID@{getID}|hyperpage}{19}
+\indexentry{getID@{getID}!Download@{Download}|hyperpage}{19}
+\indexentry{Download@{Download}!getRootHash@{getRootHash}|hyperpage}{19}
+\indexentry{getRootHash@{getRootHash}!Download@{Download}|hyperpage}{19}
+\indexentry{Download@{Download}!getStatistics@{getStatistics}|hyperpage}{19}
+\indexentry{getStatistics@{getStatistics}!Download@{Download}|hyperpage}{19}
+\indexentry{Download@{Download}!getStatus@{getStatus}|hyperpage}{19}
+\indexentry{getStatus@{getStatus}!Download@{Download}|hyperpage}{19}
+\indexentry{Download@{Download}!getTrackerAddress@{getTrackerAddress}|hyperpage}{19}
+\indexentry{getTrackerAddress@{getTrackerAddress}!Download@{Download}|hyperpage}{19}
+\indexentry{Download@{Download}!pause@{pause}|hyperpage}{20}
+\indexentry{pause@{pause}!Download@{Download}|hyperpage}{20}
+\indexentry{Download@{Download}!resume@{resume}|hyperpage}{20}
+\indexentry{resume@{resume}!Download@{Download}|hyperpage}{20}
+\indexentry{Download@{Download}!retry@{retry}|hyperpage}{20}
+\indexentry{retry@{retry}!Download@{Download}|hyperpage}{20}
+\indexentry{Download@{Download}!setDownloadAmount@{setDownloadAmount}|hyperpage}{20}
+\indexentry{setDownloadAmount@{setDownloadAmount}!Download@{Download}|hyperpage}{20}
+\indexentry{Download@{Download}!setDownloadSpeed@{setDownloadSpeed}|hyperpage}{20}
+\indexentry{setDownloadSpeed@{setDownloadSpeed}!Download@{Download}|hyperpage}{20}
+\indexentry{Download@{Download}!setID@{setID}|hyperpage}{20}
+\indexentry{setID@{setID}!Download@{Download}|hyperpage}{20}
+\indexentry{Download@{Download}!setPeers@{setPeers}|hyperpage}{21}
+\indexentry{setPeers@{setPeers}!Download@{Download}|hyperpage}{21}
+\indexentry{Download@{Download}!setProgress@{setProgress}|hyperpage}{21}
+\indexentry{setProgress@{setProgress}!Download@{Download}|hyperpage}{21}
+\indexentry{Download@{Download}!setSeeders@{setSeeders}|hyperpage}{21}
+\indexentry{setSeeders@{setSeeders}!Download@{Download}|hyperpage}{21}
+\indexentry{Download@{Download}!setStatus@{setStatus}|hyperpage}{21}
+\indexentry{setStatus@{setStatus}!Download@{Download}|hyperpage}{21}
+\indexentry{Download@{Download}!setUploadAmount@{setUploadAmount}|hyperpage}{21}
+\indexentry{setUploadAmount@{setUploadAmount}!Download@{Download}|hyperpage}{21}
+\indexentry{Download@{Download}!setUploadSpeed@{setUploadSpeed}|hyperpage}{22}
+\indexentry{setUploadSpeed@{setUploadSpeed}!Download@{Download}|hyperpage}{22}
+\indexentry{Download@{Download}!start@{start}|hyperpage}{22}
+\indexentry{start@{start}!Download@{Download}|hyperpage}{22}
+\indexentry{Download@{Download}!stop@{stop}|hyperpage}{22}
+\indexentry{stop@{stop}!Download@{Download}|hyperpage}{22}
+\indexentry{Download@{Download}!\_\discretionary {-}{}{}filename@{\_\discretionary {-}{}{}filename}|hyperpage}{22}
+\indexentry{\_\discretionary {-}{}{}filename@{\_\discretionary {-}{}{}filename}!Download@{Download}|hyperpage}{22}
+\indexentry{Download@{Download}!\_\discretionary {-}{}{}mutex@{\_\discretionary {-}{}{}mutex}|hyperpage}{22}
+\indexentry{\_\discretionary {-}{}{}mutex@{\_\discretionary {-}{}{}mutex}!Download@{Download}|hyperpage}{22}
+\indexentry{Download@{Download}!\_\discretionary {-}{}{}root\_\discretionary {-}{}{}hash@{\_\discretionary {-}{}{}root\_\discretionary {-}{}{}hash}|hyperpage}{22}
+\indexentry{\_\discretionary {-}{}{}root\_\discretionary {-}{}{}hash@{\_\discretionary {-}{}{}root\_\discretionary {-}{}{}hash}!Download@{Download}|hyperpage}{22}
+\indexentry{Download@{Download}!\_\discretionary {-}{}{}stats@{\_\discretionary {-}{}{}stats}|hyperpage}{22}
+\indexentry{\_\discretionary {-}{}{}stats@{\_\discretionary {-}{}{}stats}!Download@{Download}|hyperpage}{22}
+\indexentry{Download@{Download}!\_\discretionary {-}{}{}status@{\_\discretionary {-}{}{}status}|hyperpage}{22}
+\indexentry{\_\discretionary {-}{}{}status@{\_\discretionary {-}{}{}status}!Download@{Download}|hyperpage}{22}
+\indexentry{Download@{Download}!\_\discretionary {-}{}{}tracker@{\_\discretionary {-}{}{}tracker}|hyperpage}{23}
+\indexentry{\_\discretionary {-}{}{}tracker@{\_\discretionary {-}{}{}tracker}!Download@{Download}|hyperpage}{23}
+\indexentry{Download::downloadStats@{Download::downloadStats}|hyperpage}{23}
+\indexentry{Download::downloadStats@{Download::downloadStats}!download\_\discretionary {-}{}{}amount@{download\_\discretionary {-}{}{}amount}|hyperpage}{24}
+\indexentry{download\_\discretionary {-}{}{}amount@{download\_\discretionary {-}{}{}amount}!Download::downloadStats@{Download::downloadStats}|hyperpage}{24}
+\indexentry{Download::downloadStats@{Download::downloadStats}!download\_\discretionary {-}{}{}percentage@{download\_\discretionary {-}{}{}percentage}|hyperpage}{24}
+\indexentry{download\_\discretionary {-}{}{}percentage@{download\_\discretionary {-}{}{}percentage}!Download::downloadStats@{Download::downloadStats}|hyperpage}{24}
+\indexentry{Download::downloadStats@{Download::downloadStats}!download\_\discretionary {-}{}{}speed@{download\_\discretionary {-}{}{}speed}|hyperpage}{24}
+\indexentry{download\_\discretionary {-}{}{}speed@{download\_\discretionary {-}{}{}speed}!Download::downloadStats@{Download::downloadStats}|hyperpage}{24}
+\indexentry{Download::downloadStats@{Download::downloadStats}!estimated@{estimated}|hyperpage}{24}
+\indexentry{estimated@{estimated}!Download::downloadStats@{Download::downloadStats}|hyperpage}{24}
+\indexentry{Download::downloadStats@{Download::downloadStats}!id@{id}|hyperpage}{24}
+\indexentry{id@{id}!Download::downloadStats@{Download::downloadStats}|hyperpage}{24}
+\indexentry{Download::downloadStats@{Download::downloadStats}!peers@{peers}|hyperpage}{24}
+\indexentry{peers@{peers}!Download::downloadStats@{Download::downloadStats}|hyperpage}{24}
+\indexentry{Download::downloadStats@{Download::downloadStats}!ratio@{ratio}|hyperpage}{24}
+\indexentry{ratio@{ratio}!Download::downloadStats@{Download::downloadStats}|hyperpage}{24}
+\indexentry{Download::downloadStats@{Download::downloadStats}!seeders@{seeders}|hyperpage}{24}
+\indexentry{seeders@{seeders}!Download::downloadStats@{Download::downloadStats}|hyperpage}{24}
+\indexentry{Download::downloadStats@{Download::downloadStats}!upload\_\discretionary {-}{}{}amount@{upload\_\discretionary {-}{}{}amount}|hyperpage}{25}
+\indexentry{upload\_\discretionary {-}{}{}amount@{upload\_\discretionary {-}{}{}amount}!Download::downloadStats@{Download::downloadStats}|hyperpage}{25}
+\indexentry{Download::downloadStats@{Download::downloadStats}!upload\_\discretionary {-}{}{}speed@{upload\_\discretionary {-}{}{}speed}|hyperpage}{25}
+\indexentry{upload\_\discretionary {-}{}{}speed@{upload\_\discretionary {-}{}{}speed}!Download::downloadStats@{Download::downloadStats}|hyperpage}{25}
+\indexentry{FileNotFoundException@{FileNotFoundException}|hyperpage}{25}
+\indexentry{FileNotFoundException@{FileNotFoundException}!what@{what}|hyperpage}{25}
+\indexentry{what@{what}!FileNotFoundException@{FileNotFoundException}|hyperpage}{25}
+\indexentry{SearchEngine::result@{SearchEngine::result}|hyperpage}{26}
+\indexentry{SearchEngine::result@{SearchEngine::result}!filename@{filename}|hyperpage}{26}
+\indexentry{filename@{filename}!SearchEngine::result@{SearchEngine::result}|hyperpage}{26}
+\indexentry{SearchEngine::result@{SearchEngine::result}!hash@{hash}|hyperpage}{26}
+\indexentry{hash@{hash}!SearchEngine::result@{SearchEngine::result}|hyperpage}{26}
+\indexentry{SearchEngine::result@{SearchEngine::result}!tracker@{tracker}|hyperpage}{26}
+\indexentry{tracker@{tracker}!SearchEngine::result@{SearchEngine::result}|hyperpage}{26}
+\indexentry{Stream@{Stream}|hyperpage}{26}
+\indexentry{Stream@{Stream}!Stream@{Stream}|hyperpage}{27}
+\indexentry{Stream@{Stream}!Stream@{Stream}|hyperpage}{27}
+\indexentry{Stream@{Stream}!$\sim $Stream@{$\sim $Stream}|hyperpage}{28}
+\indexentry{$\sim $Stream@{$\sim $Stream}!Stream@{Stream}|hyperpage}{28}
+\indexentry{Stream@{Stream}!beginStreaming@{beginStreaming}|hyperpage}{28}
+\indexentry{beginStreaming@{beginStreaming}!Stream@{Stream}|hyperpage}{28}
+\indexentry{Stream@{Stream}!getEvent@{getEvent}|hyperpage}{28}
+\indexentry{getEvent@{getEvent}!Stream@{Stream}|hyperpage}{28}
+\indexentry{Stream@{Stream}!getInstance@{getInstance}|hyperpage}{28}
+\indexentry{getInstance@{getInstance}!Stream@{Stream}|hyperpage}{28}
+\indexentry{Stream@{Stream}!getStatus@{getStatus}|hyperpage}{28}
+\indexentry{getStatus@{getStatus}!Stream@{Stream}|hyperpage}{28}
+\indexentry{Stream@{Stream}!getTrackerAddress@{getTrackerAddress}|hyperpage}{28}
+\indexentry{getTrackerAddress@{getTrackerAddress}!Stream@{Stream}|hyperpage}{28}
+\indexentry{Stream@{Stream}!init@{init}|hyperpage}{28}
+\indexentry{init@{init}!Stream@{Stream}|hyperpage}{28}
+\indexentry{Stream@{Stream}!readStreaming@{readStreaming}|hyperpage}{28}
+\indexentry{readStreaming@{readStreaming}!Stream@{Stream}|hyperpage}{28}
+\indexentry{Stream@{Stream}!setStatus@{setStatus}|hyperpage}{28}
+\indexentry{setStatus@{setStatus}!Stream@{Stream}|hyperpage}{28}
+\indexentry{Stream@{Stream}!setTracker@{setTracker}|hyperpage}{29}
+\indexentry{setTracker@{setTracker}!Stream@{Stream}|hyperpage}{29}
+\indexentry{Stream@{Stream}!start@{start}|hyperpage}{29}
+\indexentry{start@{start}!Stream@{Stream}|hyperpage}{29}
+\indexentry{Stream@{Stream}!stop@{stop}|hyperpage}{29}
+\indexentry{stop@{stop}!Stream@{Stream}|hyperpage}{29}
+\indexentry{Stream@{Stream}!\_\discretionary {-}{}{}evclose@{\_\discretionary {-}{}{}evclose}|hyperpage}{29}
+\indexentry{\_\discretionary {-}{}{}evclose@{\_\discretionary {-}{}{}evclose}!Stream@{Stream}|hyperpage}{29}
+\indexentry{Stream@{Stream}!\_\discretionary {-}{}{}instance@{\_\discretionary {-}{}{}instance}|hyperpage}{29}
+\indexentry{\_\discretionary {-}{}{}instance@{\_\discretionary {-}{}{}instance}!Stream@{Stream}|hyperpage}{29}
+\indexentry{Stream@{Stream}!\_\discretionary {-}{}{}mutex@{\_\discretionary {-}{}{}mutex}|hyperpage}{29}
+\indexentry{\_\discretionary {-}{}{}mutex@{\_\discretionary {-}{}{}mutex}!Stream@{Stream}|hyperpage}{29}
+\indexentry{Stream@{Stream}!\_\discretionary {-}{}{}streaming@{\_\discretionary {-}{}{}streaming}|hyperpage}{29}
+\indexentry{\_\discretionary {-}{}{}streaming@{\_\discretionary {-}{}{}streaming}!Stream@{Stream}|hyperpage}{29}
+\indexentry{Stream@{Stream}!\_\discretionary {-}{}{}tracker@{\_\discretionary {-}{}{}tracker}|hyperpage}{30}
+\indexentry{\_\discretionary {-}{}{}tracker@{\_\discretionary {-}{}{}tracker}!Stream@{Stream}|hyperpage}{30}
+\indexentry{Download::time@{Download::time}|hyperpage}{30}
+\indexentry{Download::time@{Download::time}!days@{days}|hyperpage}{30}
+\indexentry{days@{days}!Download::time@{Download::time}|hyperpage}{30}
+\indexentry{Download::time@{Download::time}!hours@{hours}|hyperpage}{30}
+\indexentry{hours@{hours}!Download::time@{Download::time}|hyperpage}{30}
+\indexentry{Download::time@{Download::time}!minutes@{minutes}|hyperpage}{30}
+\indexentry{minutes@{minutes}!Download::time@{Download::time}|hyperpage}{30}
+\indexentry{Download::time@{Download::time}!seconds@{seconds}|hyperpage}{30}
+\indexentry{seconds@{seconds}!Download::time@{Download::time}|hyperpage}{30}
+\indexentry{include/Download.h@{include/Download.h}|hyperpage}{33}
+\indexentry{Download.h@{Download.h}!SECONDS\_\discretionary {-}{}{}PER\_\discretionary {-}{}{}DAY@{SECONDS\_\discretionary {-}{}{}PER\_\discretionary {-}{}{}DAY}|hyperpage}{34}
+\indexentry{SECONDS\_\discretionary {-}{}{}PER\_\discretionary {-}{}{}DAY@{SECONDS\_\discretionary {-}{}{}PER\_\discretionary {-}{}{}DAY}!Download.h@{Download.h}|hyperpage}{34}
+\indexentry{Download.h@{Download.h}!SECONDS\_\discretionary {-}{}{}PER\_\discretionary {-}{}{}HOUR@{SECONDS\_\discretionary {-}{}{}PER\_\discretionary {-}{}{}HOUR}|hyperpage}{34}
+\indexentry{SECONDS\_\discretionary {-}{}{}PER\_\discretionary {-}{}{}HOUR@{SECONDS\_\discretionary {-}{}{}PER\_\discretionary {-}{}{}HOUR}!Download.h@{Download.h}|hyperpage}{34}
+\indexentry{Download.h@{Download.h}!SECONDS\_\discretionary {-}{}{}PER\_\discretionary {-}{}{}MINUTE@{SECONDS\_\discretionary {-}{}{}PER\_\discretionary {-}{}{}MINUTE}|hyperpage}{34}
+\indexentry{SECONDS\_\discretionary {-}{}{}PER\_\discretionary {-}{}{}MINUTE@{SECONDS\_\discretionary {-}{}{}PER\_\discretionary {-}{}{}MINUTE}!Download.h@{Download.h}|hyperpage}{34}
+\indexentry{Download.h@{Download.h}!Status@{Status}|hyperpage}{34}
+\indexentry{Status@{Status}!Download.h@{Download.h}|hyperpage}{34}
+\indexentry{READY@{READY}!Download.h@{Download.h}|hyperpage}{34}
+\indexentry{Download.h@{Download.h}!READY@{READY}|hyperpage}{34}
+\indexentry{PAUSED@{PAUSED}!Download.h@{Download.h}|hyperpage}{34}
+\indexentry{Download.h@{Download.h}!PAUSED@{PAUSED}|hyperpage}{34}
+\indexentry{DOWNLOADING@{DOWNLOADING}!Download.h@{Download.h}|hyperpage}{34}
+\indexentry{Download.h@{Download.h}!DOWNLOADING@{DOWNLOADING}|hyperpage}{34}
+\indexentry{UPLOADING@{UPLOADING}!Download.h@{Download.h}|hyperpage}{34}
+\indexentry{Download.h@{Download.h}!UPLOADING@{UPLOADING}|hyperpage}{34}
+\indexentry{STOPPED@{STOPPED}!Download.h@{Download.h}|hyperpage}{34}
+\indexentry{Download.h@{Download.h}!STOPPED@{STOPPED}|hyperpage}{34}
+\indexentry{SWITCHING@{SWITCHING}!Download.h@{Download.h}|hyperpage}{34}
+\indexentry{Download.h@{Download.h}!SWITCHING@{SWITCHING}|hyperpage}{34}
+\indexentry{include/DownloadManager.h@{include/DownloadManager.h}|hyperpage}{34}
+\indexentry{include/Exceptions.h@{include/Exceptions.h}|hyperpage}{36}
+\indexentry{include/HttpServer.h@{include/HttpServer.h}|hyperpage}{36}
+\indexentry{include/SearchEngine.h@{include/SearchEngine.h}|hyperpage}{37}
+\indexentry{include/Stream.h@{include/Stream.h}|hyperpage}{38}
+\indexentry{src/Download.cpp@{src/Download.cpp}|hyperpage}{38}
+\indexentry{src/DownloadManager.cpp@{src/DownloadManager.cpp}|hyperpage}{38}
+\indexentry{DownloadManager.cpp@{DownloadManager.cpp}!downloadCallback@{downloadCallback}|hyperpage}{38}
+\indexentry{downloadCallback@{downloadCallback}!DownloadManager.cpp@{DownloadManager.cpp}|hyperpage}{38}
+\indexentry{src/HttpServer.cpp@{src/HttpServer.cpp}|hyperpage}{39}
+\indexentry{src/Main.cpp@{src/Main.cpp}|hyperpage}{39}
+\indexentry{Main.cpp@{Main.cpp}!InstallHTTPGateway@{InstallHTTPGateway}|hyperpage}{39}
+\indexentry{InstallHTTPGateway@{InstallHTTPGateway}!Main.cpp@{Main.cpp}|hyperpage}{39}
+\indexentry{Main.cpp@{Main.cpp}!main@{main}|hyperpage}{39}
+\indexentry{main@{main}!Main.cpp@{Main.cpp}|hyperpage}{39}
+\indexentry{src/SearchEngine.cpp@{src/SearchEngine.cpp}|hyperpage}{40}
+\indexentry{src/Stream.cpp@{src/Stream.cpp}|hyperpage}{40}
+\indexentry{Stream.cpp@{Stream.cpp}!closeCallback@{closeCallback}|hyperpage}{40}
+\indexentry{closeCallback@{closeCallback}!Stream.cpp@{Stream.cpp}|hyperpage}{40}

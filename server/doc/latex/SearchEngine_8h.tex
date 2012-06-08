@@ -1,0 +1,35 @@
+\hypertarget{SearchEngine_8h}{
+\section{include/SearchEngine.h File Reference}
+\label{SearchEngine_8h}\index{include/SearchEngine.h@{include/SearchEngine.h}}
+}
+{\ttfamily \#include $<$vector$>$}\par
+{\ttfamily \#include $<$string$>$}\par
+{\ttfamily \#include $<$iostream$>$}\par
+{\ttfamily \#include \char`\"{}HttpServer.h\char`\"{}}\par
+{\ttfamily \#include \char`\"{}Exceptions.h\char`\"{}}\par
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structSearchEngine_1_1result}{SearchEngine::result}
+\end{DoxyCompactItemize}
+\subsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+namespace \hyperlink{namespaceSearchEngine}{SearchEngine}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+std::vector$<$ struct result $>$ \hyperlink{namespaceSearchEngine_a8042f2fcffc7c08c54d81c27c3142dad}{SearchEngine::search} (std::string search\_\-term)
+\item 
+std::vector$<$ struct result $>$ \hyperlink{namespaceSearchEngine_a83cc228348eb97a22e8ab41aef85ef45}{SearchEngine::getResults} ()
+\item 
+struct result \hyperlink{namespaceSearchEngine_a10dc85e3cb31095c8081a42f4f88ab0e}{SearchEngine::getResultWithHash} (std::string hash)
+\item 
+struct result \hyperlink{namespaceSearchEngine_ace749b9778ce1e51ea18b2451b56397b}{SearchEngine::getResultWithName} (std::string name)
+\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+static std::vector$<$ struct result $>$ \hyperlink{namespaceSearchEngine_a81abb8ad4470831c92858337736559ec}{SearchEngine::search\_\-results}
+\end{DoxyCompactItemize}

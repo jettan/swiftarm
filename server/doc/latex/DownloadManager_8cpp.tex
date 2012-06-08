@@ -1,0 +1,37 @@
+\hypertarget{DownloadManager_8cpp}{
+\section{src/DownloadManager.cpp File Reference}
+\label{DownloadManager_8cpp}\index{src/DownloadManager.cpp@{src/DownloadManager.cpp}}
+}
+{\ttfamily \#include \char`\"{}DownloadManager.h\char`\"{}}\par
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{DownloadManager_8cpp_a307afc8ccbd419279d1a4356cfcd1ebf}{downloadCallback} (int fd, short event, void $\ast$arg)
+\end{DoxyCompactItemize}
+
+
+\subsection{Function Documentation}
+\hypertarget{DownloadManager_8cpp_a307afc8ccbd419279d1a4356cfcd1ebf}{
+\index{DownloadManager.cpp@{DownloadManager.cpp}!downloadCallback@{downloadCallback}}
+\index{downloadCallback@{downloadCallback}!DownloadManager.cpp@{DownloadManager.cpp}}
+\subsubsection[{downloadCallback}]{\setlength{\rightskip}{0pt plus 5cm}void downloadCallback (
+\begin{DoxyParamCaption}
+\item[{int}]{fd, }
+\item[{short}]{event, }
+\item[{void $\ast$}]{arg}
+\end{DoxyParamCaption}
+)}}
+\label{DownloadManager_8cpp_a307afc8ccbd419279d1a4356cfcd1ebf}
+Callback to keep all downloads and uploads running. 
+\begin{DoxyParams}{Parameters}
+{\em fd,:} & The file descriptor used by swift. \\
+\hline
+{\em event,:} & The event it gets from libevent. \\
+\hline
+{\em arg,:} & Unused argument from libevent. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 165 of file DownloadManager.cpp.
+

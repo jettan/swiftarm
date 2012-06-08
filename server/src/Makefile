@@ -16,7 +16,7 @@ else
 	LDADD=$(SWIFTARM)/server/lib-arm/libswift.a $(SWIFTARM)/server/lib-arm/lib/libevent_pthreads.a $(SWIFTARM)/server/lib-arm/lib/libevent.a $(SWIFTARM)/server/lib-arm/libticpp.a -lrt -lstdc++ -lgcc -lutil -lpthread
 endif
 
-CPPFLAGS +=-Wall -Wno-sign-compare -Wno-unused -g -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE 
+CPPFLAGS += -I $(SWIFTARM)/server/include/ticpp -I $(SWIFTARM)/server/include/swift -Wall -Wno-sign-compare -Wno-unused -g -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE 
 
 all: main
 

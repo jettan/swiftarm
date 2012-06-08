@@ -1,0 +1,37 @@
+\hypertarget{Stream_8cpp}{
+\section{src/Stream.cpp File Reference}
+\label{Stream_8cpp}\index{src/Stream.cpp@{src/Stream.cpp}}
+}
+{\ttfamily \#include \char`\"{}Stream.h\char`\"{}}\par
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{Stream_8cpp_ad6f1899e5d21cd91ac6e8d6cef43cf29}{closeCallback} (int fd, short event, void $\ast$arg)
+\end{DoxyCompactItemize}
+
+
+\subsection{Function Documentation}
+\hypertarget{Stream_8cpp_ad6f1899e5d21cd91ac6e8d6cef43cf29}{
+\index{Stream.cpp@{Stream.cpp}!closeCallback@{closeCallback}}
+\index{closeCallback@{closeCallback}!Stream.cpp@{Stream.cpp}}
+\subsubsection[{closeCallback}]{\setlength{\rightskip}{0pt plus 5cm}void closeCallback (
+\begin{DoxyParamCaption}
+\item[{int}]{fd, }
+\item[{short}]{event, }
+\item[{void $\ast$}]{arg}
+\end{DoxyParamCaption}
+)}}
+\label{Stream_8cpp_ad6f1899e5d21cd91ac6e8d6cef43cf29}
+Libevent loop for streaming files, also used to close stream. 
+\begin{DoxyParams}{Parameters}
+{\em fd,:} & The file descriptor used by swift. \\
+\hline
+{\em event,:} & The event it gets from libevent. \\
+\hline
+{\em arg,:} & Argument taken by callback. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 39 of file Stream.cpp.
+

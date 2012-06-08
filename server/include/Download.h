@@ -27,7 +27,6 @@ class Download {
 		
 		pthread_mutex_t _mutex;			/// Mutex to prevent download thread and main thread from accessing same data at the same time.
 		
-		double _size;					/// Download size.
 		volatile int _status;			/// Current status of the download.
 		
 		std::string _filename;			/// Name of the download.
@@ -72,7 +71,6 @@ class Download {
 		std::string getTrackerAddress();
 		std::string getFilename();
 		std::string getRootHash();
-		const double getSize();
 		
 		struct downloadStats getStatistics();
 		
