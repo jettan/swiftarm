@@ -68,7 +68,7 @@ TEST_F(HTTPServerTest, downloadTrivial) {
 	curl_easy_setopt(easyHandle, CURLOPT_URL, "http://127.0.0.1:1337/search:test");
 	res = curl_easy_perform(easyHandle);
 	
-	curl_easy_setopt(easyHandle, CURLOPT_URL, "http://127.0.0.1:1337/download:367d26a6ce626e049a21921100e24eac86dbcd32";);
+	curl_easy_setopt(easyHandle, CURLOPT_URL, "http://127.0.0.1:1337/download:367d26a6ce626e049a21921100e24eac86dbcd32");
 	res = curl_easy_perform(easyHandle);
 	
 	EXPECT_EQ(response, "Download Started");
