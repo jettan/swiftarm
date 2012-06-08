@@ -1,0 +1,57 @@
+#SceneBrowse {
+    position : absolute;
+    left : 0px;
+    top : 0px;
+    width : 960px;
+    height : 540px;
+}
+
+#usbButton {
+    position: absolute;
+    left: 350px;
+    top: 37px;
+    width:150px;
+}
+
+#playerButton {
+    position: absolute;
+    left: 350px;
+    top: 137px;
+    width:150px;
+}
+
+#labelUSB {
+    position:absolute;
+    left:500px;
+    top: 50px;
+    width: 300px;
+	height: 75px;
+}
+
+#progress1{
+	position : absolute;
+	left : 500px;
+	top : 150px;
+	width : 200px;
+	height : 37px;
+}
+
+#list0 {
+	position: absolute;
+	left: 37px;
+	top: 65px;
+	width: 195px;
+	height: 225px;
+}
+
+#labelList {
+	position: absolute;
+	left: 20px;
+    top: 37px;
+    width: 300px;
+}
+
+#popupUD {
+    width:300px;
+}
+

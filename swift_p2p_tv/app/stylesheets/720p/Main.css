@@ -1,0 +1,64 @@
+body {
+	font-size: 18px;
+}
+
+#SceneMain {
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	width: 1280px;
+	height: 720px;
+}
+
+#MainBG {
+	position: absolute;
+	left: 0px;
+	top: 0px;
+}
+
+#title {
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	font-size: 18px;
+}
+
+#category {
+	position: absolute;
+	left: 50px;
+	top: 70px;
+	width: 260px;
+	height: 300px;
+}
+
+#Main_keyhelp {
+	z-index: 1;
+}
+
+#main_info {
+	position: absolute;
+	left: 0px;
+	top: 20px;
+	font-size: 18px;
+}
+
+#MainListPage {
+	position: absolute;
+	left: 50px;
+	top: 640px;
+	font-size: 18px;
+}
+
+#labelVideo {
+	position: absolute;
+	left: 320px;
+    top: 122px;
+    width: 300px;
+}
+
+#labelRedirect {
+	position: absolute;
+	left: 320px;
+    top: 152px;
+    width: 300px;
+}

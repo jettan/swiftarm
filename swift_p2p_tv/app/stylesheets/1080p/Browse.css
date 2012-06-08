@@ -1,0 +1,37 @@
+#SceneBrowse {
+    position : absolute;
+    left : 0px;
+    top : 0px;
+    width : 1920px;
+    height : 1080px;
+}
+
+#normalButton0 {
+    position: absolute;
+    left: 600px;
+    top: 75px;
+    width:300px;
+}
+
+#normalButton1 {
+    position: absolute;
+    left: 600px;
+    top: 175px;
+    width:300px;
+}
+
+#labelUSB {
+    position:absolute;
+    left:900px;
+    top: 75px;
+    width: 300px;
+	height: 75px;
+}
+
+#progress1{
+	position : absolute;
+	left : 900px;
+	top : 175px;
+	width : 400px;
+	height : 37px;
+}

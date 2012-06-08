@@ -1,0 +1,88 @@
+#SceneSettings {
+    position : absolute;
+    left : 0px;
+    top : 0px;
+    width : 1920px;
+    height : 1080px;
+}
+
+#labelSetting0 {
+    position:absolute;
+    left:900px;
+    top: 50px;
+    width: 200px;
+	height: 75px;
+}
+
+#toggleButton0 {
+    position:absolute;
+    left:1100px;
+    top: 50px;
+    width: 200px;
+	height: 75px;
+}
+
+#labelSetting1 {
+    position:absolute;
+    left:900px;
+    top: 125px;
+    width: 200px;
+	height: 75px;
+}
+
+#toggleButton1 {
+    position:absolute;
+    left:1100px;
+    top: 125px;
+    width: 200px;
+	height: 75px;
+}
+
+#labelSetting2 {
+    position:absolute;
+    left:900px;
+    top: 200px;
+    width: 200px;
+	height: 75px;
+}
+
+#toggleButton2 {
+    position:absolute;
+    left:1100px;
+    top: 200px;
+    width: 200px;
+	height: 75px;
+}
+
+#labelSetting3 {
+    position:absolute;
+    left:900px;
+    top: 275px;
+    width: 200px;
+	height: 75px;
+}
+
+#toggleButton3 {
+    position:absolute;
+    left:1100px;
+    top: 275px;
+    width: 200px;
+	height: 75px;
+}
+
+#labelSetting4 {
+    position:absolute;
+    left:900px;
+    top: 350px;
+    width: 200px;
+	height: 75px;
+}
+
+#toggleButton3 {
+    position:absolute;
+    left:1100px;
+    top: 350px;
+    width: 200px;
+	height: 75px;
+}
+

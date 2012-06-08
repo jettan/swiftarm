@@ -1,0 +1,41 @@
+#ScenePlayer {
+    position : absolute;
+    left : 0px;
+    top : 0px;
+    width : 960px;
+    height : 540px;
+}
+
+#lstPlayer {
+    position : absolute;
+    left: 240px;
+	top: 52px;
+    width: 285px;
+	height: 375px;
+}
+
+#PlayerEventTitle {
+    position : absolute;
+    left: 525px;
+    top: 390px;
+    width: 375px;
+	height: 22px;
+}
+#PlayerEvent {
+    position : absolute;
+    left: 525px;
+    top: 412px;
+    width: 375px;
+	height: 75px;
+	border: 1px solid #0000ff;
+	overflow: hidden;
+}
+#PlayerNoti {
+    position : absolute;
+    left: 240px;
+    top: 300px;
+    width: 285px;
+	
+	color: red;
+	font-size: 12px;
+}

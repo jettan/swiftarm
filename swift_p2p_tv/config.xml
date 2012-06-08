@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<widget>
+	<ThumbIcon itemtype="string">icon/default_106.png</ThumbIcon>
+	<BigThumbIcon itemtype="string">icon/default_115.png</BigThumbIcon>
+	<ListIcon itemtype="string">icon/default_85.png</ListIcon>
+	<BigListIcon itemtype="string">icon/default_95.png</BigListIcon>
+	<category itemtype="string"></category>
+	<autoUpdate itemtype="boolean">n</autoUpdate>
+	<cpname itemtype="string"></cpname>
+	<cplogo itemtype="string"></cplogo>
+	<cpauthjs itemtype="string"></cpauthjs>
+	<ver itemtype="string"></ver>
+	<mgrver itemtype="string"></mgrver>
+	<fullwidget itemtype="boolean">y</fullwidget>
+	<srcctl itemtype="boolean">y</srcctl>
+	<ticker itemtype="boolean">n</ticker>
+	<childlock itemtype="boolean">n</childlock>
+	<audiomute itemtype="boolean">n</audiomute>
+	<videomute itemtype="boolean">n</videomute>
+	<dcont itemtype="boolean">y</dcont>
+	<type itemtype="string">user</type>
+	<widgetname itemtype="string">Swift P2P TV</widgetname>
+	<description itemtype="string"></description>
+	<width itemtype="number">960</width>
+	<height itemtype="number">540</height>
+	<author itemtype="group">
+		<name itemtype="string">Anass Drif Jethro Tan Wilson Ko Samuel Austin</name>
+		<email itemtype="string"></email>
+		<link itemtype="string">http://www.tudelft.nl</link>
+		<organization itemtype="string">Delft University of Technology</organization>
+	</author>
+</widget>

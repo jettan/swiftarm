@@ -1,0 +1,63 @@
+#SceneDownloads {
+    position : absolute;
+    left : 0px;
+    top : 0px;
+    width : 960px;
+    height : 540px;
+}
+
+#normalButton02 {
+    position: absolute;
+    left: 725px;
+    top: 80px;
+    width:200px;
+}
+
+#normalButton12 {
+    position: absolute;
+    left: 300px;
+    top: 137px;
+    width:150px;
+}
+
+#labelDownload {
+    position:absolute;
+    left:275px;
+    top: 50px;
+    width: 150px;
+	height: 75px;
+}
+
+#labelFilename {
+    position:absolute;
+    left:425px;
+    top: 50px;
+    width: 200px;
+	height: 75px;
+}
+
+#labelProgress {
+    position:absolute;
+    left:625px;
+    top: 50px;
+    width: 100px;
+	height: 75px;
+}
+
+#labelProgress0 {
+    position:absolute;
+    left:625px;
+    top: 100px;
+    width: 100px;
+	height: 75px;
+}
+
+#progress12{
+	position : absolute;
+	left : 725px;
+	top : 100px;
+	width : 200px;
+	height : 37px;
+}
+
+

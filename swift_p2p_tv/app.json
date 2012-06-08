@@ -1,0 +1,9 @@
+{ 
+   "scenes" : ["Main","Browse","Downloads","Player","Settings","Start"],
+   
+   "files" : ["app/stylesheets/global.css", "app/includeTest.js"],
+   "resolutions" : ["540p", "720p", "1080p"],
+   "theme" : "base",
+   "languages" : ["en"],
+   "modules" : ["ime"]
+}
