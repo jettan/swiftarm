@@ -1,7 +1,7 @@
 #include "Download.h"
 
 /**
- * Stop the download and removes all content from disk.
+ * Stops the download and removes all content from disk.
  */
 void Download::stop() {
 	setStatus(STOPPED);
@@ -14,7 +14,7 @@ void Download::stop() {
 }
 
 /**
- * Delete the downloaded content and try again from the beginning.
+ * Deletes the downloaded content and try again from the beginning.
  */
 void Download::retry() {
 	stop();
@@ -110,7 +110,7 @@ void Download::setUploadSpeed(double speed) {
 }
 
 /**
- * Calculate upload/download ratio.
+ * Calculates upload/download ratio.
  */
 void Download::calculateRatio() {
 	if (getID() < 0)
@@ -199,7 +199,7 @@ void Download::setPeers(int amount) {
 }
 
 /**
- * Calculate estimated download time.
+ * Calculates estimated download time.
  */
 void Download::calculateEstimatedTime() {
 	if (getID() < 0)
@@ -257,7 +257,7 @@ void Download::setStatus(int status) {
 }
 
 /**
- * Get the download ID.
+ * Getter for the download ID.
  */
 const int Download::getID() {
 	pthread_mutex_lock(&_mutex);
@@ -267,7 +267,7 @@ const int Download::getID() {
 }
 
 /**
- * Get the status.
+ * Getter for the status.
  */
 const int Download::getStatus() {
 	pthread_mutex_lock(&_mutex);
@@ -277,7 +277,7 @@ const int Download::getStatus() {
 }
 
 /**
- * Get the download statistics.
+ * Getter for the download statistics.
  */
 Download::downloadStats Download::getStatistics() {
 	struct downloadStats statistics;
@@ -304,21 +304,21 @@ Download::downloadStats Download::getStatistics() {
 }
 
 /**
- * Get the tracker address.
+ * Getter for the tracker address.
  */
 std::string Download::getTrackerAddress() {
 	return _tracker;
 }
 
 /**
- * Get the filename.
+ * Getter for the filename.
  */
 std::string Download::getFilename() {
 	return _filename;
 }
 
 /**
- * Get the root hash.
+ * Getter for the root hash.
  */
 std::string Download::getRootHash() {
 	return _root_hash;

@@ -5,7 +5,7 @@ namespace HttpServer {
 }
 
 /**
- * Send the HTTP XML response.
+ * Sends the HTTP XML response.
  * @param msg: The xml message to be sent.
  * @param req: The received HTTP request.
  * @param buf: Buffer used to send the reply.
@@ -28,7 +28,7 @@ static void HttpServer::sendXMLResponse(std::string msg, struct evhttp_request *
 }
 
 /**
- * Send the HTTP response.
+ * Sends the HTTP response.
  * @param req: The received HTTP request.
  * @param buf: Buffer used to send the reply.
  * @param message: The message to be sent.
@@ -190,7 +190,7 @@ static void HttpServer::handleRequest(struct evhttp_request *req, void *arg) {
 }
 
 /**
- * Initialise the web server.
+ * Initialises the web server.
  */
 int HttpServer::init() {
 	struct evhttp *http;

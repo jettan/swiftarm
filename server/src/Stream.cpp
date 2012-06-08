@@ -3,7 +3,7 @@
 Stream* Stream::_instance;
 
 /**
- * Initialise stream state and mutex.
+ * Initialises stream state and mutex.
  */
 void Stream::init() {
 	_streaming = false;
@@ -11,7 +11,7 @@ void Stream::init() {
 }
 
 /**
- * Set stream state to "begin streaming".
+ * Sets stream state to "begin streaming".
  */
 void Stream::beginStreaming() {
 	pthread_mutex_lock( &_mutex );
@@ -21,7 +21,7 @@ void Stream::beginStreaming() {
 }
 
 /**
- * Get stream state.
+ * Returns stream state.
  */
 bool Stream::readStreaming() {
 	pthread_mutex_lock( &_mutex );
@@ -54,14 +54,14 @@ void Stream::setTracker(std::string tracker) {
 }
 
 /**
- * Get the event to start the libevent loop.
+ * Returns the event to start the libevent loop.
  */
 event *Stream::getEvent() {
 	return &_evclose;
 }
 
 /**
- * Get Singleton instance of own class.
+ * Returns Singleton instance of own class.
  */
 Stream *Stream::getInstance() {
 	if (!_instance)
@@ -71,7 +71,7 @@ Stream *Stream::getInstance() {
 }
 
 /**
- * Stop the stream.
+ * Stops the stream.
  */
 void Stream::stop() {
 	pthread_mutex_lock( &_mutex );
@@ -81,7 +81,7 @@ void Stream::stop() {
 }
 
 /**
- * Start the stream.
+ * Starts the stream.
  */
 void Stream::start() {
 	// Change the directory to Downloads folder.

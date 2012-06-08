@@ -1,7 +1,7 @@
 #include "DownloadManager.h"
 
 /**
- * Initialise the download manager.
+ * Initialises the download manager.
  */
 void DownloadManager::init() {
 	pthread_mutex_init(&mutex, NULL);
@@ -9,7 +9,7 @@ void DownloadManager::init() {
 }
 
 /**
- * Set the directory where swift will download files to.
+ * Sets the directory where swift will download files to.
  * @param dir: The directory where swift will download files to. 
  */
 void DownloadManager::setDownloadDirectory(std::string dir) {
@@ -18,7 +18,7 @@ void DownloadManager::setDownloadDirectory(std::string dir) {
 }
 
 /**
- * Get a copy of the vector downloads.
+ * Returns a copy of the vector downloads.
  */
 std::vector<Download> DownloadManager::getDownloads() {
 	pthread_mutex_lock(&mutex);
@@ -29,14 +29,14 @@ std::vector<Download> DownloadManager::getDownloads() {
 }
 
 /**
- * Get the download directory as string.
+ * Returns the download directory as string.
  */
 std::string DownloadManager::getDownloadDirectory() {
 	return download_directory;
 }
 
 /**
- * Set the active download.
+ * Sets the active download.
  * @param download: The download to be the active download.
  */
 void DownloadManager::setActiveDownload(Download *download) {
@@ -46,14 +46,14 @@ void DownloadManager::setActiveDownload(Download *download) {
 }
 
 /**
- * Update the download statistics.
+ * Updates the download statistics.
  */
 void DownloadManager::updateDownloadStatistics() {
 	
 }
 
 /**
- * Build the XML response for the HTTP server providing statistics.
+ * Builds the XML response for the HTTP server, providing download statistics.
  */
 std::string DownloadManager::buildXML() {
 	updateDownloadStatistics();
@@ -207,7 +207,7 @@ void downloadCallback(int fd, short event, void* arg) {
 }
 
 /**
- * Dispatch swift::Channel::evbase to get into the main loop of downloads.
+ * Dispatches swift::Channel::evbase to get into the main loop to download files.
  * @param arg: Unused argument of pthread_create.
  */
 void *DownloadManager::dispatch(void* arg) {
@@ -270,7 +270,7 @@ int DownloadManager::resumeDownload(std::string download_hash) {
 }
 
 /**
- * Start a download given a root hash.
+ * Starts a download given a root hash.
  * @param download_hash: The root hash of the download.
  */
 int DownloadManager::startDownload(const std::string download_hash) {
@@ -299,7 +299,7 @@ int DownloadManager::startDownload(const std::string download_hash) {
 }
 
 /**
- * Switch active download to another download with the given root hash.
+ * Switches active download to another download with the given root hash.
  * @param hash: The root hash of the download to be switched to.
  */
 void DownloadManager::switchDownload(std::string hash) {
@@ -313,7 +313,7 @@ void DownloadManager::switchDownload(std::string hash) {
 }
 
 /**
- * Add a download to the list.
+ * Adds a download to the list.
  * @param download: The download to be added.
  */
 void DownloadManager::add(Download *download) {
@@ -362,7 +362,7 @@ void DownloadManager::add(Download *download) {
 }
 
 /**
- * Download first element in the download list.
+ * Downloads first element in the download list.
  */
 void DownloadManager::downloadFirstInList() {
 	if (getDownloads().size() > 0) {
@@ -371,7 +371,7 @@ void DownloadManager::downloadFirstInList() {
 }
 
 /**
- * Find the index of a download in the list given a root hash.
+ * Finds the index of a download in the list given a root hash.
  * @param download_hash: The root hash of a download to be searched.
  */
 int DownloadManager::getIndexFromHash(const std::string download_hash) {
@@ -386,7 +386,7 @@ int DownloadManager::getIndexFromHash(const std::string download_hash) {
 }
 
 /**
- * Remove a download from the list given a root hash.
+ * Removes a download from the list given a root hash.
  * @param download_hash: The root hash of the download to be removed.
  */
 void DownloadManager::removeFromList(const std::string download_hash) {
@@ -405,7 +405,7 @@ void DownloadManager::removeFromList(const std::string download_hash) {
 }
 
 /**
- * Remove a download from the hard disk given a root hash.
+ * Removes a download from the hard disk given a root hash.
  * @param download_hash: The root hash of the download to be removed.
  */
 void DownloadManager::removeFromDisk(const std::string download_hash) {
@@ -429,7 +429,7 @@ void DownloadManager::removeFromDisk(const std::string download_hash) {
 }
 
 /**
- * Remove all downloads from the list
+ * Removes all downloads from the list
  */
 void DownloadManager::clearList() {
 	pthread_mutex_lock(&active_download_mutex);
@@ -444,14 +444,14 @@ void DownloadManager::clearList() {
 }
 
 /**
- * Stop streaming.
+ * Stops streaming.
  */
 void DownloadManager::stopStream() {
 	Stream::getInstance()->stop();
 }
 
 /**
- * Start streaming.
+ * Starts streaming.
  * @param arg: Unused argument of pthread_create.
  */
 void* DownloadManager::startStreamThread(void* arg) {
@@ -461,7 +461,7 @@ void* DownloadManager::startStreamThread(void* arg) {
 }
 
 /**
- * Start the streaming thread.
+ * Starts the streaming thread.
  * @param tracker: The tracker from which we stream content.
  */
 void DownloadManager::startStream(std::string tracker) {
