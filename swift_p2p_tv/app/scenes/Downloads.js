@@ -1,9 +1,9 @@
 function SceneDownloads() {
   this.result = 0;
-  this.index = 0;
+  this.index  = 0;
 }
 
-var c=0;
+var c = 0;
 var t;
 var timer_is_on=0;
 
@@ -11,8 +11,10 @@ var XMLurl = "XML/data.xml";
 var k = 0;
 var progress = new Array();
 
+/**
+ * Function called at scene init
+ */
 SceneDownloads.prototype.initialize = function () {
-	alert('SceneDownloads.initialize()');
 	
 	$('#progress12').sfProgressBar({
 		type: 'loading',
@@ -26,6 +28,7 @@ SceneDownloads.prototype.initialize = function () {
 	$('#labelProgress').sfLabel({text: "Progress"});
 	$('#labelProgress0').sfLabel({text: "0 %"});
 	
+	// Button that redirects to Player when pressed. Button appears after download complete.
 	$('#normalButton02').sfButton({
         text: 'Go to player'
     }).sfButton('addCallback', 'clicked', function (event, index) {
@@ -34,18 +37,26 @@ SceneDownloads.prototype.initialize = function () {
 	$('#normalButton02').sfButton('hide');
 }
 
+/**
+ * Function called at scene show
+ */
 SceneDownloads.prototype.handleShow = function () {
-	alert('SceneDownloads.handleShow()');
 	this.result = 0;
 }
 
+/**
+ * Function called at scene hide
+ */
 SceneDownloads.prototype.handleHide = function () {
-	alert('SceneDownloads.handleHide()');
+	
 }
 
+/**
+ * Function called at scene focus
+ */
 SceneDownloads.prototype.handleFocus = function () {
-	alert('SceneDownloads.handleFocus()');
     
+    // Show left menu column
 	$('#MainBG').sfBackground('option', 'column', 'left');
 	$('#MainBG').sfBackground(this.defaultOpts);
 	$('#MainBG').sfBackground('option', 'column', 'left');
@@ -54,16 +65,13 @@ SceneDownloads.prototype.handleFocus = function () {
 	$('#label').sfLabel('show');
 	$('#category').sfList('show');
 	
+	// When downloading start a timer to update the progressbar every 2 sec
 	if ($('#labelDownloading').sfLabel("get").text())
 		startProgress();
 		
 	this.index = 0;
 	
 	$('#progress12').sfProgressBar('setValue', 0);
-	//$('#progress12').sfProgressBar('hide');
-	//$('#normalButton02').sfButton('show');
-	//$('#normalButton02').sfButton('focus');
-	this.index = 1;
 	
 	$("#Main_keyhelp").sfKeyHelp({
 		'user': 'Help',		
@@ -72,12 +80,17 @@ SceneDownloads.prototype.handleFocus = function () {
 	});
 }
 
+/**
+ * Function called at scene blur
+ */
 SceneDownloads.prototype.handleBlur = function () {
-	alert('SceneDownloads.handleBlur()');
+
 }
 
+/**
+ * Function called at scene key down
+ */
 SceneDownloads.prototype.handleKeyDown = function (keyCode) {
-	alert('SceneDownloads.handleKeyDown(' + keyCode + ')');
 	switch (keyCode) {
 		case sf.key.LEFT:
                 sf.scene.focus('Main');       
@@ -89,18 +102,18 @@ SceneDownloads.prototype.handleKeyDown = function (keyCode) {
 		case sf.key.DOWN:  
 			break;
 		case sf.key.ENTER:
-		if (this.index == 1) {
-				$('#labelRedirect').sfLabel('option','text','PlayerDownload');
-				$('#labelRedirect').sfLabel('option','text',downloads[0]);
-				$('#progress12').sfProgressBar('hide');
-				sf.scene.focus('Main');
-			}
+			if (this.index == 1) {
+					$('#labelRedirect').sfLabel('option','text','PlayerDownload');
+					$('#labelVideo').sfLabel('option','text',downloads[0]);
+					$('#progress12').sfProgressBar('hide');
+					sf.scene.focus('Main');
+				}
 			break;
 		case sf.key.RETURN:
-		if (timer_is_on)
-			stopCount();
-		sf.scene.focus('Main');
-        sf.key.preventDefault();
+			if (timer_is_on)
+				stopCount();
+			sf.scene.focus('Main');
+	        sf.key.preventDefault();
 			break;
 		case sf.key.RED:			
 			break;
@@ -113,6 +126,10 @@ SceneDownloads.prototype.handleKeyDown = function (keyCode) {
 	}
 }
 
+/**
+ * Function that requests the progress of the current download from the server, and displays it in the progressbar
+ * The timer is reset again so this function is called again after 2 seconds until download complete
+ */
 function getProgress()
 {
 	if (this.result < 100) {
@@ -122,6 +139,9 @@ function getProgress()
 		stopCount();
 }
 
+/**
+ * Function that calls the getProgress function and thereby starts a timer
+ */
 function startProgress()
 {
 	$('#labelFilename').sfLabel('option','text',downloads[0]);
@@ -131,6 +151,10 @@ function startProgress()
 	}
 }
 
+/**
+ * Function called when scene is blurred, or when download is complete. The timeout is cleared.
+ * Also when download is complete progressbar is set to 100, and a button that redirects to the Player is shown.
+ */
 function stopCount()
 {
 	if (this.result == 100) {
@@ -144,27 +168,30 @@ function stopCount()
 	timer_is_on=0;
 }
 
+/**
+ * Function that requests download stats from the server
+ */
 function httpGetXML(url) {
 	request = new XMLHttpRequest();
 	request.open("GET", url, true);
-	request.onreadystatechange = processXMLRequest;
+	request.onreadystatechange = processXMLResponse;
 	request.send(null);
 }
 
-function processXMLRequest() {
+/**
+ * Function that process the response received from the server after sending a request
+ */
+function processXMLResponse() {
 	if (request.readyState == 4) {
-		//var result = request.responseXML;
-		this.result = request.responseText;
-		/*$('DOWNLOAD',result).each(function(i) {
+		// TODO: parse the XML response.
+		/*var result = request.responseXML;
+		$('DOWNLOAD',result).each(function(i) {
 			progress[k] = $(this).find("PROGRESS").text();
 			k++;
 		});*/
+		this.result = request.responseText;
 		$('#labelProgress0').sfLabel({text:this.result});
 		$('#progress12').sfProgressBar('setValue', this.result);
 		
 	}
-}
-
-SceneDownloads.prototype.refreshButtons = function () {
-	alert('SceneDownloads.refreshButtons()');
 }
