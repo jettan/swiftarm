@@ -5,6 +5,9 @@ function SceneSettings() {
 	var textinit;
 }
 
+/**
+ * Function called at scene init
+ */
 SceneSettings.prototype.initialize = function () {
 	alert('SceneSettings.initialize()');
 	
@@ -85,9 +88,12 @@ SceneSettings.prototype.initialize = function () {
 	this.row = 0;
 }
 
+/**
+ * Function to initialize text input field
+ */
 function initText(text) {
-label = text;
-$('#input0').sfTextInput({
+	label = text;
+	$('#input0').sfTextInput({
 		text:'...', 
 		maxlength:'10',
 		oncomplete: function (text) {
@@ -108,16 +114,24 @@ $('#input0').sfTextInput({
 	$('#input0').sfTextInput('hide');
 }
 
+/**
+ * Function called at scene show
+ */
 SceneSettings.prototype.handleShow = function () {
-	alert('SceneSettings.handleShow()');
+
 }
 
+/**
+ * Function called at scene hide
+ */
 SceneSettings.prototype.handleHide = function () {
-	alert('SceneSettings.handleHide()');
+
 }
 
+/**
+ * Function called at scene focus
+ */
 SceneSettings.prototype.handleFocus = function () {
-	alert('SceneSettings.handleFocus()');
 	
 	$('#MainBG').sfBackground('option', 'column', 'left');
 	$('#MainBG').sfBackground(this.defaultOpts);
@@ -137,8 +151,10 @@ SceneSettings.prototype.handleFocus = function () {
 	});
 }
 
+/**
+ * Function called at scene blur
+ */
 SceneSettings.prototype.handleBlur = function () {
-	alert('SceneSettings.handleBlur()');
 	$('#toggleButton0').sfToggleButton('blur');
 	$('#toggleButton1').sfToggleButton('blur');
 	$('#toggleButton2').sfToggleButton('blur');
@@ -146,8 +162,10 @@ SceneSettings.prototype.handleBlur = function () {
  
 }
 
+/**
+ * Function called at scene key down
+ */
 SceneSettings.prototype.handleKeyDown = function (keyCode) {
-	alert('SceneSettings.handleKeyDown(' + keyCode + ')');
 	switch (keyCode) {
 		case sf.key.LEFT:
                 sf.scene.focus('Main');       
@@ -169,7 +187,6 @@ SceneSettings.prototype.handleKeyDown = function (keyCode) {
 			$(index[this.row]).sfToggleButton('focus');
 			break;
 		case sf.key.UP:
-		alert("INDEX!!! : " + this.row);
 		if (this.row == 4)
 			$(index[this.row]).sfButton('blur');
 		else
@@ -220,8 +237,4 @@ SceneSettings.prototype.handleKeyDown = function (keyCode) {
 		case sf.key.BLUE:
 			break;
 	}
-}
-
-SceneSettings.prototype.refreshButtons = function () {
-	alert('SceneSettings.refreshButtons()');
 }
