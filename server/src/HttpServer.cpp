@@ -160,6 +160,7 @@ static void HttpServer::handleRequest(struct evhttp_request *req, void *arg) {
 				sendResponse(req, evb, address.c_str());
 			} catch(FileNotFoundException e) {
 				std::cout << "Exception Caught In HttpServer" << std::endl;
+				std::cout << e.what() << std::endl;
 				sendResponse(req, evb, e.what());
 			}
 		}

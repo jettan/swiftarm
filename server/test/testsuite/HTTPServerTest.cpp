@@ -53,8 +53,7 @@ TEST_F(HTTPServerTest, searchTrivial) {
 	curl_easy_setopt(easyHandle, CURLOPT_URL, "http://127.0.0.1:1337/search:test");
 	res = curl_easy_perform(easyHandle);
 	
-	std::cout << "RESPONSE: " << response << std::endl;
-	//EXPECT_LT(0, SearchEngine::getResults().size());
+	EXPECT_LT(0, SearchEngine::getResults().size());
 }
 
 // Test whether an empty searh is handled properly

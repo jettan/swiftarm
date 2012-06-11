@@ -74,7 +74,6 @@ std::string SearchEngine::buildSearchXML() {
 	TiXmlPrinter printer;
 	
 	searchdoc->Accept(&printer);
-	std::cout << "Accepted printer." << std::endl;
 	std::string result = printer.Str();
 	
 	return result;
