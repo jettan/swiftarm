@@ -133,9 +133,9 @@ static void HttpServer::handleRequest(struct evhttp_request *req, void *arg) {
 	} else if (path_str.size() >= 7 && path_str.substr(0, 7).compare("/search") == 0) {
 		if (path_str.size() > 8 && path_str.at(7) == ':') {
 			std::string searchTerm = path_str.substr(8, path_str.size());
-			SearchEngine::search(searchTerm);
+			std::string result = SearchEngine::search(searchTerm);
 			// TODO: Send a useful response XML containing the search results.
-			sendResponse(req, evb, "Search Complete");
+			sendResponse(req, evb, result.c_str());
 		} else {
 			sendResponse(req, evb, "Invalid Search Term");
 		}

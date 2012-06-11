@@ -7,7 +7,7 @@
 
 #include "HttpServer.h"
 #include "Exceptions.h"
-
+#include "ticpp.h"
 
 namespace SearchEngine {
 	
@@ -18,10 +18,11 @@ namespace SearchEngine {
 	};
 	
 	static std::vector<struct result> search_results;
+	static ticpp::Document *searchdoc;
 	
+	std::string buildSearchXML();
 	
-	std::vector<struct result> search(std::string search_term);
-	
+	std::string search(std::string search_term);
 	std::vector<struct result> getResults();
 	
 	struct result getResultWithHash(std::string hash);
