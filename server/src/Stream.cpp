@@ -41,8 +41,7 @@ void closeCallback(int fd, short event, void *arg) {
 	if (stream->readStreaming()) {
 		evtimer_add(stream->getEvent(), swift::tint2tv(TINT_SEC));
 		std::cout << "Busy Streaming" << std::endl;
-	} else
-		event_base_loopexit(swift::Channel::evbase, NULL);
+	}
 }
 
 /**
@@ -78,6 +77,7 @@ void Stream::stop() {
 	if (_streaming)
 		_streaming = false;
 	pthread_mutex_unlock( &_mutex );
+	evtimer_del(getEvent());
 }
 
 /**
@@ -102,6 +102,5 @@ void Stream::start() {
 	beginStreaming();
 	std::cout << "Dispatching the event base." <<std::endl;
 	
-	event_base_dispatch(swift::Channel::evbase);
 }
 

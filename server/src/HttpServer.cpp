@@ -77,7 +77,7 @@ static void HttpServer::handleRequest(struct evhttp_request *req, void *arg) {
 				struct SearchEngine::result res = SearchEngine::getResultWithHash(hash);
 				DownloadManager::add(new Download(res.tracker, res.hash, res.filename));
 				sendResponse(req, evb, "Download Added");
-			} catch(FileNotFoundException e) {
+			} catch(std::exception e) {
 				std::cout << "Exception Caught In HttpServer" << std::endl;
 				std::cout << e.what() << std::endl;
 				sendResponse(req, evb, "-1");

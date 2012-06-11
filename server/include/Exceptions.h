@@ -13,5 +13,12 @@ class FileNotFoundException : public std::exception {
 	
 };
 
+class DownloadWhileStreamingException : public std::exception {
+	public:
+	virtual const char* what() const throw() {
+		return "Cannot download during a stream";
+	}
+	
+};
 
 #endif //_EXCEPTIONS_H

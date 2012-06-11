@@ -319,10 +319,18 @@ void DownloadManager::switchDownload(std::string hash) {
  * @param download: The download to be added.
  */
 void DownloadManager::add(Download *download) {
+	
+	if (Stream::getInstance()->readStreaming()) {
+		std::cout << "Cannot add download when streaming" << std::endl;
+		DownloadWhileStreamingException *exception = new DownloadWhileStreamingException();
+		throw *exception;
+	}
+		
 	// Only add a new download that is not alredy in the list.
 	for (int i = 0; i < getDownloads().size(); i++) {
 		if (getDownloads().at(i).getRootHash().compare(download->getRootHash()) == 0) {
-			return;
+		DownloadWhileStreamingException *exception = new DownloadWhileStreamingException();
+		throw *exception;
 		}
 	}
 	
@@ -489,6 +497,11 @@ void DownloadManager::stopStream() {
  */
 void* DownloadManager::startStreamThread(void* arg) {
 	Stream::getInstance()->start();
+	
+	if (d_pid != 0) {
+		event_base_dispatch(swift::Channel::evbase);
+	}
+	
 	std::cout << "Exiting stream thread." << std::endl;
 	pthread_exit(NULL);
 }
@@ -498,6 +511,13 @@ void* DownloadManager::startStreamThread(void* arg) {
  * @param tracker: The tracker from which we stream content.
  */
 void DownloadManager::startStream(std::string tracker) {
+	for (int i = 0; i < downloads.size(); i++) {
+		if (downloads.at(i).getStatus() == DOWNLOADING) {
+			pauseDownload(downloads.at(i).getRootHash());
+			std::cout << downloads.at(i).getFilename() << std::endl;
+		}
+	}
+	
 	if (!Stream::getInstance()->readStreaming()) {
 		Stream::getInstance()->setTracker(tracker);
 		
