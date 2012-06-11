@@ -20,6 +20,7 @@ namespace SearchEngine {
 	static std::vector<struct result> search_results;
 	static ticpp::Document *searchdoc;
 	
+	void clearSearchResults();
 	std::string buildSearchXML();
 	
 	std::string search(std::string search_term);

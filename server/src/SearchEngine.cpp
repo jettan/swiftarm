@@ -37,6 +37,10 @@ std::string SearchEngine::search(std::string search_term) {
 	return result;
 }
 
+void SearchEngine::clearSearchResults() {
+	
+	search_results.clear();
+}
 
 std::string SearchEngine::buildSearchXML() {
 	searchdoc = new ticpp::Document("searchdoc");

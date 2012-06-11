@@ -6,6 +6,7 @@
 #include "DownloadManager.h"
 #include "swift.h"
 #include "HttpServer.h"
+#include "SearchEngine.h"
 #include <pthread.h>
 
 pthread_t server_thread;
@@ -60,7 +61,7 @@ int main(int argc, char **argv){
 	
 	// Set Download directory
 	DownloadManager::setDownloadDirectory("/dtv/usb/sda1/Downloads");
-	DownloadManager::init();
+	DownloadManager::init("/dtv/usb/sda1/Downloads");
 	
 	//swift::Channel::debug_file = stdout;
 	// Make httpserver loop

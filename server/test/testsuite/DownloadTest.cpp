@@ -51,10 +51,9 @@ TEST_F(DownloadTest, setIDTrivial) {
 // Negative
 TEST_F(DownloadTest, setIDNegative) {
 	
-	int originalID = download->getID();
-	int id = -1;
+	int id = -5;
 	download->setID(id);
-	EXPECT_EQ(originalID, download->getID());
+	EXPECT_EQ(-1, download->getID());
 }
 
 /***********************************************
@@ -76,9 +75,10 @@ TEST_F(DownloadTest, setDownloadSpeedTrivial) {
 TEST_F(DownloadTest, setDownloadSpeedNegative) {
 	
 	double downloadSpeed = -1;
+	double originalSpeed = download->getStatistics().download_speed;
 	download->setDownloadSpeed(downloadSpeed);
 	double speed = download->getStatistics().download_speed;
-	EXPECT_DOUBLE_EQ(0, speed);
+	EXPECT_DOUBLE_EQ(originalSpeed, speed);
 }
 
 
@@ -97,9 +97,10 @@ TEST_F(DownloadTest, setUploadSpeedTrivial) {
 TEST_F(DownloadTest, setUploadSpeedNegative) {
 	
 	double uploadSpeed = -1;
+	double originalSpeed = download->getStatistics().upload_speed;
 	download->setUploadSpeed(uploadSpeed);
 	double speed = download->getStatistics().upload_speed;
-	EXPECT_DOUBLE_EQ(0, speed);
+	EXPECT_DOUBLE_EQ(originalSpeed, speed);
 }
 
 
@@ -108,12 +109,12 @@ TEST_F(DownloadTest, setUploadSpeedNegative) {
 //Trivial
 TEST_F(DownloadTest, calcRatioTrivial) {
 	
-	double uploadSpeed = 10;
-	double downloadSpeed = 5;
-	double ratio = uploadSpeed/downloadSpeed;
+	double uploadAmount = 10;
+	double downloadAmount = 5;
+	double ratio = uploadAmount/downloadAmount;
 	
-	download->setUploadSpeed(uploadSpeed);
-	download->setDownloadSpeed(downloadSpeed);
+	download->setUploadAmount(uploadAmount);
+	download->setDownloadAmount(downloadAmount);
 	download->calculateRatio();
 	
 	EXPECT_DOUBLE_EQ(ratio, download->getStatistics().ratio);
@@ -161,10 +162,21 @@ TEST_F(DownloadTest, percentageTrivial) {
 // Negative
 TEST_F(DownloadTest, percentageNegative) {
 	
+	double originalPercentage = download->getStatistics().download_percentage;
 	double percentage = -45.6;
 	download->setProgress(percentage);
 	
-	EXPECT_DOUBLE_EQ(0, download->getStatistics().download_percentage);
+	EXPECT_DOUBLE_EQ(originalPercentage, download->getStatistics().download_percentage);
+}
+
+// Over 100
+TEST_F(DownloadTest, percentageOver100) {
+	
+	double originalPercentage = download->getStatistics().download_percentage;
+	double percentage = 154.3;
+	download->setProgress(percentage);
+	
+	EXPECT_DOUBLE_EQ(originalPercentage, download->getStatistics().download_percentage);
 }
 
 /* Upload Amount */
@@ -181,10 +193,34 @@ TEST_F(DownloadTest, ULAmountTrivial){
 // Negative
 TEST_F(DownloadTest, ULAmountNegative){
 	
+	double originalULAmount = 10;
+	download->setUploadAmount(originalULAmount);
 	double uploadAmount = -45.6;
 	download->setUploadAmount(uploadAmount);
 	
-	EXPECT_DOUBLE_EQ(0, download->getStatistics().upload_amount);
+	EXPECT_DOUBLE_EQ(originalULAmount, download->getStatistics().upload_amount);
+}
+
+/* Download Amount */
+
+// Trivial
+TEST_F(DownloadTest, DLAmountTrivial){
+	
+	double downloadAmount = 45.6;
+	download->setDownloadAmount(downloadAmount);
+	
+	EXPECT_DOUBLE_EQ(downloadAmount, download->getStatistics().download_amount);
+}
+
+// Negative
+TEST_F(DownloadTest, DLAmountNegative){
+	
+	double originalDLAmount = 10;
+	download->setDownloadAmount(originalDLAmount);
+	double downloadAmount = -45.6;
+	download->setDownloadAmount(downloadAmount);
+	
+	EXPECT_DOUBLE_EQ(originalDLAmount, download->getStatistics().download_amount);
 }
 
 /* Seeders */
@@ -201,10 +237,12 @@ TEST_F(DownloadTest, seedersTrivial){
 //Negative
 TEST_F(DownloadTest, seedersNegative){
 	
+	int originalSeeders = 5;
+	download->setSeeders(originalSeeders);
 	int seeders = -1;
 	download->setSeeders(seeders);
 	
-	EXPECT_EQ(0, download->getStatistics().seeders);
+	EXPECT_EQ(originalSeeders, download->getStatistics().seeders);
 }
 
 /* Peers */
@@ -221,10 +259,12 @@ TEST_F(DownloadTest, peersTrivial){
 //Negative
 TEST_F(DownloadTest, peersNegative){
 	
+	int originalPeers = 5;
+	download->setPeers(originalPeers);
 	int peers = -1;
 	download->setPeers(peers);
 	
-	EXPECT_EQ(0, download->getStatistics().peers);
+	EXPECT_EQ(originalPeers, download->getStatistics().peers);
 }
 
 /***********************************

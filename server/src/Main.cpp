@@ -4,6 +4,7 @@
 #include "swift.h"
 #include "DownloadManager.h"
 #include "HttpServer.h"
+#include "SearchEngine.h"
 
 /**
  * Define the InstallHTTPGateway method in httpgw.cpp.

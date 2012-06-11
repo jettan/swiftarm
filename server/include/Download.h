@@ -20,6 +20,7 @@ enum Status {
 	UPLOADING,
 	STOPPED,
 	SWITCHING,
+	STATUS_SIZE,
 };
 
 class Download {

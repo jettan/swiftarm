@@ -126,9 +126,6 @@ void Download::calculateRatio() {
 		_stats.ratio = 0;
 	}
 	
-	std::cout << "UPLOAD: " << upload_amount << std::endl;
-	std::cout << "DOWNLOAD: " << download_amount << std::endl;
-	std::cout << "RATIO: " << _stats.ratio << std::endl;
 	pthread_mutex_unlock(&_mutex);
 }
 
@@ -237,9 +234,14 @@ void Download::calculateEstimatedTime() {
  * @param id: The download id given by swift::Open.
  */
 void Download::setID(int id) {
-	pthread_mutex_lock(&_mutex);
-	_stats.id = id;
-	pthread_mutex_unlock(&_mutex);
+	if(id > -1) {
+		pthread_mutex_lock(&_mutex);
+		_stats.id = id;
+		pthread_mutex_unlock(&_mutex);
+	}
+	else {
+		_stats.id = -1;
+	}
 }
 
 
@@ -251,9 +253,11 @@ void Download::setStatus(int status) {
 	if (getStatus() == status)
 		return;
 		
-	pthread_mutex_lock(&_mutex);
-	_status = status;
-	pthread_mutex_unlock(&_mutex);
+	if(status > -1 && status < STATUS_SIZE) {
+		pthread_mutex_lock(&_mutex);
+		_status = status;
+		pthread_mutex_unlock(&_mutex);
+	}
 }
 
 /**
