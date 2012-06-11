@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <string>
+#include <dirent.h>
 #include <iostream>
 #include <cstdio>
 #include <cstdlib>
@@ -14,6 +15,8 @@
 #include "swift.h"
 #include "ticpp.h"
 #include "Exceptions.h"
+
+#define DEFAULT_PORT 25000
 
 namespace DownloadManager {
 	
@@ -40,7 +43,7 @@ namespace DownloadManager {
 	std::vector<Download> getDownloads();
 	std::string getDownloadDirectory();
 	
-	void init();
+	void init(std::string download_dir);
 	void startStream(std::string tracker);
 	void stopStream();
 	void *startStreamThread(void *arg);
@@ -52,6 +55,7 @@ namespace DownloadManager {
 	int startDownload(const std::string download_hash);
 	int getIndexFromHash(const std::string download_hash);
 	
+	void startUploads();
 	void downloadFirstInList();
 	void add(Download *download);
 	void pauseDownload(const std::string download_hash);

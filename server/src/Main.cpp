@@ -23,6 +23,7 @@ int main(){
 	swift::Address bindaddress;
 	for (int i = 0; i < 10; i++) {
 		bindaddress = swift::Address((uint32_t) INADDR_ANY, 0);
+		bindaddress.set_port(25000);
 		sock = swift::Listen(swift::Address(bindaddress));
 		
 		if (sock > 0) {
@@ -49,8 +50,7 @@ int main(){
 	std::cout << "Initialised swift" << std::endl;
 	
 	// Set Download directory
-	DownloadManager::setDownloadDirectory("/dtv/usb/sda1/Downloads");
-	DownloadManager::init();
+	DownloadManager::init("/dtv/usb/sda1/Downloads");
 	
 	// swift::Channel::debug_file = stdout;
 	// Make httpserver loop

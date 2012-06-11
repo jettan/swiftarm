@@ -3,9 +3,11 @@
 /**
  * Initialises the download manager.
  */
-void DownloadManager::init() {
+void DownloadManager::init(std::string download_dir) {
 	pthread_mutex_init(&mutex, NULL);
 	pthread_mutex_init(&active_download_mutex, NULL);
+	setDownloadDirectory(download_dir);
+	startUploads();
 }
 
 /**
@@ -368,6 +370,37 @@ void DownloadManager::downloadFirstInList() {
 	if (getDownloads().size() > 0) {
 		startDownload(getDownloads().front().getRootHash());
 	}
+}
+
+/**
+ * Starts all Uploads located in the public folder.
+ */
+void DownloadManager::startUploads() {
+	DIR *dp;
+	struct dirent *dirp;
+	std::string root_hash = "";
+	
+	if((dp = opendir(download_directory.c_str())) == NULL) {
+		std::cout << "Failed opening Downloads directory" << std::endl;
+	}
+	
+	while ((dirp = readdir(dp)) != NULL) {
+		std::string filename(dirp->d_name);
+		if (filename.at(0) != '.' && filename.find(".mhash") == std::string::npos && filename.find(".mbinmap") == std::string::npos) {
+			int id = swift::Open(dirp->d_name, root_hash.c_str(), swift::Address(), false);
+			std::cout << dirp->d_name << std::endl;
+			
+			if (id < 0) {
+				return;
+			}
+			
+			root_hash = swift::RootMerkleHash(id).hex().c_str();
+			Download file("130.161.158.60:20000", root_hash, filename); 
+			
+			add(&file);
+		}
+	}
+	closedir(dp);
 }
 
 /**
