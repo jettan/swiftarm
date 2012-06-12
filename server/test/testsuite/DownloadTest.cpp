@@ -123,12 +123,12 @@ TEST_F(DownloadTest, calcRatioTrivial) {
 // Divide by zero
 TEST_F(DownloadTest, calcRatioDLZero) {
 	
-	double uploadSpeed = 10;
-	double downloadSpeed = 0;
+	double uploadAmount = 10;
+	double downloadAmount = 0;
 	double ratio = 0;
 	
-	download->setUploadSpeed(uploadSpeed);
-	download->setDownloadSpeed(downloadSpeed);
+	download->setUploadAmount(uploadAmount);
+	download->setDownloadAmount(downloadAmount);
 	download->calculateRatio();
 	
 	EXPECT_DOUBLE_EQ(ratio, download->getStatistics().ratio);
@@ -137,12 +137,12 @@ TEST_F(DownloadTest, calcRatioDLZero) {
 // UploadSpeed is zero
 TEST_F(DownloadTest, calcRatioULZero) {
 	
-	double uploadSpeed = 0;
-	double downloadSpeed = 10;
+	double uploadAmount = 0;
+	double downloadAmount = 10;
 	double ratio = 0;
 	
-	download->setUploadSpeed(uploadSpeed);
-	download->setDownloadSpeed(downloadSpeed);
+	download->setUploadAmount(uploadAmount);
+	download->setDownloadAmount(downloadAmount);
 	download->calculateRatio();
 	
 	EXPECT_DOUBLE_EQ(ratio, download->getStatistics().ratio);

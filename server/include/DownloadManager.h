@@ -40,6 +40,7 @@ namespace DownloadManager {
 	
 	void setDownloadDirectory(std::string dir);
 	void setActiveDownload(Download *download);
+	Download getActiveDownload();
 	std::vector<Download> getDownloads();
 	std::string getDownloadDirectory();
 	

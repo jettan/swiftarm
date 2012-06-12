@@ -49,10 +49,34 @@ void DownloadManager::setActiveDownload(Download *download) {
 }
 
 /**
+ *
+ */
+Download DownloadManager::getActiveDownload() {
+	
+	return *active_download;
+}
+
+/**
  * Updates the download statistics.
  */
 void DownloadManager::updateDownloadStatistics() {
 	
+	pthread_mutex_lock(&mutex);
+	pthread_mutex_lock(&active_download_mutex);
+	
+	for (int i = 0; i < downloads.size(); i++) {
+		if (downloads.at(i).getStatus() == UPLOADING || downloads.at(i).getStatus() == DOWNLOADING) {
+			
+			downloads.at(i).setDownloadAmount(swift::Channel::global_raw_bytes_down);
+			downloads.at(i).setUploadAmount(swift::Channel::global_raw_bytes_up);
+			int id = download.at(i).getID();
+			double progress = floorf(((swift::Complete(id) * 10000.0) / swift::Size(id) * 1.0) + 0.5) / 100;
+			download.at(i).setProgress(progress);
+		}
+	}
+	
+	pthread_mutex_unlock(&active_download_mutex);
+	pthread_mutex_unlock(&mutex);
 }
 
 /**
@@ -327,14 +351,12 @@ void DownloadManager::switchDownload(std::string hash) {
  * @param download: The download to be added.
  */
 void DownloadManager::add(Download *download) {
-	std::cout << "Started Add" << std::endl;
 	
 	if (Stream::getInstance()->readStreaming()) {
 		std::cout << "Cannot add download when streaming" << std::endl;
 		DownloadWhileStreamingException *exception = new DownloadWhileStreamingException();
 		throw *exception;
 	}
-	std::cout << "Not streaming" << std::endl;
 		
 	// Only add a new download that is not alredy in the list.
 	for (int i = 0; i < getDownloads().size(); i++) {
@@ -343,7 +365,6 @@ void DownloadManager::add(Download *download) {
 		throw *exception;
 		}
 	}
-	std::cout << "Download not in list" << std::endl;
 	
 	int active_index = 0;
 	

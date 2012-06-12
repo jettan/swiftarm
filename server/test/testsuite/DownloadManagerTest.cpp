@@ -9,7 +9,6 @@ class DownloadManagerTest : public ::testing::Test {
 	virtual ~DownloadManagerTest() {}
 	
 	virtual void SetUp(){
-		
 	}
 	
 	virtual void TearDown() {}
@@ -41,7 +40,6 @@ TEST_F(DownloadManagerTest, setDirectoryTrivial) {
 	EXPECT_EQ(test, DownloadManager::getDownloadDirectory());
 	
 	DownloadManager::setDownloadDirectory("/dtv/usb/sda1/Downloads");
-	std::cout << "Lol, I crashed" << std::endl;
 	
 }
 
@@ -49,8 +47,6 @@ TEST_F(DownloadManagerTest, setDirectoryTrivial) {
 
 // Trivial
 TEST_F(DownloadManagerTest, addDownloadTrivial) {
-	
-	std::cout << "Lol, I crashed" << std::endl;
 	
 	std::string hash = "abcd1234abcd1234abcd1234abcd1234abcd1234";
 	std::cout << " Going to create Downoad..." << std::endl;
@@ -71,15 +67,16 @@ TEST_F(DownloadManagerTest, addDownloadTrivial) {
 
 //Trivial
 TEST_F(DownloadManagerTest, getActiveDownloadTrivial) {
-	/*
-	int ID = 6;
-	Download *testDL = createDownload("track", "1234abcd1234abcd1234abcd1234abcd1234abcd", "name", ID);
-	DownloadManager::add(*testDL);
 	
-	Download *returnedDL = DownloadManager::getActiveDownload();
+	//DownloadManager::clearList();
+	Download testDL("track", "1234abcd1234abcd1234abcd1234abcd1234abcd", "name");
+	testDL.setID(6);
+	DownloadManager::add(&testDL);
+	
+	Download returnedDL = DownloadManager::getActiveDownload();
 	
 	testDownloadsAreEqual(testDL, returnedDL);
-	*/
+	
 }
 
 /* Start Download */

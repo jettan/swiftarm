@@ -190,10 +190,10 @@ static void HttpServer::handleRequest(struct evhttp_request *req, void *arg) {
 	} else if (path_str.size() >= 7 && path_str.substr(0,7).compare("/stream") == 0) {
 		std::cout << path_str << std::endl;
 		if (path_str.size() > 8 && path_str.at(7) == ':') {
-			std::string filename = path_str.substr(8, path_str.size());
+			std::string hash = path_str.substr(8, path_str.size());
 			
 			try {
-				struct SearchEngine::result res = SearchEngine::getResultWithName(filename);
+				struct SearchEngine::result res = SearchEngine::getResultWithHash(hash);
 				DownloadManager::startStream(res.tracker);
 				//std::string address = "http://130.161.158.52:15000/" + res.hash;
 				std::string address = "http://130.161.159.107:15000/" + res.hash;
