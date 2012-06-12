@@ -4,6 +4,7 @@
  * Initialises the download manager.
  */
 void DownloadManager::init(std::string download_dir) {
+	active_download = NULL;
 	pthread_mutex_init(&mutex, NULL);
 	pthread_mutex_init(&active_download_mutex, NULL);
 	setDownloadDirectory(download_dir);
@@ -165,47 +166,53 @@ std::string DownloadManager::buildXML() {
  * @param arg: Unused argument from libevent.
  */
 void downloadCallback(int fd, short event, void* arg) {
-	pthread_mutex_lock(&DownloadManager::active_download_mutex);
-	
-	// Temporary debug prints.
-	std::cout << "Download ID: " << DownloadManager::active_download->getID() << std::endl;
-	std::cout << "Download Name: " << DownloadManager::active_download->getFilename() << std::endl;
-	std::cout << "Status: " << DownloadManager::active_download->getStatus() << std::endl;
-	
-	if (DownloadManager::active_download->getStatus() == UPLOADING || DownloadManager::active_download->getStatus() == DOWNLOADING)
-		std::cout << "Percentage downloaded: " << floorf(((swift::Complete(DownloadManager::active_download->getID()) * 10000.0) /
-		  swift::Size(DownloadManager::active_download->getID()) * 1.0) + 0.5) / 100 << std::endl;
-	
-	bool is_unlocked = false;
+	if (DownloadManager::getDownloads().size() == 0) {
+		std::cout << "You shall not pass!" << std::endl;
+		evtimer_add(&DownloadManager::evcompl, swift::tint2tv(TINT_SEC));
+	} else {
+			
+		pthread_mutex_lock(&DownloadManager::active_download_mutex);
 		
-	if (swift::SeqComplete(DownloadManager::active_download->getID()) == swift::Size(DownloadManager::active_download->getID()) ||
-	  DownloadManager::active_download->getStatus() == PAUSED) {
+		// Temporary debug prints.
+		std::cout << "Download ID: " << DownloadManager::active_download->getID() << std::endl;
+		std::cout << "Download Name: " << DownloadManager::active_download->getFilename() << std::endl;
+		std::cout << "Status: " << DownloadManager::active_download->getStatus() << std::endl;
 		
-		if (DownloadManager::active_download->getStatus() != UPLOADING && DownloadManager::active_download->getStatus() != PAUSED) {
-			DownloadManager::active_download->setStatus(UPLOADING);
-		}
+		if (DownloadManager::active_download->getStatus() == UPLOADING || DownloadManager::active_download->getStatus() == DOWNLOADING)
+			std::cout << "Percentage downloaded: " << floorf(((swift::Complete(DownloadManager::active_download->getID()) * 10000.0) /
+			  swift::Size(DownloadManager::active_download->getID()) * 1.0) + 0.5) / 100 << std::endl;
 		
-		int i = 0;
-		while (i < DownloadManager::getDownloads().size() &&
-		  DownloadManager::getDownloads().at(i).getStatus() != READY &&
-		  DownloadManager::getDownloads().at(i).getStatus() != PAUSED) {
-			i++;
-		}
-		
-		if (DownloadManager::getDownloads().size() > 0 && i < DownloadManager::getDownloads().size()) {
-			if (DownloadManager::getDownloads().at(i).getStatus() == READY) {
-				pthread_mutex_unlock(&DownloadManager::active_download_mutex);
-				is_unlocked = true;
-				DownloadManager::startDownload(DownloadManager::getDownloads().at(i).getRootHash());
+		bool is_unlocked = false;
+			
+		if (swift::SeqComplete(DownloadManager::active_download->getID()) == swift::Size(DownloadManager::active_download->getID()) ||
+		  DownloadManager::active_download->getStatus() == PAUSED) {
+			
+			if (DownloadManager::active_download->getStatus() != UPLOADING && DownloadManager::active_download->getStatus() != PAUSED) {
+				DownloadManager::active_download->setStatus(UPLOADING);
+			}
+			
+			int i = 0;
+			while (i < DownloadManager::getDownloads().size() &&
+			  DownloadManager::getDownloads().at(i).getStatus() != READY &&
+			  DownloadManager::getDownloads().at(i).getStatus() != PAUSED) {
+				i++;
+			}
+			
+			if (DownloadManager::getDownloads().size() > 0 && i < DownloadManager::getDownloads().size()) {
+				if (DownloadManager::getDownloads().at(i).getStatus() == READY) {
+					pthread_mutex_unlock(&DownloadManager::active_download_mutex);
+					is_unlocked = true;
+					DownloadManager::startDownload(DownloadManager::getDownloads().at(i).getRootHash());
+				}
 			}
 		}
+		
+		if (!is_unlocked) {
+			pthread_mutex_unlock(&DownloadManager::active_download_mutex);
+		}
+		
+		evtimer_add(&DownloadManager::evcompl, swift::tint2tv(TINT_SEC));
 	}
-	
-	if (!is_unlocked) {
-		pthread_mutex_unlock(&DownloadManager::active_download_mutex);
-	}
-	
-	evtimer_add(&DownloadManager::evcompl, swift::tint2tv(TINT_SEC));
 }
 
 /**
@@ -320,7 +327,7 @@ void DownloadManager::switchDownload(std::string hash) {
  * @param download: The download to be added.
  */
 void DownloadManager::add(Download *download) {
-		std::cout << "Started Add" << std::endl;
+	std::cout << "Started Add" << std::endl;
 	
 	if (Stream::getInstance()->readStreaming()) {
 		std::cout << "Cannot add download when streaming" << std::endl;
@@ -345,7 +352,6 @@ void DownloadManager::add(Download *download) {
 		active_index = getIndexFromHash(active_download->getRootHash());
 		pthread_mutex_unlock(&active_download_mutex);
 	}
-	std::cout << "Set active download." << std::endl;
 	
 	pthread_mutex_lock(&mutex);
 	downloads.push_back(*download);
@@ -478,13 +484,24 @@ void DownloadManager::removeFromDisk(const std::string download_hash) {
  * Removes all downloads from the list
  */
 void DownloadManager::clearList() {
-	pthread_mutex_lock(&mutex);
 	for (int i = 0; i < getDownloads().size(); i++) {
+		pthread_mutex_lock(&mutex);
 		downloads.at(i).stop();
+		pthread_mutex_unlock(&mutex);
 	}
 	
+	pthread_mutex_lock(&mutex);
+	
+	pthread_mutex_lock(&active_download_mutex);
+	
 	downloads.clear();
+	
+	active_download = NULL;
+	free(active_download);
+	pthread_mutex_unlock(&active_download_mutex);
+	
 	pthread_mutex_unlock(&mutex);
+	
 }
 
 /**
