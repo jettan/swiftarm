@@ -10,9 +10,6 @@ class DownloadManagerTest : public ::testing::Test {
 	
 	virtual void SetUp(){
 		
-		DownloadManager::setDownloadDirectory("");
-		DownloadManager::clearList();
-		DownloadManager::stopStream();
 	}
 	
 	virtual void TearDown() {}
@@ -25,41 +22,52 @@ Download* createDownload(std::string tracker, std::string hash, std::string file
 	return download;
 }
 
-void testDownloadsAreEqual(Download *dl1, Download *dl2){
+void testDownloadsAreEqual(Download dl1, Download dl2){
 	
-	EXPECT_EQ(dl1->getID(), dl2->getID());
-	EXPECT_EQ(dl1->getTrackerAddress(), dl2->getTrackerAddress());
-	EXPECT_EQ(dl1->getRootHash(), dl2->getRootHash());
-	EXPECT_EQ(dl1->getFilename(), dl2->getFilename());
+	EXPECT_EQ(dl1.getID(), dl2.getID());
+	EXPECT_EQ(dl1.getTrackerAddress(), dl2.getTrackerAddress());
+	EXPECT_EQ(dl1.getRootHash(), dl2.getRootHash());
+	EXPECT_EQ(dl1.getFilename(), dl2.getFilename());
 }
 
 /* Download Directory */
 
 // Trivial
 TEST_F(DownloadManagerTest, setDirectoryTrivial) {
-	std::string test = "/blah/easy/test";
+	
+	std::string test = "/dtv/usb/sda1/Test";
 	DownloadManager::setDownloadDirectory(test);
 	
 	EXPECT_EQ(test, DownloadManager::getDownloadDirectory());
+	
+	DownloadManager::setDownloadDirectory("/dtv/usb/sda1/Downloads");
+	std::cout << "Lol, I crashed" << std::endl;
+	
 }
 
 /* Add Download */
 
 // Trivial
 TEST_F(DownloadManagerTest, addDownloadTrivial) {
-	/*
-	int ID = 5;
-	Download *testDL = createDownload("tracker", "abcd1234abcd1234abcd1234abcd1234abcd1234", "test", ID);
-	DownloadManager::add(*testDL);
 	
-	Download *returnedDL = DownloadManager::getDownloadWithID(ID);
+	std::cout << "Lol, I crashed" << std::endl;
 	
-	testDownloadsAreEqual(testDL, returnedDL);
-	*/
+	std::string hash = "abcd1234abcd1234abcd1234abcd1234abcd1234";
+	std::cout << " Going to create Downoad..." << std::endl;
+	Download *testDL = new Download("tracker", hash, "test");
+	std::cout << " Created Download." << std::endl;
+	DownloadManager::add(testDL);
+	std::cout << " Added download" << std::endl;
+	
+	int index = DownloadManager::getIndexFromHash(hash);
+	Download returnedDL = DownloadManager::getDownloads().at(index);
+	testDL->setID(returnedDL.getID());
+	
+	testDownloadsAreEqual(*testDL, returnedDL);
+	
 }
 
-
-/* Get Acitve Download */
+/* Get Active Download */
 
 //Trivial
 TEST_F(DownloadManagerTest, getActiveDownloadTrivial) {

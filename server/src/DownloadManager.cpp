@@ -319,12 +319,14 @@ void DownloadManager::switchDownload(std::string hash) {
  * @param download: The download to be added.
  */
 void DownloadManager::add(Download *download) {
+		std::cout << "Started Add" << std::endl;
 	
 	if (Stream::getInstance()->readStreaming()) {
 		std::cout << "Cannot add download when streaming" << std::endl;
 		DownloadWhileStreamingException *exception = new DownloadWhileStreamingException();
 		throw *exception;
 	}
+	std::cout << "Not streaming" << std::endl;
 		
 	// Only add a new download that is not alredy in the list.
 	for (int i = 0; i < getDownloads().size(); i++) {
@@ -333,6 +335,7 @@ void DownloadManager::add(Download *download) {
 		throw *exception;
 		}
 	}
+	std::cout << "Download not in list" << std::endl;
 	
 	int active_index = 0;
 	
@@ -341,6 +344,7 @@ void DownloadManager::add(Download *download) {
 		active_index = getIndexFromHash(active_download->getRootHash());
 		pthread_mutex_unlock(&active_download_mutex);
 	}
+	std::cout << "Set active download." << std::endl;
 	
 	pthread_mutex_lock(&mutex);
 	downloads.push_back(*download);
