@@ -55,6 +55,7 @@ void Download::start() {
  *  Pauses downloading and uploading.
  */
 void Download::pause() {
+	std::cout << "Pausing...." << std::endl;
 	if (getStatus() == PAUSED) {
 		std::cout << "Already Paused" << std::endl;
 		return;

@@ -99,6 +99,32 @@ static void HttpServer::handleRequest(struct evhttp_request *req, void *arg) {
 			}
 		}
 		
+	// Message will look like: "/stop:roothash"
+	} else if (path_str.size() >= 5 && path_str.substr(0, 5).compare("/stop") == 0) {
+		if (path_str.size() > 6 && path_str.at(5) == ':') {
+			std::string hash = path_str.substr(6, path_str.size());
+			
+			try {
+				DownloadManager::removeFromList(hash);
+				sendResponse(req, evb, "Download removed from list");
+			} catch(FileNotFoundException e) {
+				std::cout << "Exception Caught In HttpServer" << std::endl;
+				std::cout << e.what() << std::endl;
+				sendResponse(req, evb, "-1");
+			}
+		}
+		
+	// Message will look like: "/clear"
+	} else if (path_str.size() >= 6 && path_str.substr(0, 6).compare("/clear") == 0) {
+			try {
+				DownloadManager::clearList();
+				sendResponse(req, evb, "Download list cleared");
+			} catch(FileNotFoundException e) {
+				std::cout << "Exception Caught In HttpServer" << std::endl;
+				std::cout << e.what() << std::endl;
+				sendResponse(req, evb, "-1");
+			}
+		
 	// Message will look like: "/pause:roothash"
 	} else if (path_str.size() >= 6 && path_str.substr(0, 6).compare("/pause") == 0) {
 		if (path_str.size() > 7 && path_str.at(6) == ':') {
@@ -122,6 +148,21 @@ static void HttpServer::handleRequest(struct evhttp_request *req, void *arg) {
 			try {
 				DownloadManager::resumeDownload(hash);
 				sendResponse(req, evb, "Download Resumed");
+			} catch(FileNotFoundException e) {
+				std::cout << "Exception Caught In HttpServer" << std::endl;
+				std::cout << e.what() << std::endl;
+				sendResponse(req, evb, "-1");
+			}
+		}
+		
+	// Message will look like: "/remove:roothash"
+	} else if (path_str.size() >= 7 && path_str.substr(0, 7).compare("/remove") == 0) {
+		if (path_str.size() > 8 && path_str.at(7) == ':') {
+			std::string hash = path_str.substr(8, path_str.size());
+			
+			try {
+				DownloadManager::removeFromDisk(hash);
+				sendResponse(req, evb, "Download removed from disk");
 			} catch(FileNotFoundException e) {
 				std::cout << "Exception Caught In HttpServer" << std::endl;
 				std::cout << e.what() << std::endl;

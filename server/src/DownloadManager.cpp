@@ -12,7 +12,7 @@ void DownloadManager::init(std::string download_dir) {
 
 /**
  * Sets the directory where swift will download files to.
- * @param dir: The directory where swift will download files to. 
+ * @param dir: The directory where swift will download files to.
  */
 void DownloadManager::setDownloadDirectory(std::string dir) {
 	download_directory = dir;
@@ -231,6 +231,7 @@ void *DownloadManager::dispatch(void* arg) {
  * @param download_hash: The root hash of the download.
  */
 void DownloadManager::pauseDownload(const std::string download_hash) {
+	std::cout << "pausing" << std::endl;
 	int index = getIndexFromHash(download_hash);
 	std::cout << "Index = " << index << std::endl;
 	
@@ -438,7 +439,7 @@ void DownloadManager::removeFromList(const std::string download_hash) {
 	int index = getIndexFromHash(download_hash);
 	
 	if (index >= 0) {
-		if (getDownloads().at(index).getStatus() == DOWNLOADING) {
+		if (getDownloads().at(index).getStatus() == DOWNLOADING || getDownloads().at(index).getStatus() == UPLOADING) {
 			getDownloads().at(index).stop();
 			downloadFirstInList();
 		}
@@ -463,7 +464,7 @@ void DownloadManager::removeFromDisk(const std::string download_hash) {
 		
 		filename = download_directory + "/" + filename;
 		
-		if (filename.c_str() == 0) {
+		if (filename.c_str() == 0 && remove(filename.c_str()) != 0) {
 			// File removed successfully
 			std::cout << "File at directory: " << filename << " has been removed" <<std::endl;
 		} else {
@@ -477,13 +478,11 @@ void DownloadManager::removeFromDisk(const std::string download_hash) {
  * Removes all downloads from the list
  */
 void DownloadManager::clearList() {
-	pthread_mutex_lock(&active_download_mutex);
-	if (active_download != NULL) {
-		active_download->stop();
-	}
-	pthread_mutex_unlock(&active_download_mutex);
-	
 	pthread_mutex_lock(&mutex);
+	for (int i = 0; i < getDownloads().size(); i++) {
+		downloads.at(i).stop();
+	}
+	
 	downloads.clear();
 	pthread_mutex_unlock(&mutex);
 }
