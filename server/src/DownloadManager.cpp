@@ -69,9 +69,9 @@ void DownloadManager::updateDownloadStatistics() {
 			
 			downloads.at(i).setDownloadAmount(swift::Channel::global_raw_bytes_down);
 			downloads.at(i).setUploadAmount(swift::Channel::global_raw_bytes_up);
-			int id = download.at(i).getID();
+			int id = downloads.at(i).getID();
 			double progress = floorf(((swift::Complete(id) * 10000.0) / swift::Size(id) * 1.0) + 0.5) / 100;
-			download.at(i).setProgress(progress);
+			downloads.at(i).setProgress(progress);
 		}
 	}
 	
@@ -427,7 +427,7 @@ void DownloadManager::startUploads() {
 	while ((dirp = readdir(dp)) != NULL) {
 		std::string filename(dirp->d_name);
 		if (filename.at(0) != '.' && filename.find(".mhash") == std::string::npos && filename.find(".mbinmap") == std::string::npos) {
-			int id = swift::Open(dirp->d_name, root_hash.c_str(), swift::Address(), false);
+			int id = swift::Open(dirp->d_name, root_hash.c_str(), swift::Address());
 			std::cout << dirp->d_name << std::endl;
 			
 			if (id < 0) {
@@ -436,7 +436,7 @@ void DownloadManager::startUploads() {
 			
 			root_hash = swift::RootMerkleHash(id).hex().c_str();
 			Download file("130.161.158.60:20000", root_hash, filename); 
-			
+			file.setID(id);
 			add(&file);
 		}
 	}

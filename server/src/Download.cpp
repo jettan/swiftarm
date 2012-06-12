@@ -44,9 +44,11 @@ void Download::start() {
 	
 	std::cout << "Filename = " << getFilename() << std::endl;
 	
-	// Open the file with swift.
-	int id  = swift::Open(getFilename().c_str(), roothash, trackeraddr);
-	setID(id);
+	if (getID() < 0) {
+		// Open the file with swift.
+		int id  = swift::Open(getFilename().c_str(), roothash, trackeraddr);
+		setID(id);
+	}
 	
 	std::cout << "ID = " << getID() << std::endl;
 }
