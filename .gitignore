@@ -1,6 +1,5 @@
 *.o
 *.lo
-*.la
 bin
 server/doc
 *.swp
