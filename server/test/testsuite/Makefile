@@ -1,10 +1,10 @@
 GTEST = ../gtest-1.6.0
 CURL = ../curl
 TICPP = ../..
-CPPFLAGS = -I  $(SWIFTARM)/server/lib/include/ -I $(SWIFTARM)/server/include/ -I $(SWIFTARM)/server/include/ticpp -I $(SWIFTARM)/server/include/swift -I $(GTEST)/include/ -I $(CURL)/include -Wall
+CPPFLAGS = -I  $(SWIFTARM)/server/lib/include/ -I $(SWIFTARM)/server/include/ -I $(SWIFTARM)/server/include/ticpp -I $(SWIFTARM)/server/include/swift -I $(GTEST)/include/ -Wall
 CXX = g++
-LIBS = $(GTEST)/lib/libgtest.a $(GTEST)/lib/libgtest_main.a $(CURL)/lib/libcurl.a $(TICPP)/lib/libticpp.a
-LDADD=$(SWIFTARM)/server/lib/libswift.a $(SWIFTARM)/server/lib/lib/libevent_pthreads.a $(SWIFTARM)/server/lib/lib/libevent.a -lrt -lstdc++ -lgcc -lutil -lpthread
+LIBS = $(GTEST)/lib/libgtest.a $(GTEST)/lib/libgtest_main.a $(TICPP)/lib/libticpp.a
+LDADD=$(SWIFTARM)/server/lib/libswift.a $(SWIFTARM)/server/lib/lib/libevent_pthreads.a $(SWIFTARM)/server/lib/lib/libevent.a -lrt -lstdc++ -lgcc -lutil -lpthread -lcurl
 SOURCE = ../../src
 
 all: testsuite
