@@ -5,6 +5,7 @@
 #include <string>
 #include <dirent.h>
 #include <iostream>
+#include <sstream>
 #include <cstdio>
 #include <cstdlib>
 
@@ -20,6 +21,10 @@
 
 namespace DownloadManager {
 	
+	struct Amount {
+		double amount;
+		std::string unit;
+	};
 	
 	static std::vector<Download> downloads;	/// Vector containing all downloads.
 	
@@ -34,10 +39,14 @@ namespace DownloadManager {
 	
 	static ticpp::Document *doc;
 	
-	static double downloaded;			/// Total amount of bytes downloaded this session.
-	static double uploaded;				/// Total amount of bytes uploaded this session.
-	static int d_pid = -1;				/// Download thread pid.
+	static double ratio;		/// Upload amount divided by download amount.
+	static double downloaded;	/// Total amount of bytes downloaded this session.
+	static double uploaded;		/// Total amount of bytes uploaded this session.
+	static int d_pid = -1;		/// Download thread pid.
 	
+	void calculateRatio();
+	void calculateDownloadAmount();
+	void calculateUploadAmount();
 	void setDownloadDirectory(std::string dir);
 	void setActiveDownload(Download *download);
 	Download getActiveDownload();
@@ -55,6 +64,10 @@ namespace DownloadManager {
 	int resumeDownload(std::string download_hash);
 	int startDownload(const std::string download_hash);
 	int getIndexFromHash(const std::string download_hash);
+	
+	struct Amount getDownloadAmount();
+	struct Amount getUploadAmount();
+	double getRatio();
 	
 	void startUploads();
 	void downloadFirstInList();

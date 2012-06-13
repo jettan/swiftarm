@@ -23,6 +23,7 @@ enum Status {
 	STATUS_SIZE,
 };
 
+	
 class Download {
 	protected:
 		
@@ -47,10 +48,7 @@ class Download {
 			int  id;					/// Download id needed to check the stats.
 			double download_speed;		/// Current download speed.
 			double upload_speed;		/// Current upload speed.
-			double ratio;				/// Download speed divided by upload speed
 			double download_percentage; /// Download progress in percentage.
-			double upload_amount;		/// Uploaded amount in bytes.
-			double download_amount;		/// Downloaded amount in bytes.
 			
 			int seeders;				/// Number of seeders uploading this file.
 			int peers;					/// Number of peers connected to us for this file.
@@ -59,6 +57,7 @@ class Download {
 		};
 		
 		downloadStats _stats;			/// Struct holding the statistics of the download.
+		swift::FileTransfer *_transfer;
 		
 	public:
 		void retry();
@@ -75,12 +74,11 @@ class Download {
 		
 		struct downloadStats getStatistics();
 		
+		void calculateSpeeds();
+		void calculatePeers();
 		void setDownloadSpeed(double speed);
 		void setUploadSpeed(double speed);
-		void calculateRatio();
 		void setProgress(double percentage);
-		void setUploadAmount(double amount);
-		void setDownloadAmount(double amount);
 		
 		void setSeeders(int amount);
 		void setPeers(int amount);
@@ -98,6 +96,7 @@ class Download {
 			_tracker     = tracker;
 			_root_hash   = root_hash;
 			_filename    = filename;
+			
 			int rc       = pthread_mutex_init(&_mutex, NULL);
 			setStatus(READY);
 		}

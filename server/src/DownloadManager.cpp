@@ -49,6 +49,27 @@ void DownloadManager::setActiveDownload(Download *download) {
 }
 
 /**
+ * Calculates the upload/download ratio.
+ */
+void DownloadManager::calculateRatio() {
+	ratio = getUploadAmount().amount / getDownloadAmount().amount;
+}
+
+/**
+ * Calculates the download amount.
+ */
+void DownloadManager::calculateDownloadAmount() {
+	downloaded = swift::Channel::global_raw_bytes_down / 1024;
+}
+
+/**
+ * Calculates the upload amount.
+ */
+void DownloadManager::calculateUploadAmount() {
+	uploaded = swift::Channel::global_raw_bytes_up / 1024;
+}
+
+/**
  *
  */
 Download DownloadManager::getActiveDownload() {
@@ -67,13 +88,16 @@ void DownloadManager::updateDownloadStatistics() {
 	for (int i = 0; i < downloads.size(); i++) {
 		if (downloads.at(i).getStatus() == UPLOADING || downloads.at(i).getStatus() == DOWNLOADING) {
 			
-			downloads.at(i).setDownloadAmount(swift::Channel::global_raw_bytes_down);
-			downloads.at(i).setUploadAmount(swift::Channel::global_raw_bytes_up);
 			int id = downloads.at(i).getID();
 			double progress = floorf(((swift::Complete(id) * 10000.0) / swift::Size(id) * 1.0) + 0.5) / 100;
 			downloads.at(i).setProgress(progress);
+			downloads.at(i).calculateSpeeds();
+			downloads.at(i).calculatePeers();
 		}
 	}
+	calculateDownloadAmount();
+	calculateUploadAmount();
+	calculateRatio();
 	
 	pthread_mutex_unlock(&active_download_mutex);
 	pthread_mutex_unlock(&mutex);
@@ -126,17 +150,25 @@ std::string DownloadManager::buildXML() {
 		
 		ticpp::Element ratio_tag("RATIO");
 		download_tag.LinkEndChild(&ratio_tag);
-		ticpp::Text ratio_value(getDownloads().at(i).getStatistics().ratio);
+		ticpp::Text ratio_value(getRatio());
 		ratio_tag.LinkEndChild(&ratio_value);
 		
 		ticpp::Element upload_amount_tag("UPLOADAMOUNT");
 		download_tag.LinkEndChild(&upload_amount_tag);
-		ticpp::Text upload_amount_value(getDownloads().at(i).getStatistics().upload_amount);
+		
+		std::ostringstream upload_amount;
+		upload_amount << getUploadAmount().amount << " " << getUploadAmount().unit;
+		
+		ticpp::Text upload_amount_value(upload_amount.str());
 		upload_amount_tag.LinkEndChild(&upload_amount_value);
 		
 		ticpp::Element download_amount_tag("DOWNLOADAMOUNT");
 		download_tag.LinkEndChild(&download_amount_tag);
-		ticpp::Text download_amount_value(getDownloads().at(i).getStatistics().download_amount);
+		
+		std::ostringstream download_amount;
+		download_amount << getDownloadAmount().amount << " " << getDownloadAmount().unit;
+		
+		ticpp::Text download_amount_value(download_amount.str());
 		download_amount_tag.LinkEndChild(&download_amount_value);
 		
 		ticpp::Element seeders_tag("SEEDERS");
@@ -471,6 +503,51 @@ int DownloadManager::getIndexFromHash(const std::string download_hash) {
 	}
 	FileNotFoundException *e = new FileNotFoundException();
 	throw *e;
+}
+
+/**
+ * Returns the downloaded amount in kb, MB or GB.
+ */
+struct DownloadManager::Amount DownloadManager::getDownloadAmount() {
+	struct Amount result;
+	result.amount = downloaded;
+	result.unit   = "kb";
+	
+	if (result.amount > 1024*1024) {
+		result.amount = downloaded / (1024*1024);
+		result.unit = "GB";
+	} else if (result.amount > 1024) {
+		result.amount = downloaded / 1024;
+		result.unit = "MB";
+	}
+	
+	return result;
+}
+
+/**
+ * Returns the uploaded amount in kb, MB or GB.
+ */
+struct DownloadManager::Amount DownloadManager::getUploadAmount() {
+	struct Amount result;
+	result.amount = uploaded;
+	result.unit   = "kb";
+	
+	if (result.amount > 1024*1024) {
+		result.amount = uploaded / (1024*1024);
+		result.unit = "GB";
+	} else if (result.amount > 1024) {
+		result.amount = uploaded / 1024;
+		result.unit = "MB";
+	}
+	
+	return result;
+}
+
+/**
+ * Returns the upload/download ratio.
+ */
+double DownloadManager::getRatio() {
+	return ratio;
 }
 
 /**

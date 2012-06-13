@@ -50,6 +50,7 @@ void Download::start() {
 		setID(id);
 	}
 	
+	_transfer = swift::FileTransfer::file(getID());
 	std::cout << "ID = " << getID() << std::endl;
 }
 
@@ -87,6 +88,27 @@ void Download::resume() {
 }
 
 /**
+ * Calculates current download and upload speeds.
+ */
+void Download::calculateSpeeds() {
+	int dspeed = _transfer->GetCurrentSpeed(swift::DDIR_DOWNLOAD);
+	int uspeed = _transfer->GetCurrentSpeed(swift::DDIR_UPLOAD);
+	
+	setDownloadSpeed(dspeed/1024);
+	setUploadSpeed(uspeed/1024);
+}
+
+/**
+ * Calculates number of peers.
+ */
+void Download::calculatePeers() {
+	int seeders  = _transfer->GetNumSeeders();
+	int leechers = _transfer->GetNumLeechers();
+	
+	setSeeders(seeders);
+	setPeers(seeders + leechers);
+}
+/**
  * Setter for download speed.
  * @param speed: The speed in Kb/sec.
  */
@@ -113,26 +135,6 @@ void Download::setUploadSpeed(double speed) {
 }
 
 /**
- * Calculates upload/download ratio.
- */
-void Download::calculateRatio() {
-	if (getID() < 0)
-		return;
-	
-	double download_amount = getStatistics().download_amount;
-	double upload_amount   = getStatistics().upload_amount;
-	
-	pthread_mutex_lock(&_mutex);
-	if (download_amount > 0) {
-		_stats.ratio = upload_amount/download_amount;
-	} else {
-		_stats.ratio = 0;
-	}
-	
-	pthread_mutex_unlock(&_mutex);
-}
-
-/**
  * Setter for download progress.
  * @param percentage: The percentage to be set between 0 and 100.
  */
@@ -142,32 +144,6 @@ void Download::setProgress(double percentage) {
 		
 	pthread_mutex_lock(&_mutex);
 	_stats.download_percentage = percentage;
-	pthread_mutex_unlock(&_mutex);
-}
-
-/**
- * Setter for upload amount.
- * @param amount: Amount to be set in Kb.
- */
-void Download::setUploadAmount(double amount) {
-	if (getID() < 0 || amount < 0)
-		return;
-		
-	pthread_mutex_lock(&_mutex);
-	_stats.upload_amount = amount;
-	pthread_mutex_unlock(&_mutex);
-}
-
-/**
- * Setter for download amount.
- * @param amount: Amount to be set in Kb.
- */
-void Download::setDownloadAmount(double amount) {
-	if (getID() < 0 || amount < 0)
-		return;
-		
-	pthread_mutex_lock(&_mutex);
-	_stats.download_amount = amount;
 	pthread_mutex_unlock(&_mutex);
 }
 
@@ -295,10 +271,7 @@ Download::downloadStats Download::getStatistics() {
 	pthread_mutex_lock(&_mutex);
 	statistics.download_speed      = _stats.download_speed;
 	statistics.upload_speed        = _stats.upload_speed;
-	statistics.ratio               = _stats.ratio;
 	statistics.download_percentage = _stats.download_percentage;
-	statistics.upload_amount       = _stats.upload_amount;
-	statistics.download_amount     = _stats.download_amount;
 	statistics.seeders             = _stats.seeders;
 	statistics.peers               = _stats.peers;
 	statistics.estimated.days      = _stats.estimated.days;

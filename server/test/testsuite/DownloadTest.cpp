@@ -103,51 +103,6 @@ TEST_F(DownloadTest, setUploadSpeedNegative) {
 	EXPECT_DOUBLE_EQ(originalSpeed, speed);
 }
 
-
-/* Ratio */
-
-//Trivial
-TEST_F(DownloadTest, calcRatioTrivial) {
-	
-	double uploadAmount = 10;
-	double downloadAmount = 5;
-	double ratio = uploadAmount/downloadAmount;
-	
-	download->setUploadAmount(uploadAmount);
-	download->setDownloadAmount(downloadAmount);
-	download->calculateRatio();
-	
-	EXPECT_DOUBLE_EQ(ratio, download->getStatistics().ratio);
-}
-
-// Divide by zero
-TEST_F(DownloadTest, calcRatioDLZero) {
-	
-	double uploadAmount = 10;
-	double downloadAmount = 0;
-	double ratio = 0;
-	
-	download->setUploadAmount(uploadAmount);
-	download->setDownloadAmount(downloadAmount);
-	download->calculateRatio();
-	
-	EXPECT_DOUBLE_EQ(ratio, download->getStatistics().ratio);
-}
-
-// UploadSpeed is zero
-TEST_F(DownloadTest, calcRatioULZero) {
-	
-	double uploadAmount = 0;
-	double downloadAmount = 10;
-	double ratio = 0;
-	
-	download->setUploadAmount(uploadAmount);
-	download->setDownloadAmount(downloadAmount);
-	download->calculateRatio();
-	
-	EXPECT_DOUBLE_EQ(ratio, download->getStatistics().ratio);
-}
-
 /* Percentage */
 
 // Trivial
@@ -177,50 +132,6 @@ TEST_F(DownloadTest, percentageOver100) {
 	download->setProgress(percentage);
 	
 	EXPECT_DOUBLE_EQ(originalPercentage, download->getStatistics().download_percentage);
-}
-
-/* Upload Amount */
-
-// Trivial
-TEST_F(DownloadTest, ULAmountTrivial){
-	
-	double uploadAmount = 45.6;
-	download->setUploadAmount(uploadAmount);
-	
-	EXPECT_DOUBLE_EQ(uploadAmount, download->getStatistics().upload_amount);
-}
-
-// Negative
-TEST_F(DownloadTest, ULAmountNegative){
-	
-	double originalULAmount = 10;
-	download->setUploadAmount(originalULAmount);
-	double uploadAmount = -45.6;
-	download->setUploadAmount(uploadAmount);
-	
-	EXPECT_DOUBLE_EQ(originalULAmount, download->getStatistics().upload_amount);
-}
-
-/* Download Amount */
-
-// Trivial
-TEST_F(DownloadTest, DLAmountTrivial){
-	
-	double downloadAmount = 45.6;
-	download->setDownloadAmount(downloadAmount);
-	
-	EXPECT_DOUBLE_EQ(downloadAmount, download->getStatistics().download_amount);
-}
-
-// Negative
-TEST_F(DownloadTest, DLAmountNegative){
-	
-	double originalDLAmount = 10;
-	download->setDownloadAmount(originalDLAmount);
-	double downloadAmount = -45.6;
-	download->setDownloadAmount(downloadAmount);
-	
-	EXPECT_DOUBLE_EQ(originalDLAmount, download->getStatistics().download_amount);
 }
 
 /* Seeders */
