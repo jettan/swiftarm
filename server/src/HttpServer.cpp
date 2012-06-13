@@ -85,7 +85,7 @@ static void HttpServer::handleRequest(struct evhttp_request *req, void *arg) {
 		}
 		
 	// Message will look like: "/download:roothash"
-	} else if (path_str.size() >= 9 && path_str.substr(0, 9).compare("/download") == 0) {
+	} else if (path_str.size() == 50 && path_str.substr(0, 9).compare("/download") == 0) {
 		if (path_str.size() > 10 && path_str.at(9) == ':') {
 			std::string hash = path_str.substr(10, path_str.size());
 			
@@ -100,7 +100,7 @@ static void HttpServer::handleRequest(struct evhttp_request *req, void *arg) {
 		}
 		
 	// Message will look like: "/stop:roothash"
-	} else if (path_str.size() >= 5 && path_str.substr(0, 5).compare("/stop") == 0) {
+	} else if (path_str.size() == 46 && path_str.substr(0, 5).compare("/stop") == 0) {
 		if (path_str.size() > 6 && path_str.at(5) == ':') {
 			std::string hash = path_str.substr(6, path_str.size());
 			
@@ -114,7 +114,7 @@ static void HttpServer::handleRequest(struct evhttp_request *req, void *arg) {
 			}
 		}
 	// Message will look like: "/stop:roothash"
-	} else if (path_str.size() >= 7 && path_str.substr(0, 7).compare("/remove") == 0) {
+	} else if (path_str.size() == 48 && path_str.substr(0, 7).compare("/remove") == 0) {
 		if (path_str.size() > 8 && path_str.at(7) == ':') {
 			std::string hash = path_str.substr(8, path_str.size());
 			
@@ -131,7 +131,7 @@ static void HttpServer::handleRequest(struct evhttp_request *req, void *arg) {
 		}
 		
 	// Message will look like: "/clear"
-	} else if (path_str.size() >= 6 && path_str.substr(0, 6).compare("/clear") == 0) {
+	} else if (strcmp(path, "/clear") == 0) {
 			try {
 				DownloadManager::clearList();
 				sendResponse(req, evb, "Download list cleared");
@@ -142,7 +142,7 @@ static void HttpServer::handleRequest(struct evhttp_request *req, void *arg) {
 			}
 		
 	// Message will look like: "/pause:roothash"
-	} else if (path_str.size() >= 6 && path_str.substr(0, 6).compare("/pause") == 0) {
+	} else if (path_str.size() == 47 && path_str.substr(0, 6).compare("/pause") == 0) {
 		if (path_str.size() > 7 && path_str.at(6) == ':') {
 			std::string hash = path_str.substr(7, path_str.size());
 			
@@ -157,7 +157,7 @@ static void HttpServer::handleRequest(struct evhttp_request *req, void *arg) {
 		}
 		
 	// Message will look like: "/resume:roothash"
-	} else if (path_str.size() >= 7 && path_str.substr(0, 7).compare("/resume") == 0) {
+	} else if (path_str.size() == 48 && path_str.substr(0, 7).compare("/resume") == 0) {
 		if (path_str.size() > 8 && path_str.at(7) == ':'){
 			std::string hash = path_str.substr(8, path_str.size());
 			
@@ -172,7 +172,7 @@ static void HttpServer::handleRequest(struct evhttp_request *req, void *arg) {
 		}
 		
 	// Message will look like: "/remove:roothash"
-	} else if (path_str.size() >= 7 && path_str.substr(0, 7).compare("/remove") == 0) {
+	} else if (path_str.size() == 48 && path_str.substr(0, 7).compare("/remove") == 0) {
 		if (path_str.size() > 8 && path_str.at(7) == ':') {
 			std::string hash = path_str.substr(8, path_str.size());
 			
@@ -269,8 +269,8 @@ int HttpServer::init() {
 	evhttp_set_gencb(http, handleRequest, NULL);
 	
 	// Now we tell the evhttp what port to listen on.
-	// handle = evhttp_bind_socket_with_handle(http, "130.161.158.52", port);
-	handle = evhttp_bind_socket_with_handle(http, "127.0.0.1", port);
+	handle = evhttp_bind_socket_with_handle(http, "130.161.159.107", port);
+	//handle = evhttp_bind_socket_with_handle(http, "130.161.158.52", port);
 	if (!handle) {
 		std::cerr << "Couldn't bind to port " << (int)port << ". Exiting." << std::endl;
 		return 1;

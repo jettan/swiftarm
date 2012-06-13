@@ -74,8 +74,7 @@ Stream *Stream::getInstance() {
  */
 void Stream::stop() {
 	pthread_mutex_lock( &_mutex );
-	if (_streaming)
-		_streaming = false;
+	_streaming = false;
 	pthread_mutex_unlock( &_mutex );
 	evtimer_del(getEvent());
 }
