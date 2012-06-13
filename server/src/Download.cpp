@@ -232,6 +232,19 @@ void Download::setID(int id) {
 	}
 }
 
+/**
+ * Limits upload speed.
+ */
+void Download::limitUpSpeed(double speed) {
+	_transfer->SetMaxSpeed(swift::DDIR_UPLOAD, speed);
+}
+
+/**
+ * Limits download speed.
+ */
+void Download::limitDownSpeed(double speed) {
+	_transfer->SetMaxSpeed(swift::DDIR_DOWNLOAD, speed);
+}
 
 /**
  * Setter for status

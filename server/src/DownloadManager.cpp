@@ -423,6 +423,9 @@ void DownloadManager::add(Download *download) {
 		pthread_mutex_unlock(&active_download_mutex);
 	}
 	
+	download->limitDownSpeed(max_downspeed);
+	download->limitUpSpeed(max_upspeed);
+
 	pthread_mutex_lock(&mutex);
 	downloads.push_back(*download);
 	pthread_mutex_unlock(&mutex);
@@ -550,6 +553,46 @@ struct DownloadManager::Amount DownloadManager::getUploadAmount() {
  */
 double DownloadManager::getRatio() {
 	return ratio;
+}
+
+/**
+ * Returns the maximum download speed.
+ */
+double DownloadManager::getMaxDownSpeed() {
+	return max_downspeed;
+}
+
+/**
+ * Returns the maximum upload speed.
+ */
+double DownloadManager::getMaxUpSpeed() {
+	return max_upspeed;
+}
+
+/**
+ * Sets the maximum download speed.
+ */
+void DownloadManager::setMaxDownSpeed(double speed) {
+	max_downspeed = speed;
+	
+	for (int i = 0; i < getDownloads().size(); i++) {
+		pthread_mutex_lock(&mutex);
+		downloads.at(i).limitDownSpeed(max_downspeed);
+		pthread_mutex_unlock(&mutex);
+	}
+}
+
+/**
+ * Sets the maximum upload speed.
+ */
+void DownloadManager::setMaxUpSpeed(double speed) {
+	max_upspeed = speed;
+	
+	for (int i = 0; i < getDownloads().size(); i++) {
+		pthread_mutex_lock(&mutex);
+		downloads.at(i).limitUpSpeed(max_upspeed);
+		pthread_mutex_unlock(&mutex);
+	}
 }
 
 /**

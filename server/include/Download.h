@@ -87,6 +87,8 @@ class Download {
 		
 		void setID(int id);
 		void setStatus(int status);
+		void limitDownSpeed(double speed);
+		void limitUpSpeed(double speed);
 		
 		/**
 		 * Constructor.

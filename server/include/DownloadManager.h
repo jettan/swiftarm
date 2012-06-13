@@ -44,6 +44,9 @@ namespace DownloadManager {
 	static double uploaded;		/// Total amount of bytes uploaded this session.
 	static int d_pid = -1;		/// Download thread pid.
 	
+	static double max_upspeed;		/// Max upload speed.
+	static double max_downspeed;	/// Max download speed.
+	
 	void calculateRatio();
 	void calculateDownloadAmount();
 	void calculateUploadAmount();
@@ -68,6 +71,12 @@ namespace DownloadManager {
 	struct Amount getDownloadAmount();
 	struct Amount getUploadAmount();
 	double getRatio();
+	
+	double getMaxUpSpeed();
+	double getMaxDownSpeed();
+	void setMaxUpSpeed(double speed);
+	void setMaxDownSpeed(double speed);
+	
 	
 	void startUploads();
 	void downloadFirstInList();
