@@ -58,7 +58,7 @@ TEST_F(SearchEngineTest, getResultWithNameTrivial) {
 }
 
 // Doesn't exist
-TEST_F(SearchEngineTest, getResultWithNameNonexistant) {
+TEST_F(SearchEngineTest, getResultWithNameNonexistent) {
 	
 	SearchEngine::search("test");
 	
@@ -79,7 +79,7 @@ TEST_F(SearchEngineTest, getResultWithHashTrivial) {
 }
 
 // Doesn't exist
-TEST_F(SearchEngineTest, getResultWithHashNonexistant) {
+TEST_F(SearchEngineTest, getResultWithHashNonexistent) {
 	
 	SearchEngine::search("test");
 	

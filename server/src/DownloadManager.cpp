@@ -339,11 +339,26 @@ int DownloadManager::startDownload(const std::string download_hash) {
 void DownloadManager::switchDownload(std::string hash) {
 	pthread_mutex_lock(&active_download_mutex);
 	std::string previous_hash = active_download->getRootHash();
-	active_download->setStatus(SWITCHING);
-	pthread_mutex_unlock(&active_download_mutex);
 	
-	startDownload(hash);
-	pauseDownload(previous_hash);
+	if (previous_hash.compare(hash) != 0) {
+		int original_state = active_download->getStatus();
+		try {
+			
+			active_download->setStatus(SWITCHING);
+			pthread_mutex_unlock(&active_download_mutex);
+			
+			startDownload(hash);
+			pauseDownload(previous_hash);
+		}
+		catch(FileNotFoundException e) {
+			active_download->setStatus(original_state);
+			std::cout << "FileNotFoundException caught in switchDownload, exception was thrown" << std::endl;
+			throw e;
+		}
+	}
+	else {
+		pthread_mutex_unlock(&active_download_mutex);
+	}
 }
 
 /**
@@ -361,8 +376,8 @@ void DownloadManager::add(Download *download) {
 	// Only add a new download that is not alredy in the list.
 	for (int i = 0; i < getDownloads().size(); i++) {
 		if (getDownloads().at(i).getRootHash().compare(download->getRootHash()) == 0) {
-		DownloadWhileStreamingException *exception = new DownloadWhileStreamingException();
-		throw *exception;
+			AlreadyDownloadingException *exception = new AlreadyDownloadingException();
+			throw *exception;
 		}
 	}
 	
@@ -435,7 +450,7 @@ void DownloadManager::startUploads() {
 			}
 			
 			root_hash = swift::RootMerkleHash(id).hex().c_str();
-			Download file("130.161.158.60:20000", root_hash, filename); 
+			Download file("130.161.158.60:20000", root_hash, filename);
 			file.setID(id);
 			add(&file);
 		}
@@ -467,13 +482,27 @@ void DownloadManager::removeFromList(const std::string download_hash) {
 	
 	if (index >= 0) {
 		if (getDownloads().at(index).getStatus() == DOWNLOADING || getDownloads().at(index).getStatus() == UPLOADING) {
-			getDownloads().at(index).stop();
-			downloadFirstInList();
+			
+			pthread_mutex_lock(&mutex);
+			pthread_mutex_lock(&active_download_mutex);
+			
+			downloads.at(index).stop();
+			
+			active_download = NULL;
+			free(active_download);
+			
+			pthread_mutex_unlock(&active_download_mutex);
+			pthread_mutex_unlock(&mutex);
+			
 		}
 		
 		pthread_mutex_lock(&mutex);
 		downloads.erase(downloads.begin() + index);
 		pthread_mutex_unlock(&mutex);
+		
+		if(active_download == NULL) {
+			downloadFirstInList();
+		}
 	}
 }
 
