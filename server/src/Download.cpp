@@ -4,13 +4,23 @@
  * Stops the download and removes all content from disk.
  */
 void Download::stop() {
+	
+	const double left_over = swift::Size(getID()) - swift::Complete(getID());
+	
 	setStatus(STOPPED);
-	swift::Close(getID());
+	if (getStatus() != STOPPED || getStatus() != PAUSED) {
+		swift::Close(getID());
+	}
 	
 	std::string mhash = getFilename() + ".mhash";
 	std::string mbinmap = getFilename() + ".mbinmap";
 	remove(mhash.c_str());
 	remove(mbinmap.c_str());
+	
+	if (left_over > 0) {
+		std::cout << "Removed file" << std::endl;
+		remove(getFilename().c_str());
+	}
 }
 
 /**
@@ -152,7 +162,6 @@ void Download::setProgress(double percentage) {
  * @param amount: The amount of seeders to be set.
  */
 void Download::setSeeders(int amount) {
-	// TODO: or amount > max connections - the rest of peers we got already.
 	if (getID() < 0 || amount < 0)
 		return;
 		
@@ -178,12 +187,12 @@ void Download::setPeers(int amount) {
  * Calculates estimated download time.
  */
 void Download::calculateEstimatedTime() {
-	if (getID() < 0)
+	if (getID() < 0 || getStatistics().download_speed == 0)
 		return;
 	
 	struct time estimated_time;
 	double speed            = getStatistics().download_speed;
-	double time_in_seconds  = ( swift::Size(getID()) - swift::Complete(getID()) ) / speed;
+	double time_in_seconds  = ( swift::Size(getID()) - swift::Complete(getID()) ) / (speed*1024);
 	double time_left        = time_in_seconds;
 	
 	int days     = (int) floor(time_left / SECONDS_PER_DAY);

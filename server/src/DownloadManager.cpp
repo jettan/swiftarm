@@ -92,6 +92,7 @@ void DownloadManager::updateDownloadStatistics() {
 			double progress = floorf(((swift::Complete(id) * 10000.0) / swift::Size(id) * 1.0) + 0.5) / 100;
 			downloads.at(i).setProgress(progress);
 			downloads.at(i).calculateSpeeds();
+			downloads.at(i).calculateEstimatedTime();
 			downloads.at(i).calculatePeers();
 		}
 	}
@@ -408,6 +409,7 @@ void DownloadManager::add(Download *download) {
 	// Only add a new download that is not alredy in the list.
 	for (int i = 0; i < getDownloads().size(); i++) {
 		if (getDownloads().at(i).getRootHash().compare(download->getRootHash()) == 0) {
+		std::cout << "Cannot add same download" << std::endl;
 			AlreadyDownloadingException *exception = new AlreadyDownloadingException();
 			throw *exception;
 		}
@@ -597,12 +599,12 @@ void DownloadManager::removeFromDisk(const std::string download_hash) {
 		
 		filename = download_directory + "/" + filename;
 		
-		if (filename.c_str() == 0 && remove(filename.c_str()) != 0) {
+		if (remove(filename.c_str()) != 0) {
 			// File removed successfully
-			std::cout << "File at directory: " << filename << " has been removed" <<std::endl;
+			std::cout << "File at directory: " << filename << " has been removed" << std::endl;
 		} else {
 			// File not found
-			std::cout << "Could not find file at directory: " << filename <<std::endl;
+			std::cout << filename << " already deleted." << std::endl;
 		}
 	}
 }

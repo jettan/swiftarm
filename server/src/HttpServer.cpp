@@ -113,6 +113,22 @@ static void HttpServer::handleRequest(struct evhttp_request *req, void *arg) {
 				sendResponse(req, evb, "-1");
 			}
 		}
+	// Message will look like: "/stop:roothash"
+	} else if (path_str.size() >= 7 && path_str.substr(0, 7).compare("/remove") == 0) {
+		if (path_str.size() > 8 && path_str.at(7) == ':') {
+			std::string hash = path_str.substr(8, path_str.size());
+			
+			std::cout << hash << std::endl;
+			
+			try {
+				DownloadManager::removeFromDisk(hash);
+				sendResponse(req, evb, "Download removed from list");
+			} catch(FileNotFoundException e) {
+				std::cout << "Exception Caught In HttpServer" << std::endl;
+				std::cout << e.what() << std::endl;
+				sendResponse(req, evb, "-1");
+			}
+		}
 		
 	// Message will look like: "/clear"
 	} else if (path_str.size() >= 6 && path_str.substr(0, 6).compare("/clear") == 0) {
@@ -176,7 +192,7 @@ static void HttpServer::handleRequest(struct evhttp_request *req, void *arg) {
 			std::string searchTerm = path_str.substr(8, path_str.size());
 			std::string result = SearchEngine::search(searchTerm);
 			// TODO: Send a useful response XML containing the search results.
-			sendResponse(req, evb, result.c_str());
+			sendXMLResponse(result, req, evb);
 		} else {
 			sendResponse(req, evb, "Invalid Search Term");
 		}

@@ -46,8 +46,8 @@ class Download {
 		/// Struct for holding download statistics.
 		struct downloadStats {
 			int  id;					/// Download id needed to check the stats.
-			double download_speed;		/// Current download speed.
-			double upload_speed;		/// Current upload speed.
+			double download_speed;		/// Current download speed in kb/s.
+			double upload_speed;		/// Current upload speed in kb/s.
 			double download_percentage; /// Download progress in percentage.
 			
 			int seeders;				/// Number of seeders uploading this file.
@@ -98,6 +98,12 @@ class Download {
 			_filename    = filename;
 			
 			int rc       = pthread_mutex_init(&_mutex, NULL);
+			
+			setDownloadSpeed(0.0);
+			setUploadSpeed(0.0);
+			setSeeders(0);
+			setPeers(0);
+			setProgress(0.0);
 			setStatus(READY);
 		}
 		
