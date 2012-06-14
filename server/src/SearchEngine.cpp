@@ -13,7 +13,8 @@ std::string SearchEngine::search(std::string search_term) {
 	
 	search_results.clear();
 	
-	std::string tracker     = "130.161.158.52:20000";
+	//std::string tracker     = "130.161.158.52:20000";
+	std::string tracker     = "127.0.0.1:20000";
 	std::string root_hash   = "012b5549e2622ea8bf3d694b4f55c959539ac848";
 	std::string name        = "stream.mp4";
 	

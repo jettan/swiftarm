@@ -50,6 +50,7 @@ TEST_F(DownloadManagerTest, getIndexFromHashTrivial) {
 	std::string hash = "abcd1234abcd1234abcd1234abcd1234abcd1234";
 	
 	Download *testDL = new Download("tracker", hash, "test");
+	
 	DownloadManager::add(testDL);
 	
 	EXPECT_EQ(0, DownloadManager::getIndexFromHash(hash));

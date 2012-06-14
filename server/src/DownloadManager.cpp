@@ -423,8 +423,8 @@ void DownloadManager::add(Download *download) {
 		pthread_mutex_unlock(&active_download_mutex);
 	}
 	
-	download->limitDownSpeed(max_downspeed);
-	download->limitUpSpeed(max_upspeed);
+	//download->limitDownSpeed(max_downspeed);
+	//download->limitUpSpeed(max_upspeed);
 
 	pthread_mutex_lock(&mutex);
 	downloads.push_back(*download);
@@ -502,7 +502,6 @@ void DownloadManager::startUploads() {
 int DownloadManager::getIndexFromHash(const std::string download_hash) {
 	for (int i = 0; i < getDownloads().size(); i++) {
 		if (getDownloads().at(i).getRootHash().compare(download_hash) == 0) {
-			std::cout << "Hash found: " << getDownloads().at(i).getRootHash() << std::endl;
 			return i;
 		}
 	}
