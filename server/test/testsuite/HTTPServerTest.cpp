@@ -67,7 +67,7 @@ TEST_F(HTTPServerTest, searchEmpty) {
 	res = curl_easy_perform(easyHandle);
 	
 	//EXPECT_EQ(0, SearchEngine::getResults().size());
-	EXPECT_EQ("Invalid Search Term", response);
+	EXPECT_EQ("Bad Request", response);
 }
 /*
 TEST_F(HTTPServerTest, downloadTrivial) {

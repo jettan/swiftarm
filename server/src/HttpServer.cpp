@@ -4,6 +4,24 @@ namespace HttpServer {
 	struct event_base *base;
 }
 
+
+static void HttpServer::setIP(std::string ip) {
+	
+	struct sockaddr_in sa;
+	
+	if (inet_pton(AF_INET, ip.c_str(), &(sa.sin_addr)) == 1) {
+		ip_address = ip;
+	} else {
+		InvalidIPException *e = new InvalidIPException();
+		throw *e;
+	}
+}
+
+static std::string HttpServer::getIP() {
+	
+	return ip_address;
+}
+
 /**
  * Sends the HTTP XML response.
  * @param msg: The xml message to be sent.
@@ -164,7 +182,7 @@ static void HttpServer::handleRequest(struct evhttp_request *req, void *arg) {
 			sendResponse(req, evb, "-1");
 		}
 	// Message will look like: "/search:searchterm"
-	} else if (path_str.size() >= 7 && path_str.substr(0, 7).compare("/search") == 0 && path_str.at(7) == ':') {
+	} else if (path_str.size() > 8 && path_str.substr(0, 7).compare("/search") == 0 && path_str.at(7) == ':') {
 		std::string search_term = path_str.substr(8, path_str.size());
 		std::string result = SearchEngine::search(search_term);
 		sendXMLResponse(result, req, evb);
@@ -181,8 +199,7 @@ static void HttpServer::handleRequest(struct evhttp_request *req, void *arg) {
 		try {
 			struct SearchEngine::result res = SearchEngine::getResultWithHash(hash);
 			DownloadManager::startStream(res.tracker);
-			//std::string address = "http://130.161.158.52:15000/" + res.hash;
-			std::string address = "http://130.161.159.107:15000/" + res.hash;
+			std::string address = HttpServer::getIP() + res.hash;
 			std::cout << address << std::endl;
 			sendResponse(req, evb, address.c_str());
 		} catch(FileNotFoundException e) {
@@ -203,6 +220,7 @@ static void HttpServer::handleRequest(struct evhttp_request *req, void *arg) {
 	// Reply at bad requests:
 	} else {
 		std::cout << "Bad request: " << path << std::endl;
+		sendResponse(req, evb, "Bad Request");
 	}
 	
 	// Some garbage collecting.
@@ -220,6 +238,46 @@ static void HttpServer::handleRequest(struct evhttp_request *req, void *arg) {
  * Initialises the web server.
  */
 int HttpServer::init() {
+	
+	
+	// Test to see if we can get the ip address of the local machine
+	struct ifaddrs * ifAddrStruct = NULL;
+	struct ifaddrs * ifa = NULL;
+	void * tmpAddrPtr = NULL;
+	
+	getifaddrs(&ifAddrStruct);
+	
+	std::cout << "We can get an IP address now!" << std::endl;
+	
+	for (ifa = ifAddrStruct; ifa != NULL; ifa = ifa->ifa_next) {
+		
+		if (ifa ->ifa_addr->sa_family==AF_INET) { // check it is IP4
+			
+			// is a valid IP4 Address
+			tmpAddrPtr=&((struct sockaddr_in *)ifa->ifa_addr)->sin_addr;
+			
+			char addressBuffer[INET_ADDRSTRLEN];
+			inet_ntop(AF_INET, tmpAddrPtr, addressBuffer, INET_ADDRSTRLEN);
+			if(strcmp(ifa->ifa_name, "eth0") == 0 || strcmp(ifa->ifa_name, "eth1") == 0) {
+				printf("%s IP Address %s\n", ifa->ifa_name, addressBuffer);
+				std::string ip(addressBuffer);
+				setIP(ip);
+			}
+		}
+	}
+	if (ifAddrStruct!=NULL) {
+		freeifaddrs(ifAddrStruct);
+	}
+	
+	std::cout << "Set the IP address to: " << getIP() << std::endl;
+	
+	// end ip test
+	
+	
+	
+	
+	
+	
 	struct evhttp *http;
 	struct evhttp_bound_socket *handle;
 	
@@ -238,8 +296,9 @@ int HttpServer::init() {
 	evhttp_set_gencb(http, handleRequest, NULL);
 	
 	// Now we tell the evhttp what port to listen on.
+	handle = evhttp_bind_socket_with_handle(http, HttpServer::getIP().c_str(), port);
 	//handle = evhttp_bind_socket_with_handle(http, "130.161.159.107", port);
-	handle = evhttp_bind_socket_with_handle(http, "127.0.0.1", port);
+	//handle = evhttp_bind_socket_with_handle(http, "127.0.0.1", port);
 	//handle = evhttp_bind_socket_with_handle(http, "130.161.158.52", port);
 	
 	if (!handle) {

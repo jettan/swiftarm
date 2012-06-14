@@ -12,7 +12,7 @@ class FileNotFoundException : public std::exception {
 	~FileNotFoundException() throw() {}
 	
 	virtual const char* what() const throw() {
-		return "Could not find the file";
+		return "Could not find the file.";
 	}
 	
 };
@@ -24,7 +24,7 @@ class DownloadWhileStreamingException : public std::exception {
 	~DownloadWhileStreamingException() throw() {}
 	
 	virtual const char* what() const throw() {
-		return "Cannot download during a stream";
+		return "Cannot download during a stream.";
 	}
 	
 };
@@ -36,9 +36,22 @@ class AlreadyDownloadingException : public std::exception {
 	~AlreadyDownloadingException() throw() {}
 	
 	virtual const char* what() const throw() {
-		return "This file is already being downloaded";
+		return "This file is already being downloaded.";
+	}
+	
+};
+
+class InvalidIPException : public std::exception {
+	public:
+	
+	InvalidIPException() throw() {}
+	~InvalidIPException() throw() {}
+	
+	virtual const char* what() const throw() {
+		return "The given IP address is invalid.";
 	}
 	
 };
 
 #endif //_EXCEPTIONS_H
+

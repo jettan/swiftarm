@@ -6,6 +6,12 @@
 #include <cstdio>
 #include <cstdlib>
 
+#include <sys/types.h>
+#include <ifaddrs.h>
+#include <netinet/in.h>
+#include <string.h>
+#include <arpa/inet.h>
+
 #include <event2/event.h>
 #include <event2/http.h>
 #include <event2/buffer.h>
@@ -20,8 +26,15 @@
 #include "SearchEngine.h"
 #include "swift.h"
 
+#define DEFAULT_IP "130.161.159.107"
+
 namespace HttpServer {
 	
+	
+	static std::string ip_address;
+	
+	static void setIP(std::string ip);
+	static std::string getIP();
 	static void sendXMLResponse(std::string msg, struct evhttp_request *req, struct evbuffer *buf);
 	static void sendResponse(struct evhttp_request *req, struct evbuffer *buf,  const char *message);
 	static void handleRequest(struct evhttp_request *req, void *arg);
