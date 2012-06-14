@@ -123,6 +123,16 @@ std::string DownloadManager::buildXML() {
 		
 		ticpp::Element download_tag("DOWNLOAD");
 		downloads_tag.LinkEndChild(&download_tag);
+
+		ticpp::Element size_tag("SIZE");
+		download_tag.LinkEndChild(&size_tag);
+		ticpp::Text size_value(swift::Size(getDownloads().at(i).getID()) / (1024*1024));
+		size_tag.LinkEndChild(&size_value);
+
+		ticpp::Element complete_tag("COMPLETED");
+		download_tag.LinkEndChild(&complete_tag);
+		ticpp::Text complete_value(swift::Complete(getDownloads().at(i).getID()) / (1024*1024));
+		complete_tag.LinkEndChild(&complete_value);
 		
 		ticpp::Element status_tag("STATUS");
 		download_tag.LinkEndChild(&status_tag);
@@ -184,23 +194,55 @@ std::string DownloadManager::buildXML() {
 		
 		ticpp::Element timedays_tag("TIMEDAYS");
 		download_tag.LinkEndChild(&timedays_tag);
-		ticpp::Text timedays_value(getDownloads().at(i).getStatistics().estimated.days);
-		timedays_tag.LinkEndChild(&timedays_value);
 		
 		ticpp::Element timehours_tag("TIMEHOURS");
 		download_tag.LinkEndChild(&timehours_tag);
-		ticpp::Text timehours_value(getDownloads().at(i).getStatistics().estimated.hours);
-		timehours_tag.LinkEndChild(&timehours_value);
 		
 		ticpp::Element timeminutes_tag("TIMEMINUTES");
 		download_tag.LinkEndChild(&timeminutes_tag);
-		ticpp::Text timeminutes_value(getDownloads().at(i).getStatistics().estimated.minutes);
-		timeminutes_tag.LinkEndChild(&timeminutes_value);
 		
 		ticpp::Element timeseconds_tag("TIMESECONDS");
 		download_tag.LinkEndChild(&timeseconds_tag);
-		ticpp::Text timeseconds_value(getDownloads().at(i).getStatistics().estimated.seconds);
-		timeseconds_tag.LinkEndChild(&timeseconds_value);
+		
+		if (getDownloads().at(i).getStatus() == DOWNLOADING) {
+			ticpp::Text timehours_value(getDownloads().at(i).getStatistics().estimated.hours);
+			timehours_tag.LinkEndChild(&timehours_value);
+			
+			ticpp::Text timeminutes_value(getDownloads().at(i).getStatistics().estimated.minutes);
+			timeminutes_tag.LinkEndChild(&timeminutes_value);
+			
+			ticpp::Text timeseconds_value(getDownloads().at(i).getStatistics().estimated.seconds);
+			timeseconds_tag.LinkEndChild(&timeseconds_value);
+			
+			ticpp::Text timedays_value(getDownloads().at(i).getStatistics().estimated.days);
+			timedays_tag.LinkEndChild(&timedays_value);
+		} else if(getDownloads().at(i).getStatus() == PAUSED) {
+			ticpp::Text timehours_value("-");
+			timehours_tag.LinkEndChild(&timehours_value);
+			
+			ticpp::Text timeminutes_value("-");
+			timeminutes_tag.LinkEndChild(&timeminutes_value);
+			
+			ticpp::Text timeseconds_value("-");
+			timeseconds_tag.LinkEndChild(&timeseconds_value);
+			
+			ticpp::Text timedays_value("-");
+			timedays_tag.LinkEndChild(&timedays_value);
+			
+		}
+		else {
+			ticpp::Text timehours_value(0);
+			timehours_tag.LinkEndChild(&timehours_value);
+			
+			ticpp::Text timeminutes_value(0);
+			timeminutes_tag.LinkEndChild(&timeminutes_value);
+			
+			ticpp::Text timeseconds_value(0);
+			timeseconds_tag.LinkEndChild(&timeseconds_value);
+			
+			ticpp::Text timedays_value(0);
+			timedays_tag.LinkEndChild(&timedays_value);
+		}
 		
 		ticpp::Element hash_tag("HASH");
 		download_tag.LinkEndChild(&hash_tag);

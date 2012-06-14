@@ -69,8 +69,10 @@ int main(){
 	
 	std::cout << "Listening on port " << swift::BoundAddress(sock).port() << "." << std::endl;
 	
+	std::string http_address = ip + ":15000";
+	
 	// HTTP gateway address for swift to stream.
-	swift::Address httpaddr = swift::Address(ip.c_str());
+	swift::Address httpaddr = swift::Address(http_address.c_str());
 	
 	double maxspeed[2] = {DBL_MAX, DBL_MAX};
 	
