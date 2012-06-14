@@ -52,7 +52,7 @@ void DownloadManager::setActiveDownload(Download *download) {
  * Calculates the upload/download ratio.
  */
 void DownloadManager::calculateRatio() {
-	ratio = getUploadAmount().amount / getDownloadAmount().amount;
+	ratio = uploaded / downloaded;
 }
 
 /**

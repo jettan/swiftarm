@@ -4,7 +4,7 @@
 #include "swift.h"
 #include "DownloadManager.h"
 #include "HttpServer.h"
-#include "SearchEngine.h"i
+#include "SearchEngine.h"
 
 #include <stdio.h>
 #include <sys/types.h>
