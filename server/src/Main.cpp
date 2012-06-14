@@ -26,7 +26,7 @@ bool InstallStatsGateway(struct event_base *evbase, swift::Address addr);
  */
 int main(){
 	
-	// Test to see if we can get the ip address of the local machine
+	// Getting the IP address.
 	struct ifaddrs * ifAddrStruct = NULL;
 	struct ifaddrs * ifa = NULL;
 	void * tmpAddrPtr = NULL;
@@ -43,10 +43,9 @@ int main(){
 			
 			char addressBuffer[INET_ADDRSTRLEN];
 			inet_ntop(AF_INET, tmpAddrPtr, addressBuffer, INET_ADDRSTRLEN);
-			if(strcmp(ifa->ifa_name, "eth0") == 0 || strcmp(ifa->ifa_name, "eth1") == 0) {
+			if(strcmp(ifa->ifa_name, "eth0") == 0 || strcmp(ifa->ifa_name, "eth1") == 0 || strcmp(ifa->ifa_name, "wlan0") == 0) {
 				printf("%s IP Address %s\n", ifa->ifa_name, addressBuffer);
 				ip = std::string(addressBuffer);
-				//HttpServer::setIP(ip);
 			}
 		}
 	}
@@ -54,7 +53,6 @@ int main(){
 		freeifaddrs(ifAddrStruct);
 	}
 	
-	// end ip test
 	
 	// Enable pthread use in libevent.
 	evthread_use_pthreads();

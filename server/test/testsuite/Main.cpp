@@ -23,6 +23,34 @@ void *serverCallback(void *args) {
 
 int main(int argc, char **argv){
 	
+	
+	// Getting the IP address.
+	struct ifaddrs * ifAddrStruct = NULL;
+	struct ifaddrs * ifa = NULL;
+	void * tmpAddrPtr = NULL;
+	std::string ip = DEFAULT_IP;
+	
+	getifaddrs(&ifAddrStruct);
+	
+	for (ifa = ifAddrStruct; ifa != NULL; ifa = ifa->ifa_next) {
+		
+		if (ifa ->ifa_addr->sa_family==AF_INET) { // check it is IP4
+			
+			// is a valid IP4 Address
+			tmpAddrPtr=&((struct sockaddr_in *)ifa->ifa_addr)->sin_addr;
+			
+			char addressBuffer[INET_ADDRSTRLEN];
+			inet_ntop(AF_INET, tmpAddrPtr, addressBuffer, INET_ADDRSTRLEN);
+			if(strcmp(ifa->ifa_name, "eth0") == 0 || strcmp(ifa->ifa_name, "eth1") == 0 || strcmp(ifa->ifa_name, "wlan0") == 0) {
+				printf("%s IP Address %s\n", ifa->ifa_name, addressBuffer);
+				ip = std::string(addressBuffer);
+			}
+		}
+	}
+	if (ifAddrStruct!=NULL) {
+		freeifaddrs(ifAddrStruct);
+	}
+	
 	// Copied from Main.cpp in ./ws
 	
 	// Enable pthread use in libevent.
@@ -32,24 +60,15 @@ int main(int argc, char **argv){
 	
 	evutil_socket_t sock = INVALID_SOCKET;
 	swift::Address bindaddress;
-	for (int i = 0; i < 10; i++) {
-		bindaddress = swift::Address((uint32_t) INADDR_ANY, 0);
-		sock = swift::Listen(swift::Address(bindaddress));
-		
-		if (sock > 0) {
-			break;
-		}
-		
-		if (sock == 9) {
-			std::cerr << "Could not listen to any socket for swift." << std::endl;
-			return -1;
-		}
-	}
+	
+	bindaddress = swift::Address(ip.c_str(), 0);
+	bindaddress.set_port(25000);
+	sock = swift::Listen(swift::Address(bindaddress));
+	
 	std::cout << "Listening on port " << swift::BoundAddress(sock).port() << "." << std::endl;
 	
 	// HTTP gateway address for swift to stream.
-	//swift::Address httpaddr = swift::Address("130.161.158.52:15000");
-	swift::Address httpaddr = swift::Address("127.0.0.1:15000");
+	swift::Address httpaddr = swift::Address(ip.c_str());
 	
 	double maxspeed[2] = {DBL_MAX, DBL_MAX};
 	

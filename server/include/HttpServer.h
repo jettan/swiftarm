@@ -26,7 +26,7 @@
 #include "SearchEngine.h"
 #include "swift.h"
 
-#define DEFAULT_IP "130.161.159.107"
+#define DEFAULT_IP "127.0.0.1"
 
 namespace HttpServer {
 	

@@ -37,7 +37,8 @@ class HTTPServerTest : public ::testing::Test {
 // Test whether server is running
 TEST_F(HTTPServerTest, aliveTest) {
 	
-	curl_easy_setopt(easyHandle, CURLOPT_URL, "http://127.0.0.1:1337/alive");
+	std::string addr = HttpServer::getIP() + ":1337/alive";
+	curl_easy_setopt(easyHandle, CURLOPT_URL, addr.c_str());
 	res = curl_easy_perform(easyHandle);
 	
 	EXPECT_EQ("Alive", response);
@@ -50,7 +51,8 @@ TEST_F(HTTPServerTest, searchTrivial) {
 	
 	EXPECT_EQ(0, SearchEngine::getResults().size());
 	
-	curl_easy_setopt(easyHandle, CURLOPT_URL, "http://127.0.0.1:1337/search:test");
+	std::string addr = HttpServer::getIP() + ":1337/search:test";
+	curl_easy_setopt(easyHandle, CURLOPT_URL, addr.c_str());
 	res = curl_easy_perform(easyHandle);
 	
 	EXPECT_LT(0, SearchEngine::getResults().size());
@@ -63,20 +65,23 @@ TEST_F(HTTPServerTest, searchEmpty) {
 	
 	EXPECT_EQ(0, SearchEngine::getResults().size());
 	
-	curl_easy_setopt(easyHandle, CURLOPT_URL, "http://127.0.0.1:1337/search:");
+	std::string addr = HttpServer::getIP() + ":1337/search:";
+	curl_easy_setopt(easyHandle, CURLOPT_URL, addr.c_str());
 	res = curl_easy_perform(easyHandle);
 	
 	//EXPECT_EQ(0, SearchEngine::getResults().size());
 	EXPECT_EQ("Bad Request", response);
 }
-/*
+
 TEST_F(HTTPServerTest, downloadTrivial) {
 	
-	curl_easy_setopt(easyHandle, CURLOPT_URL, "http://127.0.0.1:1337/search:test");
+	std::string addr = HttpServer::getIP() + ":1337/search:test";
+	curl_easy_setopt(easyHandle, CURLOPT_URL, addr.c_str());
 	res = curl_easy_perform(easyHandle);
 	
-	curl_easy_setopt(easyHandle, CURLOPT_URL, "http://127.0.0.1:1337/download:367d26a6ce626e049a21921100e24eac86dbcd32");
+	std::string addr2 = HttpServer::getIP() + ":1337/download:367d26a6ce626e049a21921100e24eac86dbcd32";
+	curl_easy_setopt(easyHandle, CURLOPT_URL, addr2.c_str());
 	res = curl_easy_perform(easyHandle);
 	
-	EXPECT_EQ(response, "Download Started");
-}*/
+	EXPECT_EQ("Download Started", response);
+}

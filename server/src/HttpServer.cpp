@@ -244,6 +244,7 @@ int HttpServer::init() {
 	struct ifaddrs * ifAddrStruct = NULL;
 	struct ifaddrs * ifa = NULL;
 	void * tmpAddrPtr = NULL;
+	setIP(DEFAULT_IP);
 	
 	getifaddrs(&ifAddrStruct);
 	
@@ -258,7 +259,7 @@ int HttpServer::init() {
 			
 			char addressBuffer[INET_ADDRSTRLEN];
 			inet_ntop(AF_INET, tmpAddrPtr, addressBuffer, INET_ADDRSTRLEN);
-			if(strcmp(ifa->ifa_name, "eth0") == 0 || strcmp(ifa->ifa_name, "eth1") == 0) {
+			if(strcmp(ifa->ifa_name, "eth0") == 0 || strcmp(ifa->ifa_name, "eth1") == 0 || strcmp(ifa->ifa_name, "wlan0") == 0) {
 				printf("%s IP Address %s\n", ifa->ifa_name, addressBuffer);
 				std::string ip(addressBuffer);
 				setIP(ip);
