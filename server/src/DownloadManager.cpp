@@ -395,6 +395,9 @@ int DownloadManager::startDownload(const std::string download_hash) {
 		active_download->start();
 		pthread_mutex_unlock(&active_download_mutex);
 		
+		active_download->limitDownSpeed(max_downspeed);
+		active_download->limitUpSpeed(max_upspeed);
+		
 		if (d_pid != 0) {
 			d_pid = pthread_create(&thread, NULL, dispatch, NULL);
 			if (d_pid) {
@@ -465,9 +468,6 @@ void DownloadManager::add(Download *download) {
 		pthread_mutex_unlock(&active_download_mutex);
 	}
 	
-	//download->limitDownSpeed(max_downspeed);
-	//download->limitUpSpeed(max_upspeed);
-
 	pthread_mutex_lock(&mutex);
 	downloads.push_back(*download);
 	pthread_mutex_unlock(&mutex);
@@ -614,7 +614,11 @@ double DownloadManager::getMaxUpSpeed() {
  * Sets the maximum download speed.
  */
 void DownloadManager::setMaxDownSpeed(double speed) {
-	max_downspeed = speed;
+	if (speed > 0) {
+		max_downspeed = speed * 1024;
+	} else {
+		max_downspeed = DBL_MAX;
+	}
 	
 	for (int i = 0; i < getDownloads().size(); i++) {
 		pthread_mutex_lock(&mutex);
@@ -627,7 +631,11 @@ void DownloadManager::setMaxDownSpeed(double speed) {
  * Sets the maximum upload speed.
  */
 void DownloadManager::setMaxUpSpeed(double speed) {
-	max_upspeed = speed;
+	if (speed > 0) {
+		max_upspeed = speed * 1024;
+	} else {
+		max_upspeed = DBL_MAX;
+	}
 	
 	for (int i = 0; i < getDownloads().size(); i++) {
 		pthread_mutex_lock(&mutex);

@@ -102,6 +102,7 @@ static void HttpServer::handleRequest(struct evhttp_request *req, void *arg) {
 	decoded = evhttp_uri_parse(uri);
 	
 	// This is the string we want to compare.
+	
 	path = evhttp_uri_get_path(decoded);
 	std::string path_str = path;
 	
@@ -277,8 +278,18 @@ static void HttpServer::handleRequest(struct evhttp_request *req, void *arg) {
 		sendResponse(req, evb, "Not streaming anymore.");
 		
 	// Parse settings, message will look like: "/settings:downmax:upmax:downdir".
-	} else if (path_str.size() >= 35 && path_str.substr(0,9).compare("/settings") == 0 && path_str.at(9) == ':') {
+	} else if (path_str.size() >= 27 && path_str.substr(0,9).compare("/settings") == 0 && path_str.at(9) == ':') {
 		std::vector<std::string> result = split(path, ':');
+		
+		if (result.size() == 4) {
+			double max_down          = strtod(result.at(1).c_str(), NULL);
+			double max_up            = strtod(result.at(2).c_str(), NULL);
+			std::string download_dir = result.at(3);
+			
+			DownloadManager::setDownloadDirectory(download_dir);
+			DownloadManager::setMaxUpSpeed(max_up);
+			DownloadManager::setMaxDownSpeed(max_down);
+		}
 		
 		sendResponse(req, evb, "Received settings.");
 		
