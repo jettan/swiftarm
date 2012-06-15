@@ -123,7 +123,7 @@ static void HttpServer::handleRequest(struct evhttp_request *req, void *arg) {
 			} catch(std::exception e) {
 				std::cout << "Exception Caught In HttpServer" << std::endl;
 				std::cout << e.what() << std::endl;
-				sendResponse(req, evb, "-1");
+				sendResponse(req, evb, e.what());
 			}
 		} else {
 			sendResponse(req, evb, "-1");

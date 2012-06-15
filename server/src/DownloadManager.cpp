@@ -531,7 +531,12 @@ void DownloadManager::startUploads() {
 			root_hash = swift::RootMerkleHash(id).hex().c_str();
 			Download file("130.161.158.60:20000", root_hash, filename);
 			file.setID(id);
-			add(&file);
+			try {
+				add(&file);
+			} catch (AlreadyDownloadingException e) {
+				std::cout << "Exception caught in startUploads()" << std::endl;
+				std::cout << e.what() << std::endl;
+			}
 		}
 	}
 	closedir(dp);
