@@ -20,11 +20,14 @@ CPPFLAGS += -I $(SWIFTARM)/server/include/ticpp -I $(SWIFTARM)/server/include/sw
 
 all: main
 
-main: Main.o Download.o Stream.o DownloadManager.o HttpServer.o SearchEngine.o
+main: Main.o Download.o Stream.o Utils.o DownloadManager.o HttpServer.o SearchEngine.o
 	$(CXX) ${CPPFLAGS} -o ws *.o ${LDADD}
 
 Main.o: Main.cpp
 	$(CXX) $(CPPFLAGS) Main.cpp -c
+
+Utils.o: Utils.cpp
+	$(CXX) $(CPPFLAGS) Utils.cpp -c
 
 Stream.o: Stream.cpp
 	$(CXX) $(CPPFLAGS) Stream.cpp -c

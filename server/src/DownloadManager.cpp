@@ -3,25 +3,20 @@
 /**
  * Initialises the download manager.
  */
-void DownloadManager::init(std::string download_dir) {
+void DownloadManager::init() {
 	active_download = NULL;
 	pthread_mutex_init(&mutex, NULL);
 	pthread_mutex_init(&active_download_mutex, NULL);
-	setDownloadDirectory(download_dir);
 	
 	setMaxDownSpeed(UNLIMITED_SPEED);
 	setMaxUpSpeed(UNLIMITED_SPEED);
 	
-	startUploads();
-}
-
-/**
- * Sets the directory where swift will download files to.
- * @param dir: The directory where swift will download files to.
- */
-void DownloadManager::setDownloadDirectory(std::string dir) {
-	download_directory = dir;
-	chdir(download_directory.c_str());
+	try {
+		startUploads();
+	} catch (FileNotFoundException e) {
+		std::cout << e.what() << std::endl;
+		std::cout << "Coult not open directory" << std::endl;
+	}
 }
 
 /**
@@ -33,13 +28,6 @@ std::vector<Download> DownloadManager::getDownloads() {
 	pthread_mutex_unlock(&mutex);
 	
 	return return_value;
-}
-
-/**
- * Returns the download directory as string.
- */
-std::string DownloadManager::getDownloadDirectory() {
-	return download_directory;
 }
 
 /**
@@ -537,13 +525,14 @@ void DownloadManager::upload(std::string filename) {
 		}
 		
 		root_hash = swift::RootMerkleHash(id).hex().c_str();
-		Download file("145.94.189.245:20000", root_hash, filename);
+		std::string ip = Settings::getIP();
+		Download file(ip + ":25000", root_hash, filename);
 		file.setID(id);
 		
 		try {
 			add(&file);
 		} catch (AlreadyDownloadingException e) {
-			std::cout << "Exception caught in startUploads()" << std::endl;
+			std::cout << "Exception caught in upload()" << std::endl;
 			std::cout << e.what() << std::endl;
 		}
 	} else {
@@ -559,16 +548,20 @@ void DownloadManager::startUploads() {
 	DIR *dp;
 	struct dirent *dirp;
 	
-	if((dp = opendir(download_directory.c_str())) == NULL) {
+	if((dp = opendir(Settings::getDownloadDirectory().c_str())) == NULL) {
 		std::cout << "Failed opening Downloads directory" << std::endl;
-	}
-	
-	while ((dirp = readdir(dp)) != NULL) {
-		std::string filename(dirp->d_name);
-		if (filename.at(0) != '.' && filename.find(".mhash") == std::string::npos && filename.find(".mbinmap") == std::string::npos) {
-			upload(filename.c_str());
+		
+		FileNotFoundException *e = new FileNotFoundException();
+		throw *e;
+	} else {
+		while ((dirp = readdir(dp)) != NULL) {
+			std::string filename(dirp->d_name);
+			if (filename.at(0) != '.' && filename.find(".mhash") == std::string::npos && filename.find(".mbinmap") == std::string::npos) {
+				upload(filename.c_str());
+			}
 		}
 	}
+	
 	closedir(dp);
 }
 
@@ -724,7 +717,7 @@ void DownloadManager::removeFromDisk(const std::string download_hash) {
 		std::string filename = getDownloads().at(index).getFilename();
 		removeFromList(download_hash);
 		
-		filename = download_directory + "/" + filename;
+		filename = Settings::getDownloadDirectory() + "/" + filename;
 		
 		if (remove(filename.c_str()) != 0) {
 			// File removed successfully
@@ -807,4 +800,3 @@ void DownloadManager::startStream(std::string tracker) {
 		std::cout << "Already Streaming!" << std::endl;
 	}
 }
-
