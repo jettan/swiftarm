@@ -7,9 +7,9 @@ void Download::stop() {
 	
 	const double left_over = swift::Size(getID()) - swift::Complete(getID());
 	
-	setStatus(STOPPED);
-	if (getStatus() != STOPPED || getStatus() != PAUSED) {
+	if (getStatus() != STOPPED && getStatus() != PAUSED) {
 		swift::Close(getID());
+		setStatus(STOPPED);
 	}
 	
 	std::string mhash = getFilename() + ".mhash";
