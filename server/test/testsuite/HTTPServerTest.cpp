@@ -79,9 +79,16 @@ TEST_F(HTTPServerTest, downloadTrivial) {
 	curl_easy_setopt(easyHandle, CURLOPT_URL, addr.c_str());
 	res = curl_easy_perform(easyHandle);
 	
-	std::string addr2 = HttpServer::getIP() + ":1337/download:367d26a6ce626e049a21921100e24eac86dbcd32";
+	response = "";
+	
+	std::string addr2 = HttpServer::getIP() + ":1337/add:367d26a6ce626e049a21921100e24eac86dbcd32";
 	curl_easy_setopt(easyHandle, CURLOPT_URL, addr2.c_str());
 	res = curl_easy_perform(easyHandle);
 	
-	EXPECT_EQ("Download Started", response);
+	EXPECT_EQ("Download Added", response);
+	
+	std::string addr3 = HttpServer::getIP() + ":1337/download:367d26a6ce626e049a21921100e24eac86dbcd32";
+	curl_easy_setopt(easyHandle, CURLOPT_URL, addr3.c_str());
+	res = curl_easy_perform(easyHandle);
+	
 }

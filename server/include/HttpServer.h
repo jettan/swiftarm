@@ -33,8 +33,8 @@ namespace HttpServer {
 	
 	static std::string ip_address;
 	
-	static void setIP(std::string ip);
-	static std::string getIP();
+	void setIP(std::string ip);
+	std::string getIP();
 	static void sendXMLResponse(std::string msg, struct evhttp_request *req, struct evbuffer *buf);
 	static void sendResponse(struct evhttp_request *req, struct evbuffer *buf,  const char *message);
 	static void handleRequest(struct evhttp_request *req, void *arg);

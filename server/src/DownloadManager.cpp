@@ -130,12 +130,12 @@ std::string DownloadManager::buildXML() {
 
 		ticpp::Element size_tag("SIZE");
 		download_tag.LinkEndChild(&size_tag);
-		ticpp::Text size_value(swift::Size(getDownloads().at(i).getID()) / (1024*1024));
+		ticpp::Text size_value(swift::Size(getDownloads().at(i).getID()) / (1024.0 * 1024.0));
 		size_tag.LinkEndChild(&size_value);
 
 		ticpp::Element complete_tag("COMPLETED");
 		download_tag.LinkEndChild(&complete_tag);
-		ticpp::Text complete_value(swift::Complete(getDownloads().at(i).getID()) / (1024*1024));
+		ticpp::Text complete_value(swift::Complete(getDownloads().at(i).getID()) / (1024.0 * 1024.0));
 		complete_tag.LinkEndChild(&complete_value);
 		
 		ticpp::Element status_tag("STATUS");
@@ -397,10 +397,10 @@ int DownloadManager::startDownload(const std::string download_hash) {
 		
 		pthread_mutex_lock(&active_download_mutex);
 		active_download->start();
-		pthread_mutex_unlock(&active_download_mutex);
 		
 		active_download->limitDownSpeed(max_downspeed);
 		active_download->limitUpSpeed(max_upspeed);
+		pthread_mutex_unlock(&active_download_mutex);
 		
 		if (d_pid != 0) {
 			d_pid = pthread_create(&thread, NULL, dispatch, NULL);

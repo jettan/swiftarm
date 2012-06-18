@@ -100,20 +100,29 @@ TEST_F(DownloadManagerTest, addDownloadExists) {
 // Trivial
 TEST_F(DownloadManagerTest, downloadFirstInListTrivial) {
 	
+	// Add two different downloads
 	Download dl1("track1", "1234abcd1234abcd1234abcd1234abcd1234abcd", "name1");
-	dl1.setID(6);
 	DownloadManager::add(&dl1);
+	int index = DownloadManager::getIndexFromHash("1234abcd1234abcd1234abcd1234abcd1234abcd");
+	dl1.setID(DownloadManager::getDownloads().at(index).getID());
 	
 	Download dl2("track2", "abcd1234abcd1234abcd1234abcd1234abcd1234", "name2");
-	dl2.setID(7);
 	DownloadManager::add(&dl2);
 	
+	std::cout << "Added downloads" << std::endl;
+	
+	// Check whether the first download started downloading automatically
 	testDownloadsAreEqual(DownloadManager::getActiveDownload(), dl1);
 	
+	// Start the second download
 	DownloadManager::startDownload("abcd1234abcd1234abcd1234abcd1234abcd1234");
+	index = DownloadManager::getIndexFromHash("abcd1234abcd1234abcd1234abcd1234abcd1234");
+	dl2.setID(DownloadManager::getDownloads().at(index).getID());
 	
+	// Check whether the second download is not downloading
 	testDownloadsAreEqual(DownloadManager::getActiveDownload(), dl2);
 	
+	// Start downloading the first again
 	DownloadManager::downloadFirstInList();
 	
 	testDownloadsAreEqual(DownloadManager::getActiveDownload(), dl1);
@@ -123,8 +132,9 @@ TEST_F(DownloadManagerTest, downloadFirstInListTrivial) {
 TEST_F(DownloadManagerTest, downloadFirstInListAlreadyDownloading) {
 	
 	Download dl1("track1", "1234abcd1234abcd1234abcd1234abcd1234abcd", "name1");
-	dl1.setID(6);
 	DownloadManager::add(&dl1);
+	int index = DownloadManager::getIndexFromHash("1234abcd1234abcd1234abcd1234abcd1234abcd");
+	dl1.setID(DownloadManager::getDownloads().at(index).getID());
 	
 	testDownloadsAreEqual(DownloadManager::getActiveDownload(), dl1);
 	
@@ -164,8 +174,9 @@ TEST_F(DownloadManagerTest, clearListEmpty) {
 TEST_F(DownloadManagerTest, getActiveDownloadTrivial) {
 	
 	Download testDL("track", "1234abcd1234abcd1234abcd1234abcd1234abcd", "name");
-	testDL.setID(6);
 	DownloadManager::add(&testDL);
+	int index = DownloadManager::getIndexFromHash("1234abcd1234abcd1234abcd1234abcd1234abcd");
+	testDL.setID(DownloadManager::getDownloads().at(index).getID());
 	
 	Download returnedDL = DownloadManager::getActiveDownload();
 	
@@ -178,16 +189,18 @@ TEST_F(DownloadManagerTest, getActiveDownloadTrivial) {
 TEST_F(DownloadManagerTest, startDownloadTrivial) {
 	
 	Download dl1("track1", "1234abcd1234abcd1234abcd1234abcd1234abcd", "name1");
-	dl1.setID(6);
 	DownloadManager::add(&dl1);
+	int index = DownloadManager::getIndexFromHash("1234abcd1234abcd1234abcd1234abcd1234abcd");
+	dl1.setID(DownloadManager::getDownloads().at(index).getID());
 	
 	Download dl2("track2", "abcd1234abcd1234abcd1234abcd1234abcd1234", "name2");
-	dl2.setID(7);
 	DownloadManager::add(&dl2);
 	
 	testDownloadsAreEqual(DownloadManager::getActiveDownload(), dl1);
 	
 	DownloadManager::startDownload("abcd1234abcd1234abcd1234abcd1234abcd1234");
+	index = DownloadManager::getIndexFromHash("abcd1234abcd1234abcd1234abcd1234abcd1234");
+	dl2.setID(DownloadManager::getDownloads().at(index).getID());
 	
 	testDownloadsAreEqual(DownloadManager::getActiveDownload(), dl2);
 }
@@ -206,12 +219,12 @@ TEST_F(DownloadManagerTest, startDownloadNonexistent) {
 TEST_F(DownloadManagerTest, removeFromListTrivial) {
 	
 	Download dl1("track1", "1234abcd1234abcd1234abcd1234abcd1234abcd", "name1");
-	dl1.setID(6);
 	DownloadManager::add(&dl1);
+	int index = DownloadManager::getIndexFromHash("1234abcd1234abcd1234abcd1234abcd1234abcd");
+	dl1.setID(DownloadManager::getDownloads().at(index).getID());
 	
 	std::string hash = "abcd1234abcd1234abcd1234abcd1234abcd1234";
 	Download dl2("track2", hash, "name2");
-	dl2.setID(7);
 	DownloadManager::add(&dl2);
 	
 	EXPECT_EQ(2, DownloadManager::getDownloads().size());
@@ -227,17 +240,19 @@ TEST_F(DownloadManagerTest, removeFromListActiveDownload) {
 	
 	std::string hash = "1234abcd1234abcd1234abcd1234abcd1234abcd";
 	Download dl1("track1", hash, "name1");
-	dl1.setID(6);
 	DownloadManager::add(&dl1);
+	int index = DownloadManager::getIndexFromHash("1234abcd1234abcd1234abcd1234abcd1234abcd");
+	dl1.setID(DownloadManager::getDownloads().at(index).getID());
 	
 	Download dl2("track2", "abcd1234abcd1234abcd1234abcd1234abcd1234", "name2");
-	dl2.setID(7);
 	DownloadManager::add(&dl2);
 	
 	EXPECT_EQ(2, DownloadManager::getDownloads().size());
 	testDownloadsAreEqual(dl1, DownloadManager::getActiveDownload());
 	
 	DownloadManager::removeFromList(hash);
+	index = DownloadManager::getIndexFromHash("abcd1234abcd1234abcd1234abcd1234abcd1234");
+	dl2.setID(DownloadManager::getDownloads().at(index).getID());
 	
 	EXPECT_EQ(1, DownloadManager::getDownloads().size());
 	EXPECT_THROW(DownloadManager::getIndexFromHash(hash), FileNotFoundException);
@@ -257,17 +272,19 @@ TEST_F(DownloadManagerTest, removeFromListNonexistent) {
 TEST_F(DownloadManagerTest, switchDownloadTrivial) {
 	
 	Download dl1("track1", "1234abcd1234abcd1234abcd1234abcd1234abcd", "name1");
-	dl1.setID(6);
 	DownloadManager::add(&dl1);
+	int index = DownloadManager::getIndexFromHash("1234abcd1234abcd1234abcd1234abcd1234abcd");
+	dl1.setID(DownloadManager::getDownloads().at(index).getID());
 	
 	std::string hash = "abcd1234abcd1234abcd1234abcd1234abcd1234";
 	Download dl2("track2", hash, "name2");
-	dl2.setID(7);
 	DownloadManager::add(&dl2);
 	
 	testDownloadsAreEqual(dl1, DownloadManager::getActiveDownload());
 	
 	DownloadManager::switchDownload(hash);
+	index = DownloadManager::getIndexFromHash("abcd1234abcd1234abcd1234abcd1234abcd1234");
+	dl2.setID(DownloadManager::getDownloads().at(index).getID());
 	
 	EXPECT_EQ(2, DownloadManager::getDownloads().size());
 	testDownloadsAreEqual(dl2, DownloadManager::getActiveDownload());
@@ -278,8 +295,9 @@ TEST_F(DownloadManagerTest, switchDownloadSame) {
 	
 	std::string hash = "1234abcd1234abcd1234abcd1234abcd1234abcd";
 	Download dl1("track1", hash, "name1");
-	dl1.setID(6);
 	DownloadManager::add(&dl1);
+	int index = DownloadManager::getIndexFromHash("1234abcd1234abcd1234abcd1234abcd1234abcd");
+	dl1.setID(DownloadManager::getDownloads().at(index).getID());
 	
 	Download dl2("track2", "abcd1234abcd1234abcd1234abcd1234abcd1234", "name2");
 	dl2.setID(7);
@@ -299,8 +317,9 @@ TEST_F(DownloadManagerTest, switchDownloadSame) {
 TEST_F(DownloadManagerTest, switchDownloadNonexistent) {
 	
 	Download dl1("track1", "1234abcd1234abcd1234abcd1234abcd1234abcd", "name1");
-	dl1.setID(6);
 	DownloadManager::add(&dl1);
+	int index = DownloadManager::getIndexFromHash("1234abcd1234abcd1234abcd1234abcd1234abcd");
+	dl1.setID(DownloadManager::getDownloads().at(index).getID());
 	
 	std::string hash = "abcd1234abcd1234abcd1234abcd1234abcd1234";
 	EXPECT_THROW(DownloadManager::switchDownload(hash), FileNotFoundException);

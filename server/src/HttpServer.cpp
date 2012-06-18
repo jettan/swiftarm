@@ -5,7 +5,7 @@ namespace HttpServer {
 }
 
 
-static void HttpServer::setIP(std::string ip) {
+void HttpServer::setIP(std::string ip) {
 	
 	struct sockaddr_in sa;
 	
@@ -17,7 +17,7 @@ static void HttpServer::setIP(std::string ip) {
 	}
 }
 
-static std::string HttpServer::getIP() {
+std::string HttpServer::getIP() {
 	
 	return ip_address;
 }
@@ -261,7 +261,7 @@ static void HttpServer::handleRequest(struct evhttp_request *req, void *arg) {
 			try {
 				struct SearchEngine::result res = SearchEngine::getResultWithHash(hash);
 				DownloadManager::startStream(res.tracker);
-				std::string address = HttpServer::getIP() + ":15000/" + res.hash;
+				std::string address = getIP() + ":15000/" + res.hash;
 				std::cout << address << std::endl;
 				sendResponse(req, evb, address.c_str());
 			} catch(FileNotFoundException e) {
@@ -388,7 +388,7 @@ int HttpServer::init() {
 	evhttp_set_gencb(http, handleRequest, NULL);
 	
 	// Now we tell the evhttp what port to listen on.
-	handle = evhttp_bind_socket_with_handle(http, HttpServer::getIP().c_str(), port);
+	handle = evhttp_bind_socket_with_handle(http, getIP().c_str(), port);
 	//handle = evhttp_bind_socket_with_handle(http, "130.161.159.107", port);
 	//handle = evhttp_bind_socket_with_handle(http, "127.0.0.1", port);
 	//handle = evhttp_bind_socket_with_handle(http, "130.161.158.52", port);

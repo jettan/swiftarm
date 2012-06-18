@@ -61,6 +61,9 @@ void Download::start() {
 	}
 	
 	_transfer = swift::FileTransfer::file(getID());
+	if(_transfer == NULL) {
+		std::cout << "TRANSFER IS NULL" << std::endl;
+	}
 	std::cout << "ID = " << getID() << std::endl;
 }
 
@@ -236,14 +239,22 @@ void Download::setID(int id) {
  * Limits upload speed.
  */
 void Download::limitUpSpeed(double speed) {
-	_transfer->SetMaxSpeed(swift::DDIR_UPLOAD, speed);
+	if (speed == 0) {
+		_transfer->SetMaxSpeed(swift::DDIR_UPLOAD, DBL_MAX);
+	} else {
+		_transfer->SetMaxSpeed(swift::DDIR_UPLOAD, speed);
+	}
 }
 
 /**
  * Limits download speed.
  */
 void Download::limitDownSpeed(double speed) {
-	_transfer->SetMaxSpeed(swift::DDIR_DOWNLOAD, speed);
+	if (speed == 0) {
+		_transfer->SetMaxSpeed(swift::DDIR_DOWNLOAD, DBL_MAX);
+	} else {
+		_transfer->SetMaxSpeed(swift::DDIR_DOWNLOAD, speed);
+	}
 }
 
 /**

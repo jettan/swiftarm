@@ -6,6 +6,7 @@
 #include <string>
 #include <cstdio>
 #include <cstdlib>
+#include <float.h>
 
 #include "swift.h"
 
