@@ -79,6 +79,7 @@ namespace DownloadManager {
 	void setMaxDownSpeed(double speed);
 	
 	
+	void upload(std::string filename);
 	void startUploads();
 	void downloadFirstInList();
 	void add(Download *download);

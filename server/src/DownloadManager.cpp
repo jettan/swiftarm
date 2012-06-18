@@ -511,12 +511,53 @@ void DownloadManager::downloadFirstInList() {
 }
 
 /**
+ * Checks whether a file exists.
+ * @param filename: Name of the file to be checked.
+ */
+bool fileExists(const std::string filename) {
+	struct stat buf;
+	if (stat(filename.c_str(), &buf) != -1) {
+		return true;
+	}
+	
+	return false;
+}
+
+/**
+ * Uploads a file.
+ * @param filename: Name of the file to be uploaded.
+ */
+void DownloadManager::upload(std::string filename) {
+	if (fileExists(filename)) {
+		std::string root_hash = "";
+		int id = swift::Open(filename.c_str(), root_hash.c_str(), swift::Address());
+		
+		if (id < 0) {
+			return;
+		}
+		
+		root_hash = swift::RootMerkleHash(id).hex().c_str();
+		Download file("145.94.189.245:20000", root_hash, filename);
+		file.setID(id);
+		
+		try {
+			add(&file);
+		} catch (AlreadyDownloadingException e) {
+			std::cout << "Exception caught in startUploads()" << std::endl;
+			std::cout << e.what() << std::endl;
+		}
+	} else {
+		FileNotFoundException *e = new FileNotFoundException();
+		throw *e;
+	}
+}
+
+/**
  * Starts all Uploads located in the public folder.
  */
 void DownloadManager::startUploads() {
 	DIR *dp;
 	struct dirent *dirp;
-	std::string root_hash = "";
 	
 	if((dp = opendir(download_directory.c_str())) == NULL) {
 		std::cout << "Failed opening Downloads directory" << std::endl;
@@ -525,22 +566,7 @@ void DownloadManager::startUploads() {
 	while ((dirp = readdir(dp)) != NULL) {
 		std::string filename(dirp->d_name);
 		if (filename.at(0) != '.' && filename.find(".mhash") == std::string::npos && filename.find(".mbinmap") == std::string::npos) {
-			int id = swift::Open(dirp->d_name, root_hash.c_str(), swift::Address());
-			std::cout << dirp->d_name << std::endl;
-			
-			if (id < 0) {
-				return;
-			}
-			
-			root_hash = swift::RootMerkleHash(id).hex().c_str();
-			Download file("145.94.189.245:20000", root_hash, filename);
-			file.setID(id);
-			try {
-				add(&file);
-			} catch (AlreadyDownloadingException e) {
-				std::cout << "Exception caught in startUploads()" << std::endl;
-				std::cout << e.what() << std::endl;
-			}
+			upload(filename.c_str());
 		}
 	}
 	closedir(dp);

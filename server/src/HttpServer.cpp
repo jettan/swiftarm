@@ -146,6 +146,24 @@ static void HttpServer::handleRequest(struct evhttp_request *req, void *arg) {
 		} else {
 				sendResponse(req, evb, "-1");
 			}
+	// Message will look like: "/upload:filename"
+	} else if (path_str.size() > 7 && path_str.substr(0, 7).compare("/upload") == 0  && path_str.at(7) == ':') {
+		std::vector<std::string> result = split(path_str, ':');
+		
+		if (result.size() == 2) {
+			std::string filename = result.at(1);
+			
+			try {
+				DownloadManager::upload(filename);
+				sendResponse(req, evb, "Upload Started");
+			} catch(FileNotFoundException e) {
+				std::cout << "Exception Caught In HttpServer" << std::endl;
+				std::cout << e.what() << std::endl;
+				sendResponse(req, evb, "-1");
+			}
+		} else {
+			sendResponse(req, evb, "-1");
+		}
 	// Message will look like: "/stop:roothash"
 	} else if (path_str.size() == 46 && path_str.substr(0, 5).compare("/stop") == 0  && path_str.at(5) == ':') {
 		std::vector<std::string> result = split(path_str, ':');
