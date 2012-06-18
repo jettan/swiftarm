@@ -18,6 +18,7 @@
 #include "Exceptions.h"
 
 #define DEFAULT_PORT 25000
+#define UNLIMITED_SPEED 25000
 
 namespace DownloadManager {
 	

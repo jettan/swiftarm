@@ -69,7 +69,7 @@ int main(){
 	
 	std::cout << "Listening on port " << swift::BoundAddress(sock).port() << "." << std::endl;
 	
-	std::string http_address = ip + ":15000";
+	std::string http_address  = ip + ":15000";
 	
 	// HTTP gateway address for swift to stream.
 	swift::Address httpaddr = swift::Address(http_address.c_str());
@@ -80,7 +80,6 @@ int main(){
 	bool res = InstallHTTPGateway(swift::Channel::evbase, httpaddr, SWIFT_DEFAULT_CHUNK_SIZE, maxspeed);
 	std::cout << "HTTP gateway installation returned: " << res << std::endl;
 	
-	//res = InstallStatsGateway(swift::Channel::evbase, statsaddr);
 	//std::cout << "Stats gateway installation returned: " << res << std::endl;
 	
 	std::cout << "Initialised swift" << std::endl;

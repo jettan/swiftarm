@@ -8,6 +8,10 @@ void DownloadManager::init(std::string download_dir) {
 	pthread_mutex_init(&mutex, NULL);
 	pthread_mutex_init(&active_download_mutex, NULL);
 	setDownloadDirectory(download_dir);
+	
+	setMaxDownSpeed(UNLIMITED_SPEED);
+	setMaxUpSpeed(UNLIMITED_SPEED);
+	
 	startUploads();
 }
 
@@ -529,7 +533,7 @@ void DownloadManager::startUploads() {
 			}
 			
 			root_hash = swift::RootMerkleHash(id).hex().c_str();
-			Download file("130.161.158.60:20000", root_hash, filename);
+			Download file("145.94.189.245:20000", root_hash, filename);
 			file.setID(id);
 			try {
 				add(&file);
