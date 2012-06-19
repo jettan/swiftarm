@@ -8,8 +8,10 @@ void DownloadManager::init() {
 	pthread_mutex_init(&mutex, NULL);
 	pthread_mutex_init(&active_download_mutex, NULL);
 	
-	setMaxDownSpeed(UNLIMITED_SPEED);
-	setMaxUpSpeed(UNLIMITED_SPEED);
+	std::cout << "Max down speed: " << Settings::getMaxDownSpeed() << std::endl;
+	std::cout << "Max up speed: " << Settings::getMaxUpSpeed() << std::endl;
+	limitDownSpeeds(Settings::getMaxDownSpeed());
+	limitUpSpeeds(Settings::getMaxUpSpeed());
 	
 	try {
 		startUploads();
@@ -386,8 +388,8 @@ int DownloadManager::startDownload(const std::string download_hash) {
 		pthread_mutex_lock(&active_download_mutex);
 		active_download->start();
 		
-		active_download->limitDownSpeed(max_downspeed);
-		active_download->limitUpSpeed(max_upspeed);
+		active_download->limitDownSpeed(Settings::getMaxDownSpeed());
+		active_download->limitUpSpeed(Settings::getMaxUpSpeed());
 		pthread_mutex_unlock(&active_download_mutex);
 		
 		if (d_pid != 0) {
@@ -625,49 +627,35 @@ double DownloadManager::getRatio() {
 }
 
 /**
- * Returns the maximum download speed.
+ * Sets the maximum download speed in kb/s.
  */
-double DownloadManager::getMaxDownSpeed() {
-	return max_downspeed;
-}
-
-/**
- * Returns the maximum upload speed.
- */
-double DownloadManager::getMaxUpSpeed() {
-	return max_upspeed;
-}
-
-/**
- * Sets the maximum download speed.
- */
-void DownloadManager::setMaxDownSpeed(double speed) {
+void DownloadManager::limitDownSpeeds(double speed) {
 	if (speed > 0) {
-		max_downspeed = speed * 1024;
+		Settings::setMaxDownSpeed(speed * 1024);
 	} else {
-		max_downspeed = DBL_MAX;
+		Settings::setMaxDownSpeed(DBL_MAX);
 	}
 	
 	for (int i = 0; i < getDownloads().size(); i++) {
 		pthread_mutex_lock(&mutex);
-		downloads.at(i).limitDownSpeed(max_downspeed);
+		downloads.at(i).limitDownSpeed(Settings::getMaxDownSpeed());
 		pthread_mutex_unlock(&mutex);
 	}
 }
 
 /**
- * Sets the maximum upload speed.
+ * Sets the maximum upload speed in kb/s.
  */
-void DownloadManager::setMaxUpSpeed(double speed) {
+void DownloadManager::limitUpSpeeds(double speed) {
 	if (speed > 0) {
-		max_upspeed = speed * 1024;
+		Settings::setMaxUpSpeed(speed * 1024);
 	} else {
-		max_upspeed = DBL_MAX;
+		Settings::setMaxUpSpeed(DBL_MAX);
 	}
 	
 	for (int i = 0; i < getDownloads().size(); i++) {
 		pthread_mutex_lock(&mutex);
-		downloads.at(i).limitUpSpeed(max_upspeed);
+		downloads.at(i).limitUpSpeed(Settings::getMaxUpSpeed());
 		pthread_mutex_unlock(&mutex);
 	}
 }

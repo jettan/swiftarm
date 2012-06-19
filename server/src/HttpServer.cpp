@@ -46,28 +46,6 @@ static void HttpServer::sendResponse(struct evhttp_request *req, struct evbuffer
 }
 
 /**
- * Used to tokenize strings.
- */
-std::vector<std::string> &split(const std::string &str, char delim, std::vector<std::string> &elems) {
-	std::stringstream stream(str);
-	std::string item;
-	
-	while(std::getline(stream, item, delim)) {
-		elems.push_back(item);
-	}
-	
-	return elems;
-}
-
-/**
- * Used to tokenize strings.
- */
-std::vector<std::string> split(const std::string &str, char delim) {
-	std::vector<std::string> elems;
-	return split(str, delim, elems);
-}
-
-/**
  * The HTTP GET request handler.
  * @param req: The request struct from libevent.
  * @param arg: Ignored argument.
@@ -93,7 +71,7 @@ static void HttpServer::handleRequest(struct evhttp_request *req, void *arg) {
 	
 	// Message will look like: "/add:hash".
 	if (path_str.size() == 45 && path_str.substr(0, 4).compare("/add") == 0  && path_str.at(4) == ':') {
-		std::vector<std::string> result = split(path_str, ':');
+		std::vector<std::string> result = Settings::split(path_str, ':');
 		
 		if (result.size() == 2) {
 			std::string hash = result.at(1);
@@ -112,7 +90,7 @@ static void HttpServer::handleRequest(struct evhttp_request *req, void *arg) {
 		}
 	// Message will look like: "/download:roothash"
 	} else if (path_str.size() == 50 && path_str.substr(0, 9).compare("/download") == 0  && path_str.at(9) == ':') {
-		std::vector<std::string> result = split(path_str, ':');
+		std::vector<std::string> result = Settings::split(path_str, ':');
 		
 		if (result.size() == 2) {
 			std::string hash = result.at(1);
@@ -130,7 +108,7 @@ static void HttpServer::handleRequest(struct evhttp_request *req, void *arg) {
 			}
 	// Message will look like: "/upload:filename"
 	} else if (path_str.size() > 7 && path_str.substr(0, 7).compare("/upload") == 0  && path_str.at(7) == ':') {
-		std::vector<std::string> result = split(path_str, ':');
+		std::vector<std::string> result = Settings::split(path_str, ':');
 		
 		if (result.size() == 2) {
 			std::string filename = result.at(1);
@@ -148,7 +126,7 @@ static void HttpServer::handleRequest(struct evhttp_request *req, void *arg) {
 		}
 	// Message will look like: "/stop:roothash"
 	} else if (path_str.size() == 46 && path_str.substr(0, 5).compare("/stop") == 0  && path_str.at(5) == ':') {
-		std::vector<std::string> result = split(path_str, ':');
+		std::vector<std::string> result = Settings::split(path_str, ':');
 		
 		if (result.size() == 2) {
 			std::string hash = result.at(1);
@@ -166,7 +144,7 @@ static void HttpServer::handleRequest(struct evhttp_request *req, void *arg) {
 		}
 	// Message will look like: "/stop:roothash"
 	} else if (path_str.size() == 48 && path_str.substr(0, 7).compare("/remove") == 0 && path_str.at(7) == ':') {
-		std::vector<std::string> result = split(path_str, ':');
+		std::vector<std::string> result = Settings::split(path_str, ':');
 		
 		if (result.size() == 2) {
 			std::string hash = result.at(1);
@@ -183,7 +161,7 @@ static void HttpServer::handleRequest(struct evhttp_request *req, void *arg) {
 			sendResponse(req, evb, "-1");
 		}
 	} else if (path_str.size() == 47 && path_str.substr(0, 6).compare("/pause") == 0  && path_str.at(6) == ':') {
-		std::vector<std::string> result = split(path_str, ':');
+		std::vector<std::string> result = Settings::split(path_str, ':');
 		
 		if (result.size() == 2) {
 			std::string hash = result.at(1);
@@ -201,7 +179,7 @@ static void HttpServer::handleRequest(struct evhttp_request *req, void *arg) {
 		}
 	// Message will look like: "/resume:roothash"
 	} else if (path_str.size() == 48 && path_str.substr(0, 7).compare("/resume") == 0  && path_str.at(7) == ':') {
-		std::vector<std::string> result = split(path_str, ':');
+		std::vector<std::string> result = Settings::split(path_str, ':');
 		
 		if (result.size() == 2) {
 			std::string hash = result.at(1);
@@ -219,7 +197,7 @@ static void HttpServer::handleRequest(struct evhttp_request *req, void *arg) {
 		}
 	// Message will look like: "/remove:roothash"
 	} else if (path_str.size() == 48 && path_str.substr(0, 7).compare("/remove") == 0  && path_str.at(7) == ':') {
-		std::vector<std::string> result = split(path_str, ':');
+		std::vector<std::string> result = Settings::split(path_str, ':');
 		
 		if (result.size() == 2) {
 			std::string hash = result.at(1);
@@ -237,7 +215,7 @@ static void HttpServer::handleRequest(struct evhttp_request *req, void *arg) {
 		}
 	// Message will look like: "/search:searchterm"
 	} else if (path_str.size() > 8 && path_str.substr(0, 7).compare("/search") == 0 && path_str.at(7) == ':') {
-		std::vector<std::string> result = split(path_str, ':');
+		std::vector<std::string> result = Settings::split(path_str, ':');
 		
 		if (result.size() == 2) {
 			std::string search_term = result.at(1);
@@ -253,7 +231,7 @@ static void HttpServer::handleRequest(struct evhttp_request *req, void *arg) {
 		
 	// Message will look like: "/stream:filename"
 	} else if (path_str.size() >= 7 && path_str.substr(0,7).compare("/stream") == 0 && path_str.at(7) == ':') {
-		std::vector<std::string> result = split(path_str, ':');
+		std::vector<std::string> result = Settings::split(path_str, ':');
 		
 		if (result.size() == 2) {
 			std::string hash = result.at(1);
@@ -279,16 +257,17 @@ static void HttpServer::handleRequest(struct evhttp_request *req, void *arg) {
 		
 	// Parse settings, message will look like: "/settings:downmax:upmax:downdir".
 	} else if (path_str.size() >= 27 && path_str.substr(0,9).compare("/settings") == 0 && path_str.at(9) == ':') {
-		std::vector<std::string> result = split(path, ':');
+		std::vector<std::string> result = Settings::split(path, ':');
 		
 		if (result.size() == 4) {
 			double max_down          = strtod(result.at(1).c_str(), NULL);
 			double max_up            = strtod(result.at(2).c_str(), NULL);
 			std::string download_dir = result.at(3);
 			
+			DownloadManager::limitUpSpeeds(max_up);
+			DownloadManager::limitDownSpeeds(max_down);
 			Settings::setDownloadDirectory(download_dir);
-			DownloadManager::setMaxUpSpeed(max_up);
-			DownloadManager::setMaxDownSpeed(max_down);
+			Settings::saveSettings(result);
 		}
 		
 		sendResponse(req, evb, "Received settings.");

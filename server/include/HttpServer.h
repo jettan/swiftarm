@@ -2,10 +2,8 @@
 #define _HTTPSERVER_H
 
 #include <iostream>
-#include <string>
 #include <cstdio>
 #include <cstdlib>
-
 #include <string.h>
 
 #include <event2/event.h>
