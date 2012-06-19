@@ -430,6 +430,8 @@ void DownloadManager::switchDownload(std::string hash) {
 	}
 	else {
 		pthread_mutex_unlock(&active_download_mutex);
+		AlreadyDownloadingException *e = new AlreadyDownloadingException();
+		throw *e;
 	}
 }
 

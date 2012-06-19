@@ -223,6 +223,9 @@ TEST_F(DownloadTest, startTrivial){
 // Already Started
 TEST_F(DownloadTest, startAlreadyStarted){
 	
+	download->start();
+	download->start();
+	EXPECT_EQ(DOWNLOADING, download->getStatus());
 	
 }
 
@@ -237,9 +240,20 @@ TEST_F(DownloadTest, pauseTrivial){
 	EXPECT_EQ(PAUSED, download->getStatus());
 }
 
+// Not Downloading
+TEST_F(DownloadTest, pauseNotPlaying) {
+	
+	download->pause();
+	EXPECT_EQ(PAUSED, download->getStatus());
+}
+
 // Already Paused
 TEST_F(DownloadTest, pauseAlreadyPaused) {
 	
+	download->start();
+	download->pause();
+	download->pause();
+	EXPECT_EQ(PAUSED, download->getStatus());
 	
 }
 
@@ -256,9 +270,14 @@ TEST_F(DownloadTest, resumeTrivial){
 }
 
 // Already Downloading
-TEST_F(DownloadTest, pauseAlreadyDownloading) {
+TEST_F(DownloadTest, resumeAlreadyDownloading) {
 	
+	download->start();
+	download->pause();
+	download->resume();
 	
+	download->resume();
+	EXPECT_EQ(DOWNLOADING, download->getStatus());
 }
 
 /* Stop */
@@ -271,8 +290,27 @@ TEST_F(DownloadTest, stopTrivial){
 	EXPECT_EQ(STOPPED, download->getStatus());
 }
 
+// Not Started
+TEST_F(DownloadTest, stopNotStarted){
+	
+	download->stop();
+	EXPECT_EQ(STOPPED, download->getStatus());
+}
+
+// While Paused
+TEST_F(DownloadTest, stopWhilePaused) {
+	
+	download->pause();
+	download->stop();
+	EXPECT_EQ(STOPPED, download->getStatus());
+}
+
 // Already Stopped
 TEST_F(DownloadTest, stopAlreadyStopped){
 	
+	download->stop();
+	EXPECT_EQ(STOPPED, download->getStatus());
 	
+	download->stop();
+	EXPECT_EQ(STOPPED, download->getStatus());
 }

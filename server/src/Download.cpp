@@ -9,8 +9,8 @@ void Download::stop() {
 	
 	if (getStatus() != STOPPED && getStatus() != PAUSED) {
 		swift::Close(getID());
-		setStatus(STOPPED);
 	}
+	setStatus(STOPPED);
 	
 	std::string mhash = getFilename() + ".mhash";
 	std::string mbinmap = getFilename() + ".mbinmap";

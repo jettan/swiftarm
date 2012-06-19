@@ -80,7 +80,7 @@ static void HttpServer::handleRequest(struct evhttp_request *req, void *arg) {
 				struct SearchEngine::result res = SearchEngine::getResultWithHash(hash);
 				DownloadManager::add(new Download(res.tracker, res.hash, res.filename));
 				sendResponse(req, evb, "Download Added");
-			} catch(std::exception e) {
+			} catch(FileNotFoundException e) {
 				std::cout << "Exception Caught In HttpServer" << std::endl;
 				std::cout << e.what() << std::endl;
 				sendResponse(req, evb, e.what());
@@ -96,13 +96,19 @@ static void HttpServer::handleRequest(struct evhttp_request *req, void *arg) {
 			std::string hash = result.at(1);
 			
 			try {
-				DownloadManager::switchDownload(hash);
-				sendResponse(req, evb, "Download Started");
+				if(DownloadManager::getIndexFromHash(hash) > -1) {
+					DownloadManager::switchDownload(hash);
+					sendResponse(req, evb, "Download Started");
+				}
 			} catch(FileNotFoundException e) {
 				std::cout << "Exception Caught In HttpServer" << std::endl;
 				std::cout << e.what() << std::endl;
-				sendResponse(req, evb, "-1");
-			} 
+				sendResponse(req, evb, e.what());
+			} catch(AlreadyDownloadingException e) {
+				std::cout << "Exception Caught In HttpServer" << std::endl;
+				std::cout << e.what() << std::endl;
+				sendResponse(req, evb, e.what());
+			}
 		} else {
 				sendResponse(req, evb, "-1");
 			}
@@ -142,7 +148,7 @@ static void HttpServer::handleRequest(struct evhttp_request *req, void *arg) {
 		} else {
 			sendResponse(req, evb, "-1");
 		}
-	// Message will look like: "/stop:roothash"
+	// Message will look like: "/remove:roothash"
 	} else if (path_str.size() == 48 && path_str.substr(0, 7).compare("/remove") == 0 && path_str.at(7) == ':') {
 		std::vector<std::string> result = Settings::split(path_str, ':');
 		
@@ -155,7 +161,7 @@ static void HttpServer::handleRequest(struct evhttp_request *req, void *arg) {
 			} catch(FileNotFoundException e) {
 				std::cout << "Exception Caught In HttpServer" << std::endl;
 				std::cout << e.what() << std::endl;
-				sendResponse(req, evb, "-1");
+				sendResponse(req, evb, e.what());
 			}
 		} else {
 			sendResponse(req, evb, "-1");
@@ -172,7 +178,7 @@ static void HttpServer::handleRequest(struct evhttp_request *req, void *arg) {
 			} catch(FileNotFoundException e) {
 				std::cout << "Exception Caught In HttpServer" << std::endl;
 				std::cout << e.what() << std::endl;
-				sendResponse(req, evb, "-1");
+				sendResponse(req, evb, e.what());
 			}
 		} else {
 			sendResponse(req, evb, "-1");
@@ -190,25 +196,7 @@ static void HttpServer::handleRequest(struct evhttp_request *req, void *arg) {
 			} catch(FileNotFoundException e) {
 				std::cout << "Exception Caught In HttpServer" << std::endl;
 				std::cout << e.what() << std::endl;
-				sendResponse(req, evb, "-1");
-			}
-		} else {
-			sendResponse(req, evb, "-1");
-		}
-	// Message will look like: "/remove:roothash"
-	} else if (path_str.size() == 48 && path_str.substr(0, 7).compare("/remove") == 0  && path_str.at(7) == ':') {
-		std::vector<std::string> result = Settings::split(path_str, ':');
-		
-		if (result.size() == 2) {
-			std::string hash = result.at(1);
-			
-			try {
-				DownloadManager::removeFromDisk(hash);
-				sendResponse(req, evb, "Download removed from disk");
-			} catch(FileNotFoundException e) {
-				std::cout << "Exception Caught In HttpServer" << std::endl;
-				std::cout << e.what() << std::endl;
-				sendResponse(req, evb, "-1");
+				sendResponse(req, evb, e.what());
 			}
 		} else {
 			sendResponse(req, evb, "-1");
@@ -229,7 +217,7 @@ static void HttpServer::handleRequest(struct evhttp_request *req, void *arg) {
 		std::string msg = DownloadManager::buildXML();
 		sendXMLResponse(msg, req, evb);
 		
-	// Message will look like: "/stream:filename"
+	// Message will look like: "/stream:hash"
 	} else if (path_str.size() >= 7 && path_str.substr(0,7).compare("/stream") == 0 && path_str.at(7) == ':') {
 		std::vector<std::string> result = Settings::split(path_str, ':');
 		
@@ -302,6 +290,118 @@ static void HttpServer::handleRequest(struct evhttp_request *req, void *arg) {
 		evbuffer_free(evb);
 		std::cout << "Cleaned evb garbage" << std::endl;
 	}
+}
+
+/**
+ * Handler for the /add request
+ */
+static void addRequest(std::string hash) {
+	
+	
+}
+
+/**
+ * Handler for the /download request
+ */
+static void downloadRequest(std::string hash) {
+	
+	
+}
+
+/**
+ * Handler for the /upload request
+ */
+static void uploadRequest(std::string filename) {
+	
+	
+}
+
+/**
+ * Handler for the /stop request
+ */
+static void stopRequest(std::string hash) {
+	
+	
+}
+
+/**
+ * Handler for the /remove request
+ */
+static void removeRequest(std::string hash) {
+	
+	
+}
+
+/**
+ * Handler for the /pause request
+ */
+static void pauseRequest(std::string hash) {
+	
+	
+}
+
+/**
+ * Handler for the /resume request
+ */
+static void resumeRequest(std::string hash) {
+	
+	
+}
+
+/**
+ * Handler for the /search request
+ */
+static void searchRequest(std::string searchTerm) {
+	
+	
+}
+
+/**
+ * Handler for the /stats request
+ */
+static void statsRequest() {
+	
+	
+}
+
+/**
+ * Handler for the /stream request
+ */
+static void streamRequest(std::string hash) {
+	
+	
+}
+
+/**
+ * Handler for the /stopStream request
+ */
+static void stopStreamRequest() {
+	
+	
+}
+
+/**
+ * Handler for the /settings request
+ */
+static void settingsRequest(std::string settings) {
+	
+	
+}
+
+/**
+ * Handler for the /clear request
+ */
+static void clearRequest() {
+	
+	
+}
+
+/**
+ * Handler for the /alive request
+ */
+static void aliveRequest() {
+	
+	
 }
 
 /**

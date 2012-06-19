@@ -3,10 +3,13 @@
 #include "curl.h"
 #include "easy.h"
 #include "gtest.h"
-#include "DownloadManager.h"
 #include "swift.h"
+
+#include "DownloadManager.h"
 #include "HttpServer.h"
 #include "SearchEngine.h"
+#include "Utils.h"
+
 #include <pthread.h>
 
 pthread_t server_thread;
@@ -79,8 +82,8 @@ int main(int argc, char **argv){
 	std::cout << "Initialised swift" << std::endl;
 	
 	// Set Download directory
-	DownloadManager::setDownloadDirectory("/dtv/usb/sda1/Downloads");
-	DownloadManager::init("/dtv/usb/sda1/Downloads");
+	Settings::init("/dtv/usb/sda1/Downloads");
+	DownloadManager::init();
 	
 	//swift::Channel::debug_file = stdout;
 	// Make httpserver loop

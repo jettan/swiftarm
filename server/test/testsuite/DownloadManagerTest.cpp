@@ -1,5 +1,6 @@
 #include "DownloadManager.h"
 #include "Download.h"
+#include "Utils.h"
 #include "gtest.h"
 #include <string>
 
@@ -35,11 +36,11 @@ void testDownloadsAreEqual(Download dl1, Download dl2){
 TEST_F(DownloadManagerTest, setDirectoryTrivial) {
 	
 	std::string test = "/dtv/usb/sda1/Test";
-	DownloadManager::setDownloadDirectory(test);
+	Settings::setDownloadDirectory(test);
 	
-	EXPECT_EQ(test, DownloadManager::getDownloadDirectory());
+	EXPECT_EQ(test, Settings::getDownloadDirectory());
 	
-	DownloadManager::setDownloadDirectory("/dtv/usb/sda1/Downloads");
+	Settings::setDownloadDirectory("/dtv/usb/sda1/Downloads");
 }
 
 /* getIndexFromHash */
@@ -315,7 +316,7 @@ TEST_F(DownloadManagerTest, switchDownloadSame) {
 	testDownloadsAreEqual(dl1, DownloadManager::getActiveDownload());
 	EXPECT_EQ(DOWNLOADING, DownloadManager::getActiveDownload().getStatus());
 	
-	DownloadManager::switchDownload(hash1);
+	EXPECT_THROW(DownloadManager::switchDownload(hash1), AlreadyDownloadingException);
 	
 	EXPECT_EQ(2, DownloadManager::getDownloads().size());
 	testDownloadsAreEqual(dl1, DownloadManager::getActiveDownload());

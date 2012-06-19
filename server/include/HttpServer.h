@@ -26,6 +26,22 @@ namespace HttpServer {
 	static void sendXMLResponse(std::string msg, struct evhttp_request *req, struct evbuffer *buf);
 	static void sendResponse(struct evhttp_request *req, struct evbuffer *buf,  const char *message);
 	static void handleRequest(struct evhttp_request *req, void *arg);
+	
+	static void addRequest(std::string hash);
+	static void downloadRequest(std::string hash);
+	static void uploadRequest(std::string filename);
+	static void stopRequest(std::string hash);
+	static void removeRequest(std::string hash);
+	static void pauseRequest(std::string hash);
+	static void resumeRequest(std::string hash);
+	static void searchRequest(std::string searchTerm);
+	static void statsRequest();
+	static void streamRequest(std::string hash);
+	static void stopStreamRequest();
+	static void settingsRequest(std::string settings);
+	static void clearRequest();
+	static void aliveRequest();
+	
 	int init();
 	
 }
