@@ -7,6 +7,7 @@
 #include <sstream>
 #include <fstream>
 #include <sys/types.h>
+#include <sys/stat.h>
 #include <unistd.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
@@ -42,6 +43,8 @@ namespace Settings {
 	std::vector<std::string> split(const std::string &str, char delim);
 	std::string getIP();
 	std::string getDownloadDirectory();
+	
+	bool directoryExists(std::string path);
 	
 	double getMaxUpSpeed();
 	double getMaxDownSpeed();

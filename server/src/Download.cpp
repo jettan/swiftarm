@@ -47,7 +47,7 @@ void Download::start() {
 	
 	// Change the directory to Downloads folder.
 	// Temporarily hard coded.
-	int change = chdir("/dtv/usb/sda1/Downloads");
+	int change = chdir(Settings::getDownloadDirectory().c_str());
 	
 	swift::Address trackeraddr = swift::Address(getTrackerAddress().c_str());
 	swift::Sha1Hash roothash   = swift::Sha1Hash(true, getRootHash().c_str());

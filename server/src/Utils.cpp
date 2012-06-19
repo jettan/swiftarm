@@ -41,7 +41,6 @@ void Settings::loadSettings(std::string filename) {
 			std::string max_down_speed_str = result.at(0);
 			
 			double max_down_speed_value = std::atof(split(max_down_speed_str, ':').at(1).c_str());
-			std::cout << "This is the max download speed: " << max_down_speed_value << std::endl;
 			
 			setMaxDownSpeed(max_down_speed_value);
 		}
@@ -51,8 +50,6 @@ void Settings::loadSettings(std::string filename) {
 			
 			double max_up_speed_value = std::atof(split(max_up_speed_str, ':').at(1).c_str());
 			
-			std::cout << "This is the max upload speed: " << max_up_speed_value << std::endl;
-			
 			setMaxUpSpeed(max_up_speed_value);
 		}
 		
@@ -60,8 +57,6 @@ void Settings::loadSettings(std::string filename) {
 			std::string download_dir_str = result.at(2);
 			
 			std::string download_dir_value = split(download_dir_str, ':').at(1);
-			
-			std::cout << "This is the download dir: " << download_dir_value << std::endl;
 			
 			setDownloadDirectory(download_dir_value);
 		}
@@ -90,14 +85,29 @@ void Settings::saveSettings(std::vector<std::string> settings) {
 	
 	} else {
 		settings_file << "max_down_speed:" << settings.at(1) << ";";
-		std::cout << "Writing: " << settings.at(1) << std::endl;
 		settings_file << "max_up_speed:" << settings.at(2) << ";";
-		std::cout << "Writing: " << settings.at(2) << std::endl;
 		settings_file << "download_dir:" << settings.at(3) << ";";
-		std::cout << "Writing: " << settings.at(3) << std::endl;
 	}
 	
 	settings_file.close();
+}
+
+bool Settings::directoryExists(std::string path) {
+	if (access(path.c_str(), 0 ) == 0) {
+		struct stat status;
+		stat(path.c_str(), &status);
+		
+		if (status.st_mode & S_IFDIR) {
+			std::cout << "The directory exists." << std::endl;
+			return true;
+		} else {
+			std::cout << "The path you entered is a file." << std::endl;
+		}
+	} else {
+		std::cout << "Path doesn't exist." << std::endl;
+	}
+	
+	return false;
 }
 
 /**
@@ -106,8 +116,16 @@ void Settings::saveSettings(std::vector<std::string> settings) {
  */
 void Settings::setDownloadDirectory(std::string dir) {
 	pthread_mutex_lock(&mutex);
-	download_directory = dir;
-	chdir(download_directory.c_str());
+	
+	if (directoryExists(dir)) {
+		download_directory = dir;
+		chdir(download_directory.c_str());
+	} else {
+		std::cout << "No device found, going to /tmp" << std::endl;
+		download_directory = "/tmp/Downloads";
+		mkdir("/tmp/Downloads", 0777);
+		chdir(download_directory.c_str());
+	}
 	pthread_mutex_unlock(&mutex);
 }
 

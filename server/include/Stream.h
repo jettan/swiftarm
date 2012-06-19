@@ -7,6 +7,7 @@
 #include <cstdio>
 #include <cstdlib>
 
+#include "Utils.h"
 #include "swift.h"
 
 class Stream {

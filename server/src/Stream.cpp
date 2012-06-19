@@ -85,7 +85,7 @@ void Stream::stop() {
 void Stream::start() {
 	// Change the directory to Downloads folder.
 	// Temporarily hard coded.
-	int change = chdir("/dtv/usb/sda1/Downloads");
+	int change = chdir(Settings::getDownloadDirectory().c_str());
 	
 	std::cout << "Tracker = " << _tracker <<std::endl;
 	

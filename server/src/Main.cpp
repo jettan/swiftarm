@@ -33,7 +33,7 @@ int main() {
 	swift::Address bindaddress;
 	
 	bindaddress = swift::Address(Settings::getIP().c_str(), 0);
-	bindaddress.set_port(25000);
+	bindaddress.set_port(DEFAULT_PORT);
 	sock = swift::Listen(swift::Address(bindaddress));
 	
 	std::cout << "Listening on port " << swift::BoundAddress(sock).port() << "." << std::endl;
