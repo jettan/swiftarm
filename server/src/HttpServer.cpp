@@ -75,58 +75,30 @@ static void HttpServer::handleRequest(struct evhttp_request *req, void *arg) {
 		
 		if (result.size() == 2) {
 			std::string hash = result.at(1);
-			
-			try {
-				struct SearchEngine::result res = SearchEngine::getResultWithHash(hash);
-				DownloadManager::add(new Download(res.tracker, res.hash, res.filename));
-				sendResponse(req, evb, "Download Added");
-			} catch(FileNotFoundException e) {
-				std::cout << "Exception Caught In HttpServer" << std::endl;
-				std::cout << e.what() << std::endl;
-				sendResponse(req, evb, e.what());
-			}
+			std::string response = addRequest(hash);
+			sendResponse(req, evb, response.c_str());
 		} else {
 			sendResponse(req, evb, "-1");
 		}
-	// Message will look like: "/download:roothash"
+	// Message will look like: "/download:hash"
 	} else if (path_str.size() == 50 && path_str.substr(0, 9).compare("/download") == 0  && path_str.at(9) == ':') {
 		std::vector<std::string> result = Settings::split(path_str, ':');
 		
 		if (result.size() == 2) {
 			std::string hash = result.at(1);
-			
-			try {
-				if(DownloadManager::getIndexFromHash(hash) > -1) {
-					DownloadManager::switchDownload(hash);
-					sendResponse(req, evb, "Download Started");
-				}
-			} catch(FileNotFoundException e) {
-				std::cout << "Exception Caught In HttpServer" << std::endl;
-				std::cout << e.what() << std::endl;
-				sendResponse(req, evb, e.what());
-			} catch(AlreadyDownloadingException e) {
-				std::cout << "Exception Caught In HttpServer" << std::endl;
-				std::cout << e.what() << std::endl;
-				sendResponse(req, evb, e.what());
-			}
+			std::string response = downloadRequest(hash);
+			sendResponse(req, evb, response.c_str());
 		} else {
-				sendResponse(req, evb, "-1");
-			}
+			sendResponse(req, evb, "-1");
+		}
 	// Message will look like: "/upload:filename"
 	} else if (path_str.size() > 7 && path_str.substr(0, 7).compare("/upload") == 0  && path_str.at(7) == ':') {
 		std::vector<std::string> result = Settings::split(path_str, ':');
 		
 		if (result.size() == 2) {
 			std::string filename = result.at(1);
-			
-			try {
-				DownloadManager::upload(filename);
-				sendResponse(req, evb, "Upload Started");
-			} catch(FileNotFoundException e) {
-				std::cout << "Exception Caught In HttpServer" << std::endl;
-				std::cout << e.what() << std::endl;
-				sendResponse(req, evb, "-1");
-			}
+			std::string response = uploadRequest(filename);
+			sendResponse(req, evb, response.c_str());
 		} else {
 			sendResponse(req, evb, "-1");
 		}
@@ -136,15 +108,8 @@ static void HttpServer::handleRequest(struct evhttp_request *req, void *arg) {
 		
 		if (result.size() == 2) {
 			std::string hash = result.at(1);
-			
-			try {
-				DownloadManager::removeFromList(hash);
-				sendResponse(req, evb, "Download removed from list");
-			} catch(FileNotFoundException e) {
-				std::cout << "Exception Caught In HttpServer" << std::endl;
-				std::cout << e.what() << std::endl;
-				sendResponse(req, evb, "-1");
-			}
+			std::string response = stopRequest(hash);
+			sendResponse(req, evb, response.c_str());
 		} else {
 			sendResponse(req, evb, "-1");
 		}
@@ -154,32 +119,19 @@ static void HttpServer::handleRequest(struct evhttp_request *req, void *arg) {
 		
 		if (result.size() == 2) {
 			std::string hash = result.at(1);
-			
-			try {
-				DownloadManager::removeFromDisk(hash);
-				sendResponse(req, evb, "Download removed from list");
-			} catch(FileNotFoundException e) {
-				std::cout << "Exception Caught In HttpServer" << std::endl;
-				std::cout << e.what() << std::endl;
-				sendResponse(req, evb, e.what());
-			}
+			std::string response = removeRequest(hash);
+			sendResponse(req, evb, response.c_str());
 		} else {
 			sendResponse(req, evb, "-1");
 		}
+	// Message will look like: "/pause:hash"
 	} else if (path_str.size() == 47 && path_str.substr(0, 6).compare("/pause") == 0  && path_str.at(6) == ':') {
 		std::vector<std::string> result = Settings::split(path_str, ':');
 		
 		if (result.size() == 2) {
 			std::string hash = result.at(1);
-			
-			try {
-				DownloadManager::pauseDownload(hash);
-				sendResponse(req, evb, "Download Paused");
-			} catch(FileNotFoundException e) {
-				std::cout << "Exception Caught In HttpServer" << std::endl;
-				std::cout << e.what() << std::endl;
-				sendResponse(req, evb, e.what());
-			}
+			std::string response = pauseRequest(hash);
+			sendResponse(req, evb, response.c_str());
 		} else {
 			sendResponse(req, evb, "-1");
 		}
@@ -189,15 +141,8 @@ static void HttpServer::handleRequest(struct evhttp_request *req, void *arg) {
 		
 		if (result.size() == 2) {
 			std::string hash = result.at(1);
-			
-			try {
-				DownloadManager::resumeDownload(hash);
-				sendResponse(req, evb, "Download Resumed");
-			} catch(FileNotFoundException e) {
-				std::cout << "Exception Caught In HttpServer" << std::endl;
-				std::cout << e.what() << std::endl;
-				sendResponse(req, evb, e.what());
-			}
+			std::string response = resumeRequest(hash);
+			sendResponse(req, evb, response.c_str());
 		} else {
 			sendResponse(req, evb, "-1");
 		}
@@ -223,18 +168,8 @@ static void HttpServer::handleRequest(struct evhttp_request *req, void *arg) {
 		
 		if (result.size() == 2) {
 			std::string hash = result.at(1);
-			
-			try {
-				struct SearchEngine::result res = SearchEngine::getResultWithHash(hash);
-				DownloadManager::startStream(res.tracker);
-				std::string address = Settings::getIP() + ":15000/" + res.hash;
-				std::cout << address << std::endl;
-				sendResponse(req, evb, address.c_str());
-			} catch(FileNotFoundException e) {
-				std::cout << "Exception Caught In HttpServer" << std::endl;
-				std::cout << e.what() << std::endl;
-				sendResponse(req, evb, e.what());
-			}
+			std::string response = streamRequest(hash);
+			sendResponse(req, evb, response.c_str());
 		} else {
 			sendResponse(req, evb, "-1");
 		}
@@ -248,28 +183,14 @@ static void HttpServer::handleRequest(struct evhttp_request *req, void *arg) {
 		std::vector<std::string> result = Settings::split(path, ':');
 		
 		if (result.size() == 4) {
-			double max_down          = strtod(result.at(1).c_str(), NULL);
-			double max_up            = strtod(result.at(2).c_str(), NULL);
-			std::string download_dir = result.at(3);
-			
-			DownloadManager::limitUpSpeeds(max_up);
-			DownloadManager::limitDownSpeeds(max_down);
-			Settings::setDownloadDirectory(download_dir);
-			Settings::saveSettings(result);
+			std::string response = settingsRequest(result);
+			sendResponse(req, evb, response.c_str());
+		} else {
+			sendResponse(req, evb, "Invalid settings format");
 		}
-		
-		sendResponse(req, evb, "Received settings.");
 		
 	// Message will look like: "/clear"
 	} else if (strcmp(path, "/clear") == 0) {
-		try {
-			DownloadManager::clearList();
-			sendResponse(req, evb, "Download list cleared");
-		} catch(FileNotFoundException e) {
-			std::cout << "Exception Caught In HttpServer" << std::endl;
-			std::cout << e.what() << std::endl;
-			sendResponse(req, evb, "-1");
-		}
 		
 	// Check to see whether the server is still alive.
 	} else if (strcmp(path, "/alive") == 0) {
@@ -295,113 +216,191 @@ static void HttpServer::handleRequest(struct evhttp_request *req, void *arg) {
 /**
  * Handler for the /add request
  */
-static void addRequest(std::string hash) {
+static std::string HttpServer::addRequest(std::string hash) {
+	std::string response = "-1";
 	
+	try {
+		struct SearchEngine::result res = SearchEngine::getResultWithHash(hash);
+		DownloadManager::add(new Download(res.tracker, res.hash, res.filename));
+		response = "Download Added";
+	} catch(FileNotFoundException e) {
+		std::cout << "Exception Caught In HttpServer" << std::endl;
+		std::cout << e.what() << std::endl;
+		response = e.what();
+	}
 	
+	return response;
 }
 
 /**
  * Handler for the /download request
  */
-static void downloadRequest(std::string hash) {
+static std::string HttpServer::downloadRequest(std::string hash) {
+	std::string response = "-1";
 	
+	try {
+		if(DownloadManager::getIndexFromHash(hash) > -1) {
+			DownloadManager::switchDownload(hash);
+			response = "Download Started";
+		}
+	} catch(FileNotFoundException e) {
+		std::cout << "Exception Caught In HttpServer" << std::endl;
+		std::cout << e.what() << std::endl;
+		response = e.what();
+	} catch(AlreadyDownloadingException e) {
+		std::cout << "Exception Caught In HttpServer" << std::endl;
+		std::cout << e.what() << std::endl;
+		response = e.what();
+	}
 	
+	return response;
 }
 
 /**
  * Handler for the /upload request
  */
-static void uploadRequest(std::string filename) {
+static std::string HttpServer::uploadRequest(std::string filename) {
+	std::string response = "-1";
 	
+	try {
+		DownloadManager::upload(filename);
+		response = "Upload Started";
+	} catch(FileNotFoundException e) {
+		std::cout << "Exception Caught In HttpServer" << std::endl;
+		std::cout << e.what() << std::endl;
+		response = e.what();
+	}
 	
+	return response;
 }
 
 /**
  * Handler for the /stop request
  */
-static void stopRequest(std::string hash) {
+static std::string HttpServer::stopRequest(std::string hash) {
+	std::string response = "-1";
 	
+	try {
+		DownloadManager::removeFromList(hash);
+		response = "Download removed from list";
+	} catch(FileNotFoundException e) {
+		std::cout << "Exception Caught In HttpServer" << std::endl;
+		std::cout << e.what() << std::endl;
+		response = e.what();
+	}
 	
+	return response;
 }
 
 /**
  * Handler for the /remove request
  */
-static void removeRequest(std::string hash) {
+static std::string HttpServer::removeRequest(std::string hash) {
+	std::string response = "-1";
 	
+	try {
+		DownloadManager::removeFromDisk(hash);
+		response = "Download removed from list";
+	} catch(FileNotFoundException e) {
+		std::cout << "Exception Caught In HttpServer" << std::endl;
+		std::cout << e.what() << std::endl;
+		response = e.what();
+	}
 	
+	return response;
 }
 
 /**
  * Handler for the /pause request
  */
-static void pauseRequest(std::string hash) {
+static std::string HttpServer::pauseRequest(std::string hash) {
+	std::string response = "-1";
 	
+	try {
+		DownloadManager::pauseDownload(hash);
+		response = "Download Paused";
+	} catch(FileNotFoundException e) {
+		std::cout << "Exception Caught In HttpServer" << std::endl;
+		std::cout << e.what() << std::endl;
+		response = e.what();
+	}
 	
+	return response;
 }
 
 /**
  * Handler for the /resume request
  */
-static void resumeRequest(std::string hash) {
+static std::string HttpServer::resumeRequest(std::string hash) {
+	std::string response = "-1";
 	
+	try {
+		DownloadManager::resumeDownload(hash);
+		response = "Download Resumed";
+	} catch(FileNotFoundException e) {
+		std::cout << "Exception Caught In HttpServer" << std::endl;
+		std::cout << e.what() << std::endl;
+		response = e.what();
+	}
 	
-}
-
-/**
- * Handler for the /search request
- */
-static void searchRequest(std::string searchTerm) {
-	
-	
-}
-
-/**
- * Handler for the /stats request
- */
-static void statsRequest() {
-	
-	
+	return response;
 }
 
 /**
  * Handler for the /stream request
  */
-static void streamRequest(std::string hash) {
+static std::string HttpServer::streamRequest(std::string hash) {
+	std::string response = "-1";
 	
+	try {
+		struct SearchEngine::result res = SearchEngine::getResultWithHash(hash);
+		DownloadManager::startStream(res.tracker);
+		std::string address = Settings::getIP() + ":15000/" + res.hash;
+		std::cout << address << std::endl;
+		response = address.c_str();
+	} catch(FileNotFoundException e) {
+		std::cout << "Exception Caught In HttpServer" << std::endl;
+		std::cout << e.what() << std::endl;
+		response = e.what();
+	}
 	
-}
-
-/**
- * Handler for the /stopStream request
- */
-static void stopStreamRequest() {
-	
-	
+	return response;
 }
 
 /**
  * Handler for the /settings request
  */
-static void settingsRequest(std::string settings) {
+static std::string HttpServer::settingsRequest(std::vector<std::string> result) {
 	
+	double max_down          = strtod(result.at(1).c_str(), NULL);
+	double max_up            = strtod(result.at(2).c_str(), NULL);
+	std::string download_dir = result.at(3);
 	
+	DownloadManager::limitUpSpeeds(max_up);
+	DownloadManager::limitDownSpeeds(max_down);
+	Settings::setDownloadDirectory(download_dir);
+	Settings::saveSettings(result);
+	
+	return "Received settings.";
+
 }
 
 /**
  * Handler for the /clear request
  */
-static void clearRequest() {
+static std::string HttpServer::clearRequest() {
+	std::string response = "-1";
 	
+	try {
+		DownloadManager::clearList();
+		response = "Download list cleared";
+	} catch(FileNotFoundException e) {
+		std::cout << "Exception Caught In HttpServer" << std::endl;
+		std::cout << e.what() << std::endl;
+		response = e.what();
+	}
 	
-}
-
-/**
- * Handler for the /alive request
- */
-static void aliveRequest() {
-	
-	
+	return response;
 }
 
 /**

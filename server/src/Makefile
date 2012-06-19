@@ -1,19 +1,19 @@
-cppflags_for_gpp= -I $(SWIFTARM)/server/include -I $(SWIFTARM)/server/lib/include
-cppflags_for_x86_64= -O2 -I . -I $(SWIFTARM)/server/include -I $(SWIFTARM)/server/lib/include64
+cppflags_for_gpp= -I $(SWIFTARM)/server/include -I $(SWIFTARM)/server/lib/include -I /usr/include/python2.7
+cppflags_for_x86_64= -O2 -I . -I $(SWIFTARM)/server/include -I $(SWIFTARM)/server/lib/include64 -I /usr/include/python2.7
 cppflags_for_arm= -O2 -I . -I $(SWIFTARM)/server/include -I $(SWIFTARM)/server/lib-arm/include -I /opt/armv7a8-toolchain-lite/arm-v7a8-linux-gnueabi/include -I /opt/armv7a8-toolchain-lite/arm-v7a8-linux-gnueabi/libc/include
 
 ifeq ($(CXX),g++)
 	ifeq ($(system),x86_64)
 		CPPFLAGS=$(cppflags_for_x86_64)
-		LDADD=$(SWIFTARM)/server/lib/libswift64.a $(SWIFTARM)/server/lib/lib64/libevent_pthreads.a $(SWIFTARM)/server/lib/lib64/libevent.a -lrt -lstdc++ -lgcc -lutil -lpthread
+		LDADD=$(SWIFTARM)/server/lib/libswift64.a $(SWIFTARM)/server/lib/lib64/libevent_pthreads.a $(SWIFTARM)/server/lib/lib64/libevent.a -lrt -lstdc++ -lgcc -lutil -lpthread -lpython2.7
 	else
 		CPPFLAGS=$(cppflags_for_gpp)
-		LDADD=$(SWIFTARM)/server/lib/libswift.a $(SWIFTARM)/server/lib/lib/libevent_pthreads.a $(SWIFTARM)/server/lib/lib/libevent.a $(SWIFTARM)/server/lib/libticpp.a -lrt -lstdc++ -lgcc -lutil -lpthread
+		LDADD=$(SWIFTARM)/server/lib/libswift.a $(SWIFTARM)/server/lib/lib/libevent_pthreads.a $(SWIFTARM)/server/lib/lib/libevent.a $(SWIFTARM)/server/lib/libticpp.a -lrt -lstdc++ -lgcc -lutil -lpthread -lpython2.7
 	endif
 else
 	CPPFLAGS=$(cppflags_for_arm)
 	LD=arm-v7a8-linux-gnueabi-ld
-	LDADD=$(SWIFTARM)/server/lib-arm/libswift.a $(SWIFTARM)/server/lib-arm/lib/libevent_pthreads.a $(SWIFTARM)/server/lib-arm/lib/libevent.a $(SWIFTARM)/server/lib-arm/libticpp.a -lrt -lstdc++ -lgcc -lutil -lpthread
+	LDADD=$(SWIFTARM)/server/lib-arm/libswift.a $(SWIFTARM)/server/lib-arm/lib/libevent_pthreads.a $(SWIFTARM)/server/lib-arm/lib/libevent.a $(SWIFTARM)/server/lib-arm/libticpp.a -lrt -lstdc++ -lgcc -lutil -lpthread -lpython2.6
 endif
 
 CPPFLAGS += -I $(SWIFTARM)/server/include/ticpp -I $(SWIFTARM)/server/include/swift -Wall -Wno-sign-compare -Wno-unused -g -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE 
