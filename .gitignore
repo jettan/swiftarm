@@ -4,5 +4,7 @@ bin
 server/doc
 *.swp
 *.pc
+*.pyc
+*.pyo
 server/src/ws
 server/test/testsuite/testsuite
