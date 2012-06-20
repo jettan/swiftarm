@@ -15,6 +15,23 @@ class DownloadManagerTest : public ::testing::Test {
 	
 	virtual void TearDown() {
 		DownloadManager::clearList();
+		
+		DIR *dp;
+		struct dirent *dirp;
+		
+		if((dp = opendir(Settings::getDownloadDirectory().c_str())) == NULL) {
+			std::cout << "Failed opening Downloads directory in DownloadManagerTest" << std::endl;
+			
+		} else {
+			std::cout << "TEST: Removing all files in " << Settings::getDownloadDirectory() << std::endl;
+			while ((dirp = readdir(dp)) != NULL) {
+				std::string filename(dirp->d_name);
+				if (filename.at(0) != '.') {
+					remove(filename.c_str());
+				}
+			}
+		}
+		
 	}
 };
 

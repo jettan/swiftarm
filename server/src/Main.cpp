@@ -56,6 +56,9 @@ int main() {
 	// Set Download directory
 	DownloadManager::init();
 	
+	// Start python binder
+	SearchEngine::init();
+	
 	// Make httpserver loop
 	HttpServer::init();
 }

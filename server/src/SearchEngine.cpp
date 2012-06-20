@@ -1,4 +1,3 @@
-#include <Python.h>
 #include "SearchEngine.h"
 
 /**
@@ -125,4 +124,52 @@ struct SearchEngine::result SearchEngine::getResultWithName(std::string name) {
 	FileNotFoundException *e = new FileNotFoundException();
 	throw *e;
 }
+
+/**
+ * Init function to set up python calls
+ */
+void SearchEngine::init() {
+	
+	Py_Initialize();
+	
+	std::string answer = "-1";
+	
+	modname = PyString_FromString("Test");
+	if(modname == NULL) {
+		
+		Py_Exit(0);
+		std::cout << "Could not create python modname" << std::endl;
+	}
+	else {
+		
+		mod = PyImport_Import(modname);
+		if(mod) {
+			
+			mdict = PyModule_GetDict(mod);
+			func = PyDict_GetItemString(mdict, "testFunction");
+			
+			if(func && PyCallable_Check(func)) {
+				
+				stringarg = PyString_FromString("searchTerm");
+				args = PyTuple_New(1);
+				PyTuple_SetItem(args, 0, stringarg);
+				result = PyObject_CallObject(func, args);
+				
+				if(result) {
+					
+					if(PyString_Check(result)) {
+						
+						answer = PyString_AsString(result);
+						std::cout << "Python returned the following string: " << answer << std::endl;
+					}
+					else {
+						
+						std::cout << "Could not convert the python return value to std::string" << std::endl;
+					}
+				}
+			}
+		}
+	}
+}
+
 

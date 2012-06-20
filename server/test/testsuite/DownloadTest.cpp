@@ -22,8 +22,24 @@ class DownloadTest : public ::testing::Test {
 		download = new Download(tracker, root_hash, filename);
 	}
 	
-	virtual void TearDown() {}
-	
+	virtual void TearDown() {
+			
+		DIR *dp;
+		struct dirent *dirp;
+		
+		if((dp = opendir(Settings::getDownloadDirectory().c_str())) == NULL) {
+			std::cout << "Failed opening Downloads directory in DownloadTest" << std::endl;
+			
+		} else {
+			std::cout << "TEST: Removing all files in " << Settings::getDownloadDirectory() << std::endl;
+			while ((dirp = readdir(dp)) != NULL) {
+				std::string filename(dirp->d_name);
+				if (filename.at(0) != '.') {
+					remove(filename.c_str());
+				}
+			}
+		}
+	}
 };
 
 /* Constructor */
