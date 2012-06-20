@@ -22,6 +22,9 @@ bool InstallStatsGateway(struct event_base *evbase, swift::Address addr);
  */
 int main() {
 	
+	// Start python binder
+	SearchEngine::init();
+	
 	Settings::init(DEFAULT_DOWNLOAD_DIR);
 	
 	// Enable pthread use in libevent.
@@ -56,8 +59,6 @@ int main() {
 	// Set Download directory
 	DownloadManager::init();
 	
-	// Start python binder
-	SearchEngine::init();
 	
 	// Make httpserver loop
 	HttpServer::init();

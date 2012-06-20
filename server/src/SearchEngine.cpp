@@ -1,4 +1,10 @@
 #include "SearchEngine.h"
+#include <Python.h>
+
+namespace SearchEngine {
+    PyObject *pName, *pModule, *pDict, *pFunc;
+    PyObject *pArgs, *pValue;
+}
 
 /**
  * Generates a new list of result based on the search term
@@ -129,47 +135,55 @@ struct SearchEngine::result SearchEngine::getResultWithName(std::string name) {
  * Init function to set up python calls
  */
 void SearchEngine::init() {
-	
 	Py_Initialize();
+	std::cout << "Initialized python." << std::endl;
 	
-	std::string answer = "-1";
+	pName = PyString_FromString("Test");
 	
-	modname = PyString_FromString("Test");
-	if(modname == NULL) {
+	std::cout << "Trying to import module Test." << std::endl;
+	pModule = PyImport_Import(pName);
+	Py_DECREF(pName);
+	
+	if (pModule != NULL) {
+		std::cout << "Succesfully imported module Test." << std::endl;
+		pFunc = PyObject_GetAttrString(pModule, "testFunction");
+		/* pFunc is a new reference */
 		
-		Py_Exit(0);
-		std::cout << "Could not create python modname" << std::endl;
-	}
-	else {
-		
-		mod = PyImport_Import(modname);
-		if(mod) {
+		if (pFunc && PyCallable_Check(pFunc)) {
+			std::cout << "Function callable." << std::endl;
+			pArgs = PyTuple_New(1);
+			pValue = PyString_FromString("IRONMAN");
 			
-			mdict = PyModule_GetDict(mod);
-			func = PyDict_GetItemString(mdict, "testFunction");
+			/* pValue reference stolen here: */
+			PyTuple_SetItem(pArgs, 0, pValue);
+			std::cout << "Set the tuple." << std::endl;
+			pValue = PyObject_CallObject(pFunc, pArgs);
+			Py_DECREF(pArgs);
 			
-			if(func && PyCallable_Check(func)) {
-				
-				stringarg = PyString_FromString("searchTerm");
-				args = PyTuple_New(1);
-				PyTuple_SetItem(args, 0, stringarg);
-				result = PyObject_CallObject(func, args);
-				
-				if(result) {
-					
-					if(PyString_Check(result)) {
-						
-						answer = PyString_AsString(result);
-						std::cout << "Python returned the following string: " << answer << std::endl;
-					}
-					else {
-						
-						std::cout << "Could not convert the python return value to std::string" << std::endl;
-					}
-				}
+			std::cout << "Called the function" << std::endl;
+			
+			if (pValue != NULL) {
+				printf("Result of call: %s\n", PyString_AsString(pValue));
+				Py_DECREF(pValue);
+			} else {
+				Py_DECREF(pFunc);
+				Py_DECREF(pModule);
+				PyErr_Print();
+				fprintf(stderr,"Call failed\n");
+				return;
 			}
+		} else {
+			if (PyErr_Occurred())
+				PyErr_Print();
+			fprintf(stderr, "Cannot find function testFunction");
 		}
+		Py_XDECREF(pFunc);
+		Py_DECREF(pModule);
+	} else {
+		PyErr_Print();
+		fprintf(stderr, "Failed to load module Test");
+		return;
 	}
+	Py_Finalize();
 }
-
 

@@ -1,7 +1,6 @@
 #ifndef _SEARCHENGINE_H
 #define _SEARCHENGINE_H
 
-#include <Python.h>
 #include <vector>
 #include <string>
 #include <iostream>
@@ -11,7 +10,6 @@
 
 namespace SearchEngine {
 	
-	PyObject *modname, *mod, *mdict, *func, *stringarg, *args, *result;
 	
 	struct result {
 		std::string filename;
