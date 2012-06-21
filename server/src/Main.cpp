@@ -23,7 +23,7 @@ bool InstallStatsGateway(struct event_base *evbase, swift::Address addr);
 int main() {
 	
 	// Start python binder
-	SearchEngine::init();
+//	SearchEngine::init();
 	
 	Settings::init(DEFAULT_DOWNLOAD_DIR);
 	
