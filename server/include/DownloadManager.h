@@ -29,8 +29,6 @@ namespace DownloadManager {
 	
 	static std::vector<Download> downloads;	/// Vector containing all downloads.
 	
-	static std::string download_directory;
-	
 	static struct event evcompl;
 	static Download *active_download;
 	static pthread_t streaming_thread;
@@ -51,13 +49,11 @@ namespace DownloadManager {
 	void calculateRatio();
 	void calculateDownloadAmount();
 	void calculateUploadAmount();
-	void setDownloadDirectory(std::string dir);
 	void setActiveDownload(Download *download);
 	Download getActiveDownload();
 	std::vector<Download> getDownloads();
-	std::string getDownloadDirectory();
 	
-	void init(std::string download_dir);
+	void init();
 	void startStream(std::string tracker);
 	void stopStream();
 	void *startStreamThread(void *arg);
@@ -78,7 +74,8 @@ namespace DownloadManager {
 	void setMaxUpSpeed(double speed);
 	void setMaxDownSpeed(double speed);
 	
-	
+	void limitUpSpeeds(double speed);
+	void limitDownSpeeds(double speed);
 	void upload(std::string filename);
 	void startUploads();
 	void downloadFirstInList();
