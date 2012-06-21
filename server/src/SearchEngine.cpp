@@ -2,8 +2,8 @@
 #include <Python.h>
 
 namespace SearchEngine {
-    PyObject *pName, *pModule, *pDict, *pFunc;
-    PyObject *pArgs, *pValue;
+	PyObject *pName, *pModule, *pDict, *pFunc;
+	PyObject *pArgs, *pValue;
 }
 
 /**
@@ -138,15 +138,15 @@ void SearchEngine::init() {
 	Py_Initialize();
 	std::cout << "Initialized python." << std::endl;
 	
-	pName = PyString_FromString("Test");
+	pName = PyString_FromString("DispersyInterface");
 	
-	std::cout << "Trying to import module Test." << std::endl;
+	std::cout << "Trying to import DispersyInterface." << std::endl;
 	pModule = PyImport_Import(pName);
 	Py_DECREF(pName);
 	
 	if (pModule != NULL) {
-		std::cout << "Succesfully imported module Test." << std::endl;
-		pFunc = PyObject_GetAttrString(pModule, "testFunction");
+		std::cout << "Succesfully imported DispersyInterface." << std::endl;
+		pFunc = PyObject_GetAttrString(pModule, "main");
 		/* pFunc is a new reference */
 		
 		if (pFunc && PyCallable_Check(pFunc)) {
@@ -163,8 +163,8 @@ void SearchEngine::init() {
 			std::cout << "Called the function" << std::endl;
 			
 			if (pValue != NULL) {
-				printf("Result of call: %s\n", PyString_AsString(pValue));
-				Py_DECREF(pValue);
+				//printf("Result of call: %s\n", PyString_AsString(pValue));
+				//Py_DECREF(pValue);
 			} else {
 				Py_DECREF(pFunc);
 				Py_DECREF(pModule);

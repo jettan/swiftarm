@@ -1,6 +1,6 @@
 cppflags_for_gpp= -I $(SWIFTARM)/server/include -I $(SWIFTARM)/server/lib/include -I /usr/include/python2.7
 cppflags_for_x86_64= -O2 -I . -I $(SWIFTARM)/server/include -I $(SWIFTARM)/server/lib/include64 -I /usr/include/python2.7
-cppflags_for_arm= -O2 -I . -I $(SWIFTARM)/server/include -I $(SWIFTARM)/server/lib-arm/include -I /opt/armv7a8-toolchain-lite/arm-v7a8-linux-gnueabi/include -I /opt/armv7a8-toolchain-lite/arm-v7a8-linux-gnueabi/libc/include
+cppflags_for_arm= -O2 -I . -I $(SWIFTARM)/server/include -I $(SWIFTARM)/server/lib-arm/include -I /opt/armv7a8-toolchain-lite/arm-v7a8-linux-gnueabi/include -I /opt/armv7a8-toolchain-lite/arm-v7a8-linux-gnueabi/libc/include -I /usr/include/python2.6
 
 ifeq ($(CXX),g++)
 	ifeq ($(system),x86_64)
