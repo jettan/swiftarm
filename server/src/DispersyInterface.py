@@ -53,7 +53,7 @@ def printResultsFromDispersy(keywords, results, candidate):
             print >> sys.stderr, "========================================"
             finger += 1
 
-def main(dummy):
+def main():
     sscfg = SessionStartupConfig()
     sscfg.set_state_dir(unicode(os.path.realpath("/tmp")))
     sscfg.set_dispersy_port(6421)

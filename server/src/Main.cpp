@@ -59,7 +59,6 @@ int main() {
 	// Set Download directory
 	DownloadManager::init();
 	
-	
 	// Make httpserver loop
 	HttpServer::init();
 }

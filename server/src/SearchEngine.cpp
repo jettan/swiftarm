@@ -151,19 +151,12 @@ void SearchEngine::init() {
 		
 		if (pFunc && PyCallable_Check(pFunc)) {
 			std::cout << "Function callable." << std::endl;
-			pArgs = PyTuple_New(1);
-			pValue = PyString_FromString("IRONMAN");
-			
-			/* pValue reference stolen here: */
-			PyTuple_SetItem(pArgs, 0, pValue);
-			std::cout << "Set the tuple." << std::endl;
-			pValue = PyObject_CallObject(pFunc, pArgs);
-			Py_DECREF(pArgs);
+			// TODO: Call main() of DispersyInterface in another thread.
+			pValue = PyObject_CallObject(pFunc, NULL);
 			
 			std::cout << "Called the function" << std::endl;
 			
 			if (pValue != NULL) {
-				//printf("Result of call: %s\n", PyString_AsString(pValue));
 				//Py_DECREF(pValue);
 			} else {
 				Py_DECREF(pFunc);
