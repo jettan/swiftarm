@@ -3,15 +3,25 @@
 /**
  * Initialises the download manager.
  */
-void DownloadManager::init() {
+void DownloadManager::init(std::string download_dir) {
 	active_download = NULL;
 	pthread_mutex_init(&mutex, NULL);
 	pthread_mutex_init(&active_download_mutex, NULL);
+	setDownloadDirectory(download_dir);
 	
 	setMaxDownSpeed(UNLIMITED_SPEED);
 	setMaxUpSpeed(UNLIMITED_SPEED);
 	
 	startUploads();
+}
+
+/**
+ * Sets the directory where swift will download files to.
+ * @param dir: The directory where swift will download files to.
+ */
+void DownloadManager::setDownloadDirectory(std::string dir) {
+	download_directory = dir;
+	chdir(download_directory.c_str());
 }
 
 /**
@@ -23,6 +33,13 @@ std::vector<Download> DownloadManager::getDownloads() {
 	pthread_mutex_unlock(&mutex);
 	
 	return return_value;
+}
+
+/**
+ * Returns the download directory as string.
+ */
+std::string DownloadManager::getDownloadDirectory() {
+	return download_directory;
 }
 
 /**
@@ -542,7 +559,7 @@ void DownloadManager::startUploads() {
 	DIR *dp;
 	struct dirent *dirp;
 	
-	if((dp = opendir(Settings::getDownloadDirectory().c_str())) == NULL) {
+	if((dp = opendir(download_directory.c_str())) == NULL) {
 		std::cout << "Failed opening Downloads directory" << std::endl;
 	}
 	
@@ -663,40 +680,6 @@ void DownloadManager::setMaxUpSpeed(double speed) {
 }
 
 /**
- * Sets the maximum download speed in kb/s.
- */
-void DownloadManager::limitDownSpeeds(double speed) {
-	if (speed > 0) {
-		Settings::setMaxDownSpeed(speed * 1024);
-	} else {
-		Settings::setMaxDownSpeed(DBL_MAX);
-	}
-
-	for (int i = 0; i < getDownloads().size(); i++) {
-		pthread_mutex_lock(&mutex);
-		downloads.at(i).limitDownSpeed(Settings::getMaxDownSpeed());
-		pthread_mutex_unlock(&mutex);
-	}
-}
-
-/**
- * Sets the maximum upload speed in kb/s.
- */
-void DownloadManager::limitUpSpeeds(double speed) {
-	if (speed > 0) {
-		Settings::setMaxUpSpeed(speed * 1024);
-	} else {
-		Settings::setMaxUpSpeed(DBL_MAX);
-	}
-
-	for (int i = 0; i < getDownloads().size(); i++) {
-		pthread_mutex_lock(&mutex);
-		downloads.at(i).limitUpSpeed(Settings::getMaxUpSpeed());
-		pthread_mutex_unlock(&mutex);
-	}
-}
-
-/**
  * Removes a download from the list given a root hash.
  * @param download_hash: The root hash of the download to be removed.
  */
@@ -741,7 +724,7 @@ void DownloadManager::removeFromDisk(const std::string download_hash) {
 		std::string filename = getDownloads().at(index).getFilename();
 		removeFromList(download_hash);
 		
-		filename = Settings::getDownloadDirectory() + "/" + filename;
+		filename = download_directory + "/" + filename;
 		
 		if (remove(filename.c_str()) != 0) {
 			// File removed successfully
