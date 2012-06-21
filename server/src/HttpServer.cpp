@@ -80,6 +80,9 @@ static void HttpServer::handleRequest(struct evhttp_request *req, void *arg) {
 		} else {
 			sendResponse(req, evb, "-1");
 		}
+	} else if (strcmp(path, "/dispersy") == 0) {
+		SearchEngine::searchDispersy();
+		sendResponse(req, evb, "Called dispersy.");
 	// Message will look like: "/download:hash"
 	} else if (path_str.size() == 50 && path_str.substr(0, 9).compare("/download") == 0  && path_str.at(9) == ':') {
 		std::vector<std::string> result = Settings::split(path_str, ':');

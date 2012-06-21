@@ -9,6 +9,7 @@
 #include <cstdio>
 #include <cstdlib>
 
+#include <pthread.h>
 #include <float.h>
 
 #include "Stream.h"
@@ -59,7 +60,7 @@ namespace DownloadManager {
 	void *startStreamThread(void *arg);
 	void updateDownloadStatistics();
 	std::string buildXML();
-	void *dispatch(void* arg);
+	void *dispatch(void *arg);
 	
 	int resumeDownload(std::string download_hash);
 	int startDownload(const std::string download_hash);

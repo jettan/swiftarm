@@ -5,11 +5,17 @@
 #include <string>
 #include <iostream>
 
+#include <pthread.h>
+
 #include "Exceptions.h"
 #include "ticpp.h"
 
 namespace SearchEngine {
 	
+	static pthread_t dispersy_thread;
+	static pthread_mutex_t dispersy_mutex;
+	
+	void *startDispersy(void *arg);
 	
 	struct result {
 		std::string filename;
@@ -24,6 +30,8 @@ namespace SearchEngine {
 	std::string buildSearchXML();
 	
 	std::string search(std::string search_term);
+
+	void searchDispersy();
 	
 	std::vector<struct result> getResults();
 	

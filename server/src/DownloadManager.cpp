@@ -11,7 +11,7 @@ void DownloadManager::init() {
 	setMaxDownSpeed(UNLIMITED_SPEED);
 	setMaxUpSpeed(UNLIMITED_SPEED);
 	
-	startUploads();
+	//startUploads();
 }
 
 /**
@@ -303,7 +303,7 @@ void downloadCallback(int fd, short event, void* arg) {
 
 /**
  * Dispatches swift::Channel::evbase to get into the main loop to download files.
- * @param arg: Unused argument of pthread_create.
+ * @param arg: Unused argument of p`thread_create.
  */
 void *DownloadManager::dispatch(void* arg) {
 	// Assign callbacks to the event base.

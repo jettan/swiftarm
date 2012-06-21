@@ -2,8 +2,10 @@
 #include <Python.h>
 
 namespace SearchEngine {
-	PyObject *pName, *pModule, *pDict, *pFunc;
-	PyObject *pArgs, *pValue;
+	PyObject *pName, *pModule, *pDict, *pFunc, *pFunc2;
+	PyObject *pArgs, *pValue, *pValue2;
+	PyThreadState *mainThreadState, *myThreadState;
+	PyInterpreterState *mainInterpreterState;
 }
 
 /**
@@ -132,9 +134,39 @@ struct SearchEngine::result SearchEngine::getResultWithName(std::string name) {
 }
 
 /**
+ * Call the main() from DispersyInterface.
+ */
+void *SearchEngine::startDispersy(void *arg) {
+	pValue = PyObject_CallObject(pFunc, NULL);
+	Py_Finalize();
+	std::cout << "For some reason the dispersythread has kicked you out." << std::endl;
+	pthread_exit(NULL);
+}
+
+/**
+ * Search.
+ */
+void SearchEngine::searchDispersy() {
+	pFunc2 = PyObject_GetAttrString(pModule, "search");
+	
+	if (pFunc2 && PyCallable_Check(pFunc2)) {
+		std::cout << "Function callable." << std::endl;
+		pValue2 = PyObject_CallObject(pFunc2, NULL);
+		std::cout << "Called the function" << std::endl;
+	} else {
+		if (PyErr_Occurred())
+			PyErr_Print();
+		fprintf(stderr, "Could not find function main()");
+	}
+	Py_XDECREF(pFunc2);
+}
+
+/**
  * Init function to set up python calls
  */
 void SearchEngine::init() {
+	pthread_mutex_init(&dispersy_mutex, NULL);
+	
 	Py_Initialize();
 	std::cout << "Initialized python." << std::endl;
 	
@@ -151,32 +183,23 @@ void SearchEngine::init() {
 		
 		if (pFunc && PyCallable_Check(pFunc)) {
 			std::cout << "Function callable." << std::endl;
-			// TODO: Call main() of DispersyInterface in another thread.
-			pValue = PyObject_CallObject(pFunc, NULL);
+			int pid = pthread_create(&dispersy_thread, NULL, startDispersy, NULL);
 			
-			std::cout << "Called the function" << std::endl;
-			
-			if (pValue != NULL) {
-				//Py_DECREF(pValue);
-			} else {
-				Py_DECREF(pFunc);
-				Py_DECREF(pModule);
-				PyErr_Print();
-				fprintf(stderr,"Call failed\n");
-				return;
+			if (pid) {
+				std::cerr << "Could not spawn dispersy thread." << std::endl;
 			}
+			std::cout << "Called the function" << std::endl;
 		} else {
 			if (PyErr_Occurred())
 				PyErr_Print();
-			fprintf(stderr, "Cannot find function testFunction");
+			fprintf(stderr, "Could not find function main()");
 		}
 		Py_XDECREF(pFunc);
-		Py_DECREF(pModule);
+		//Py_DECREF(pModule);
 	} else {
 		PyErr_Print();
-		fprintf(stderr, "Failed to load module Test");
+		fprintf(stderr, "Failed to load DispersyInterface");
 		return;
 	}
-	Py_Finalize();
 }
 
