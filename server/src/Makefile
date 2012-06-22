@@ -5,8 +5,7 @@ cppflags_for_arm= -O2 -I . -I $(SWIFTARM)/server/include -I $(SWIFTARM)/server/l
 ifeq ($(CXX),g++)
 	ifeq ($(system),x86_64)
 		CPPFLAGS=$(cppflags_for_x86_64)
-		#TODO: compile and create swift64.a
-		LDADD=$(SWIFTARM)/server/lib/swift64.a $(SWIFTARM)/server/lib/lib64/libevent_pthreads.a $(SWIFTARM)/server/lib/lib64/libevent.a -lrt -lstdc++ -lgcc -lutil -lpthread
+		LDADD=$(SWIFTARM)/server/lib/swift64.a $(SWIFTARM)/server/lib/lib64/libevent_pthreads.a $(SWIFTARM)/server/lib/lib64/libevent.a $(SWIFTARM)/server/lib/lib64/libticpp.a -lrt -lstdc++ -lgcc -lutil -lpthread -lpython2.7
 	else
 		CPPFLAGS=$(cppflags_for_gpp)
 		LDADD=$(SWIFTARM)/server/lib/swift.a $(SWIFTARM)/server/lib/lib/libevent_pthreads.a $(SWIFTARM)/server/lib/lib/libevent.a $(SWIFTARM)/server/lib/libticpp.a -lrt -lstdc++ -lgcc -lutil -lpthread -lpython2.7
