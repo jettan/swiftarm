@@ -279,8 +279,7 @@ void downloadCallback(int fd, short event, void* arg) {
 			
 			int i = 0;
 			while (i < DownloadManager::getDownloads().size() &&
-			  DownloadManager::getDownloads().at(i).getStatus() != READY &&
-			  DownloadManager::getDownloads().at(i).getStatus() != PAUSED) {
+			  DownloadManager::getDownloads().at(i).getStatus() != READY) {
 				i++;
 			}
 			

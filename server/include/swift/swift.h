@@ -52,6 +52,7 @@
 #include <deque>
 #include <vector>
 #include <set>
+#include <map>
 #include <algorithm>
 #include <string>
 #include <math.h>
@@ -64,7 +65,8 @@
 #include "binmap.h"
 #include "hashtree.h"
 #include "avgspeed.h"
-#include "availability.h"
+// Arno, 2012-05-21: MacOS X has an Availability.h :-(
+#include "avail.h"
 
 
 namespace swift {
@@ -82,6 +84,8 @@ namespace swift {
 
 // Arno, 2011-12-22: Enable Riccardo's VodPiecePicker
 #define ENABLE_VOD_PIECEPICKER		1
+
+#define SWIFT_URI_SCHEME			"tswift"
 
 
 /** IPv4 address, just a nice wrapping around struct sockaddr_in. */
@@ -152,6 +156,14 @@ namespace swift {
 	    return rs[i];
 	}
 	bool operator != (const Address& b) const { return !(*this==b); }
+	bool is_private() const {
+		// TODO IPv6
+		uint32_t no = ipv4(); uint8_t no0 = no>>24,no1 = (no>>16)&0xff;
+		if (no0 == 10) return true;
+		else if (no0 == 172 && no1 >= 16 && no1 <= 31) return true;
+		else if (no0 == 192 && no1 == 168) return true;
+		else return false;
+	}
     };
 
 // Arno, 2011-10-03: Use libevent callback functions, no on_error?
@@ -215,6 +227,10 @@ namespace swift {
         }
     };
 
+    typedef std::pair<std::string,std::string> stringpair;
+    typedef std::map<std::string,std::string>  parseduri_t;
+    bool ParseURI(std::string uri,parseduri_t &map);
+
     /** swift protocol message types; these are used on the wire. */
     typedef enum {
         SWIFT_HANDSHAKE = 0,
@@ -242,6 +258,7 @@ namespace swift {
     class PeerSelector;
     class Channel;
     typedef void (*ProgressCallback) (int transfer, bin_t bin);
+    class Storage;
 
     /** A class representing single file transfer. */
     class    FileTransfer {
@@ -251,8 +268,9 @@ namespace swift {
         /** A constructor. Open/submit/retrieve a file.
          *  @param file_name    the name of the file
          *  @param root_hash    the root hash of the file; zero hash if the file
-	 is newly submitted */
-        FileTransfer(const char *file_name, const Sha1Hash& root_hash=Sha1Hash::ZERO,bool check_hashes=true,uint32_t chunk_size=SWIFT_DEFAULT_CHUNK_SIZE);
+	 	 *                      is newly submitted
+	 	 */
+        FileTransfer(std::string file_name, const Sha1Hash& root_hash=Sha1Hash::ZERO,bool check_hashes=true,uint32_t chunk_size=SWIFT_DEFAULT_CHUNK_SIZE, bool zerostate=false);
 
         /**    Close everything. */
         ~FileTransfer();
@@ -276,18 +294,18 @@ namespace swift {
             return fd<files.size() ? files[fd] : NULL;
         }
 
-        /** The binmap for data already retrieved and checked. */
-        binmap_t&           ack_out ()  { return file_.ack_out(); }
+        /** The binmap pointer for data already retrieved and checked. */
+        binmap_t *           ack_out ()  { return hashtree_->ack_out(); }
         /** Piece picking strategy used by this transfer. */
         PiecePicker&    picker () { return *picker_; }
         /** The number of channels working for this transfer. */
         int             channel_count () const { return hs_in_.size(); }
         /** Hash tree checked file; all the hashes and data are kept here. */
-        HashTree&       file() { return file_; }
+        HashTree *       hashtree() { return hashtree_; }
         /** File descriptor for the data file. */
-        int             fd () const { return file_.file_descriptor(); }
+        int             fd () const { return fd_; }
         /** Root SHA1 hash of the transfer (and the data file). */
-        const Sha1Hash& root_hash () const { return file_.root_hash(); }
+        const Sha1Hash& root_hash () const { return hashtree_->root_hash(); }
         /** Ric: the availability in the swarm */
         Availability&	availability() { return *availability_; }
 
@@ -311,11 +329,41 @@ namespace swift {
 		/** Arno: Return the set of Channels for this transfer. MORESTATS */
 		std::set<Channel *> GetChannels() { return mychannels_; }
 
+		/** Arno: set the tracker for this transfer. Reseting it won't kill
+		 * any existing connections.
+		 */
+		void SetTracker(Address tracker) { tracker_ = tracker; }
+
+		/** Arno: (Re)Connect to tracker for this transfer, or global Channel::tracker if not set */
+		void ConnectToTracker();
+
+		/** Arno: Reconnect to the tracker if no established peers and
+		 * exp backoff allows it.
+		 */
+		void ReConnectToTrackerIfAllowed(bool hasestablishedpeers);
+
+		/** Arno: Return the Channel to peer "addr" that is not equal to "notc". */
+		Channel * FindChannel(const Address &addr, Channel *notc);
+
+		// MULTIFILE
+		Storage * GetStorage() { return storage_; }
+
 		// SAFECLOSE
 		static void LibeventCleanCallback(int fd, short event, void *arg);
+
+		//ZEROSTATE
+		/** Returns whether this FileTransfer is running in zero-state mode,
+		 * meaning that the hash tree is not mmapped into memory but read
+		 * directly from disk, and other memory saving measures.
+		 */
+		bool IsZeroState() { return zerostate_; }
+
+		/** Add a peer to the set of addresses to connect to */
+		void AddPeer(Address &peer);
+
     protected:
 
-        HashTree        file_;
+        HashTree*		hashtree_;
 
         /** Piece picker strategy. */
         PiecePicker*    picker_;
@@ -346,10 +394,21 @@ namespace swift {
         // SAFECLOSE
         struct event 		evclean_;
 
+        Address 			tracker_; // Tracker for this transfer
+        tint				tracker_retry_interval_;
+        tint				tracker_retry_time_;
+
+        // MULTIFILE
+        Storage				*storage_;
+        int					fd_;
+
+        //ZEROSTATE
+        bool				zerostate_;
+
     public:
         void            OnDataIn (bin_t pos);
         // Gertjan fix: return bool
-        bool            OnPexIn (const Address& addr);
+        bool            OnPexAddIn (const Address& addr);
 
         static std::vector<FileTransfer*> files;
 
@@ -360,7 +419,7 @@ namespace swift {
         friend uint64_t  Size (int fdes);
         friend bool      IsComplete (int fdes);
         friend uint64_t  Complete (int fdes);
-        friend uint64_t  SeqComplete (int fdes);
+        friend uint64_t  SeqComplete (int fdes, int64_t offset);
         friend int     Open (const char* filename, const Sha1Hash& hash, Address tracker, bool check_hashes, uint32_t chunk_size);
         friend void    Close (int fd) ;
         friend void AddProgressCallback (int transfer,ProgressCallback cb,uint8_t agg);
@@ -383,10 +442,11 @@ namespace swift {
          *  @return             the bin number to request */
         virtual bin_t Pick (binmap_t& offered, uint64_t max_width, tint expires) = 0;
         virtual void LimitRange (bin_t range) = 0;
-        /** updates the playback position for streaming piece picking.
-         *  @param  amount		amount to increment in bin unit size (1KB default) */
-        virtual void updatePlaybackPos (int amount=1) = 0;
         virtual ~PiecePicker() {}
+        /** updates the playback position for streaming piece picking.
+         *  @param  offbin		bin number of new playback pos
+         *  @param  whence      only SEEK_CUR supported */
+        virtual int Seek(bin_t offbin, int whence) = 0;
     };
 
 
@@ -397,24 +457,12 @@ namespace swift {
     };
 
 
-    /* class DataStorer { // Arno: never implemented
-    public:
-        DataStorer (const Sha1Hash& id, size_t size);
-        virtual size_t    ReadData (bin_t pos,uint8_t** buf) = 0;
-        virtual size_t    WriteData (bin_t pos, uint8_t* buf, size_t len) = 0;
-    }; */
-
-
     /**    swift channel's "control block"; channels loosely correspond to TCP
 	   connections or FTP sessions; one channel is created for one file
 	   being transferred between two peers. As we don't need buffers and
 	   lots of other TCP stuff, sizeof(Channel+members) must be below 1K.
 	   Normally, API users do not deal with this class. */
     class Channel {
-
-#define DGRAM_MAX_SOCK_OPEN 128
-	static int sock_count;
-	static sckrwecb_t sock_open[DGRAM_MAX_SOCK_OPEN];
 
     public:
         Channel    (FileTransfer* file, int socket=INVALID_SOCKET, Address peer=Address());
@@ -429,7 +477,7 @@ namespace swift {
             CLOSE_CONTROL
         } send_control_t;
 
-
+        static Address  tracker; // Global tracker for all transfers
         struct event *evsend_ptr_; // Arno: timer per channel // SAFECLOSE
         static struct event_base *evbase;
         static struct event evrecv;
@@ -468,7 +516,7 @@ namespace swift {
         bin_t       OnData (struct evbuffer *evb);
         void        OnHint (struct evbuffer *evb);
         void        OnHash (struct evbuffer *evb);
-        void        OnPex (struct evbuffer *evb);
+        void        OnPexAdd (struct evbuffer *evb);
         void        OnHandshake (struct evbuffer *evb);
         void        OnRandomize (struct evbuffer *evb); //FRAGRAND
         void        AddHandshake (struct evbuffer *evb);
@@ -492,6 +540,9 @@ namespace swift {
         tint        LedbatNextSendTime ();
         /** Arno: return true if this peer has complete file. May be fuzzy if Peak Hashes not in */
         bool		IsComplete();
+        /** Arno: return (UDP) port for this channel */
+        uint16_t 	GetMyPort();
+        bool 		IsDiffSenderOrDuplicate(Address addr, uint32_t chid);
 
         static int  MAX_REORDERING;
         static tint TIMEOUT;
@@ -509,8 +560,9 @@ namespace swift {
         /** A channel is "established" if had already sent and received packets. */
         bool        is_established () { return peer_channel_id_ && own_id_mentioned_; }
         FileTransfer& transfer() { return *transfer_; }
-        HashTree&   file () { return transfer_->file(); }
+        HashTree *   hashtree() { return transfer_->hashtree(); }
         const Address& peer() const { return peer_; }
+        const Address& recv_peer() const { return recv_peer_; }
         tint ack_timeout () {
         	tint dev = dev_avg_ < MIN_DEV ? MIN_DEV : dev_avg_;
         	tint tmo = rtt_avg_ + dev * 4;
@@ -537,7 +589,20 @@ namespace swift {
         bool		IsScheduled4Close() { return scheduled4close_; }
 
 
+        //ZEROSTATE
+        void OnDataZeroState(struct evbuffer *evb);
+        void OnHaveZeroState(struct evbuffer *evb);
+        void OnHashZeroState(struct evbuffer *evb);
+        void OnPexAddZeroState(struct evbuffer *evb);
+        void OnPexReqZeroState(struct evbuffer *evb);
+
+
     protected:
+#define DGRAM_MAX_SOCK_OPEN 128
+   	    static int sock_count;
+	    static sckrwecb_t sock_open[DGRAM_MAX_SOCK_OPEN];
+
+
         /** Channel id: index in the channel array. */
         uint32_t    id_;
         /**    Socket address of the peer. */
@@ -617,7 +682,12 @@ namespace swift {
 
         // SAFECLOSE
         bool		scheduled4close_;
+        /** Arno: Socket address of the peer where packets are received from,
+         * when an IANA private address, otherwise 0.
+         * May not be equal to peer_. 2PEERSBEHINDSAMENAT */
+        Address     recv_peer_;
 
+		bool		direct_sending_;
 
         int         PeerBPS() const {
             return TINT_SEC / dip_avg_ * 1024;
@@ -637,7 +707,6 @@ namespace swift {
         static tint     last_tick;
         //static tbheap   send_queue;
 
-        static Address  tracker;
         static std::vector<Channel*> channels;
 
         friend int      Listen (Address addr);
@@ -645,8 +714,169 @@ namespace swift {
         friend void     AddPeer (Address address, const Sha1Hash& root);
         friend void     SetTracker(const Address& tracker);
         friend int      Open (const char*, const Sha1Hash&, Address tracker, bool check_hashes, uint32_t chunk_size) ; // FIXME
+        // SOCKTUNNEL
+        friend void 	CmdGwTunnelSendUDP(struct evbuffer *evb);
     };
 
+
+    // MULTIFILE
+    /*
+     * Class representing a single file in a multi-file swarm.
+     */
+    class StorageFile
+    {
+       public:
+    	 StorageFile(std::string specpath, int64_t start, int64_t size, std::string ospath);
+    	 ~StorageFile();
+    	 int64_t GetStart() { return start_; }
+    	 int64_t GetEnd() { return end_; }
+    	 int64_t GetSize() { return end_+1-start_; }
+    	 std::string GetSpecPathName() { return spec_pathname_; }
+    	 std::string GetOSPathName() { return os_pathname_; }
+    	 ssize_t  Write(const void *buf, size_t nbyte, int64_t offset) { return pwrite(fd_,buf,nbyte,offset); }
+    	 ssize_t  Read(void *buf, size_t nbyte, int64_t offset) {  return pread(fd_,buf,nbyte,offset); }
+    	 int ResizeReserved() { return file_resize(fd_,GetSize()); }
+
+       protected:
+    	 std::string spec_pathname_;
+    	 std::string os_pathname_;
+    	 int64_t	start_;
+    	 int64_t	end_;
+
+    	 int		fd_;
+    };
+
+    typedef std::vector<StorageFile *>	storage_files_t;
+
+    /*
+     * Class representing the persistent storage layer. Supports a swarm
+     * stored as multiple files.
+     *
+     * This is implemented by storing a multi-file specification in chunk 0
+     * (and further if needed). This spec lists what other files the swarm
+     * contains and their sizes. E.g.
+     *
+     * META-INF-multifilespec.txt 113
+	 * seeder/190557.ts 249798796
+	 * seeder/berta.dat 2395920988
+	 * seeder/bunny.ogg 166825767
+	 *
+	 * The concatenation of these files (starting with the multi-file spec with
+	 * pseudo filename META-INF-multifile-spec.txt) are the contents of the
+	 * swarm.
+     */
+	class Storage {
+
+	  public:
+
+		static const std::string MULTIFILE_PATHNAME;
+		static const std::string MULTIFILE_PATHNAME_FILE_SEP;
+		static const int 		 MULTIFILE_MAX_PATH = 2048;
+		static const int 		 MULTIFILE_MAX_LINE = MULTIFILE_MAX_PATH+1+32+1;
+
+		typedef enum {
+			STOR_STATE_INIT,
+			STOR_STATE_MFSPEC_SIZE_KNOWN,
+			STOR_STATE_MFSPEC_COMPLETE,
+			STOR_STATE_SINGLE_FILE
+		} storage_state_t;
+
+		typedef std::vector<StorageFile *>	storage_files_t;
+
+		/** convert multi-file spec filename (UTF-8 encoded Unicode) to OS name and vv. */
+		static std::string spec2ospn(std::string specpn);
+		static std::string os2specpn(std::string ospn);
+
+		/** Create Storage from specified path and destination dir if content turns about to be a multi-file */
+		Storage(std::string ospathname, std::string destdir,int transferfd);
+		~Storage();
+
+		/** UNIX pread approximation. Does change file pointer. Thread-safe if no concurrent writes */
+		ssize_t  Read(void *buf, size_t nbyte, int64_t offset); // off_t not 64-bit dynamically on Win32
+
+		/** UNIX pwrite approximation. Does change file pointer. Is not thread-safe */
+		ssize_t  Write(const void *buf, size_t nbyte, int64_t offset);
+
+		/** Link to HashTree */
+		void SetHashTree(HashTree *ht) { ht_ = ht; }
+
+		/** Size of content according to multi-file spec, -1 if unknown or single file */
+		int64_t GetSizeFromSpec();
+
+		/** Size reserved for storage */
+		int64_t GetReservedSize();
+
+		/** 0 for single file, spec size for multi-file */
+		int64_t GetMinimalReservedSize();
+
+		/** Change size reserved for storage */
+		int ResizeReserved(int64_t size);
+
+		/** Return the operating system path for this Storage */
+		std::string GetOSPathName() { return os_pathname_; }
+
+		/** Return the root hash of the content being stored */
+		std::string roothashhex() { if (ht_ == NULL) return "0000000000000000000000000000000000000000"; else return ht_->root_hash().hex(); }
+
+		/** Return the destination directory for this Storage */
+		std::string GetDestDir() { return destdir_; }
+
+		/** Whether Storage is ready to be used */
+		bool IsReady() { return state_ == STOR_STATE_SINGLE_FILE || state_ == STOR_STATE_MFSPEC_COMPLETE; }
+
+		/** Return the list of StorageFiles for this Storage, empty if not multi-file */
+		storage_files_t	GetStorageFiles() { return sfs_; }
+
+		/** Return a one-time callback when swift starts allocating disk space */
+		void AddOneTimeAllocationCallback(ProgressCallback cb) { alloc_cb_ = cb; }
+
+	  protected:
+			storage_state_t	state_;
+
+			std::string os_pathname_;
+			std::string destdir_;
+
+			/** HashTree this Storage is linked to */
+			HashTree *ht_;
+
+			int64_t spec_size_;
+
+			storage_files_t	sfs_;
+			int single_fd_;
+			int64_t reserved_size_;
+			int64_t total_size_from_spec_;
+			StorageFile *last_sf_;
+
+			int transfer_fd_;
+			ProgressCallback alloc_cb_;
+
+			int WriteSpecPart(StorageFile *sf, const void *buf, size_t nbyte, int64_t offset);
+			std::pair<int64_t,int64_t> WriteBuffer(StorageFile *sf, const void *buf, size_t nbyte, int64_t offset);
+			StorageFile * FindStorageFile(int64_t offset);
+			int ParseSpec(StorageFile *sf);
+			int OpenSingleFile();
+
+	};
+
+	class ZeroState
+	{
+	  public:
+    	ZeroState();
+    	~ZeroState();
+    	static ZeroState *GetInstance();
+    	void SetContentDir(std::string contentdir);
+    	FileTransfer * Find(Sha1Hash &root_hash);
+
+
+    	static void LibeventCleanCallback(int fd, short event, void *arg);
+
+	  protected:
+    	static ZeroState *__singleton;
+
+    	struct event 		evclean_;
+        std::string 		contentdir_;
+
+	};
 
 
     /*************** The top-level API ****************/
@@ -663,9 +893,10 @@ namespace swift {
         automatically, .mbinmap files must be written by checkpointing the
         transfer by calling FileTransfer::serialize(). If the reconstruction
         fails, it will hashcheck anyway. Roothash is optional for new files or
-        files already hashchecked and checkpointed.
+        files already hashchecked and checkpointed. If roothash is set and
+        filename is a directory, swift will download the content to dir/roothash-in-hex.
         */
-    int     Open (const char* filename, const Sha1Hash& hash=Sha1Hash::ZERO,Address tracker=Address(), bool check_hashes=true,uint32_t chunk_size=SWIFT_DEFAULT_CHUNK_SIZE);
+    int     Open (std::string filename, const Sha1Hash& hash=Sha1Hash::ZERO,Address tracker=Address(), bool check_hashes=true,uint32_t chunk_size=SWIFT_DEFAULT_CHUNK_SIZE);
     /** Get the root hash for the transmission. */
     const Sha1Hash& RootMerkleHash (int file) ;
     /** Close a file and a transmission. */
@@ -675,7 +906,16 @@ namespace swift {
         (likely, a tracker, cache or an archive). */
     void    AddPeer (Address address, const Sha1Hash& root=Sha1Hash::ZERO);
 
-    void    SetTracker(const Address& tracker);
+	/** UNIX pread approximation. Does change file pointer. Thread-safe if no concurrent writes */
+	ssize_t  Read(int fd, void *buf, size_t nbyte, int64_t offset); // off_t not 64-bit dynamically on Win32
+
+	/** UNIX pwrite approximation. Does change file pointer. Is not thread-safe */
+	ssize_t  Write(int fd, const void *buf, size_t nbyte, int64_t offset);
+
+    /** Seek, i.e., move start of interest window */
+    int Seek(int fd, int64_t offset, int whence);
+
+	void    SetTracker(const Address& tracker);
     /** Set the default tracker that is used when Open is not passed a tracker
         address. */
 
@@ -688,7 +928,7 @@ namespace swift {
     bool      IsComplete (int fdes);
     /** Returns the number of bytes that are complete sequentially, starting from the
         beginning, till the first not-yet-retrieved packet. */
-    uint64_t  SeqComplete (int fdes);
+    uint64_t  SeqComplete(int fdes, int64_t offset=0);
     /***/
     int       Find (Sha1Hash hash);
     /** Returns the number of bytes in a chunk for this transmission */
@@ -725,7 +965,11 @@ namespace swift {
     void nat_test_update(void);
 
     // Arno: Save transfer's binmap for zero-hashcheck restart
-    void Checkpoint(int fdes);
+    int Checkpoint(int fdes);
+
+    // SOCKTUNNEL
+    void CmdGwTunnelUDPDataCameIn(Address srcaddr, uint32_t srcchan, struct evbuffer* evb);
+    void CmdGwTunnelSendUDP(struct evbuffer *evb); // for friendship with Channel
 
 } // namespace end
 

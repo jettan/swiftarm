@@ -303,7 +303,7 @@ static std::string HttpServer::removeRequest(std::string hash) {
 	
 	try {
 		DownloadManager::removeFromDisk(hash);
-		response = "Download removed from list";
+		response = "Download removed from disk";
 	} catch(FileNotFoundException e) {
 		std::cout << "Exception Caught In HttpServer" << std::endl;
 		std::cout << e.what() << std::endl;
