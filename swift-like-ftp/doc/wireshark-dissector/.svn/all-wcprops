@@ -1,0 +1,95 @@
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/!svn/ver/26309/libswift/branches/arno/swift-like-ftp/doc/wireshark-dissector
+END
+plugin.c
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/!svn/ver/26309/libswift/branches/arno/swift-like-ftp/doc/wireshark-dissector/plugin.c
+END
+packet-swift.c
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/!svn/ver/26309/libswift/branches/arno/swift-like-ftp/doc/wireshark-dissector/packet-swift.c
+END
+Makefile.in
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/!svn/ver/26309/libswift/branches/arno/swift-like-ftp/doc/wireshark-dissector/Makefile.in
+END
+AUTHORS
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/!svn/ver/26309/libswift/branches/arno/swift-like-ftp/doc/wireshark-dissector/AUTHORS
+END
+moduleinfo.h
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/!svn/ver/26309/libswift/branches/arno/swift-like-ftp/doc/wireshark-dissector/moduleinfo.h
+END
+ChangeLog
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/!svn/ver/26309/libswift/branches/arno/swift-like-ftp/doc/wireshark-dissector/ChangeLog
+END
+moduleinfo.nmake
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/!svn/ver/26309/libswift/branches/arno/swift-like-ftp/doc/wireshark-dissector/moduleinfo.nmake
+END
+README
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/!svn/ver/26309/libswift/branches/arno/swift-like-ftp/doc/wireshark-dissector/README
+END
+Makefile.common
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/!svn/ver/26309/libswift/branches/arno/swift-like-ftp/doc/wireshark-dissector/Makefile.common
+END
+plugin.rc.in
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/!svn/ver/26309/libswift/branches/arno/swift-like-ftp/doc/wireshark-dissector/plugin.rc.in
+END
+Makefile.nmake
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/!svn/ver/26309/libswift/branches/arno/swift-like-ftp/doc/wireshark-dissector/Makefile.nmake
+END
+COPYING
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/!svn/ver/26309/libswift/branches/arno/swift-like-ftp/doc/wireshark-dissector/COPYING
+END
+Makefile.am
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/!svn/ver/26309/libswift/branches/arno/swift-like-ftp/doc/wireshark-dissector/Makefile.am
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/!svn/ver/26309/libswift/branches/arno/swift-like-ftp/doc/wireshark-dissector/Makefile
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/!svn/ver/26309/libswift/branches/arno/swift-like-ftp/doc/wireshark-dissector/CMakeLists.txt
+END
