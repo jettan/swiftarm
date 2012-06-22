@@ -6,6 +6,9 @@ namespace SearchEngine {
 	PyObject *pArgs, *pValue, *pValue2;
 	PyThreadState *mainThreadState, *myThreadState;
 	PyInterpreterState *mainInterpreterState;
+	PyGILState_STATE gstate;
+	pthread_mutex_t gstate_mutex;
+	PyThreadState *save;
 }
 
 /**
@@ -137,7 +140,26 @@ struct SearchEngine::result SearchEngine::getResultWithName(std::string name) {
  * Call the main() from DispersyInterface.
  */
 void *SearchEngine::startDispersy(void *arg) {
+	std::cout << "dsagdfjfhgsdfajgfsadfsjadf" <<std::endl;
+	
+	
+//	PyEval_InitThreads();
+//	pthread_mutex_lock(&gstate_mutex);
+//	save = PyEval_SaveThread();
+	gstate = PyGILState_Ensure();
+//	pthread_mutex_unlock(&gstate_mutex);
+	
 	pValue = PyObject_CallObject(pFunc, NULL);
+	
+	sleep(3);
+	std::cout << "printpinrt" << std::endl;
+	
+//	pthread_mutex_lock(&gstate_mutex);
+	PyGILState_Release(gstate);
+//	PyEval_RestoreThread(save);
+//	pthread_mutex_unlock(&gstate_mutex);
+	
+	
 	Py_Finalize();
 	std::cout << "For some reason the dispersythread has kicked you out." << std::endl;
 	pthread_exit(NULL);
@@ -151,12 +173,23 @@ void SearchEngine::searchDispersy() {
 	
 	if (pFunc2 && PyCallable_Check(pFunc2)) {
 		std::cout << "Function callable." << std::endl;
+//		pthread_mutex_lock(&gstate_mutex);
+	//	 save = PyEval_SaveThread();
+		gstate = PyGILState_Ensure();
+//		pthread_mutex_unlock(&gstate_mutex);
+		
 		pValue2 = PyObject_CallObject(pFunc2, NULL);
+		
+//		pthread_mutex_lock(&gstate_mutex);
+		PyGILState_Release(gstate);
+	//	PyEval_RestoreThread(save);
+//		pthread_mutex_unlock(&gstate_mutex);
+		
 		std::cout << "Called the function" << std::endl;
 	} else {
 		if (PyErr_Occurred())
 			PyErr_Print();
-		fprintf(stderr, "Could not find function main()");
+		fprintf(stderr, "Could not find function search()");
 	}
 	Py_XDECREF(pFunc2);
 }
@@ -165,12 +198,14 @@ void SearchEngine::searchDispersy() {
  * Init function to set up python calls
  */
 void SearchEngine::init() {
+	pthread_mutex_init(&gstate_mutex, NULL);
 	pthread_mutex_init(&dispersy_mutex, NULL);
 	
 	Py_Initialize();
 	std::cout << "Initialized python." << std::endl;
 	
-	pName = PyString_FromString("DispersyInterface");
+	//pName = PyString_FromString("DispersyInterface");
+	pName = PyString_FromString("Test");
 	
 	std::cout << "Trying to import DispersyInterface." << std::endl;
 	pModule = PyImport_Import(pName);
@@ -179,7 +214,6 @@ void SearchEngine::init() {
 	if (pModule != NULL) {
 		std::cout << "Succesfully imported DispersyInterface." << std::endl;
 		pFunc = PyObject_GetAttrString(pModule, "main");
-		/* pFunc is a new reference */
 		
 		if (pFunc && PyCallable_Check(pFunc)) {
 			std::cout << "Function callable." << std::endl;
@@ -195,7 +229,6 @@ void SearchEngine::init() {
 			fprintf(stderr, "Could not find function main()");
 		}
 		Py_XDECREF(pFunc);
-		//Py_DECREF(pModule);
 	} else {
 		PyErr_Print();
 		fprintf(stderr, "Failed to load DispersyInterface");

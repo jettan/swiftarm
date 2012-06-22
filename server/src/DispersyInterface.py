@@ -5,13 +5,13 @@ import os
 import sys
 import time
 import binascii
-
 from Tribler.Core.CacheDB.SqliteCacheDBHandler import NetworkBuzzDBHandler
 from Tribler.Core.API import SessionStartupConfig, Session
 from Tribler.Core.Statistics.Logger import OverlayLogger
 from Tribler.dispersy.dispersy import Dispersy
 from Tribler.dispersy.message import Message
 from Tribler.community.search.community import SearchCommunity
+
 
 search_community = []
 dispersy = []
@@ -27,15 +27,17 @@ def dispersyDoSearch(keywords, callback):
             break
 
 def search():
-    dispersy[0].callback.register(dispersyDoSearch, args=([u"Iron Man"], printResultsFromDispersy))
+    print >> sys.stderr, "Going to search"
+    dispersy[0].callback.register(dispersyDoSearch, args=([u"vodo"], printResultsFromDispersy))
+    print >> sys.stderr, "Finished search"
 
 
 def printResultsFromDispersy(keywords, results, candidate):
     results_length = len(results)
     print >> sys.stderr,"TorrentSearchGridManager: gotRemoteHist: got", results_length,"unfiltered results for", keywords, candidate
-    
+
     if results_length > 0:
-        infohashes = [result[0] for result in results]
+#        infohashes = [result[0] for result in results]
         
         finger = 0
         for result in results:
@@ -54,6 +56,11 @@ def printResultsFromDispersy(keywords, results, candidate):
             finger += 1
 
 def main():
+
+#    while True:
+#        print >> sys.stderr, "Going to loop!"
+#        time.sleep(2)
+
     sscfg = SessionStartupConfig()
     sscfg.set_state_dir(unicode(os.path.realpath("/tmp")))
     sscfg.set_dispersy_port(6421)
