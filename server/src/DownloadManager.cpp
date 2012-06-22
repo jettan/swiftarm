@@ -11,7 +11,7 @@ void DownloadManager::init() {
 	setMaxDownSpeed(UNLIMITED_SPEED);
 	setMaxUpSpeed(UNLIMITED_SPEED);
 	
-	//startUploads();
+	startUploads();
 }
 
 /**
@@ -541,7 +541,7 @@ void DownloadManager::startUploads() {
 	DIR *dp;
 	struct dirent *dirp;
 	
-	if((dp = opendir(Settings::getDownloadDirectory().c_str())) == NULL) {
+	if ((dp = opendir(Settings::getDownloadDirectory().c_str())) == NULL) {
 		std::cout << "Failed opening Downloads directory" << std::endl;
 	}
 	

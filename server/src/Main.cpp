@@ -41,7 +41,7 @@ int main() {
 	
 	std::cout << "Listening on port " << swift::BoundAddress(sock).port() << "." << std::endl;
 	
-	std::string http_address  = Settings::getIP() + ":15000";
+	std::string http_address  = Settings::getIP() + ":17758";
 	
 	// HTTP gateway address for swift to stream.
 	swift::Address httpaddr = swift::Address(http_address.c_str());

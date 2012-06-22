@@ -12,7 +12,7 @@ from traceback import print_exc
 #DEFAULT_STOPWORDS_FILE = os.path.join(LIBRARYNAME, 'Core', 'Tag', 'stop_snowball.filter')
 
 # Workaround for now:
-DEFAULT_STOPWORDS_FILE = os.path.join(os.path.dirname(__file__), 'stop_snowball.filter')
+DEFAULT_STOPWORDS_FILE = u"/home/jettan/tribler/Tribler/Core/Tag/stop_snowball.filter" #os.path.join(os.path.dirname(__file__), 'stop_snowball.filter')
 # TODO: Improve this code ^
 
 class StopwordsFilter:
@@ -24,7 +24,7 @@ class StopwordsFilter:
             self.stopwords = []
             
     def _readStopwordsList(self, filename):
-        f = open(filename, 'r')
+        f = open(DEFAULT_STOPWORDS_FILE, 'r')
         stopwords = set()
         for line in f:
             word = line.split('|')[0].rstrip()

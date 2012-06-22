@@ -20,7 +20,7 @@
 #define DEFAULT_SETTINGS_FILE "/mtd_down/widgets/user/SamyGO/SamyGO/.p2psettings"
 #define DEFAULT_DOWNLOAD_DIR  "/dtv/usb/sda1/Downloads"
 #define DEFAULT_IP            "127.0.0.1"
-#define DEFAULT_PORT          25000
+#define DEFAULT_PORT          7758
 
 namespace Settings {
 	static std::string ip_address;			/// Keeps track of the current ip address.

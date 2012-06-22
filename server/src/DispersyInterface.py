@@ -20,7 +20,7 @@ search_results = []
 
 def dispersyDoSearch(keywords, callback):
     while True:
-        if search_community[0].get_nr_connections() < 5:
+        if search_community[0].get_nr_connections() < 1:
             yield 5.0
         else:
             print >> sys.stderr, "CREATING SEARCH RESULT!"
@@ -33,6 +33,7 @@ def getSearchResults():
     return search_results
 
 def search(search_term):
+    global search_results
     search_results = []
     print >> sys.stderr, "Searching for: ", search_term
     dispersy[0].callback.register(dispersyDoSearch, args=([unicode(search_term)], printResultsFromDispersy))
@@ -49,7 +50,7 @@ def printResultsFromDispersy(keywords, results, candidate):
         finger = 0
         for result in results:
             #print >> sys.stderr, "Result ", finger, ":", result[1]
-            swifthash = result[9]
+            swifthash = result[8]
         
             if swifthash:
                 if not isinstance(swifthash, str):
@@ -57,12 +58,11 @@ def printResultsFromDispersy(keywords, results, candidate):
                 elif len(swifthash) != 20:
                     print >> sys.stderr, "Invalid swift hash!"
                 else:
-                    #print >> sys.stderr, "swifthash = ", binascii.hexlify(swifthash)
-                    search_result = binascii.hexlify(swifthash) + ":" + result[1]
-                    print >> sys.stderr, search_result
+                    search_result = binascii.hexlify(swifthash) + ":"+ result[1]
+                    print >> sys.stderr,">>>>>>>>>>>>>>>>>>>>>", search_result
                     search_results.append(search_result)
             
-            print >> sys.stderr, "========================================"
+            print >> sys.stderr, "===="
             finger += 1
 
 def main():

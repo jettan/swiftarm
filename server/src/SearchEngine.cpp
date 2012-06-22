@@ -55,7 +55,7 @@ std::string SearchEngine::buildSearchXML() {
  * Returns the current list of results.
  */
 std::string SearchEngine::getResults() {
-	
+	clearSearchResults();
 	p_function = PyObject_GetAttrString(p_module, "getSearchResults");
 	
 	if (p_function && PyCallable_Check(p_function)) {
@@ -71,7 +71,7 @@ std::string SearchEngine::getResults() {
 			
 			std::vector<std::string> item = Settings::split(result_string, ':');
 			struct SearchEngine::result r;
-			r.tracker   = "127.0.0.1:9999";
+			r.tracker   = Settings::getIP() + ":9999";
 			r.hash      = item[0];
 			r.filename  = item[1];
 			search_results.push_back(r);

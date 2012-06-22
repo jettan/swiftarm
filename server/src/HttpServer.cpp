@@ -195,6 +195,8 @@ static void HttpServer::handleRequest(struct evhttp_request *req, void *arg) {
 		
 	// Message will look like: "/clear"
 	} else if (strcmp(path, "/clear") == 0) {
+		std::string response = clearRequest();
+		sendResponse(req, evb, response.c_str());
 		
 	// Check to see whether the server is still alive.
 	} else if (strcmp(path, "/alive") == 0) {
@@ -359,7 +361,7 @@ static std::string HttpServer::streamRequest(std::string hash) {
 	try {
 		struct SearchEngine::result res = SearchEngine::getResultWithHash(hash);
 		DownloadManager::startStream(res.tracker);
-		std::string address = Settings::getIP() + ":15000/" + res.hash;
+		std::string address = Settings::getIP() + ":17758/" + res.hash;
 		std::cout << address << std::endl;
 		response = address.c_str();
 	} catch(FileNotFoundException e) {
