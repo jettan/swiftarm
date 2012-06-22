@@ -80,9 +80,10 @@ static void HttpServer::handleRequest(struct evhttp_request *req, void *arg) {
 		} else {
 			sendResponse(req, evb, "-1");
 		}
-	} else if (strcmp(path, "/dispersy") == 0) {
-		SearchEngine::searchDispersy();
-		sendResponse(req, evb, "Called dispersy.");
+	} else if (strcmp(path, "/result") == 0) {
+		std::string results = SearchEngine::getResults();
+		sendXMLResponse(results, req, evb);
+		
 	// Message will look like: "/download:hash"
 	} else if (path_str.size() == 50 && path_str.substr(0, 9).compare("/download") == 0  && path_str.at(9) == ':') {
 		std::vector<std::string> result = Settings::split(path_str, ':');
@@ -155,8 +156,8 @@ static void HttpServer::handleRequest(struct evhttp_request *req, void *arg) {
 		
 		if (result.size() == 2) {
 			std::string search_term = result.at(1);
-			std::string result = SearchEngine::search(search_term);
-			sendXMLResponse(result, req, evb);
+			SearchEngine::search(search_term);
+			sendResponse(req, evb, "Search request sent.");
 		} else {
 			sendResponse(req, evb, "-1");
 		}

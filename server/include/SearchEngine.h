@@ -8,6 +8,7 @@
 #include <pthread.h>
 
 #include "Exceptions.h"
+#include "Utils.h"
 #include "ticpp.h"
 
 namespace SearchEngine {
@@ -29,11 +30,8 @@ namespace SearchEngine {
 	void clearSearchResults();
 	std::string buildSearchXML();
 	
-	std::string search(std::string search_term);
-
-	void searchDispersy();
-	
-	std::vector<struct result> getResults();
+	void search(std::string search_term);
+	std::string getResults();
 	
 	struct result getResultWithHash(std::string hash);
 	struct result getResultWithName(std::string name);

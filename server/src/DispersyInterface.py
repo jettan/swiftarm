@@ -16,6 +16,7 @@ from Tribler.community.search.community import SearchCommunity
 
 search_community = []
 dispersy = []
+search_results = []
 
 def dispersyDoSearch(keywords, callback):
     while True:
@@ -27,9 +28,14 @@ def dispersyDoSearch(keywords, callback):
             print >> sys.stderr, nr_requests_made
             break
 
-def search():
-    print >> sys.stderr, "Going to search"
-    dispersy[0].callback.register(dispersyDoSearch, args=([u"vodo"], printResultsFromDispersy))
+def getSearchResults():
+#    search_results.append("testroothash:testfilename")
+    return search_results
+
+def search(search_term):
+    search_results = []
+    print >> sys.stderr, "Searching for: ", search_term
+    dispersy[0].callback.register(dispersyDoSearch, args=([unicode(search_term)], printResultsFromDispersy))
     print >> sys.stderr, "Finished search"
 
 
@@ -42,7 +48,7 @@ def printResultsFromDispersy(keywords, results, candidate):
         
         finger = 0
         for result in results:
-            print >> sys.stderr, "Result ", finger, ":", result[1]
+            #print >> sys.stderr, "Result ", finger, ":", result[1]
             swifthash = result[9]
         
             if swifthash:
@@ -51,7 +57,10 @@ def printResultsFromDispersy(keywords, results, candidate):
                 elif len(swifthash) != 20:
                     print >> sys.stderr, "Invalid swift hash!"
                 else:
-                    print >> sys.stderr, "swifthash = ", binascii.hexlify(swifthash)
+                    #print >> sys.stderr, "swifthash = ", binascii.hexlify(swifthash)
+                    search_result = binascii.hexlify(swifthash) + ":" + result[1]
+                    print >> sys.stderr, search_result
+                    search_results.append(search_result)
             
             print >> sys.stderr, "========================================"
             finger += 1

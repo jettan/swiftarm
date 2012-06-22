@@ -2,55 +2,15 @@
 #include <Python.h>
 
 namespace SearchEngine {
-	PyObject *pName, *pModule, *pDict, *pFunc, *pFunc2;
-	PyObject *pArgs, *pValue, *pValue2;
-	PyThreadState *mainThreadState, *myThreadState;
-	PyInterpreterState *mainInterpreterState;
+	PyObject *p_module_name, *p_module, *p_main, *p_function;
+	PyObject *p_args, *p_main_value, *p_function_value;
+	PyObject *p_result_string;
 	PyGILState_STATE gstate;
 	pthread_mutex_t gstate_mutex;
 	PyThreadState *save;
 }
 
-/**
- * Generates a new list of result based on the search term
- * and returns the list.
- * @param search_term: Keyword used to find files.
- */
-//std::vector<struct SearchEngine::result> SearchEngine::search(std::string search_term) {
-std::string SearchEngine::search(std::string search_term) {
-	
-	// For now search results will be hard coded
-	// Once dispersy works we can do the real deal
-	
-	search_results.clear();
-	
-	//std::string tracker     = "130.161.158.52:20000";
-	std::string tracker     = "127.0.0.1:20000";
-	std::string root_hash   = "012b5549e2622ea8bf3d694b4f55c959539ac848";
-	std::string name        = "stream.mp4";
-	
-	struct SearchEngine::result r;
-	r.tracker = tracker;
-	r.hash = root_hash;
-	r.filename = name;
-	
-	root_hash = "367d26a6ce626e049a21921100e24eac86dbcd32";
-	name      = "SG.mkv";
-	
-	struct SearchEngine::result r2;
-	r2.tracker = tracker;
-	r2.hash = root_hash;
-	r2.filename = name;
-	
-	search_results.push_back(r);
-	search_results.push_back(r2);
-	
-	std::string result = buildSearchXML();
-	return result;
-}
-
 void SearchEngine::clearSearchResults() {
-	
 	search_results.clear();
 }
 
@@ -94,12 +54,41 @@ std::string SearchEngine::buildSearchXML() {
 /**
  * Returns the current list of results.
  */
-std::vector<struct SearchEngine::result> SearchEngine::getResults() {
+std::string SearchEngine::getResults() {
 	
+	p_function = PyObject_GetAttrString(p_module, "getSearchResults");
+	
+	if (p_function && PyCallable_Check(p_function)) {
+		std::cout << "Function callable." << std::endl;
+		gstate = PyGILState_Ensure();
+		
+		p_function_value = PyObject_CallObject(p_function, NULL);
+		int py_list_size = PyList_Size(p_function_value);
+		
+		for (int i = 0; i < py_list_size; i++) {
+			p_result_string              = PyList_GetItem(p_function_value, i);
+			std::string result_string    = PyString_AsString(p_result_string);
+			
+			std::vector<std::string> item = Settings::split(result_string, ':');
+			struct SearchEngine::result r;
+			r.tracker   = "127.0.0.1:9999";
+			r.hash      = item[0];
+			r.filename  = item[1];
+			search_results.push_back(r);
+		}
+		
+		PyGILState_Release(gstate);
+	} else {
+		if (PyErr_Occurred())
+			PyErr_Print();
+		fprintf(stderr, "Could not find function getSearchResults()");
+	}
+	Py_XDECREF(p_function);
+	Py_DECREF(p_function_value);
 	// For now search results will be hard coded.
 	// Once dispersy works we can do the real deal.
-	
-	return search_results;
+	std::string xml_results = buildSearchXML();
+	return xml_results;
 }
 
 /**
@@ -141,20 +130,11 @@ struct SearchEngine::result SearchEngine::getResultWithName(std::string name) {
  */
 void *SearchEngine::startDispersy(void *arg) {
 	std::cout << "Entered dispersy thread." <<std::endl;
+	p_main_value = PyObject_CallObject(p_main, NULL);
 	
-	
-//	PyEval_InitThreads();
-//	pthread_mutex_lock(&gstate_mutex);
-//	save = PyEval_SaveThread();
-//	gstate = PyGILState_Ensure();
-//	pthread_mutex_unlock(&gstate_mutex);
-	
-	pValue = PyObject_CallObject(pFunc, NULL);
-	
-//	pthread_mutex_lock(&gstate_mutex);
+	pthread_mutex_lock(&gstate_mutex);
 	PyGILState_Release(gstate);
-//	PyEval_RestoreThread(save);
-//	pthread_mutex_unlock(&gstate_mutex);
+	pthread_mutex_unlock(&gstate_mutex);
 	
 	Py_Finalize();
 	std::cout << "For some reason the dispersy thread has kicked you out." << std::endl;
@@ -164,22 +144,25 @@ void *SearchEngine::startDispersy(void *arg) {
 /**
  * Search.
  */
-void SearchEngine::searchDispersy() {
-	pFunc2 = PyObject_GetAttrString(pModule, "search");
+void SearchEngine::search(std::string search_term) {
+	clearSearchResults();
 	
-	if (pFunc2 && PyCallable_Check(pFunc2)) {
+	p_function = PyObject_GetAttrString(p_module, "search");
+	
+	if (p_function && PyCallable_Check(p_function)) {
 		std::cout << "Function callable." << std::endl;
-//		pthread_mutex_lock(&gstate_mutex);
-	//	 save = PyEval_SaveThread();
+		pthread_mutex_lock(&gstate_mutex);
 		gstate = PyGILState_Ensure();
-//		pthread_mutex_unlock(&gstate_mutex);
+		pthread_mutex_unlock(&gstate_mutex);
 		
-		pValue2 = PyObject_CallObject(pFunc2, NULL);
+		p_args = PyTuple_New(1);
+		PyTuple_SetItem(p_args, 0, PyString_FromString(search_term.c_str()));
 		
-//		pthread_mutex_lock(&gstate_mutex);
+		p_function_value = PyObject_CallObject(p_function, p_args);
+		
+		pthread_mutex_lock(&gstate_mutex);
 		PyGILState_Release(gstate);
-	//	PyEval_RestoreThread(save);
-//		pthread_mutex_unlock(&gstate_mutex);
+		pthread_mutex_unlock(&gstate_mutex);
 		
 		std::cout << "Called the function" << std::endl;
 	} else {
@@ -187,47 +170,48 @@ void SearchEngine::searchDispersy() {
 			PyErr_Print();
 		fprintf(stderr, "Could not find function search()");
 	}
-	Py_XDECREF(pFunc2);
+	Py_XDECREF(p_function);
+	Py_DECREF(p_function_value);
 }
 
 /**
- * Init function to set up python calls
+ * Init function to set up python calls and start dispersy.
  */
 void SearchEngine::init() {
 	pthread_mutex_init(&gstate_mutex, NULL);
 	pthread_mutex_init(&dispersy_mutex, NULL);
 	
+	// Initialize python.
 	Py_Initialize();
-	std::cout << "Initialized python." << std::endl;
 	
-	pName = PyString_FromString("DispersyInterface");
-	//pName = PyString_FromString("Test");
+	// The module or file name we want to import.
+	p_module_name = PyString_FromString("DispersyInterface");
 	
-	std::cout << "Trying to import DispersyInterface." << std::endl;
-	pModule = PyImport_Import(pName);
-	Py_DECREF(pName);
+	// Import DispersyInterface.py.
+	p_module = PyImport_Import(p_module_name);
 	
-	if (pModule != NULL) {
-		std::cout << "Succesfully imported DispersyInterface." << std::endl;
-		pFunc = PyObject_GetAttrString(pModule, "main");
+	// Garbage cleaning.
+	Py_DECREF(p_module_name);
+	
+	if (p_module != NULL) {
+		// Get the main() python function.
+		p_main = PyObject_GetAttrString(p_module, "main");
 		
-		if (pFunc && PyCallable_Check(pFunc)) {
-			std::cout << "Function callable." << std::endl;
+		if (p_main && PyCallable_Check(p_main)) {
+			// Start the blocking main() function in another thread.
 			int pid = pthread_create(&dispersy_thread, NULL, startDispersy, NULL);
-			
 			if (pid) {
 				std::cerr << "Could not spawn dispersy thread." << std::endl;
 			}
-			std::cout << "Called the function" << std::endl;
 		} else {
 			if (PyErr_Occurred())
 				PyErr_Print();
-			fprintf(stderr, "Could not find function main()");
+			std::cerr <<  "Could not find function main()" << std::endl;
 		}
-		Py_XDECREF(pFunc);
+		//Py_XDECREF(p_main);
 	} else {
 		PyErr_Print();
-		fprintf(stderr, "Failed to load DispersyInterface");
+		std::cerr <<  "Failed to load DispersyInterface" << std::endl;
 		return;
 	}
 }
