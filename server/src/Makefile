@@ -45,6 +45,6 @@ SearchEngine.o: SearchEngine.cpp
 	$(CXX) $(CPPFLAGS) SearchEngine.cpp -c
 
 clean:
-	rm -f *.o ws 2>/dev/null
+	rm -f *.o *.pyo *.pyc ws 2>/dev/null
 
 .PHONY: clean all

@@ -140,28 +140,24 @@ struct SearchEngine::result SearchEngine::getResultWithName(std::string name) {
  * Call the main() from DispersyInterface.
  */
 void *SearchEngine::startDispersy(void *arg) {
-	std::cout << "dsagdfjfhgsdfajgfsadfsjadf" <<std::endl;
+	std::cout << "Entered dispersy thread." <<std::endl;
 	
 	
 //	PyEval_InitThreads();
 //	pthread_mutex_lock(&gstate_mutex);
 //	save = PyEval_SaveThread();
-	gstate = PyGILState_Ensure();
+//	gstate = PyGILState_Ensure();
 //	pthread_mutex_unlock(&gstate_mutex);
 	
 	pValue = PyObject_CallObject(pFunc, NULL);
-	
-	sleep(3);
-	std::cout << "printpinrt" << std::endl;
 	
 //	pthread_mutex_lock(&gstate_mutex);
 	PyGILState_Release(gstate);
 //	PyEval_RestoreThread(save);
 //	pthread_mutex_unlock(&gstate_mutex);
 	
-	
 	Py_Finalize();
-	std::cout << "For some reason the dispersythread has kicked you out." << std::endl;
+	std::cout << "For some reason the dispersy thread has kicked you out." << std::endl;
 	pthread_exit(NULL);
 }
 
@@ -204,8 +200,8 @@ void SearchEngine::init() {
 	Py_Initialize();
 	std::cout << "Initialized python." << std::endl;
 	
-	//pName = PyString_FromString("DispersyInterface");
-	pName = PyString_FromString("Test");
+	pName = PyString_FromString("DispersyInterface");
+	//pName = PyString_FromString("Test");
 	
 	std::cout << "Trying to import DispersyInterface." << std::endl;
 	pModule = PyImport_Import(pName);

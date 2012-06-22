@@ -5,6 +5,7 @@ import os
 import sys
 import time
 import binascii
+
 from Tribler.Core.CacheDB.SqliteCacheDBHandler import NetworkBuzzDBHandler
 from Tribler.Core.API import SessionStartupConfig, Session
 from Tribler.Core.Statistics.Logger import OverlayLogger
@@ -18,11 +19,11 @@ dispersy = []
 
 def dispersyDoSearch(keywords, callback):
     while True:
-        if searchCommunity[0].get_nr_connections() < 5:
+        if search_community[0].get_nr_connections() < 5:
             yield 5.0
         else:
             print >> sys.stderr, "CREATING SEARCH RESULT!"
-            nr_requests_made = searchCommunity[0].create_search(keywords, callback)
+            nr_requests_made = search_community[0].create_search(keywords, callback)
             print >> sys.stderr, nr_requests_made
             break
 
@@ -56,11 +57,6 @@ def printResultsFromDispersy(keywords, results, candidate):
             finger += 1
 
 def main():
-
-#    while True:
-#        print >> sys.stderr, "Going to loop!"
-#        time.sleep(2)
-
     sscfg = SessionStartupConfig()
     sscfg.set_state_dir(unicode(os.path.realpath("/tmp")))
     sscfg.set_dispersy_port(6421)
@@ -91,7 +87,6 @@ def main():
                  break
     
     dispersy[0].callback.register(findSearchCommunity)
-    
     
     # KeyboardInterrupt
     try:
