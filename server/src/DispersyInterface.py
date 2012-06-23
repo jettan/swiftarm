@@ -5,12 +5,18 @@ import os
 import sys
 import time
 import binascii
+import threading
 
 from Tribler.Core.CacheDB.SqliteCacheDBHandler import NetworkBuzzDBHandler
 from Tribler.Core.API import SessionStartupConfig, Session
 from Tribler.dispersy.dispersy import Dispersy
 from Tribler.dispersy.message import Message
 from Tribler.community.search.community import SearchCommunity
+
+# TODO: Create function to store downloading/uploading stuff to the dispersy database.
+# TODO: Create function to delete deleted stuff from the dispersy database.
+# TODO: Remove duplicate results.
+# TODO: Multifile support.
 
 # Container for the search community of dispersy.
 search_community = []
@@ -21,6 +27,8 @@ dispersy = []
 # List containing all search results to be sent back to C++.
 search_results = []
 
+# Mutex for locking the search results.
+result_lock = threading.Lock()
 
 # The actual search function done in the dispersy thread.
 # MUST be done in the dispersy thread.
@@ -37,7 +45,13 @@ def dispersyDoSearch(keywords, callback):
 
 # Function to get the search results. Called from the C++ side.
 def getSearchResults():
-    return search_results
+    result_lock.acquire()
+    return_value = []
+    try:
+        return_value = search_results
+    finally:
+        result_lock.release()
+        return return_value
 
 # Function that lets the dispersy thread do the search.
 # param search_term: The search term got from the C++ side.
@@ -55,25 +69,28 @@ def resultsCallback(keywords, results, candidate):
 
     if results_length > 0:
 #        infohashes = [result[0] for result in results]
-        
-        finger = 0
-        for result in results:
-            swifthash = result[8]
-        
-            if swifthash:
-                if not isinstance(swifthash, str):
-                    print >> sys.stderr, "Type error!"
-                elif len(swifthash) != 20:
-                    print >> sys.stderr, "Invalid swift hash!"
+        result_lock.acquire()
+        try:
+            finger = 0
+            for result in results:
+                swifthash = result[8]
+            
+                if swifthash:
+                    if not isinstance(swifthash, str):
+                        print >> sys.stderr, "Type error!"
+                    elif len(swifthash) != 20:
+                        print >> sys.stderr, "Invalid swift hash!"
+                    else:
+                        search_result = binascii.hexlify(swifthash) + ":"+ result[1]
+                        print >> sys.stderr, search_result
+                        search_results.append(search_result)
                 else:
-                    search_result = binascii.hexlify(swifthash) + ":"+ result[1]
-                    print >> sys.stderr, search_result
-                    search_results.append(search_result)
-            else:
-                print >> sys.stderr, "swifthashless"
-                
-            print >> sys.stderr, "-----------------------------------------------"
-            finger += 1
+                    print >> sys.stderr, "swifthashless"
+                    
+                print >> sys.stderr, "-----------------------------------------------"
+                finger += 1
+        finally:
+            result_lock.release()
 
 # Main function to start a dispersy session and DHT in background.
 def main():
