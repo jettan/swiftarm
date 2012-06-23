@@ -8,8 +8,9 @@ void DownloadManager::init() {
 	pthread_mutex_init(&mutex, NULL);
 	pthread_mutex_init(&active_download_mutex, NULL);
 	
-	setMaxDownSpeed(UNLIMITED_SPEED);
-	setMaxUpSpeed(UNLIMITED_SPEED);
+	setMaxDownSpeed(Settings::getMaxDownSpeed());
+	setMaxUpSpeed(Settings::getMaxUpSpeed());
+	std::cout << max_upspeed << std::endl;
 	
 	startUploads();
 }
@@ -57,10 +58,12 @@ void DownloadManager::calculateUploadAmount() {
 }
 
 /**
- *
+ * Only for testing purposes.
+ * Returns the active_download variable.
+ * Method is not thread safe, so refrain from using it.
+ * Instead, acces active_download directly and lock it with the _active_download_mutex.
  */
 Download DownloadManager::getActiveDownload() {
-	
 	return *active_download;
 }
 
@@ -68,13 +71,12 @@ Download DownloadManager::getActiveDownload() {
  * Updates the download statistics.
  */
 void DownloadManager::updateDownloadStatistics() {
-	
+	std::cout << "Entered" << std::endl;
 	pthread_mutex_lock(&mutex);
 	pthread_mutex_lock(&active_download_mutex);
 	
 	for (int i = 0; i < downloads.size(); i++) {
 		if (downloads.at(i).getStatus() == UPLOADING || downloads.at(i).getStatus() == DOWNLOADING) {
-			
 			int id = downloads.at(i).getID();
 			double progress = floorf(((swift::Complete(id) * 10000.0) / swift::Size(id) * 1.0) + 0.5) / 100;
 			downloads.at(i).setProgress(progress);
@@ -89,6 +91,231 @@ void DownloadManager::updateDownloadStatistics() {
 	
 	pthread_mutex_unlock(&active_download_mutex);
 	pthread_mutex_unlock(&mutex);
+}
+
+/**
+ * Fills in XML tags with the specified value.
+ * @param value: The value to be set.
+ * @param tag: The tag to be filled with the value.
+ */
+template <class Type>
+void fillXMLValue(Type value, ticpp::Element *tag) {
+	ticpp::Text text(value);
+	tag->LinkEndChild(&text);
+}
+
+/**
+ * Builds the SIZE tag for the statistics XML document.
+ * @param index: index of the download from which the size is needed.
+ * @param download_tag: The DOWNLOAD tag in which the SIZE tag is nested.
+ */
+void buildSizeTag(int index, ticpp::Element *download_tag) {
+	using namespace DownloadManager;
+	
+	ticpp::Element size_tag("SIZE");
+	download_tag->LinkEndChild(&size_tag);
+	fillXMLValue<double>(swift::Size(getDownloads().at(index).getID()) / (1024.0 * 1024.0), &size_tag);
+}
+
+/**
+ * Builds the COMPLETED tag for the statistics XML document.
+ * @param index: index of the download from which the size is needed.
+ * @param download_tag: The DOWNLOAD tag in which the COMPLETED tag is nested.
+ */
+void buildCompletedTag(int index, ticpp::Element *download_tag) {
+	using namespace DownloadManager;
+	
+	ticpp::Element completed_tag("COMPLETED");
+	download_tag->LinkEndChild(&completed_tag);
+	fillXMLValue<double>((swift::Complete(getDownloads().at(index).getID()) / (1024.0 * 1024.0)), &completed_tag);
+}
+
+/**
+ * Builds the STATUS tag for the statistics XML document.
+ * @param index: index of the download from which the size is needed.
+ * @param download_tag: The DOWNLOAD tag in which the STATUS tag is nested.
+ */
+void buildStatusTag(int index, ticpp::Element *download_tag) {
+	using namespace DownloadManager;
+	
+	ticpp::Element status_tag("STATUS");
+	download_tag->LinkEndChild(&status_tag);
+	fillXMLValue<int>(getDownloads().at(index).getStatus(), &status_tag);
+}
+
+/**
+ * Builds the NAME tag for the statistics XML document.
+ * @param index: index of the download from which the size is needed.
+ * @param download_tag: The DOWNLOAD tag in which the NAME tag is nested.
+ */
+void buildNameTag(int index, ticpp::Element *download_tag) {
+	using namespace DownloadManager;
+	
+	ticpp::Element name_tag("NAME");
+	download_tag->LinkEndChild(&name_tag);
+	fillXMLValue<std::string>(getDownloads().at(index).getFilename(), &name_tag);
+}
+
+/**
+ * Builds the DSPEED tag for the statistics XML document.
+ * @param index: index of the download from which the size is needed.
+ * @param download_tag: The DOWNLOAD tag in which the DSPEED tag is nested.
+ */
+void buildDSpeedTag(int index, ticpp::Element *download_tag) {
+	using namespace DownloadManager;
+	
+	ticpp::Element dspeed_tag("DSPEED");
+	download_tag->LinkEndChild(&dspeed_tag);
+	fillXMLValue<double>(getDownloads().at(index).getStatistics().download_speed, &dspeed_tag);
+}
+
+/**
+ * Builds the USPEED tag for the statistics XML document.
+ * @param index: index of the download from which the size is needed.
+ * @param download_tag: The DOWNLOAD tag in which the USPEED tag is nested.
+ */
+void buildUSpeedTag(int index, ticpp::Element *download_tag) {
+	using namespace DownloadManager;
+	
+	ticpp::Element uspeed_tag("USPEED");
+	download_tag->LinkEndChild(&uspeed_tag);
+	fillXMLValue<double>(getDownloads().at(index).getStatistics().upload_speed, &uspeed_tag);
+}
+
+/**
+ * Builds the PROGRESS tag for the statistics XML document.
+ * @param index: index of the download from which the size is needed.
+ * @param download_tag: The DOWNLOAD tag in which the PROGRESS tag is nested.
+ */
+void buildProgressTag(int index, ticpp::Element *download_tag) {
+	using namespace DownloadManager;
+	
+	ticpp::Element progress_tag("PROGRESS");
+	download_tag->LinkEndChild(&progress_tag);
+	fillXMLValue<double>(getDownloads().at(index).getStatistics().download_percentage, &progress_tag);
+}
+
+/**
+ * Builds the RATIO tag for the statistics XML document.
+ * @param download_tag: The DOWNLOAD tag in which the RATIO tag is nested.
+ */
+void buildRatioTag(ticpp::Element *download_tag) {
+	using namespace DownloadManager;
+	
+	ticpp::Element ratio_tag("RATIO");
+	download_tag->LinkEndChild(&ratio_tag);
+	fillXMLValue<double>(getRatio(), &ratio_tag);
+}
+
+/**
+ * Builds the UPLOADAMOUNT tag for the statistics XML document.
+ * @param download_tag: The DOWNLOAD tag in which the UPLOADAMOUNT tag is nested.
+ */
+void buildUploadAmountTag(ticpp::Element *download_tag) {
+	using namespace DownloadManager;
+	
+	ticpp::Element upload_amount_tag("UPLOADAMOUNT");
+	download_tag->LinkEndChild(&upload_amount_tag);
+	
+	std::ostringstream upload_amount;
+	upload_amount << getUploadAmount().amount << " " << getUploadAmount().unit;
+	
+	fillXMLValue<std::string>(upload_amount.str(), &upload_amount_tag);
+}
+
+/**
+ * Builds the DOWNLOADAMOUNT tag for the statistics XML document.
+ * @param download_tag: The DOWNLOAD tag in which the DOWNLOADAMOUNT tag is nested.
+ */
+void buildDownloadAmountTag(ticpp::Element *download_tag) {
+	using namespace DownloadManager;
+	
+	ticpp::Element download_amount_tag("DOWNLOADAMOUNT");
+	download_tag->LinkEndChild(&download_amount_tag);
+	
+	std::ostringstream download_amount;
+	download_amount << getDownloadAmount().amount << " " << getDownloadAmount().unit;
+	
+	fillXMLValue<std::string>(download_amount.str(), &download_amount_tag);
+}
+
+/**
+ * Builds the SEEDERS tag for the statistics XML document.
+ * @param index: index of the download from which the no. of seeders is needed.
+ * @param download_tag: The DOWNLOAD tag in which the SEEDERS tag is nested.
+ */
+void buildSeedersTag(int index, ticpp::Element *download_tag) {
+	using namespace DownloadManager;
+	
+	ticpp::Element seeders_tag("SEEDERS");
+	download_tag->LinkEndChild(&seeders_tag);
+	fillXMLValue<int>(getDownloads().at(index).getStatistics().seeders, &seeders_tag);
+}
+
+/**
+ * Builds the PEERS tag for the statistics XML document.
+ * @param index: index of the download from which the no. of peers is needed.
+ * @param download_tag: The DOWNLOAD tag in which the PEERS tag is nested.
+ */
+void buildPeersTag(int index, ticpp::Element *download_tag) {
+	using namespace DownloadManager;
+	
+	ticpp::Element peers_tag("PEERS");
+	download_tag->LinkEndChild(&peers_tag);
+	fillXMLValue<int>(getDownloads().at(index).getStatistics().peers, &peers_tag);
+}
+
+/**
+ * Builds the HASH tag for the statistics XML document.
+ * @param index: index of the download from which the root hash is needed.
+ * @param download_tag: The DOWNLOAD tag in which the HASH tag is nested.
+ */
+void buildHashTag(int index, ticpp::Element *download_tag) {
+	using namespace DownloadManager;
+	
+	ticpp::Element hash_tag("HASH");
+	download_tag->LinkEndChild(&hash_tag);
+	fillXMLValue<std::string>(getDownloads().at(index).getRootHash(), &hash_tag);
+}
+
+/**
+ * Builds the TIME tags for the statistics XML document.
+ * @param index: index of the download from which the estimated times are needed.
+ * @param download_tag: The DOWNLOAD tag in which the TIME tags are nested.
+ */
+void buildTimeTag(int index, ticpp::Element *download_tag) {
+	using namespace DownloadManager;
+	
+	ticpp::Element timedays_tag("TIMEDAYS");
+	download_tag->LinkEndChild(&timedays_tag);
+	
+	ticpp::Element timehours_tag("TIMEHOURS");
+	download_tag->LinkEndChild(&timehours_tag);
+	
+	ticpp::Element timeminutes_tag("TIMEMINUTES");
+	download_tag->LinkEndChild(&timeminutes_tag);
+	
+	ticpp::Element timeseconds_tag("TIMESECONDS");
+	download_tag->LinkEndChild(&timeseconds_tag);
+	
+	if (getDownloads().at(index).getStatus() == DOWNLOADING) {
+		fillXMLValue<int>(getDownloads().at(index).getStatistics().estimated.days, &timedays_tag);
+		fillXMLValue<int>(getDownloads().at(index).getStatistics().estimated.hours, &timehours_tag);
+		fillXMLValue<int>(getDownloads().at(index).getStatistics().estimated.minutes, &timeminutes_tag);
+		fillXMLValue<int>(getDownloads().at(index).getStatistics().estimated.seconds, &timeseconds_tag);
+		
+	} else if(getDownloads().at(index).getStatus() == PAUSED) {
+		fillXMLValue<char>('-', &timedays_tag);
+		fillXMLValue<char>('-', &timehours_tag);
+		fillXMLValue<char>('-', &timeminutes_tag);
+		fillXMLValue<char>('-', &timeseconds_tag);
+		
+	} else {
+		fillXMLValue<int>(0, &timedays_tag);
+		fillXMLValue<int>(0, &timehours_tag);
+		fillXMLValue<int>(0, &timeminutes_tag);
+		fillXMLValue<int>(0, &timeseconds_tag);
+	}
 }
 
 /**
@@ -110,135 +337,24 @@ std::string DownloadManager::buildXML() {
 		
 		ticpp::Element download_tag("DOWNLOAD");
 		downloads_tag.LinkEndChild(&download_tag);
-
-		ticpp::Element size_tag("SIZE");
-		download_tag.LinkEndChild(&size_tag);
-		ticpp::Text size_value(swift::Size(getDownloads().at(i).getID()) / (1024.0 * 1024.0));
-		size_tag.LinkEndChild(&size_value);
-
-		ticpp::Element complete_tag("COMPLETED");
-		download_tag.LinkEndChild(&complete_tag);
-		ticpp::Text complete_value(swift::Complete(getDownloads().at(i).getID()) / (1024.0 * 1024.0));
-		complete_tag.LinkEndChild(&complete_value);
 		
-		ticpp::Element status_tag("STATUS");
-		download_tag.LinkEndChild(&status_tag);
-		ticpp::Text status_value(getDownloads().at(i).getStatus());
-		status_tag.LinkEndChild(&status_value);
-		
-		ticpp::Element name_tag("NAME");
-		download_tag.LinkEndChild(&name_tag);
-		ticpp::Text name_value(getDownloads().at(i).getFilename());
-		name_tag.LinkEndChild(&name_value);
-		
-		ticpp::Element dspeed_tag("DSPEED");
-		download_tag.LinkEndChild(&dspeed_tag);
-		ticpp::Text dspeed_value(getDownloads().at(i).getStatistics().download_speed);
-		dspeed_tag.LinkEndChild(&dspeed_value);
-		
-		ticpp::Element uspeed_tag("USPEED");
-		download_tag.LinkEndChild(&uspeed_tag);
-		ticpp::Text uspeed_value(getDownloads().at(i).getStatistics().upload_speed);
-		uspeed_tag.LinkEndChild(&uspeed_value);
-		
-		ticpp::Element progress_tag("PROGRESS");
-		download_tag.LinkEndChild(&progress_tag);
-		ticpp::Text progress_value(getDownloads().at(i).getStatistics().download_percentage);
-		progress_tag.LinkEndChild(&progress_value);
-		
-		ticpp::Element ratio_tag("RATIO");
-		download_tag.LinkEndChild(&ratio_tag);
-		ticpp::Text ratio_value(getRatio());
-		ratio_tag.LinkEndChild(&ratio_value);
-		
-		ticpp::Element upload_amount_tag("UPLOADAMOUNT");
-		download_tag.LinkEndChild(&upload_amount_tag);
-		
-		std::ostringstream upload_amount;
-		upload_amount << getUploadAmount().amount << " " << getUploadAmount().unit;
-		
-		ticpp::Text upload_amount_value(upload_amount.str());
-		upload_amount_tag.LinkEndChild(&upload_amount_value);
-		
-		ticpp::Element download_amount_tag("DOWNLOADAMOUNT");
-		download_tag.LinkEndChild(&download_amount_tag);
-		
-		std::ostringstream download_amount;
-		download_amount << getDownloadAmount().amount << " " << getDownloadAmount().unit;
-		
-		ticpp::Text download_amount_value(download_amount.str());
-		download_amount_tag.LinkEndChild(&download_amount_value);
-		
-		ticpp::Element seeders_tag("SEEDERS");
-		download_tag.LinkEndChild(&seeders_tag);
-		ticpp::Text seeders_value(getDownloads().at(i).getStatistics().seeders);
-		seeders_tag.LinkEndChild(&seeders_value);
-		
-		ticpp::Element peers_tag("PEERS");
-		download_tag.LinkEndChild(&peers_tag);
-		ticpp::Text peers_value(getDownloads().at(i).getStatistics().peers);
-		peers_tag.LinkEndChild(&peers_value);
-		
-		ticpp::Element timedays_tag("TIMEDAYS");
-		download_tag.LinkEndChild(&timedays_tag);
-		
-		ticpp::Element timehours_tag("TIMEHOURS");
-		download_tag.LinkEndChild(&timehours_tag);
-		
-		ticpp::Element timeminutes_tag("TIMEMINUTES");
-		download_tag.LinkEndChild(&timeminutes_tag);
-		
-		ticpp::Element timeseconds_tag("TIMESECONDS");
-		download_tag.LinkEndChild(&timeseconds_tag);
-		
-		if (getDownloads().at(i).getStatus() == DOWNLOADING) {
-			ticpp::Text timehours_value(getDownloads().at(i).getStatistics().estimated.hours);
-			timehours_tag.LinkEndChild(&timehours_value);
-			
-			ticpp::Text timeminutes_value(getDownloads().at(i).getStatistics().estimated.minutes);
-			timeminutes_tag.LinkEndChild(&timeminutes_value);
-			
-			ticpp::Text timeseconds_value(getDownloads().at(i).getStatistics().estimated.seconds);
-			timeseconds_tag.LinkEndChild(&timeseconds_value);
-			
-			ticpp::Text timedays_value(getDownloads().at(i).getStatistics().estimated.days);
-			timedays_tag.LinkEndChild(&timedays_value);
-		} else if(getDownloads().at(i).getStatus() == PAUSED) {
-			ticpp::Text timehours_value("-");
-			timehours_tag.LinkEndChild(&timehours_value);
-			
-			ticpp::Text timeminutes_value("-");
-			timeminutes_tag.LinkEndChild(&timeminutes_value);
-			
-			ticpp::Text timeseconds_value("-");
-			timeseconds_tag.LinkEndChild(&timeseconds_value);
-			
-			ticpp::Text timedays_value("-");
-			timedays_tag.LinkEndChild(&timedays_value);
-			
-		}
-		else {
-			ticpp::Text timehours_value(0);
-			timehours_tag.LinkEndChild(&timehours_value);
-			
-			ticpp::Text timeminutes_value(0);
-			timeminutes_tag.LinkEndChild(&timeminutes_value);
-			
-			ticpp::Text timeseconds_value(0);
-			timeseconds_tag.LinkEndChild(&timeseconds_value);
-			
-			ticpp::Text timedays_value(0);
-			timedays_tag.LinkEndChild(&timedays_value);
-		}
-		
-		ticpp::Element hash_tag("HASH");
-		download_tag.LinkEndChild(&hash_tag);
-		ticpp::Text hash_value(getDownloads().at(i).getRootHash());
-		hash_tag.LinkEndChild(&hash_value);
+		buildSizeTag(i, &download_tag);
+		buildCompletedTag(i, &download_tag);
+		buildStatusTag(i, &download_tag);
+		buildNameTag(i, &download_tag);
+		buildDSpeedTag(i, &download_tag);
+		buildUSpeedTag(i, &download_tag);
+		buildProgressTag(i, &download_tag);
+		buildRatioTag(&download_tag);
+		buildUploadAmountTag(&download_tag);
+		buildDownloadAmountTag(&download_tag);
+		buildSeedersTag(i, &download_tag);
+		buildPeersTag(i, &download_tag);
+		buildHashTag(i, &download_tag);
+		buildTimeTag(i, &download_tag);
 	}
 	
 	TiXmlPrinter printer;
-	
 	doc->Accept(&printer);
 	std::string xml_stats = printer.Str();
 	
@@ -253,7 +369,6 @@ std::string DownloadManager::buildXML() {
  */
 void downloadCallback(int fd, short event, void* arg) {
 	if (DownloadManager::getDownloads().size() == 0) {
-		std::cout << "You shall not pass!" << std::endl;
 		evtimer_add(&DownloadManager::evcompl, swift::tint2tv(TINT_SEC));
 	} else {
 			
@@ -354,6 +469,9 @@ int DownloadManager::resumeDownload(std::string download_hash) {
 		
 		if (active_download->getID() > -1) {
 			active_download->resume();
+			std::cout << max_upspeed << std::endl;
+			active_download->limitDownSpeed(max_downspeed);
+			active_download->limitUpSpeed(max_upspeed);
 		} else {
 			pthread_mutex_unlock(&active_download_mutex);
 			return -1;
@@ -611,20 +729,6 @@ struct DownloadManager::Amount DownloadManager::getUploadAmount() {
  */
 double DownloadManager::getRatio() {
 	return ratio;
-}
-
-/**
- * Returns the maximum download speed.
- */
-double DownloadManager::getMaxDownSpeed() {
-	return max_downspeed;
-}
-
-/**
- * Returns the maximum upload speed.
- */
-double DownloadManager::getMaxUpSpeed() {
-	return max_upspeed;
 }
 
 /**

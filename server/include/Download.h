@@ -29,7 +29,8 @@ enum Status {
 class Download {
 	protected:
 		
-		pthread_mutex_t _mutex;			/// Mutex to prevent download thread and main thread from accessing same data at the same time.
+		pthread_mutex_t _mutex;				/// Mutex to prevent download thread and main thread from accessing same data at the same time.
+		pthread_mutex_t _transfer_mutex;	/// Mutex to prevent download thread and main thread from accessing _transfer at the same time.
 		
 		volatile int _status;			/// Current status of the download.
 		
@@ -101,7 +102,8 @@ class Download {
 			_root_hash   = root_hash;
 			_filename    = filename;
 			
-			int rc       = pthread_mutex_init(&_mutex, NULL);
+			pthread_mutex_init(&_mutex, NULL);
+			pthread_mutex_init(&_transfer_mutex, NULL);
 			
 			setDownloadSpeed(0.0);
 			setUploadSpeed(0.0);

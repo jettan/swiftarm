@@ -59,11 +59,12 @@ void Download::start() {
 		int id  = swift::Open(getFilename().c_str(), roothash, trackeraddr);
 		setID(id);
 	}
-	
+	pthread_mutex_lock(&_transfer_mutex);
 	_transfer = swift::FileTransfer::file(getID());
 	if(_transfer == NULL) {
 		std::cout << "TRANSFER IS NULL" << std::endl;
 	}
+	pthread_mutex_unlock(&_transfer_mutex);
 	std::cout << "ID = " << getID() << std::endl;
 }
 
@@ -76,9 +77,14 @@ void Download::pause() {
 		std::cout << "Already Paused" << std::endl;
 		return;
 	}
+	
 	// Let swift save the progress and close the file.
+	pthread_mutex_lock(&_transfer_mutex);
+	swift::Channel::CloseTransfer(_transfer);
+	pthread_mutex_unlock(&_transfer_mutex);
 	swift::Checkpoint(getID());
 	swift::Close(getID());
+	
 	setStatus(PAUSED);
 }
 
@@ -95,17 +101,25 @@ void Download::resume() {
 	swift::Sha1Hash roothash   = swift::Sha1Hash(true, getRootHash().c_str());
 	
 	int id = swift::Open(getFilename().c_str(), roothash, trackeraddr, false);
-	
-	// Not sure if this has to be called...
 	setID(id);
+	
+	pthread_mutex_lock(&_transfer_mutex);
+	_transfer = swift::FileTransfer::file(getID());
+	if(_transfer == NULL) {
+		std::cout << "TRANSFER IS NULL" << std::endl;
+	}
+	pthread_mutex_unlock(&_transfer_mutex);
+	
 }
 
 /**
  * Calculates current download and upload speeds.
  */
 void Download::calculateSpeeds() {
+	pthread_mutex_lock(&_transfer_mutex);
 	int dspeed = _transfer->GetCurrentSpeed(swift::DDIR_DOWNLOAD);
 	int uspeed = _transfer->GetCurrentSpeed(swift::DDIR_UPLOAD);
+	pthread_mutex_unlock(&_transfer_mutex);
 	
 	setDownloadSpeed(dspeed/1024);
 	setUploadSpeed(uspeed/1024);
@@ -115,8 +129,10 @@ void Download::calculateSpeeds() {
  * Calculates number of peers.
  */
 void Download::calculatePeers() {
+	pthread_mutex_lock(&_transfer_mutex);
 	int seeders  = _transfer->GetNumSeeders();
 	int leechers = _transfer->GetNumLeechers();
+	pthread_mutex_unlock(&_transfer_mutex);
 	
 	setSeeders(seeders);
 	setPeers(seeders + leechers);
@@ -239,22 +255,26 @@ void Download::setID(int id) {
  * Limits upload speed.
  */
 void Download::limitUpSpeed(double speed) {
+	pthread_mutex_lock(&_transfer_mutex);
 	if (speed == 0) {
 		_transfer->SetMaxSpeed(swift::DDIR_UPLOAD, DBL_MAX);
 	} else {
 		_transfer->SetMaxSpeed(swift::DDIR_UPLOAD, speed);
 	}
+	pthread_mutex_unlock(&_transfer_mutex);
 }
 
 /**
  * Limits download speed.
  */
 void Download::limitDownSpeed(double speed) {
+	pthread_mutex_lock(&_transfer_mutex);
 	if (speed == 0) {
 		_transfer->SetMaxSpeed(swift::DDIR_DOWNLOAD, DBL_MAX);
 	} else {
 		_transfer->SetMaxSpeed(swift::DDIR_DOWNLOAD, speed);
 	}
+	pthread_mutex_unlock(&_transfer_mutex);
 }
 
 /**
