@@ -118,6 +118,10 @@ def main():
     # MUST be called on the dispersy thread.
     dispersy[0].callback.register(findSearchCommunity)
     
+    # Any search request before this point will create a segfault!
+    # TODO: Disable searching on C++ side before this happens.
+    print >> sys.stderr, "Ready to search!"
+    
     # Keep the main function spinning to keep the session alive and dispersy and DHT running.
     try:
         while True:
