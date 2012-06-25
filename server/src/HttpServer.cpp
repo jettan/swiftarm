@@ -69,139 +69,115 @@ static void HttpServer::handleRequest(struct evhttp_request *req, void *arg) {
 	// This holds the content we want to send.
 	evb = evbuffer_new();
 	
-	// Message will look like: "/add:hash".
-	if (path_str.size() == 45 && path_str.substr(0, 4).compare("/add") == 0  && path_str.at(4) == ':') {
-		std::vector<std::string> result = Settings::split(path_str, ':');
-		
-		if (result.size() == 2) {
+	// Vector with the request text
+	std::vector<std::string> result = Settings::split(path_str, ':');
+	
+	if(result.size() == 1) {
+		// Stops streaming.
+		if (result.at(0).compare("/stopStream") == 0) {
+			DownloadManager::stopStream();
+			sendResponse(req, evb, "Not streaming anymore.");
+			
+		// Message will look like: "/clear".
+		} else if (result.at(0).compare("/clear") == 0) {
+			std::string response = clearRequest();
+			sendResponse(req, evb, response.c_str());
+			
+		// Check to see whether the server is still alive.
+		} else if (result.at(0).compare("/alive") == 0) {
+			sendResponse(req, evb, "Alive");
+			
+		// Returns an XML file with the latest search results.
+		} else if (result.at(0).compare("/results") == 0) {
+			std::string results = SearchEngine::getResults();
+			sendXMLResponse(results, req, evb);
+			
+		// Returns current download statistics to JavaScript.
+		} else if (result.at(0).compare("/stats") == 0) {
+			std::string msg = DownloadManager::buildXML();
+			sendXMLResponse(msg, req, evb);
+			
+		// Reply at bad requests:
+		} else {
+			std::cout << "Bad request: " << path << std::endl;
+			sendResponse(req, evb, "Bad Request");
+		}
+	} else if (result.size() == 2) {
+		// Message will look like: "/add:hash".
+		if (result.at(1).size() == 40 && result.at(0).compare("/add") == 0) {
+			
 			std::string hash = result.at(1);
 			std::string response = addRequest(hash);
 			sendResponse(req, evb, response.c_str());
-		} else {
-			sendResponse(req, evb, "-1");
-		}
-	} else if (strcmp(path, "/results") == 0) {
-		std::string results = SearchEngine::getResults();
-		sendXMLResponse(results, req, evb);
-		
-	// Message will look like: "/download:hash"
-	} else if (path_str.size() == 50 && path_str.substr(0, 9).compare("/download") == 0  && path_str.at(9) == ':') {
-		std::vector<std::string> result = Settings::split(path_str, ':');
-		
-		if (result.size() == 2) {
+			
+		// Message will look like: "/download:hash".
+		} else if (result.at(1).size() == 40 && result.at(0).compare("/download") == 0) {
+			
 			std::string hash = result.at(1);
 			std::string response = downloadRequest(hash);
 			sendResponse(req, evb, response.c_str());
-		} else {
-			sendResponse(req, evb, "-1");
-		}
-	// Message will look like: "/upload:filename"
-	} else if (path_str.size() > 7 && path_str.substr(0, 7).compare("/upload") == 0  && path_str.at(7) == ':') {
-		std::vector<std::string> result = Settings::split(path_str, ':');
-		
-		if (result.size() == 2) {
+			
+		// Message will look like: "/upload:filename"
+		} else if (result.at(0).compare("/upload") == 0) {
+			
 			std::string filename = result.at(1);
 			std::string response = uploadRequest(filename);
 			sendResponse(req, evb, response.c_str());
-		} else {
-			sendResponse(req, evb, "-1");
-		}
-	// Message will look like: "/stop:roothash"
-	} else if (path_str.size() == 46 && path_str.substr(0, 5).compare("/stop") == 0  && path_str.at(5) == ':') {
-		std::vector<std::string> result = Settings::split(path_str, ':');
-		
-		if (result.size() == 2) {
+			
+		// Message will look like: "/stop:roothash"
+		} else if (result.at(1).size() == 40 && result.at(0).compare("/stop") == 0) {
+			
 			std::string hash = result.at(1);
 			std::string response = stopRequest(hash);
 			sendResponse(req, evb, response.c_str());
-		} else {
-			sendResponse(req, evb, "-1");
-		}
-	// Message will look like: "/remove:roothash"
-	} else if (path_str.size() == 48 && path_str.substr(0, 7).compare("/remove") == 0 && path_str.at(7) == ':') {
-		std::vector<std::string> result = Settings::split(path_str, ':');
-		
-		if (result.size() == 2) {
+			
+		// Message will look like: "/remove:roothash"
+		} else if (result.at(1).size() == 40 && result.at(0).compare("/remove") == 0) {
+			
 			std::string hash = result.at(1);
 			std::string response = removeRequest(hash);
 			sendResponse(req, evb, response.c_str());
-		} else {
-			sendResponse(req, evb, "-1");
-		}
-	// Message will look like: "/pause:hash"
-	} else if (path_str.size() == 47 && path_str.substr(0, 6).compare("/pause") == 0  && path_str.at(6) == ':') {
-		std::vector<std::string> result = Settings::split(path_str, ':');
-		
-		if (result.size() == 2) {
+			
+		// Message will look like: "/pause:hash"
+		} else if (result.at(1).size() == 40 && result.at(0).compare("/pause") == 0) {
+			
 			std::string hash = result.at(1);
 			std::string response = pauseRequest(hash);
 			sendResponse(req, evb, response.c_str());
-		} else {
-			sendResponse(req, evb, "-1");
-		}
-	// Message will look like: "/resume:roothash"
-	} else if (path_str.size() == 48 && path_str.substr(0, 7).compare("/resume") == 0  && path_str.at(7) == ':') {
-		std::vector<std::string> result = Settings::split(path_str, ':');
-		
-		if (result.size() == 2) {
+			
+		// Message will look like: "/resume:roothash"
+		} else if (result.at(1).size() == 40 && result.at(0).compare("/resume") == 0) {
+			
 			std::string hash = result.at(1);
 			std::string response = resumeRequest(hash);
 			sendResponse(req, evb, response.c_str());
-		} else {
-			sendResponse(req, evb, "-1");
-		}
-	// Message will look like: "/search:searchterm"
-	} else if (path_str.size() > 8 && path_str.substr(0, 7).compare("/search") == 0 && path_str.at(7) == ':') {
-		std::vector<std::string> result = Settings::split(path_str, ':');
-		
-		if (result.size() == 2) {
+			
+		// Message will look like: "/search:searchterm"
+		} else if (result.at(0).compare("/search") == 0) {
+			
 			std::string search_term = result.at(1);
 			SearchEngine::search(search_term);
 			sendResponse(req, evb, "Search request sent.");
-		} else {
-			sendResponse(req, evb, "-1");
-		}
-	// Returns current download statistics to JavaScript
-	} else if (strcmp(path, "/stats") == 0) {
-		std::string msg = DownloadManager::buildXML();
-		sendXMLResponse(msg, req, evb);
-		
-	// Message will look like: "/stream:hash"
-	} else if (path_str.size() >= 7 && path_str.substr(0,7).compare("/stream") == 0 && path_str.at(7) == ':') {
-		std::vector<std::string> result = Settings::split(path_str, ':');
-		
-		if (result.size() == 2) {
+			
+		// Message will look like: "/stream:hash"
+		} else if (result.at(0).compare("/stream") == 0) {
+			
 			std::string hash = result.at(1);
 			std::string response = streamRequest(hash);
 			sendResponse(req, evb, response.c_str());
+			
+		// Reply at bad requests:
 		} else {
-			sendResponse(req, evb, "-1");
+			std::cout << "Bad request: " << path << std::endl;
+			sendResponse(req, evb, "Bad Request");
 		}
-	// Stops streaming.
-	} else if (strcmp(path, "/stopStream") == 0) {
-		DownloadManager::stopStream();
-		sendResponse(req, evb, "Not streaming anymore.");
-		
-	// Parse settings, message will look like: "/settings:downmax:upmax:downdir".
-	} else if (path_str.size() >= 27 && path_str.substr(0,9).compare("/settings") == 0 && path_str.at(9) == ':') {
-		std::vector<std::string> result = Settings::split(path, ':');
-		
-		if (result.size() == 4) {
+	} else if (result.size() == 4) {
+		// Parse settings, message will look like: "/settings:downmax:upmax:downdir".
+		if (result.at(0).compare("/settings") == 0) {
+			
 			std::string response = settingsRequest(result);
 			sendResponse(req, evb, response.c_str());
-		} else {
-			sendResponse(req, evb, "Invalid settings format");
 		}
-		
-	// Message will look like: "/clear"
-	} else if (strcmp(path, "/clear") == 0) {
-		std::string response = clearRequest();
-		sendResponse(req, evb, response.c_str());
-		
-	// Check to see whether the server is still alive.
-	} else if (strcmp(path, "/alive") == 0) {
-		sendResponse(req, evb, "Alive");
-		
 	// Reply at bad requests:
 	} else {
 		std::cout << "Bad request: " << path << std::endl;

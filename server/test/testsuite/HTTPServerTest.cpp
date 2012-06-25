@@ -4,6 +4,7 @@
 #include "easy.h"
 #include "HttpServer.h"
 #include "gtest.h"
+#include "SearchEngine.h"
 
 class HTTPServerTest : public ::testing::Test {
 	protected:
@@ -55,13 +56,13 @@ TEST_F(HTTPServerTest, searchTrivial) {
 	
 	SearchEngine::clearSearchResults();
 	
-	EXPECT_EQ(0, SearchEngine::getResults().size());
-	
 	std::string addr = Settings::getIP() + ":1337/search:test";
+	std::cout << "Got IP" << std::endl;
 	curl_easy_setopt(easyHandle, CURLOPT_URL, addr.c_str());
 	res = curl_easy_perform(easyHandle);
+	std::cout << "Sent Http request" << std::endl;
 	
-	EXPECT_LT(0, SearchEngine::getResults().size());
+	EXPECT_EQ("Search request sent.", response);
 }
 
 // Test whether an empty searh is handled properly
@@ -69,13 +70,11 @@ TEST_F(HTTPServerTest, searchEmpty) {
 	
 	SearchEngine::clearSearchResults();
 	
-	EXPECT_EQ(0, SearchEngine::getResults().size());
-	
 	std::string addr = Settings::getIP() + ":1337/search:";
 	curl_easy_setopt(easyHandle, CURLOPT_URL, addr.c_str());
 	res = curl_easy_perform(easyHandle);
 	
-	EXPECT_EQ(0, SearchEngine::getResults().size());
+	// PARSE EMPTY XML HERE
 	EXPECT_EQ("Bad Request", response);
 }
 
@@ -88,6 +87,7 @@ TEST_F(HTTPServerTest, downloadTrivial) {
 	curl_easy_setopt(easyHandle, CURLOPT_URL, addr.c_str());
 	res = curl_easy_perform(easyHandle);
 	
+	EXPECT_EQ("Search request sent.", response);
 	response = "";
 	
 	std::string addr2 = Settings::getIP() + ":1337/add:367d26a6ce626e049a21921100e24eac86dbcd32";
@@ -116,30 +116,28 @@ TEST_F(HTTPServerTest, downloadTrivial) {
 // Test whether adding a nonexistent download is handled properly
 TEST_F(HTTPServerTest, addNonexistent){
 	
-	std::string addr2 = Settings::getIP() + ":1337/add:367d26a6ce626e049a21921100e24eac86dbcd32";
-	curl_easy_setopt(easyHandle, CURLOPT_URL, addr2.c_str());
+	std::string addr1 = Settings::getIP() + ":1337/add:367d26a6ce626e049a21921100e24eac86dbcd32";
+	curl_easy_setopt(easyHandle, CURLOPT_URL, addr1.c_str());
 	res = curl_easy_perform(easyHandle);
 	
 	EXPECT_EQ("Could not find the file.", response);
-	response = "";
 }
 
 // Test whether downloading a nonexistent download is handled properly
 TEST_F(HTTPServerTest, downloadNonexistent){
 	
-	std::string addr2 = Settings::getIP() + ":1337/download:367d26a6ce626e049a21921100e24eac86dbcd32";
-	curl_easy_setopt(easyHandle, CURLOPT_URL, addr2.c_str());
+	std::string addr1 = Settings::getIP() + ":1337/download:367d26a6ce626e049a21921100e24eac86dbcd32";
+	curl_easy_setopt(easyHandle, CURLOPT_URL, addr1.c_str());
 	res = curl_easy_perform(easyHandle);
 	
 	EXPECT_EQ("Could not find the file.", response);
-	response = "";
 }
 
 // Try downloading the same file twice
 TEST_F(HTTPServerTest, downloadTwice){
 	
-	std::string addr = Settings::getIP() + ":1337/search:test";
-	curl_easy_setopt(easyHandle, CURLOPT_URL, addr.c_str());
+	std::string addr1 = Settings::getIP() + ":1337/search:test";
+	curl_easy_setopt(easyHandle, CURLOPT_URL, addr1.c_str());
 	res = curl_easy_perform(easyHandle);
 	
 	response = "";

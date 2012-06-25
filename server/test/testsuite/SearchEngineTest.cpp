@@ -8,13 +8,17 @@ class SearchEngineTest : public ::testing::Test {
 	
 	virtual ~SearchEngineTest() {}
 	
-	virtual void SetUp(){}
+	virtual void SetUp() {}
 	
 	virtual void TearDown() {}
 };
 
 std::vector<struct SearchEngine::result> toVector(std::string result) {
 	
+	ticpp::Document doc;
+	doc.Parse(result, true, TIXML_DEFAULT_ENCODING);
+	ticpp::Iterator<ticpp::Element> iterator;
+	iterator = iterator.begin(&doc);
 	
 }
 
@@ -36,17 +40,16 @@ TEST_F(SearchEngineTest, searchTrivial) {
 TEST_F(SearchEngineTest, getResultsTrivial) {
 	
 	SearchEngine::clearSearchResults();
-	EXPECT_EQ(0, SearchEngine::getResults().size());
+	// PARSE XML HERE
 	
 	SearchEngine::search("test");
-	EXPECT_LT(0, SearchEngine::getResults().size());
 }
 
 // Empty
 TEST_F(SearchEngineTest, getResultsEmpty) {
 	
 	SearchEngine::clearSearchResults();
-	EXPECT_EQ(0, SearchEngine::getResults().size());
+	// PARSE XML HERE
 }
 
 /* Get Result With Name Tests */
@@ -55,11 +58,8 @@ TEST_F(SearchEngineTest, getResultsEmpty) {
 TEST_F(SearchEngineTest, getResultWithNameTrivial) {
 	
 	SearchEngine::search("test");
+	// TODO
 	
-	std::string name = SearchEngine::getResults().at(0).filename;
-	std::string hash = SearchEngine::getResults().at(0).hash;
-	
-	EXPECT_EQ(hash, SearchEngine::getResultWithName(name).hash);
 }
 
 // Doesn't exist
@@ -78,12 +78,9 @@ TEST_F(SearchEngineTest, getResultWithHashTrivial) {
 	SearchEngine::search("test");
 	std::string result = SearchEngine::getResults();
 	
-	ticpp::Document doc;
-	doc.Parse(result, true, TIXML_DEFAULT_ENCODING);
+	// UNFINISHED
 	
 	
-	
-	std::cout
 }
 
 // Doesn't exist
