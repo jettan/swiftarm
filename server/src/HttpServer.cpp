@@ -80,7 +80,7 @@ static void HttpServer::handleRequest(struct evhttp_request *req, void *arg) {
 		} else {
 			sendResponse(req, evb, "-1");
 		}
-	} else if (strcmp(path, "/result") == 0) {
+	} else if (strcmp(path, "/results") == 0) {
 		std::string results = SearchEngine::getResults();
 		sendXMLResponse(results, req, evb);
 		
@@ -365,7 +365,7 @@ static std::string HttpServer::streamRequest(std::string hash) {
 	try {
 		struct SearchEngine::result res = SearchEngine::getResultWithHash(hash);
 		DownloadManager::startStream(res.tracker);
-		std::string address = Settings::getIP() + ":17758/" + res.hash;
+		std::string address = "http://" + Settings::getIP() + ":17758/" + res.hash;
 		std::cout << address << std::endl;
 		response = address.c_str();
 	} catch(FileNotFoundException e) {

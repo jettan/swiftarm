@@ -105,6 +105,10 @@ def main():
     
     # Disable all other tribler modules.
     sscfg.set_swift_proc(False)
+    sscfg.set_buddycast(False)
+    sscfg.set_social_networking(False)
+    sscfg.set_remote_query(False)
+    sscfg.set_bartercast(False)
     sscfg.set_overlay(False)
     sscfg.set_torrent_collecting(False)
     sscfg.set_dialback(False)

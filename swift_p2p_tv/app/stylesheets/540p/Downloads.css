@@ -1,63 +1,1081 @@
 #SceneDownloads {
-    position : absolute;
-    left : 0px;
-    top : 0px;
-    width : 960px;
-    height : 540px;
-}
-
-#normalButton02 {
-    position: absolute;
-    left: 725px;
-    top: 80px;
-    width:200px;
-}
-
-#normalButton12 {
-    position: absolute;
-    left: 300px;
-    top: 137px;
-    width:150px;
-}
-
-#labelDownload {
-    position:absolute;
-    left:275px;
-    top: 50px;
-    width: 150px;
-	height: 75px;
-}
-
-#labelFilename {
-    position:absolute;
-    left:425px;
-    top: 50px;
-    width: 200px;
-	height: 75px;
-}
-
-#labelProgress {
-    position:absolute;
-    left:625px;
-    top: 50px;
-    width: 100px;
-	height: 75px;
-}
-
-#labelProgress0 {
-    position:absolute;
-    left:625px;
-    top: 100px;
-    width: 100px;
-	height: 75px;
-}
-
-#progress12{
 	position : absolute;
-	left : 725px;
+	left : 0px;
+	top : 0px;
+	width : 960px;
+	height : 540px;
+	#background-color : #ffffff;
+	#background-image: url("../../../images/background.jpg");
+}
+
+#SceneDownloads #svecButton_EZNV{
+	position : absolute;
+	left : 310px;
+	top : 460px;
+	width : 120px;
+}
+
+#SceneDownloads #svecLabel_4MQH{
+	position : absolute;
+	font-size : 10pt;
+	color : #ffffff;
+	left : 440px;
+	top : 480px;
+	width : 40px;
+}
+
+#SceneDownloads #svecLabel_F9M8{
+	position : absolute;
+	font-size : 10pt;
+	color : #ffffff;
+	left : 480px;
+	top : 480px;
+	width : 30px;
+}
+
+#SceneDownloads #svecLabel_TCTT{
+	position : absolute;
+	font-size : 10pt;
+	color : #ffffff;
+	left : 550px;
+	top : 480px;
+	width : 40px;
+}
+
+#SceneDownloads #svecLabel_0KZJ{
+	position : absolute;
+	font-size : 10pt;
+	color : #ffffff;
+	left : 590px;
+	top : 480px;
+	width : 30px;
+}
+
+/*#SceneDownloads #line0{
+	position : absolute;
+	left : 300px;
+	top : 0px;
+	#width: 300px;
+	height: 540px;
+	border-width:2px;	
+	border-left-style:groove;
+}
+
+#SceneDownloads #line1{
+	position : absolute;
+	left : 300px;
+	top : 0px;
+	width: 660px;
+	border-width:2px;	
+	border-bottom-style:groove;
+}
+
+#SceneDownloads #line2{
+	position : absolute;
+	left : 415px;
+	top : 0px;
+	height: 40px;
+	border-width:2px;	
+	border-right-style:groove;
+}*/
+
+#SceneDownloads #line3{
+	position : absolute;
+	left : 263px;
+	top : 90px;
+	width: 697px;
+	border-width:2px;	
+	border-bottom-style:groove;
+}
+
+#SceneDownloads #line4{
+	position : absolute;
+	left : 263px;
+	top : 180px;
+	width: 697px;
+	border-width:2px;	
+	border-bottom-style:groove;
+}
+
+#SceneDownloads #line5{
+	position : absolute;
+	left : 263px;
+	top : 270px;
+	width: 697px;
+	border-width:2px;	
+	border-bottom-style:groove;
+}
+
+#SceneDownloads #line6{
+	position : absolute;
+	left : 263px;
+	top : 360px;
+	width: 697px;
+	border-width:2px;	
+	border-bottom-style:groove;
+}
+
+#SceneDownloads #line7{
+	position : absolute;
+	left : 263px;
+	top : 450px;
+	width: 697px;
+	border-width:2px;	
+	border-bottom-style:groove;
+}
+
+#SceneDownloads #progressDownload {
+	position : absolute;
+    left: 330px;
+    top: 50px;
+    width: 600px;
+}
+
+#SceneDownloads #progressDownload2 {
+	position : absolute;
+    left: 330px;
+    top: 140px;
+    width: 600px;
+}
+
+#SceneDownloads #progressDownload3 {
+	position : absolute;
+    left: 330px;
+    top: 230px;
+    width: 600px;
+}
+
+#SceneDownloads #progressDownload4 {
+	position : absolute;
+    left: 330px;
+    top: 320px;
+    width: 600px;
+}
+
+#SceneDownloads #progressDownload5 {
+	position : absolute;
+    left: 330px;
+    top: 410px;
+    width: 600px;
+}
+
+/*
+Download 1 START
+*/
+#SceneDownloads #nameLabel{
+	position : absolute;
+	font-size : 12pt;
+	color : #ffffff;
+	left : 310px;
+	top : 10px;
+	width : 200px;
+}
+
+#SceneDownloads #roothashLabel{
+	position : absolute;
+	font-size : 12pt;
+	color : #ffffff;
+	left : 530px;
+	top : 10px;
+	width : 400px;
+}
+
+#SceneDownloads #completeLabel{
+	position : absolute;
+	font-size : 12pt;
+	text-align: right;
+	color : #ffffff;
+	left : 310px;
+	top : 70px;
+	width : 70px;
+}
+
+#SceneDownloads #sizeLabel{
+	position : absolute;
+	font-size : 12pt;
+	color : #ffffff;
+	left : 390px;
+	top : 70px;
+	width : 70px;
+}
+
+#SceneDownloads #progressLabel{
+	position : absolute;
+	font-size : 12pt;
+	color : #ffffff;
+	left : 450px;
+	top : 70px;
+	width : 70px;
+}
+
+#SceneDownloads #statusLabel{
+	position : absolute;
+	font-size : 10pt;
+	color : #ffffff;
+	left : 330px;
+	top : 30px;
+	width : 30px;
+}
+
+#SceneDownloads #downSpeed{
+	position : absolute;
+	font-size : 10pt;
+	color : #ffffff;
+	left : 380px;
+	top : 30px;
+	width : 80px;
+}
+
+#SceneDownloads #upSpeed{
+	position : absolute;
+	font-size : 10pt;
+	color : #ffffff;
+	left : 445px;
+	top : 30px;
+	width : 80px;
+}
+/* seeders */
+#SceneDownloads #svecLabel_07NY{
+	position : absolute;
+	font-size : 10pt;
+	color : #ffffff;
+	left : 590px;
+	top : 30px;
+	width : 80px;
+}
+/* peers */
+#SceneDownloads #svecLabel_ZB04{
+	position : absolute;
+	font-size : 10pt;
+	color : #ffffff;
+	left : 660px;
+	top : 30px;
+	width : 80px;
+}
+
+#SceneDownloads #slashLabel{
+	position : absolute;
+	font-size : 12pt;
+	color : #ffffff;
+	left : 380px;
+	top : 70px;
+	width : 20px;
+}
+
+#SceneDownloads #seedersLabel{
+	position : absolute;
+	font-size : 10pt;
+	color : #ffffff;
+	left : 645px;
+	top : 30px;
+	width : 50px;
+}
+
+#SceneDownloads #peersLabel{
+	position : absolute;
+	font-size : 10pt;
+	color : #ffffff;
+	left : 705px;
+	top : 30px;
+	width : 60px;
+}
+
+#SceneDownloads #timeLabel{
+	position : absolute;
+	font-size : 12pt;
+	color : #ffffff;
+	left : 560px;
+	top : 70px;
+	width : 100px;
+}
+
+#SceneDownloads #svecLabel_QQM0{
+	position : absolute;
+	font-size : 12pt;
+	color : #ffffff;
+	left : 530px;
+	top : 70px;
+	width : 40px;
+}
+
+#SceneDownloads #svecLabel_0660{
+	position : absolute;
+	font-size : 10pt;
+	color : #ffffff;
+	left : 470px;
+	top : 30px;
+	width : 80px;
+}
+
+#SceneDownloads #svecLabel_AO6B{
+	position : absolute;
+	font-size : 10pt;
+	color : #ffffff;
+	left : 405px;
+	top : 30px;
+	width : 80px;
+}
+
+#SceneDownloads #svecLabel_5911{
+	position : absolute;
+	font-size : 12pt;
+	color : #ffffff;
+	left : 455px;
+	top : 70px;
+	width : 40px;
+}
+
+#SceneDownloads #svecLabel_7ANW{
+	position : absolute;
+	font-size : 12pt;
+	color : #ffffff;
+	left : 485px;
+	top : 70px;
+	width : 40px;
+}
+
+/*
+	Download 2 START
+*/
+/* name label */
+#SceneDownloads #svecLabel_5032{
+	position : absolute;
+	font-size : 12pt;
+	color : #ffffff;
+	left : 310px;
 	top : 100px;
 	width : 200px;
-	height : 37px;
 }
 
+/* root hash label */
+#SceneDownloads #svecLabel_6WZA{
+	position : absolute;
+	font-size : 12pt;
+	color : #ffffff;
+	left : 530px;
+	top : 100px;
+	width : 400px;
+}
+/* complete label */
+#SceneDownloads #svecLabel_V7AX{
+	position : absolute;
+	font-size : 12pt;
+	text-align: right;
+	color : #ffffff;
+	left : 310px;
+	top : 160px;
+	width : 70px;
+}
+
+/* size label */
+#SceneDownloads #svecLabel_9JQR{
+	position : absolute;
+	font-size : 12pt;
+	color : #ffffff;
+	left : 390px;
+	top : 160px;
+	width : 70px;
+}
+
+/* ( label */
+#SceneDownloads #svecLabel_09H7{
+	position : absolute;
+	font-size : 12pt;
+	color : #ffffff;
+	left : 450px;
+	top : 160px;
+	width : 70px;
+}
+
+/*#SceneDownloads #svecLabel_XU1R{
+	position : absolute;
+	font-size : 12pt;
+	color : #ffffff;
+	left : 530px;
+	top : 160px;
+	width : 100px;
+}*/
+
+/* status label */
+#SceneDownloads #svecLabel_4TO1{
+	position : absolute;
+	font-size : 10pt;
+	color : #ffffff;
+	left : 330px;
+	top : 120px;
+	width : 30px;
+}
+
+/* DL: label */
+#SceneDownloads #svecLabel_GYID{
+	position : absolute;
+	font-size : 10pt;
+	color : #ffffff;
+	left : 380px;
+	top : 120px;
+	width : 80px;
+}
+
+/* UL: label */
+#SceneDownloads #svecLabel_2V1Q{
+	position : absolute;
+	font-size : 10pt;
+	color : #ffffff;
+	left : 445px;
+	top : 120px;
+	width : 120px;
+}
+
+/* seeders: label */
+#SceneDownloads #svecLabel_VP16{
+	position : absolute;
+	font-size : 10pt;
+	color : #ffffff;
+	left : 590px;
+	top : 120px;
+	width : 80px;
+}
+
+/* peers: label */
+#SceneDownloads #svecLabel_GX9V{
+	position : absolute;
+	font-size : 10pt;
+	color : #ffffff;
+	left : 660px;
+	top : 120px;
+	width : 80px;
+}
+
+/* / label */
+#SceneDownloads #svecLabel_0L1K{
+	position : absolute;
+	font-size : 12pt;
+	color : #ffffff;
+	left : 380px;
+	top : 160px;
+	width : 20px;
+}
+
+/* seeders label */
+#SceneDownloads #svecLabel_S6BL{
+	position : absolute;
+	font-size : 10pt;
+	color : #ffffff;
+	left : 645px;
+	top : 120px;
+	width : 50px;
+}
+
+/* peers label */
+#SceneDownloads #svecLabel_20PQ{
+	position : absolute;
+	font-size : 10pt;
+	color : #ffffff;
+	left : 705px;
+	top : 120px;
+	width : 60px;
+}
+
+/* remaining label */
+#SceneDownloads #svecLabel_K8Y8{
+	position : absolute;
+	font-size : 12pt;
+	color : #ffffff;
+	left : 560px;
+	top : 160px;
+	width : 100px;
+}
+
+/* time label */
+#SceneDownloads #svecLabel_HLQI{
+	position : absolute;
+	font-size : 12pt;
+	color : #ffffff;
+	left : 530px;
+	top : 160px;
+	width : 40px;
+}
+
+/* down speed label */
+#SceneDownloads #svecLabel_BR0U{
+	position : absolute;
+	font-size : 10pt;
+	color : #ffffff;
+	left : 470px;
+	top : 120px;
+	width : 80px;
+}
+
+/* up speed label */
+#SceneDownloads #svecLabel_PR2L{
+	position : absolute;
+	font-size : 10pt;
+	color : #ffffff;
+	left : 405px;
+	top : 120px;
+	width : 80px;
+}
+
+/* progress label */
+#SceneDownloads #svecLabel_YY6U{
+	position : absolute;
+	font-size : 12pt;
+	color : #ffffff;
+	left : 455px;
+	top : 160px;
+	width : 40px;
+}
+
+/* ) label */
+#SceneDownloads #svecLabel_Y145{
+	position : absolute;
+	font-size : 12pt;
+	color : #ffffff;
+	left : 485px;
+	top : 160px;
+	width : 40px;
+}
+
+/* 
+	Download 3 START 
+*/
+
+/* name label */
+#SceneDownloads #svecLabel_J3JD{
+	position : absolute;
+	font-size : 12pt;
+	color : #ffffff;
+	left : 310px;
+	top : 190px;
+	width : 200px;
+}
+
+/* root hash label */
+#SceneDownloads #svecLabel_YLU6{
+	position : absolute;
+	font-size : 12pt;
+	color : #ffffff;
+	left : 530px;
+	top : 190px;
+	width : 400px;
+}
+
+/* complete label */
+#SceneDownloads #svecLabel_8MZF{
+	position : absolute;
+	font-size : 12pt;
+	text-align: right;
+	color : #ffffff;
+	left : 310px;
+	top : 250px;
+	width : 70px;
+}
+
+/* size label */
+#SceneDownloads #svecLabel_VJNN{
+	position : absolute;
+	font-size : 12pt;
+	color : #ffffff;
+	left : 390px;
+	top : 250px;
+	width : 70px;
+}
+
+/* ( label */
+#SceneDownloads #svecLabel_N4Q2{
+	position : absolute;
+	font-size : 12pt;
+	color : #ffffff;
+	left : 450px;
+	top : 250px;
+	width : 70px;
+}
+
+#SceneDownloads #svecLabel_CB8O{
+	position : absolute;
+	font-size : 12pt;
+	color : #ffffff;
+	left : 560px;
+	top : 250px;
+	width : 100px;
+}
+
+#SceneDownloads #svecLabel_JVQZ{
+	position : absolute;
+	font-size : 10pt;
+	color : #ffffff;
+	left : 330px;
+	top : 210px;
+	width : 30px;
+}
+
+#SceneDownloads #svecLabel_1L1N{
+	position : absolute;
+	font-size : 10pt;
+	color : #ffffff;
+	left : 380px;
+	top : 210px;
+	width : 80px;
+}
+
+#SceneDownloads #svecLabel_56OO{
+	position : absolute;
+	font-size : 10pt;
+	color : #ffffff;
+	left : 445px;
+	top : 210px;
+	width : 80px;
+}
+
+#SceneDownloads #svecLabel_1NU4{
+	position : absolute;
+	font-size : 10pt;
+	color : #ffffff;
+	left : 590px;
+	top : 210px;
+	width : 80px;
+}
+
+#SceneDownloads #svecLabel_SS0E{
+	position : absolute;
+	font-size : 10pt;
+	color : #ffffff;
+	left : 660px;
+	top : 210px;
+	width : 80px;
+}
+
+#SceneDownloads #svecLabel_N9IC{
+	position : absolute;
+	font-size : 12pt;
+	color : #ffffff;
+	left : 380px;
+	top : 250px;
+	width : 20px;
+}
+
+#SceneDownloads #svecLabel_FDPV{
+	position : absolute;
+	font-size : 12pt;
+	color : #ffffff;
+	left : 310px;
+	top : 280px;
+	width : 200px;
+}
+
+#SceneDownloads #svecLabel_LC37{
+	position : absolute;
+	font-size : 12pt;
+	color : #ffffff;
+	left : 530px;
+	top : 280px;
+	width : 400px;
+}
+
+#SceneDownloads #svecLabel_J8RO{
+	position : absolute;
+	font-size : 12pt;
+	text-align: right;
+	color : #ffffff;
+	left : 310px;
+	top : 340px;
+	width : 70px;
+}
+
+#SceneDownloads #svecLabel_YPN4{
+	position : absolute;
+	font-size : 12pt;
+	color : #ffffff;
+	left : 390px;
+	top : 340px;
+	width : 70px;
+}
+
+#SceneDownloads #svecLabel_K8OX{
+	position : absolute;
+	font-size : 12pt;
+	color : #ffffff;
+	left : 450px;
+	top : 340px;
+	width : 70px;
+}
+
+#SceneDownloads #svecLabel_IUIV{
+	position : absolute;
+	font-size : 12pt;
+	color : #ffffff;
+	left : 560px;
+	top : 340px;
+	width : 100px;
+}
+
+#SceneDownloads #svecLabel_CXKL{
+	position : absolute;
+	font-size : 10pt;
+	color : #ffffff;
+	left : 330px;
+	top : 300px;
+	width : 30px;
+}
+
+#SceneDownloads #svecLabel_QF5M{
+	position : absolute;
+	font-size : 10pt;
+	color : #ffffff;
+	left : 380px;
+	top : 300px;
+	width : 80px;
+}
+
+#SceneDownloads #svecLabel_THE0{
+	position : absolute;
+	font-size : 10pt;
+	color : #ffffff;
+	left : 445px;
+	top : 300px;
+	width : 80px;
+}
+
+#SceneDownloads #svecLabel_P51S{
+	position : absolute;
+	font-size : 10pt;
+	color : #ffffff;
+	left : 590px;
+	top : 300px;
+	width : 80px;
+}
+
+#SceneDownloads #svecLabel_CVU8{
+	position : absolute;
+	font-size : 10pt;
+	color : #ffffff;
+	left : 660px;
+	top : 300px;
+	width : 80px;
+}
+
+#SceneDownloads #svecLabel_M14B{
+	position : absolute;
+	font-size : 12pt;
+	color : #ffffff;
+	left : 380px;
+	top : 340px;
+	width : 20px;
+}
+
+#SceneDownloads #svecLabel_9N28{
+	position : absolute;
+	font-size : 12pt;
+	color : #ffffff;
+	left : 310px;
+	top : 370px;
+	width : 200px;
+}
+
+#SceneDownloads #svecLabel_XIH7{
+	position : absolute;
+	font-size : 12pt;
+	color : #ffffff;
+	left : 530px;
+	top : 370px;
+	width : 400px;
+}
+
+#SceneDownloads #svecLabel_7CVC{
+	position : absolute;
+	font-size : 12pt;
+	text-align: right;
+	color : #ffffff;
+	left : 310px;
+	top : 430px;
+	width : 70px;
+}
+
+#SceneDownloads #svecLabel_T44Z{
+	position : absolute;
+	font-size : 12pt;
+	color : #ffffff;
+	left : 390px;
+	top : 430px;
+	width : 70px;
+}
+
+#SceneDownloads #svecLabel_0S90{
+	position : absolute;
+	font-size : 12pt;
+	color : #ffffff;
+	left : 450px;
+	top : 430px;
+	width : 70px;
+}
+
+#SceneDownloads #svecLabel_GQFE{
+	position : absolute;
+	font-size : 12pt;
+	color : #ffffff;
+	left : 560px;
+	top : 430px;
+	width : 100px;
+}
+
+#SceneDownloads #svecLabel_UQS1{
+	position : absolute;
+	font-size : 10pt;
+	color : #ffffff;
+	left : 330px;
+	top : 390px;
+	width : 30px;
+}
+
+#SceneDownloads #svecLabel_7Q4C{
+	position : absolute;
+	font-size : 10pt;
+	color : #ffffff;
+	left : 380px;
+	top : 390px;
+	width : 80px;
+}
+
+#SceneDownloads #svecLabel_JYIQ{
+	position : absolute;
+	font-size : 10pt;
+	color : #ffffff;
+	left : 445px;
+	top : 390px;
+	width : 80px;
+}
+
+#SceneDownloads #svecLabel_6AAE{
+	position : absolute;
+	font-size : 10pt;
+	color : #ffffff;
+	left : 590px;
+	top : 390px;
+	width : 80px;
+}
+
+#SceneDownloads #svecLabel_BA3X{
+	position : absolute;
+	font-size : 10pt;
+	color : #ffffff;
+	left : 660px;
+	top : 390px;
+	width : 80px;
+}
+
+#SceneDownloads #svecLabel_CQNS{
+	position : absolute;
+	font-size : 12pt;
+	color : #ffffff;
+	left : 380px;
+	top : 430px;
+	width : 20px;
+}
+
+#SceneDownloads #svecLabel_GB6Y{
+	position : absolute;
+	font-size : 12pt;
+	color : #ffffff;
+	left : 630px;
+	top : 480px;
+	width : 150px;
+}
+
+#SceneDownloads #svecLabel_1XTU{
+	position : absolute;
+	font-size : 12pt;
+	color : #ffffff;
+	left : 800px;
+	top : 480px;
+	width : 130px;
+}
+
+#SceneDownloads #svecLabel_PDRT{
+	position : absolute;
+	font-size : 10pt;
+	color : #ffffff;
+	left : 645px;
+	top : 210px;
+	width : 50px;
+}
+
+#SceneDownloads #svecLabel_J5EW{
+	position : absolute;
+	font-size : 10pt;
+	color : #ffffff;
+	left : 700px;
+	top : 210px;
+	width : 60px;
+}
+
+#SceneDownloads #svecLabel_VLQT{
+	position : absolute;
+	font-size : 10pt;
+	color : #ffffff;
+	left : 645px;
+	top : 300px;
+	width : 50px;
+}
+
+#SceneDownloads #svecLabel_OCZP{
+	position : absolute;
+	font-size : 10pt;
+	color : #ffffff;
+	left : 700px;
+	top : 300px;
+	width : 60px;
+}
+
+#SceneDownloads #svecLabel_YEV7{
+	position : absolute;
+	font-size : 10pt;
+	color : #ffffff;
+	left : 645px;
+	top : 390px;
+	width : 50px;
+}
+
+#SceneDownloads #svecLabel_5RVG{
+	position : absolute;
+	font-size : 10pt;
+	color : #ffffff;
+	left : 700px;
+	top : 390px;
+	width : 60px;
+}
+
+#SceneDownloads #svecLabel_DMIE{
+	position : absolute;
+	font-size : 12pt;
+	color : #ffffff;
+	left : 530px;
+	top : 250px;
+	width : 40px;
+}
+
+#SceneDownloads #svecLabel_Y6NL{
+	position : absolute;
+	font-size : 10pt;
+	color : #ffffff;
+	left : 470px;
+	top : 210px;
+	width : 80px;
+}
+
+#SceneDownloads #svecLabel_ST5V{
+	position : absolute;
+	font-size : 10pt;
+	color : #ffffff;
+	left : 405px;
+	top : 210px;
+	width : 80px;
+}
+
+#SceneDownloads #svecLabel_6IRF{
+	position : absolute;
+	font-size : 12pt;
+	color : #ffffff;
+	left : 455px;
+	top : 250px;
+	width : 40px;
+}
+
+#SceneDownloads #svecLabel_MB4M{
+	position : absolute;
+	font-size : 12pt;
+	color : #ffffff;
+	left : 485px;
+	top : 250px;
+	width : 40px;
+}
+
+#SceneDownloads #svecLabel_P71T{
+	position : absolute;
+	font-size : 12pt;
+	color : #ffffff;
+	left : 530px;
+	top : 340px;
+	width : 40px;
+}
+
+#SceneDownloads #svecLabel_FXXA{
+	position : absolute;
+	font-size : 10pt;
+	color : #ffffff;
+	left : 470px;
+	top : 300px;
+	width : 80px;
+}
+
+#SceneDownloads #svecLabel_S3AD{
+	position : absolute;
+	font-size : 10pt;
+	color : #ffffff;
+	left : 405px;
+	top : 300px;
+	width : 80px;
+}
+
+#SceneDownloads #svecLabel_NNKJ{
+	position : absolute;
+	font-size : 12pt;
+	color : #ffffff;
+	left : 455px;
+	top : 340px;
+	width : 40px;
+}
+
+#SceneDownloads #svecLabel_AXTX{
+	position : absolute;
+	font-size : 12pt;
+	color : #ffffff;
+	left : 485px;
+	top : 340px;
+	width : 40px;
+}
+
+#SceneDownloads #svecLabel_9H7R{
+	position : absolute;
+	font-size : 12pt;
+	color : #ffffff;
+	left : 530px;
+	top : 430px;
+	width : 40px;
+}
+
+#SceneDownloads #svecLabel_CXDK{
+	position : absolute;
+	font-size : 10pt;
+	color : #ffffff;
+	left : 470px;
+	top : 390px;
+	width : 80px;
+}
+
+#SceneDownloads #svecLabel_SLJE{
+	position : absolute;
+	font-size : 10pt;
+	color : #ffffff;
+	left : 405px;
+	top : 390px;
+	width : 80px;
+}
+
+#SceneDownloads #svecLabel_BJKU{
+	position : absolute;
+	font-size : 12pt;
+	color : #ffffff;
+	left : 455px;
+	top : 430px;
+	width : 40px;
+}
+
+#SceneDownloads #svecLabel_XGFC{
+	position : absolute;
+	font-size : 12pt;
+	color : #ffffff;
+	left : 485px;
+	top : 430px;
+	width : 40px;
+}
 

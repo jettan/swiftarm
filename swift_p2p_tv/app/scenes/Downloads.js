@@ -1,62 +1,300 @@
-function SceneDownloads() {
-  this.result = 0;
-  this.index  = 0;
-}
-
-var c = 0;
-var t;
-var timer_is_on=0;
-
-var XMLurl = "XML/data.xml";
-var k = 0;
-var progress = new Array();
-
-/**
- * Function called at scene init
- */
-SceneDownloads.prototype.initialize = function () {
+function SceneDownloads(options) {
+	this.options = options;
 	
-	$('#progress12').sfProgressBar({
-		type: 'loading',
+	this.progressopts = [{
+		type: 'status',
 		max: 100
-	});
-	$('#progress12').sfProgressBar('setValue', 50);
-	$('#progress12').sfProgressBar('show');
+	}];
 	
-    $('#labelFilename').sfLabel({text: "Filename"});
-	$('#labelDownload').sfLabel({text: "Download nr."});
-	$('#labelProgress').sfLabel({text: "Progress"});
-	$('#labelProgress0').sfLabel({text: "0 %"});
-	
-	// Button that redirects to Player when pressed. Button appears after download complete.
-	$('#normalButton02').sfButton({
-        text: 'Go to player'
-    }).sfButton('addCallback', 'clicked', function (event, index) {
-		alert("Button0 clicked: " + index);
-	});
-	$('#normalButton02').sfButton('hide');
+	//this.downloadList;
+	this.elementList = [];
+	this.linesList = [];
+	this.count = 0;
+	this.size = 5;
 }
 
-/**
- * Function called at scene show
- */
+var statsURL = "http://130.161.169.107:1337/stats";
+var downloadList;
+var allDownloads;
+var progressBarList = [];
+var focus = 0;
+var downloadNumber = 0;
+
+SceneDownloads.prototype.initialize = function () {
+	alert("SceneDownloads.initialize()");
+	// this function will be called only once when the scene manager show this scene first time
+	// initialize the scene controls and styles, and initialize your variables here 
+	// scene HTML and CSS will be loaded before this function is called
+	var downloadZero = [];
+	var downloadOne = [];
+	var downloadTwo = [];
+	var downloadThree = [];
+	var downloadFour = [];
+	
+	var elementZero = [];
+	var elementOne = [];
+	var elementTwo = [];
+	var elementThree = [];
+	var elementFour = [];
+	
+	$('#svecButton_EZNV').sfButton({text:'clear'});
+	$('#svecLabel_4MQH').sfLabel({text:'up:'});
+	$('#svecLabel_F9M8').sfLabel({text:'XX'});
+	$('#svecLabel_TCTT').sfLabel({text:'down:'});
+	$('#svecLabel_0KZJ').sfLabel({text:'XX'});
+	$('#svecLabel_GB6Y').sfLabel({text:'Selected download:'});
+	$('#svecLabel_1XTU').sfLabel({text:'X / X'});
+	
+	// First download 
+	$('#nameLabel').sfLabel({text:'Name'});
+	$('#roothashLabel').sfLabel({text:'roothash'});
+	$('#completeLabel').sfLabel({text:'Complete'});
+	$('#sizeLabel').sfLabel({text:'Size'});
+	$('#progressLabel').sfLabel({text:'('});
+	$('#statusLabel').sfLabel({text:'X'});
+	$('#downSpeed').sfLabel({text:'DL: '});
+	$('#upSpeed').sfLabel({text:'UL: '});
+	$('#svecLabel_07NY').sfLabel({text:'seeders: '});
+	$('#svecLabel_ZB04').sfLabel({text:'peers: '});
+	$('#slashLabel').sfLabel({text:'/'});
+	$('#seedersLabel').sfLabel({text:'..'});
+	$('#peersLabel').sfLabel({text:'..'});
+	$('#timeLabel').sfLabel({text:' remaining'});
+	$('#svecLabel_QQM0').sfLabel({text:'XX'});
+	$('#svecLabel_0660').sfLabel({text:'XXXX'});
+	$('#svecLabel_AO6B').sfLabel({text:'XXXX'});
+	$('#svecLabel_5911').sfLabel({text:'100'});
+	$('#svecLabel_7ANW').sfLabel({text:'%)'});
+	downloadZero.push('#sizeLabel');
+	downloadZero.push('#completeLabel');
+	downloadZero.push('#statusLabel');
+	downloadZero.push('#nameLabel');
+	downloadZero.push('#svecLabel_AO6B');
+	downloadZero.push('#svecLabel_0660');
+	downloadZero.push('#svecLabel_5911');
+	downloadZero.push('#seedersLabel');
+	downloadZero.push('#peersLabel');
+	downloadZero.push('#svecLabel_QQM0');
+	downloadZero.push('#roothashLabel');
+	elementZero = downloadZero.slice(0);
+	elementZero.push('#progressLabel');
+	elementZero.push('#downSpeed');
+	elementZero.push('#upSpeed');
+	elementZero.push('#svecLabel_07NY');
+	elementZero.push('#svecLabel_ZB04');
+	elementZero.push('#slashLabel');
+	elementZero.push('#timeLabel');
+	elementZero.push('#svecLabel_7ANW');
+	
+	//Second download
+	$('#svecLabel_5032').sfLabel({text:'Name'});
+	$('#svecLabel_6WZA').sfLabel({text:'roothash'});
+	$('#svecLabel_V7AX').sfLabel({text:'Complete'});
+	$('#svecLabel_9JQR').sfLabel({text:'Size'});
+	$('#svecLabel_09H7').sfLabel({text:'('});
+	$('#svecLabel_4TO1').sfLabel({text:'X'});
+	$('#svecLabel_GYID').sfLabel({text:'DL: '});
+	$('#svecLabel_2V1Q').sfLabel({text:'UL: '});
+	$('#svecLabel_VP16').sfLabel({text:'seeders: '});
+	$('#svecLabel_GX9V').sfLabel({text:'peers: '});
+	$('#svecLabel_0L1K').sfLabel({text:'/'});
+	$('#svecLabel_S6BL').sfLabel({text:'..'});
+	$('#svecLabel_20PQ').sfLabel({text:'..'});
+	$('#svecLabel_K8Y8').sfLabel({text:'remaining'});
+	$('#svecLabel_HLQI').sfLabel({text:'XX'});
+	$('#svecLabel_BR0U').sfLabel({text:'XXXX'});
+	$('#svecLabel_PR2L').sfLabel({text:'XXXX'});
+	$('#svecLabel_YY6U').sfLabel({text:'100'});
+	$('#svecLabel_Y145').sfLabel({text:'%)'});
+	downloadOne.push('#svecLabel_9JQR');
+	downloadOne.push('#svecLabel_V7AX');
+	downloadOne.push('#svecLabel_4TO1');
+	downloadOne.push('#svecLabel_5032');
+	downloadOne.push('#svecLabel_PR2L');
+	downloadOne.push('#svecLabel_BR0U');
+	downloadOne.push('#svecLabel_YY6U');
+	downloadOne.push('#svecLabel_S6BL');
+	downloadOne.push('#svecLabel_20PQ');
+	downloadOne.push('#svecLabel_HLQI');
+	downloadOne.push('#svecLabel_6WZA');
+	elementOne = downloadOne.slice(0);
+	elementOne.push('#svecLabel_09H7');
+	elementOne.push('#svecLabel_GYID');
+	elementOne.push('#svecLabel_2V1Q');
+	elementOne.push('#svecLabel_VP16');
+	elementOne.push('#svecLabel_GX9V');
+	elementOne.push('#svecLabel_0L1K');
+	elementOne.push('#svecLabel_K8Y8');
+	elementOne.push('#svecLabel_Y145');
+	
+	//Third download
+	$('#svecLabel_J3JD').sfLabel({text:'Name'});
+	$('#svecLabel_YLU6').sfLabel({text:'roothash'});
+	$('#svecLabel_8MZF').sfLabel({text:'Complete'});
+	$('#svecLabel_VJNN').sfLabel({text:'Size'});
+	$('#svecLabel_N4Q2').sfLabel({text:'('});
+	$('#svecLabel_CB8O').sfLabel({text:'remaining'});
+	$('#svecLabel_JVQZ').sfLabel({text:'X'});
+	$('#svecLabel_1L1N').sfLabel({text:'DL: '});
+	$('#svecLabel_56OO').sfLabel({text:'UL: '});
+	$('#svecLabel_1NU4').sfLabel({text:'seeders: '});
+	$('#svecLabel_SS0E').sfLabel({text:'peers: '});
+	$('#svecLabel_N9IC').sfLabel({text:'/'});
+	$('#svecLabel_PDRT').sfLabel({text:'..'});
+	$('#svecLabel_J5EW').sfLabel({text:'..'});
+	$('#svecLabel_DMIE').sfLabel({text:'XX'});
+	$('#svecLabel_Y6NL').sfLabel({text:'XXXX'});
+	$('#svecLabel_ST5V').sfLabel({text:'XXXX'});
+	$('#svecLabel_6IRF').sfLabel({text:'100'});
+	$('#svecLabel_MB4M').sfLabel({text:'%)'});
+	downloadTwo.push('#svecLabel_VJNN');
+	downloadTwo.push('#svecLabel_8MZF');
+	downloadTwo.push('#svecLabel_JVQZ');
+	downloadTwo.push('#svecLabel_J3JD');
+	downloadTwo.push('#svecLabel_ST5V');
+	downloadTwo.push('#svecLabel_Y6NL');
+	downloadTwo.push('#svecLabel_6IRF');
+	downloadTwo.push('#svecLabel_PDRT');
+	downloadTwo.push('#svecLabel_J5EW');
+	downloadTwo.push('#svecLabel_DMIE');
+	downloadTwo.push('#svecLabel_YLU6');
+	elementTwo = downloadTwo.slice(0);
+	elementTwo.push('#svecLabel_N4Q2');
+	elementTwo.push('#svecLabel_CB8O');
+	elementTwo.push('#svecLabel_1L1N');
+	elementTwo.push('#svecLabel_56OO');
+	elementTwo.push('#svecLabel_1NU4');
+	elementTwo.push('#svecLabel_SS0E');
+	elementTwo.push('#svecLabel_N9IC');
+	elementTwo.push('#svecLabel_MB4M');
+	
+	//Fourth download
+	$('#svecLabel_FDPV').sfLabel({text:'Name'});
+	$('#svecLabel_LC37').sfLabel({text:'roothash'});
+	$('#svecLabel_J8RO').sfLabel({text:'Complete'});
+	$('#svecLabel_YPN4').sfLabel({text:'Size'});
+	$('#svecLabel_K8OX').sfLabel({text:'('});
+	$('#svecLabel_IUIV').sfLabel({text:'remaining'});
+	$('#svecLabel_CXKL').sfLabel({text:'X'});
+	$('#svecLabel_QF5M').sfLabel({text:'DL:'});
+	$('#svecLabel_THE0').sfLabel({text:'UL:'});
+	$('#svecLabel_P51S').sfLabel({text:'seeders: '});
+	$('#svecLabel_CVU8').sfLabel({text:'peers: '});
+	$('#svecLabel_M14B').sfLabel({text:'/'});
+	$('#svecLabel_VLQT').sfLabel({text:'..'});
+	$('#svecLabel_OCZP').sfLabel({text:'..'});
+	$('#svecLabel_P71T').sfLabel({text:'XX'});
+	$('#svecLabel_FXXA').sfLabel({text:'XXXX'});
+	$('#svecLabel_S3AD').sfLabel({text:'XXXX'});
+	$('#svecLabel_NNKJ').sfLabel({text:'100'});
+	$('#svecLabel_AXTX').sfLabel({text:'%)'});
+	downloadThree.push('#svecLabel_YPN4');
+	downloadThree.push('#svecLabel_J8RO');
+	downloadThree.push('#svecLabel_CXKL');
+	downloadThree.push('#svecLabel_FDPV');
+	downloadThree.push('#svecLabel_S3AD');
+	downloadThree.push('#svecLabel_FXXA');
+	downloadThree.push('#svecLabel_NNKJ');
+	downloadThree.push('#svecLabel_VLQT');
+	downloadThree.push('#svecLabel_OCZP');
+	downloadThree.push('#svecLabel_P71T');
+	downloadThree.push('#svecLabel_LC37');
+	elementThree = downloadThree.slice(0);
+	elementThree.push('#svecLabel_K8OX');
+	elementThree.push('#svecLabel_IUIV');
+	elementThree.push('#svecLabel_QF5M');
+	elementThree.push('#svecLabel_THE0');
+	elementThree.push('#svecLabel_P51S');
+	elementThree.push('#svecLabel_CVU8');
+	elementThree.push('#svecLabel_M14B');
+	elementThree.push('#svecLabel_AXTX');
+
+	
+	//Fifth download
+	$('#svecLabel_9N28').sfLabel({text:'Name'});
+	$('#svecLabel_XIH7').sfLabel({text:'roothash'});
+	$('#svecLabel_7CVC').sfLabel({text:'Complete'});
+	$('#svecLabel_T44Z').sfLabel({text:'Size'});
+	$('#svecLabel_0S90').sfLabel({text:'('});
+	$('#svecLabel_GQFE').sfLabel({text:'remaining'});
+	$('#svecLabel_UQS1').sfLabel({text:'X'});
+	$('#svecLabel_7Q4C').sfLabel({text:'DL: '});
+	$('#svecLabel_JYIQ').sfLabel({text:'UL: '});
+	$('#svecLabel_6AAE').sfLabel({text:'seeders: '});
+	$('#svecLabel_BA3X').sfLabel({text:'peers: '});
+	$('#svecLabel_CQNS').sfLabel({text:'/'});
+	$('#svecLabel_YEV7').sfLabel({text:'..'});
+	$('#svecLabel_5RVG').sfLabel({text:'..'});
+	$('#svecLabel_9H7R').sfLabel({text:'XX'});
+	$('#svecLabel_CXDK').sfLabel({text:'XXXX'});
+	$('#svecLabel_SLJE').sfLabel({text:'XXXX'});
+	$('#svecLabel_BJKU').sfLabel({text:'100'});
+	$('#svecLabel_XGFC').sfLabel({text:'%)'});
+	downloadFour.push('#svecLabel_T44Z');
+	downloadFour.push('#svecLabel_7CVC');
+	downloadFour.push('#svecLabel_UQS1');
+	downloadFour.push('#svecLabel_9N28');
+	downloadFour.push('#svecLabel_SLJE');
+	downloadFour.push('#svecLabel_CXDK');
+	downloadFour.push('#svecLabel_BJKU');
+	downloadFour.push('#svecLabel_YEV7');
+	downloadFour.push('#svecLabel_5RVG');
+	downloadFour.push('#svecLabel_9H7R');
+	downloadFour.push('#svecLabel_XIH7');
+	elementFour = downloadFour.slice(0);
+	elementFour.push('#svecLabel_0S90');
+	elementFour.push('#svecLabel_GQFE');
+	elementFour.push('#svecLabel_7Q4C');
+	elementFour.push('#svecLabel_JYIQ');
+	elementFour.push('#svecLabel_6AAE');
+	elementFour.push('#svecLabel_BA3X');
+	elementFour.push('#svecLabel_CQNS');
+	elementFour.push('#svecLabel_XGFC');
+
+	
+	$("#progressDownload").sfProgressBar(this.progressopts[0]);
+	$("#progressDownload").sfProgressBar('setValue', 50);
+	$("#progressDownload2").sfProgressBar(this.progressopts[0]);
+	$("#progressDownload2").sfProgressBar('setValue', 50);
+	$("#progressDownload3").sfProgressBar(this.progressopts[0]);
+	$("#progressDownload3").sfProgressBar('setValue', 50);
+	$("#progressDownload4").sfProgressBar(this.progressopts[0]);
+	$("#progressDownload4").sfProgressBar('setValue', 50);
+	$("#progressDownload5").sfProgressBar(this.progressopts[0]);
+	$("#progressDownload5").sfProgressBar('setValue', 50);
+	
+	progressBarList.push("progressDownload");
+	progressBarList.push("progressDownload2");
+	progressBarList.push("progressDownload3");
+	progressBarList.push("progressDownload4");
+	progressBarList.push("progressDownload5");
+	
+	this.linesList.push("line3");
+	this.linesList.push("line4");
+	this.linesList.push("line5");
+	this.linesList.push("line6");
+	this.linesList.push("line7");
+	
+	downloadList = [downloadZero, downloadOne, downloadTwo, downloadThree, downloadFour];
+	this.elementList = [elementZero, elementOne, elementTwo, elementThree, elementFour];
+}
+
+
+
+
 SceneDownloads.prototype.handleShow = function () {
-	this.result = 0;
+	alert("SceneDownloads.handleShow()");
+	// this function will be called when the scene manager show this scene 
 }
 
-/**
- * Function called at scene hide
- */
 SceneDownloads.prototype.handleHide = function () {
-	
+	alert("SceneDownloads.handleHide()");
+	// this function will be called when the scene manager hide this scene  
 }
 
-/**
- * Function called at scene focus
- */
 SceneDownloads.prototype.handleFocus = function () {
-    
-    // Show left menu column
+	alert("SceneDownloads.handleFocus()");
+	// this function will be called when the scene manager focus this scene
 	$('#MainBG').sfBackground('option', 'column', 'left');
 	$('#MainBG').sfBackground(this.defaultOpts);
 	$('#MainBG').sfBackground('option', 'column', 'left');
@@ -64,134 +302,219 @@ SceneDownloads.prototype.handleFocus = function () {
 	$('#image').sfImage('show');
 	$('#label').sfLabel('show');
 	$('#category').sfList('show');
-	
-	// When downloading start a timer to update the progressbar every 2 sec
-	if ($('#labelDownloading').sfLabel("get").text())
-		startProgress();
-		
-	this.index = 0;
-	
-	$('#progress12').sfProgressBar('setValue', 0);
+	focus = 0;
+	this.focusElement(focus);
 	
 	$("#Main_keyhelp").sfKeyHelp({
 		'user': 'Help',		
 		'move':'Move',
-        'return': 'Return'
+        'return': 'Return',
+		'pause': 'Pause download/upload',
+		'play': 'Start/Resume download',
+		'stop': 'Stop download'
 	});
 }
 
-/**
- * Function called at scene blur
- */
 SceneDownloads.prototype.handleBlur = function () {
-
+	alert("SceneDownloads.handleBlur()");
+	// this function will be called when the scene manager move focus to another scene from this scene
 }
 
-/**
- * Function called at scene key down
- */
 SceneDownloads.prototype.handleKeyDown = function (keyCode) {
+	alert("SceneDownloads.handleKeyDown(" + keyCode + ")");
+	// TODO : write an key event handler when this scene get focued
 	switch (keyCode) {
 		case sf.key.LEFT:
-                sf.scene.focus('Main');       
+			this.hideElement(focus);
 			break;
 		case sf.key.RIGHT:
+			this.showElement(focus);
 			break;
 		case sf.key.UP:
+			if (focus == 0 && downloadNumber == 0)
+				break;
+				
+			this.blurElement(focus);	
+			if (focus == 0 && downloadNumber > 0) {
+				focus = 4;
+				this.prevPage();
+			}
+			else {
+				focus = focus - 1;
+				this.focusElement(focus);
+			}
 			break;
-		case sf.key.DOWN:  
+		case sf.key.DOWN:
+			if (focus == (allDownloads.length -1) % 5 && downloadNumber == Math.floor(allDownloads.length / 5))
+				break;
+				
+			this.blurElement(focus);
+			if (focus == 4)
+					this.nextPage();
+			else {
+				focus = focus + 1;
+				this.focusElement(focus);
+			}
 			break;
+
 		case sf.key.ENTER:
-			if (this.index == 1) {
-					$('#labelRedirect').sfLabel('option','text','PlayerDownload');
-					$('#labelVideo').sfLabel('option','text',downloads[0]);
-					$('#progress12').sfProgressBar('hide');
-					sf.scene.focus('Main');
-				}
+			this.httpGetXML(statsURL);
 			break;
 		case sf.key.RETURN:
-			if (timer_is_on)
-				stopCount();
 			sf.scene.focus('Main');
-	        sf.key.preventDefault();
-			break;
-		case sf.key.RED:			
-			break;
-		case sf.key.GREEN:			
-			break;
-		case sf.key.YELLOW:            
-			break;
-		case sf.key.BLUE:
+            sf.key.preventDefault();
 			break;
 	}
 }
 
-/**
- * Function that requests the progress of the current download from the server, and displays it in the progressbar
- * The timer is reset again so this function is called again after 2 seconds until download complete
- */
-function getProgress()
-{
-	if (this.result < 100) {
-		httpGetXML(progressURL);
-		t = setTimeout("getProgress()",2000);
-	} else
-		stopCount();
+var statsRequest;
+SceneDownloads.prototype.httpGetXML = function(url) {
+	statsRequest = new XMLHttpRequest();
+	statsRequest.open("GET", url, true);
+	statsRequest.onreadystatechange = this.processStatsResponse;
+	statsRequest.send(null);
 }
 
-/**
- * Function that calls the getProgress function and thereby starts a timer
- */
-function startProgress()
-{
-	$('#labelFilename').sfLabel('option','text',downloads[0]);
-	if (!timer_is_on) {
-		timer_is_on = 1;
-		getProgress();
-	}
-}
-
-/**
- * Function called when scene is blurred, or when download is complete. The timeout is cleared.
- * Also when download is complete progressbar is set to 100, and a button that redirects to the Player is shown.
- */
-function stopCount()
-{
-	if (this.result == 100) {
-		$('#progress12').sfProgressBar('setValue', 100);
-		$('#labelDownloading').sfLabel('option','text', '');
-		$('#progress12').sfProgressBar('hide');
-		$('#normalButton02').sfButton('show');
-		$('#normalButton02').sfButton('focus');
-	}
-	clearTimeout(t);
-	timer_is_on=0;
-}
-
-/**
- * Function that requests download stats from the server
- */
-function httpGetXML(url) {
-	request = new XMLHttpRequest();
-	request.open("GET", url, true);
-	request.onreadystatechange = processXMLResponse;
-	request.send(null);
-}
-
-/**
- * Function that process the response received from the server after sending a request
- */
-function processXMLResponse() {
-	if (request.readyState == 4) {
-		// TODO: parse the XML response.
-		/*var result = request.responseXML;
+SceneDownloads.prototype.processStatsResponse = function() {
+	if (statsRequest.readyState == 4) {
+		var result = statsRequest.responseXML;
+		allDownloads = [];
+		var one = [];
+		var two = [];
+		var three = [];
+		var four = [];
+		var five = [];
+		//downloadStats = [one , two, three, four, five];
+		downloadStats = [];
+		//downloadStats = new Array(5);
+		alert(result);
+		this.count = 0;
+		var _THIS_ = this;
 		$('DOWNLOAD',result).each(function(i) {
-			progress[k] = $(this).find("PROGRESS").text();
-			k++;
-		});*/
-		this.result = request.responseText;
-		$('#labelProgress0').sfLabel({text:this.result});
-		$('#progress12').sfProgressBar('setValue', this.result);
+			//downloadStats = [];
+			alert($(this).find("SIZE").text());
+			allDownloads[_THIS_.count] = [];
+			allDownloads[_THIS_.count].push($(this).find("SIZE").text());
+			allDownloads[_THIS_.count].push($(this).find("COMPLETED").text());
+			allDownloads[_THIS_.count].push($(this).find("STATUS").text());
+			allDownloads[_THIS_.count].push($(this).find("NAME").text());
+			allDownloads[_THIS_.count].push($(this).find("DSPEED").text());
+			allDownloads[_THIS_.count].push($(this).find("USPEED").text());
+			allDownloads[_THIS_.count].push($(this).find("PROGRESS").text());
+			/*downloadStats.push($(this).find("RATIO").text());
+			downloadStats.push($(this).find("UPLOADAMOUNT").text());
+			downloadStats.push($(this).find("DOWNLOADAMOUNT").text());*/
+			allDownloads[_THIS_.count].push($(this).find("SEEDERS").text());
+			allDownloads[_THIS_.count].push($(this).find("PEERS").text());
+			/*downloadStats.push($(this).find("TIMEDAYS").text());
+			downloadStats.push($(this).find("TIMEHOURS").text());*/
+			allDownloads[_THIS_.count].push($(this).find("TIMEMINUTES").text());
+			//downloadStats.push($(this).find("TIMESECONDS").text());
+			allDownloads[_THIS_.count].push($(this).find("HASH").text());
+			alert(allDownloads[_THIS_.count].length);
+			_THIS_.count++;
+		});
+		alert(allDownloads.length);
+		var d;
+		for(d = 0; d< 5; d++) {
+			var counter;
+			for(counter = 0; counter < 11; counter++)
+				$(downloadList[d][counter]).sfLabel("option","text",allDownloads[d][counter]);
+			
+			$(progressBarList[d]).sfProgressBar('setValue', allDownloads[d][6]);
+		}
 		
 	}
+}
+
+SceneDownloads.prototype.nextPage = function () {
+	if(downloadNumber < Math.floor(allDownloads.length / 5) - 1) {
+		downloadNumber++;
+		this.switchPage();
+		focus = 0;
+		this.focusElement(focus);
+	} else if (downloadNumber == Math.floor(allDownloads.length / 5) - 1) {
+		downloadNumber++;
+		var numelements = allDownloads.length % 5;
+		var hidecounter = 0;
+		for (hidecounter = numelements; hidecounter < 5; hidecounter++)
+			this.hideElement(hidecounter);
+		this.switchPage();
+		focus = 0;
+		this.focusElement(focus);
+	}
+}
+
+SceneDownloads.prototype.prevPage = function () {
+	
+	if (downloadNumber == Math.floor(allDownloads.length / 5)) {
+			var showcounter = 0;
+			for (showcounter = 0; showcounter < 5; showcounter++)
+				this.showElement(showcounter);
+	}
+		
+	if(downloadNumber > 0) {
+		downloadNumber--;
+		this.switchPage();
+		focus = 4;
+		this.focusElement(focus);
+	}
+}
+
+SceneDownloads.prototype.switchPage = function () {
+	var end = 5;
+	if ((allDownloads.length % 5) > 0)
+		end = allDownloads.length % 5;
+		
+	var j;
+	var start = downloadNumber * 5;
+	for(j = 0; j < end; j++) {
+		var counter;
+		for(counter = 0; counter < 11; counter++)
+			$(downloadList[j][counter]).sfLabel("option","text",allDownloads[j+start][counter]);
+		
+		$(progressBarList[j]).sfProgressBar('setValue', allDownloads[j+start][6]);
+	}
+}
+
+SceneDownloads.prototype.hideElement = function (index) {
+	alert("SceneDownloads.hideElement()");
+	var element = this.elementList[index];
+	var i;
+	for(i=0; i<element.length; i++)
+		$(element[i]).sfLabel('hide');	
+		
+	var myElement = document.getElementById(progressBarList[index]);
+	myElement.style.visibility="hidden";
+	var myElement = document.getElementById(this.linesList[index]);
+	myElement.style.visibility="hidden";
+}
+
+SceneDownloads.prototype.showElement = function (index) {
+	alert("SceneDownloads.showElement()");
+	var element = this.elementList[index];
+	var i;
+	for(i=0; i<element.length; i++)
+		$(element[i]).sfLabel('show');	
+		
+	var myElement = document.getElementById(progressBarList[index]);
+	myElement.style.visibility="visible";
+	var myElement = document.getElementById(this.linesList[index]);
+	myElement.style.visibility="visible";
+}
+
+SceneDownloads.prototype.focusElement = function (index) {
+	alert("SceneDownloads.focusElement()");	
+	var myElement = document.getElementById(this.linesList[index]);
+	myElement.style.borderWidth="4px";
+	myElement.style.borderBottomStyle="inset";
+	myElement.style.borderBottomColor="#40e0d0";
+}
+
+SceneDownloads.prototype.blurElement = function (index) {
+	alert("SceneDownloads.blurElement()");	
+	var myElement = document.getElementById(this.linesList[index]);
+	myElement.style.borderWidth="2px";
+	myElement.style.borderBottomStyle="groove";
+	myElement.style.borderBottomColor="#e6e6fa";
 }

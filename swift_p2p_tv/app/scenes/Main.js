@@ -2,28 +2,31 @@ function SceneMain() {
 	
 }
 
-var downloads    = [];
-var stream       = '';
+var names = new Array();
+var trackers = new Array();
+var hashes = new Array();
+var downloadStats = new Array();
+var downloads = [];
+var playlist = {};
+var downloading = false;
 var downloadPath = '/dtv/usb/sda1';
 
-/**
- * Function called at scene init
- */
 SceneMain.prototype.initialize = function () {
+	alert('SceneMain.initialize()');
 	this.itemPerPage = 8;
 	this.data = [
+		// UI Components
 		'Browse',
 		'Downloads',
 		'Player',
 		'Settings',
 	];
-	
+	playlist = [];
 	var listdata = [];
 	for(var i=0; i<this.data.length; i++) {
 		listdata.push(this.data[i]);
 	}
 	
-	// Initialize left column menu with scenes
 	$('#category').sfList({
 		data: listdata,
 		index: 0,
@@ -55,27 +58,20 @@ SceneMain.prototype.initialize = function () {
     }
 }
 
-/**
- * Function called at scene show
- */
-SceneMain.prototype.handleShow = function (data) {	
+SceneMain.prototype.handleShow = function (data) {
+	alert('SceneMain.handleShow()');	
+	//var index = $('#category').sfList('getIndex');
 	sf.scene.show('Start');
 }
 
-/**
- * Function called at scene hide
- */
 SceneMain.prototype.handleHide = function () {
-
+	alert('SceneMain.handleHide()');
 }
 
-/**
- * Function called at scene focus
- */
 SceneMain.prototype.handleFocus = function () {
+	alert('SceneMain.handleFocus()');
 	var index = $('#category').sfList('getIndex');
 	sf.scene.hide(this.data[index]);
-	// If this scene was focused with the redirection label filled in, don't load elements just redirect to Player
 	if ($('#labelRedirect').sfLabel("get").text()) {
 		$('#category').sfList('move',2);
 		sf.scene.show('Player');
@@ -94,8 +90,7 @@ SceneMain.prototype.handleFocus = function () {
 			'user': 'user',
 			'enter': 'Enter',		
 			'move':'move',
-			'return': 'Return',
-			'red': 'Left column',
+			'return': 'Exit app',
 		});
 		$('#MainBG').sfBackground('option', 'column', 'left');
 		$('#MainBG').sfBackground(this.defaultOpts);
@@ -104,33 +99,29 @@ SceneMain.prototype.handleFocus = function () {
 
 }
 
-/**
- * Function called at scene blur
- */
 SceneMain.prototype.handleBlur = function () {
+	alert('SceneMain.handleBlur()');
 	$('#image').sfImage('hide');
 	$('#label').sfLabel('hide');
 	$('#MainBG').sfBackground(this.defaultOpts);
 }
 
-/**
- * Function called at scene key down
- */
 SceneMain.prototype.handleKeyDown = function (keyCode) {
+	alert('SceneMain.handleKeyDown(' + keyCode + ')');
 	switch (keyCode) {
 		case sf.key.LEFT:
 			break;
 		case sf.key.RIGHT:
 		case sf.key.ENTER:
 			$('#startimage').sfImage('hide');
+			var index = $('#category').sfList('getIndex');
+			sf.scene.show(this.data[index]);
 			$('#category').sfList('blur');            
+			var index = $('#category').sfList('getIndex');
 			$('#category').sfList('hide');
 			$('#image').sfImage('hide');
 			$('#label').sfLabel('hide');
 			$('#MainBG').sfBackground(this.defaultOpts);
-			
-			var index = $('#category').sfList('getIndex');
-			sf.scene.show(this.data[index]);
 			sf.scene.focus(this.data[index]);
 			break;
 		case sf.key.UP:
@@ -150,6 +141,26 @@ SceneMain.prototype.handleKeyDown = function (keyCode) {
 		case sf.key.YELLOW:
 			break;
 		case sf.key.BLUE:
+			break;
+		case sf.key.RETURN:
+			var _THIS_ = this;
+			var exit = false;
+			$('#popupExit').sfPopup({
+					text:"Do you really want to exit the application?",
+					buttons: ["Yes", "No"],
+					defaultFocus: 1,
+					keyhelp: {'return' : 'Return'},
+					callback : function(selectedIndex){
+						if (selectedIndex == 0) {
+							exit = true;
+						}
+					}
+				}).sfPopup('show');
+			if (!exit)
+				sf.key.preventDefault();
+			else
+				widgetApi.sendReturnEvent();
+				//sf.core.exit(false);
 			break;
 	}
 }

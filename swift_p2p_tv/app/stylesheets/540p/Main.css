@@ -68,6 +68,10 @@ body {
     width: 300px;
 }
 
+#popupExit {
+    width:300px;
+}
+
 #Main_keyhelp {
 	z-index: 1;
 }

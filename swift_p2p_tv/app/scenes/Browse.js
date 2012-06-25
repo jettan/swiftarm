@@ -1,86 +1,84 @@
 function SceneBrowse() {
-	this.row    = 0;
+    this.row = 0;
 	this.column = 0;
-	var buttons;
-	var but     = 0;
-}
-
-var downloadURL   = "http://130.161.159.107:1337/add:012b5549e2622ea8bf3d694b4f55c959539ac848";
-var progressURL   = "http://130.161.159.107:1337/progress";
-var searchURL 	  = "http://130.161.159.107:1337/search:bla";
-var streamURL	  = "http://130.161.159.107:1337/stream";
-var stopStreamURL = "http://130.161.159.107:1337/stopStream";
-
-/**
- * Function called at scene init
- */
-SceneBrowse.prototype.initialize = function () {
 	
 	// List with available files for download/stream
 	// In future release a search function will be included
-	this.data = [
-		'stream.mp4',
-		'bla.mp4'
-	];
-    
-    // Create list of div:list0 with previous defined data
+	var stream = '';
+	var buttons;
+	var but = 3;
+	var k = 0;
+}
+
+var downloadURL = "http://130.161.159.107:1337/add:";
+var uploadURL = "http://130.161.159.107:1337/upload:";
+var searchURL = "http://130.161.159.107:1337/search:";
+var resultURL = "http://130.161.159.107:1337/result";
+var streamURL = "http://130.161.159.107:1337/stream";
+var stopStreamURL = "http://130.161.159.107:1337/stopStream";
+
+var listShown = false;
+var searchResults = ["Search results"];
+
+SceneBrowse.prototype.initialize = function () {
+	alert('SceneBrowse.initialize()');
+	 
 	$('#list0').sfList({
-		data: this.data,
-		index: 0,
-		itemsPerPage: 7
+		data: searchResults, 
+		index:'0', 
+		itemsPerPage:'7'
 	});
+	$('#list0').sfList('show');
 	
-	$('#labelList').sfLabel({
-		text: 'Available files for stream/download'
-	});
+	$('#labelList').sfLabel({text:'Filebrowser'});
 	$('#labelList').sfLabel('show');
 	
-	// Usb buttons starts service api file browser when pressed
-	$('#usbButton').sfButton({
-        text: 'Browse USB'
-    }).sfButton('addCallback', 'clicked', function (event, index) {
-		alert("USB button clicked: " + index);
-	});
+	$('#usbButton').sfButton({text:'Browse USB'});
 	
-	// Player button returns the focus to the main scene with the redirect label set to Player when pressed
-	$('#playerButton').sfButton({
-        text: 'Go to player'
-    }).sfButton('addCallback', 'clicked', function (event, index) {
-		alert("Button3 clicked: " + index);
-	});
-	$('#playerButton').sfButton('hide');	
+	$('#svecInput_Z6V6').sfTextInput({
+		text:'stream', 
+		maxlength:'10',
+		oncomplete: function (text) {
+			/*if (text)
+				search(searchURL + $("#svecInput_Z6V6").sfTextInput('getText'));*/
+		}
+	}).sfTextInput('blur');
 	
-	buttons = new Array('#usbButton','#playerButton');
+	$('#svecLabel_EXXY').sfLabel({text:'Search'});
+	$('#playerButton').sfButton({text:'Go to player'});
+	$('#svecLabel_XKN9').sfLabel({text:'Selected file:'});
+	$('#svecLabel_YDEP').sfLabel({text:'...'});
+	$('#svecButton_4PT8').sfButton({text:'Add to playlist'});
 	
-    $('#labelUSB').sfLabel({text: "Click button to browse usb device"});
+	$('#playerButton').sfButton({text:'Go to player'});
+	$('#svecLabel_EXXY').sfLabel({text:'Search'});	
+	
+	$('#uploadButton').sfButton({text:'Upload file'});
+	
+	buttons = new Array('#usbButton','#svecButton_4PT8','#uploadButton');
+	
 }
+  
 
-/**
- * Function called at scene show
- */
 SceneBrowse.prototype.handleShow = function () {
-
+	alert('SceneBrowse.handleShow()');
 }
 
-/**
- * Function called at scene hide
- */
 SceneBrowse.prototype.handleHide = function () {
-
+	alert('SceneBrowse.handleHide()');
 }
 
-/**
- * Function called at scene focus
- */
 SceneBrowse.prototype.handleFocus = function () {
+	alert('SceneBrowse.handleFocus()');
 	
-	this.row    = 0;
-	this.column = 0;
-	but 	    = 0;
+	this.row = 0;
+	this.column = 1;
+	but = 0;
 	
 	$('#labelList').sfLabel('show');
 	$('#list0').sfList('show');
-	$('#list0').sfList('focus');
+	//$('#list0').sfList('focus');
+	$('#usbButton').sfButton('focus');
 	
 	$("#Main_keyhelp").sfKeyHelp({
 		'user': 'Help',		
@@ -89,10 +87,8 @@ SceneBrowse.prototype.handleFocus = function () {
 	});
 }
 
-/**
- * Function called at scene blur
- */
 SceneBrowse.prototype.handleBlur = function () {
+	alert('SceneBrowse.handleBlur()');
 	
 	$('#button0').sfButton('blur');
 	$('#labelList').sfLabel('hide');
@@ -100,135 +96,366 @@ SceneBrowse.prototype.handleBlur = function () {
 	$('#list0').sfList('hide');
 }
 
-/**
- * Function called at scene key down
- */
 SceneBrowse.prototype.handleKeyDown = function (keyCode) {
+	alert('SceneBrowse.handleKeyDown(' + keyCode + ')');
 	switch (keyCode) {
 		case sf.key.LEFT:
+			if (this.column == 0) {
+				if (this.row == 0)
+					$('#svecInput_Z6V6').sfTextInput('blur');
+				else if (listShown)
+						$('#list0').sfList('blur');
+					
+				$('#usbButton').sfButton('focus');
+				this.column = 1;
+				this.row = 0;
+			} else if (this.column == 1) {
+				if (this.row == 0)
+					$('#usbButton').sfButton('blur');
+				else if (this.row == 1)
+					$('#svecButton_4PT8').sfButton('blur');
+				else
+					$('#uploadButton').sfButton('blur');
+				if (listShown) {
+					$('#list0').sfList('focus');
+					this.column = 0;
+					this.row = 1 + $('#list0').sfList('getIndex');
+				}
+				else {
+						$('#svecInput_Z6V6').sfTextInput('focus');
+					this.column = 0;
+					this.row = 0;
+				}
+			} else if (this.column == 2) {
+				$('#playerButton').sfButton('blur');
+				$('#svecButton_4PT8').sfButton('focus');
+				this.column = 1;
+				this.row = 1;
+			}		
+			break;
 		case sf.key.RIGHT:
 			if (this.column == 0) {
-				$('#list0').sfList('blur');
+				if (this.row == 0)
+					$('#svecInput_Z6V6').sfTextInput('blur');
+				else if (listShown)
+						$('#list0').sfList('blur');
+					
 				$('#usbButton').sfButton('focus');
-			} else {
-				$(buttons[this.row]).sfButton('blur');
-				$('#list0').sfList('focus');
-			}
-			this.column = (this.column == 0 ? 1 : 0);
+				this.column = 1;
+				this.row = 0;
+			} else if (this.column == 1) {
+				if (this.row == 1 || this.row == 2) {
+					$(buttons[this.row]).sfButton('blur');
+					$('#playerButton').sfButton('focus');
+					this.column = 2;
+					break;
+				}
+				else
+					$('#usbButton').sfButton('blur');
+					
+				if (listShown) {
+					$('#list0').sfList('focus');
+					this.column = 0;
+					this.row = 1 + $('#list0').sfList('getIndex');
+				}
+				else {
+						$('#svecInput_Z6V6').sfTextInput('focus');
+					this.column = 0;
+					this.row = 0;
+				}
+			} else if (this.column == 2) {
+				$('#playerButton').sfButton('blur');
+				if (listShown) {
+					$('#list0').sfList('focus');
+					this.column = 0;
+					this.row = 1 + $('#list0').sfList('getIndex');
+				}
+				else {
+						$('#svecInput_Z6V6').sfTextInput('focus');
+					this.column = 0;
+					this.row = 0;
+				}
+			}	
 			break;
 		case sf.key.UP:
-			if (this.column == 0)
-				$('#list0').sfList('prev');
-			else {
-				$(buttons[this.row]).sfButton('blur');  
-				if (but == 1)
-					this.row = (this.row ==0 ? 1 : 0);
-				$(buttons[this.row]).sfButton('focus');  
-			}
+			alert('=======================HIEROOOOOOOOOOOOOOOOOOO=======================');
+			alert(searchResults.length);
+			if (this.column == 0 && listShown) {
+				if (this.row == 0) {
+						$('#svecInput_Z6V6').sfTextInput('blur');
+						/*searchResults = [];
+						for(var y=0; y<names.length; y++)
+							searchResults.push(names[y]);*/
+						alert('=======================HIEROOOOOOOOOOOOOOOOOOO2=======================');
+						alert(searchResults.length);
+						$('#list0').sfList('focus');
+						this.row = 1 + searchResults.length;
+						$('#list0').sfList('move',searchResults.length-1);
+				} else if ($('#list0').sfList('getIndex') == 0) {
+						$('#list0').sfList('blur');
+						$('#svecInput_Z6V6').sfTextInput('focus');
+						this.row = 0;
+						break;
+				} else {
+					$('#list0').sfList('prev');
+					this.row = this.row - 1;
+				}
+			} else if (this.column == 1) {
+				if (this.row == 0) {
+					$('#usbButton').sfButton('blur');
+					$('#uploadButton').sfButton('focus');
+					this.row = 2;
+					break;
+				} else if (this.row == 1) {
+					$('#svecButton_4PT8').sfButton('blur');
+					$('#usbButton').sfButton('focus');
+					this.row = 0;
+					break;
+				} else {
+					$('#uploadButton').sfButton('blur');
+					$('#svecButton_4PT8').sfButton('focus');
+					this.row = 1;
+					break;
+				}
+			} 
 			break;
 		case sf.key.DOWN:
-			if (this.column == 0)
-				$('#list0').sfList('next');
-			else {
-				$(buttons[this.row]).sfButton('blur'); 
-				if (but == 1)
-					this.row = (this.row ==0 ? 1 : 0);
-				$(buttons[this.row]).sfButton('focus'); 
-			}
+			alert('=======================HIEROOOOOOOOOOOOOOOOOOO=======================');
+			alert(searchResults.length);
+			if (this.column == 0 && listShown) {
+				if (this.row == 0) {
+						$('#svecInput_Z6V6').sfTextInput('blur');
+						/*searchResults = [];
+						for(var y=0; y<names.length; y++)
+							searchResults.push(names[y]);*/
+						alert('=======================HIEROOOOOOOOOOOOOOOOOOO2=======================');
+						alert(searchResults.length);
+						$('#list0').sfList('focus');
+						this.row = 1;
+						$('#list0').sfList('move',0);
+				} else if ($('#list0').sfList('getIndex') == searchResults.length - 1) {
+						$('#list0').sfList('blur');
+						alert(searchResults.length);
+						$('#svecInput_Z6V6').sfTextInput('focus');
+						this.row = 0;
+						break;
+				} else {
+					$('#list0').sfList('next');
+					this.row = this.row + 1;
+				}
+			} else if (this.column == 1) {
+				if (this.row == 0) {
+					$('#usbButton').sfButton('blur');
+					$('#svecButton_4PT8').sfButton('focus');
+					this.row = 1;
+					break;
+				} else if (this.row == 1){
+					$('#svecButton_4PT8').sfButton('blur');
+					$('#uploadButton').sfButton('focus');
+					this.row = 2;
+					break;
+				} else {
+					$('#uploadButton').sfButton('blur');
+					$('#usbButton').sfButton('focus');
+					this.row = 0;
+					break;
+				}
+			} 
 			break;
 		case sf.key.ENTER:
-			if (this.column == 0) {
-				var index = $('#list0').sfList('getIndex');
-				$('#labelUSB').sfLabel("option", "text", 'Selected file: ' + this.data[index]);
-				
-				var _THIS_ = this;
-				$('#popupUD').sfPopup({
-						text:"Do you want to download or stream this file?",
-						buttons: ["Download", "Stream"],
-						defaultFocus: 1,
-						keyhelp: {'return' : 'Return'},
-						callback : function(selectedIndex){
-							if (selectedIndex == -1)
-								$('#labelUSB').sfLabel("option", "text", 'Operation canceled');
-							else if (selectedIndex == 0) {
-								// Start download
-								httpGet(downloadURL);
-								downloads.push(this.data[index]);
-								$('#labelDownloading').sfLabel('option','text','Downloading');
-							} else {
-								//Start streaming and redirect to player
-								httpGet(streamURL + ":" + _THIS_.data[index]);
-								$('#labelRedirect').sfLabel('option','text','PlayerStream');
-								sf.scene.focus('Main');
-							}
+		if (this.column == 0 && this.row == 0) {
+			httpGet(searchURL + $("#svecInput_Z6V6").sfTextInput('getText'));
+			startResultPolling();
+		} else if (this.column == 0 && listShown && this.row > 0) {
+			var index = $('#list0').sfList('getIndex');
+			$('#svecLabel_YDEP').sfLabel("option", "text", searchResults[index]);
+			var _THIS_ = this;
+			$('#popupUD').sfPopup({
+					text:"Do you want to download or stream this file?",
+					buttons: ["Download", "Stream"],
+					defaultFocus: 1,
+					keyhelp: {'return' : 'Return'},
+					callback : function(selectedIndex){
+						if (selectedIndex == -1)
+							$('#labelUSB').sfLabel("option", "text", 'Operation canceled');
+						else if (selectedIndex == 0) {
+							// Start download
+							httpGet(downloadURL + hashes[index]);
+							//downloads.push(this.searchResults[index]);
+							downloading = true;
+							$('#labelDownloading').sfLabel('option','text','Downloading');
+						} else {
+							//Start streaming and redirect to player
+							httpGet(streamURL + ":" + hashes[index]);
+							alert("!dadada: " + stream);
+							alert("!lalala: " + $('#labelVideo').sfLabel("get").text());
+							var vid = "http://" + stream;						
+							playlist.push({
+								url: vid,
+								title: 'Stream'
+							});
+							
+							//$('#svecLabel_YDEP').sfLabel("option","text",$('#labelVideo').sfLabel("get").text());
+							$('#labelRedirect').sfLabel('option','text','Player');
+							sf.scene.focus('Main');
 						}
-					}).sfPopup('show');
-			} else if (this.row == 0 && this.column == 1) {
-				$("#usbButton").sfButton('blur');
-				var _THIS_ = this;
-				sf.service.USB.show({
-					callback: function(result){
-						alert("Callback of USB module: " + result);
-						 $('#labelVideo').sfLabel("option", "text", result[0]); 
-						 $('#labelUSB').sfLabel("option", "text", 'Selected file: ' + result[0]); 
-						but = 1;
-						$('#playerButton').sfButton('show');
-						$("#playerButton").sfButton('focus');
-					},
-					fileType: 'all'
-				});
-				this.row = 1;
-			} else if (this.row == 1 && this.column == 1) {
-				$('#labelRedirect').sfLabel('option','text','Player');
-				sf.scene.focus('Main');
+					}
+				}).sfPopup('show');
+		} else if (this.row == 0 && this.column == 1) {
+			$("#usbButton").sfButton('blur');
+			var _THIS_ = this;
+			sf.service.USB.show({
+				callback: function(result){
+					alert("Callback of USB module: " + result);
+					 $('#labelVideo').sfLabel("option", "text", result[0]); 
+					 $('#svecLabel_YDEP').sfLabel("option", "text", result[0]); 
+					but = 1;
+					$("#playerButton").sfButton('focus');
+				},
+				fileType: 'all'
+			});
+			this.column = 2;
+			this.row = 1;
+		} else if (this.row == 1 && this.column == 1) {
+			// Add to selection to playlist(Check for correct path) 
+			//$('#svecLabel_YDEP').sfLabel("option","text","You are absolutely motherfucking right!");
+			
+			var vid = $('#labelVideo').sfLabel("get").text();
+			//var vid = '$Usb/sda1/lalala.mkv';
+			vid = 'file:///dtv/usb' + vid.substring(8);
+			var n = vid.split("/");
+			var nlength = n.length - 1;
+			
+			playlist.push({
+				url: vid,
+				title: n[nlength]
+			});
+			
+			//playlist = playlist.splice(4,5);
+			$('#svecLabel_YDEP').sfLabel("option","text",playlist.length);
+		
+		} else if (this.row == 2 && this.column == 1){
+			// Upload selection via swift(Check for correct path)
+			if($('#labelUSB').sfLabel("get").text()) {
+				var vid = $('#labelUSB').sfLabel("get").text()
+				vid = 'file:///dtv/usb' + link.substring(8);
+				httpGet(uploadUrl + vid);
 			}
+			
+		} else if (this.row == 1 && this.column == 2) {
+			$('#labelRedirect').sfLabel('option','text','Player');
+			$("#playerButton").sfButton('blur');
+			sf.scene.focus('Main');
+		}
 			break;
 		case sf.key.RETURN:
 			$('#category').sfList('show');
 			$('#image').sfImage('show');
 			$('#label').sfLabel('show');
 			sf.scene.focus('Main');
-            		sf.key.preventDefault();
+            sf.key.preventDefault();
 			break;
 		case sf.key.RED:
-			httpGet(searchURL);
+			searchResults = ['1','2','3','4','5'];
 			break;
-		case sf.key.GREEN:			
+		case sf.key.GREEN:
+			$('#svecLabel_YDEP').sfLabel("option", "text", stream);
 			break;
-		case sf.key.YELLOW:            
+		case sf.key.YELLOW:
+			$('#svecLabel_YDEP').sfLabel("option", "text", $('#labelVideo').sfLabel("get").text());
 			break;
 		case sf.key.BLUE:
 			break;
 	}
 }
 
-/**
- * Function to send http request to server
- */
-function httpGet(url) {
+var c=0;
+var t;
+var timer_is_on=0;
+
+function timedCount()
+{
+	result();
+	$('#svecLabel_YDEP').sfLabel("option", "text", "C =" + c);
+	c+=5;
+	if(c <= 15)
+		t=setTimeout("timedCount()",5000);
+	else
+		stopCount();
+}
+
+function startResultPolling()
+{
+	c = 0;
+	if (!timer_is_on) {
+		timer_is_on=1;
+		timedCount();
+	}
+}
+
+function stopCount()
+{
+	clearTimeout(t);
+	timer_is_on=0;
+}
+
+function result() {
 	request = new XMLHttpRequest();
-	request.open("GET", url, true);
-	request.onreadystatechange = processResponse;
+	request.open("GET", resultURL, true);
+	request.onreadystatechange = processSearchResponse;
 	request.send(null);
 }
 
-/**
- * Function to process response received from server after request
- */
-function processResponse() {
+function processSearchResponse() {
+	alert('=====================READYSTATE ===============' + request.readyState);
 	if (request.readyState == 4) {
-		var result = request.responseText;
-		$('#labelUSB').sfLabel("option", "text", result);
-		$('#labelVideo').sfLabel("option","text",result);
-		stream = result;
+		var resultxml = request.responseXML;
+		
+		alert('GOT XML RESPONSE!');
+		alert(resultxml);
+		alert('--------------------END XML RESPONSE------------------');
+		k = 0;
+		$('RESULT',resultxml).each(function(i) {
+			names[k] = $(this).find("NAME").text();
+			trackers[k] = $(this).find("TRACKER").text();
+			hashes[k] = $(this).find("HASH").text();
+			k++;
+		});
+		
+		searchResults = [];
+		
+		for(var j=0; j<names.length; j++)
+			searchResults.push(names[j]);
+		
+		$('#list0').sfList('clear');
+		$('#list0').sfList('option', 'data', searchResults);//.sfList('focus');
+		
+		alert('=========LALALALALALLAL===========');
+		alert(searchResults.length);
+		listShown = true;
+	}
+}
+
+function httpGet(url) {
+	request = new XMLHttpRequest();
+	request.open("GET", url, true);
+	request.onreadystatechange = processRequest;
+	request.send(null);
+}
+
+function processRequest() {
+	if (request.readyState == 4) {
+		var resulthttp = request.responseText;
+		
+		stream = resulthttp;
 		// Url is returned in response when streaming, otherwise a number indicating fail or success
-		if (result == -1)
+		if (resulthttp == -1)
 			$('#labelUSB').sfLabel("option", "text", 'Request failed');
 		else {
-			if (result == 1)
+			if (resulthttp == 1)
 				$('#labelUSB').sfLabel("option", "text", 'Download started');
 			else
-				$('#labelVideo').sfLabel('option','text',result);
+				$('#labelVideo').sfLabel('option','text',resulthttp);
 		}
 	}	
 }

@@ -1,23 +1,11 @@
 #SceneBrowse {
-    position : absolute;
-    left : 0px;
-    top : 0px;
-    width : 960px;
-    height : 540px;
-}
-
-#usbButton {
-    position: absolute;
-    left: 350px;
-    top: 37px;
-    width:150px;
-}
-
-#playerButton {
-    position: absolute;
-    left: 350px;
-    top: 137px;
-    width:150px;
+	position : absolute;
+	left : 0px;
+	top : 0px;
+	width : 960px;
+	height : 540px;
+	/*background-color : #ffffff;*/
+	background-image: url("../../../images/background.jpg");
 }
 
 #labelUSB {
@@ -36,22 +24,103 @@
 	height : 37px;
 }
 
-#list0 {
-	position: absolute;
-	left: 37px;
-	top: 65px;
-	width: 195px;
-	height: 225px;
-}
-
-#labelList {
-	position: absolute;
-	left: 20px;
-    top: 37px;
-    width: 300px;
-}
-
 #popupUD {
     width:300px;
+}
+
+#SceneBrowse #list0{
+	position : absolute;
+	left : 37px;
+	top : 90px;
+	width : 445px;
+	height: 380px;
+}
+
+#SceneBrowse #playerButton{
+	position : absolute;
+	left : 720px;
+	top : 330px;
+	width : 150px;
+}
+
+#SceneBrowse #labelList{
+	position : absolute;
+	left : 510px;
+	top : 30px;
+	width : 100px;
+	border-bottom-style:solid;
+	border-bottom-width:thin;
+}
+
+#SceneBrowse #svecLabel_EXXY{
+	position : absolute;
+	left : 400px;
+	top : 50px;
+	width : 120px;
+}
+
+#SceneBrowse #usbButton{
+	position : absolute;
+	left : 510px;
+	top : 80px;
+	width : 150px;
+}
+
+#SceneBrowse #svecInput_Z6V6{
+	position : absolute;
+	left : 35px;
+	top : 30px;
+	width : 355px;
+}
+
+#SceneBrowse #middle{
+	position : absolute;
+	left : 480px;
+	top : 30px;
+	height: 450px;
+	border-width:2px;	
+	border-left-style:groove;
+	border-color:#e6e6fa;
+	/*border-style:ridge;*/
+}
+
+#SceneBrowse #middle2{
+	position : absolute;
+	left : 510px;
+	top : 300px;
+	width: 420px;
+	border-width:2px;	
+	border-bottom-style:groove;
+	border-color:#e6e6fa;
+}
+
+#SceneBrowse #svecLabel_XKN9{
+	position : absolute;
+	left : 510px;
+	top : 150px;
+	width : 110px;
+	border-bottom-style:solid;
+	border-bottom-width:thin;
+}
+
+#SceneBrowse #svecLabel_YDEP{
+	position : absolute;
+	left : 580px;
+	top : 200px;
+	width : 290px;
+}
+
+#SceneBrowse #svecButton_4PT8{
+	position : absolute;
+	left : 510px;
+	top : 330px;
+	width : 200px;
+}
+
+#SceneBrowse #uploadButton{
+	position : absolute;
+	left : 510px;
+	top : 380px;
+	width : 150px;
 }
 
