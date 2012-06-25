@@ -21,6 +21,13 @@ class HTTPServerTest : public ::testing::Test {
 		return size*count;
 	}
 	
+	void search() {
+		
+		std::string addr1 = Settings::getIP() + ":1337/search:test";
+		curl_easy_setopt(easyHandle, CURLOPT_URL, addr1.c_str());
+		res = curl_easy_perform(easyHandle);
+	}
+	
 	virtual void SetUp(){
 		
 		easyHandle = curl_easy_init();
@@ -57,10 +64,8 @@ TEST_F(HTTPServerTest, searchTrivial) {
 	SearchEngine::clearSearchResults();
 	
 	std::string addr = Settings::getIP() + ":1337/search:test";
-	std::cout << "Got IP" << std::endl;
 	curl_easy_setopt(easyHandle, CURLOPT_URL, addr.c_str());
 	res = curl_easy_perform(easyHandle);
-	std::cout << "Sent Http request" << std::endl;
 	
 	EXPECT_EQ("Search request sent.", response);
 }
@@ -83,9 +88,7 @@ TEST_F(HTTPServerTest, searchEmpty) {
 // Test whether you can add and download a file after a search
 TEST_F(HTTPServerTest, downloadTrivial) {
 	
-	std::string addr = Settings::getIP() + ":1337/search:test";
-	curl_easy_setopt(easyHandle, CURLOPT_URL, addr.c_str());
-	res = curl_easy_perform(easyHandle);
+	search();
 	
 	EXPECT_EQ("Search request sent.", response);
 	response = "";
@@ -136,10 +139,7 @@ TEST_F(HTTPServerTest, downloadNonexistent){
 // Try downloading the same file twice
 TEST_F(HTTPServerTest, downloadTwice){
 	
-	std::string addr1 = Settings::getIP() + ":1337/search:test";
-	curl_easy_setopt(easyHandle, CURLOPT_URL, addr1.c_str());
-	res = curl_easy_perform(easyHandle);
-	
+	search();
 	response = "";
 	
 	std::string addr2 = Settings::getIP() + ":1337/add:367d26a6ce626e049a21921100e24eac86dbcd32";
@@ -168,6 +168,59 @@ TEST_F(HTTPServerTest, downloadTwice){
 	
 	EXPECT_EQ("This file is already being downloaded.", response);
 	response = "";
+}
+
+// Test the infamous pause-resume-stats segfault.
+TEST_F(HTTPServerTest, pauseResumePause) {
+	
+	search();
+	
+	std::string addr1 = Settings::getIP() + ":1337/add:367d26a6ce626e049a21921100e24eac86dbcd32";
+	curl_easy_setopt(easyHandle, CURLOPT_URL, addr1.c_str());
+	res = curl_easy_perform(easyHandle);
+	
+	std::string addr2 = Settings::getIP() + ":1337/pause:367d26a6ce626e049a21921100e24eac86dbcd32";
+	curl_easy_setopt(easyHandle, CURLOPT_URL, addr2.c_str());
+	res = curl_easy_perform(easyHandle);
+	
+	std::string addr3 = Settings::getIP() + ":1337/resume:367d26a6ce626e049a21921100e24eac86dbcd32";
+	curl_easy_setopt(easyHandle, CURLOPT_URL, addr3.c_str());
+	res = curl_easy_perform(easyHandle);
+	
+	response = "";
+	
+	std::string addr4 = Settings::getIP() + ":1337/pause:367d26a6ce626e049a21921100e24eac86dbcd32";
+	curl_easy_setopt(easyHandle, CURLOPT_URL, addr4.c_str());
+	res = curl_easy_perform(easyHandle);
+	
+	EXPECT_EQ("Download Paused", response);
+	response = "";
+}
+
+// Test the infamous pause-resume-stats segfault.
+TEST_F(HTTPServerTest, pauseResumeStats) {
+	
+	search();
+	
+	std::string addr1 = Settings::getIP() + ":1337/add:367d26a6ce626e049a21921100e24eac86dbcd32";
+	curl_easy_setopt(easyHandle, CURLOPT_URL, addr1.c_str());
+	res = curl_easy_perform(easyHandle);
+	
+	
+	std::string addr2 = Settings::getIP() + ":1337/pause:367d26a6ce626e049a21921100e24eac86dbcd32";
+	curl_easy_setopt(easyHandle, CURLOPT_URL, addr2.c_str());
+	res = curl_easy_perform(easyHandle);
+	
+	std::string addr3 = Settings::getIP() + ":1337/resume:367d26a6ce626e049a21921100e24eac86dbcd32";
+	curl_easy_setopt(easyHandle, CURLOPT_URL, addr3.c_str());
+	res = curl_easy_perform(easyHandle);
+	
+	std::string addr4 = Settings::getIP() + ":1337/stats";
+	curl_easy_setopt(easyHandle, CURLOPT_URL, addr4.c_str());
+	res = curl_easy_perform(easyHandle);
+	
+	// We don't need to check for any specific outcome,
+	// just making sure there is no segfault.
 }
 
 /* Remove */
