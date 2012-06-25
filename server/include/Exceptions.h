@@ -53,5 +53,17 @@ class InvalidIPException : public std::exception {
 	
 };
 
+class CannotResumeException : public std::exception {
+	public:
+	
+	CannotResumeException() throw() {}
+	~CannotResumeException() throw() {}
+	
+	virtual const char* what() const throw() {
+		return "This download can not be resumed. It was probably never started and paused.";
+	}
+	
+};
+
 #endif //_EXCEPTIONS_H
 

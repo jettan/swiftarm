@@ -4,7 +4,7 @@ TICPP = ../..
 CPPFLAGS = -I  $(SWIFTARM)/server/lib/include/ -I $(SWIFTARM)/server/include/ -I $(SWIFTARM)/server/include/ticpp -I $(SWIFTARM)/server/include/swift -I $(GTEST)/include/ -I $(CURL)/include -I /usr/include/python2.7 #-Wall
 CXX = g++
 LIBS = $(GTEST)/lib/libgtest.a $(GTEST)/lib/libgtest_main.a $(TICPP)/lib/libticpp.a
-LDADD=$(SWIFTARM)/server/lib/libswift.a $(SWIFTARM)/server/lib/lib/libevent_pthreads.a $(SWIFTARM)/server/lib/lib/libevent.a -lrt -lstdc++ -lgcc -lutil -lpthread -lcurl -lpython2.7
+LDADD=$(SWIFTARM)/server/lib/swift.a $(SWIFTARM)/server/lib/lib/libevent_pthreads.a $(SWIFTARM)/server/lib/lib/libevent.a -lrt -lstdc++ -lgcc -lutil -lpthread -lcurl -lpython2.7
 SOURCE = ../../src
 
 all: testsuite

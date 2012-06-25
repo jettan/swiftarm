@@ -343,7 +343,11 @@ static std::string HttpServer::resumeRequest(std::string hash) {
 	try {
 		DownloadManager::resumeDownload(hash);
 		response = "Download Resumed";
-	} catch(FileNotFoundException e) {
+	} catch (FileNotFoundException e) {
+		std::cout << "Exception Caught In HttpServer" << std::endl;
+		std::cout << e.what() << std::endl;
+		response = e.what();
+	} catch (CannotResumeException e) {
 		std::cout << "Exception Caught In HttpServer" << std::endl;
 		std::cout << e.what() << std::endl;
 		response = e.what();

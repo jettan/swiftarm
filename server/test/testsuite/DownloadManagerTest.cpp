@@ -91,7 +91,9 @@ TEST_F(DownloadManagerTest, addDownloadTrivial) {
 	Download *testDL = new Download("tracker", hash, "test");
 	DownloadManager::add(testDL);
 	
+	std::cout << "Added download" << std::endl;
 	int index = DownloadManager::getIndexFromHash(hash);
+	std::cout << "Got hash" << std::endl;
 	Download returnedDL = DownloadManager::getDownloads().at(index);
 	testDL->setID(returnedDL.getID());
 	

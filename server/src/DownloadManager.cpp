@@ -460,23 +460,37 @@ void DownloadManager::pauseDownload(const std::string download_hash) {
 int DownloadManager::resumeDownload(std::string download_hash) {
 	int index = getIndexFromHash(download_hash);
 	
-	if (index >= 0) {
-		pthread_mutex_lock(&mutex);
-		setActiveDownload(&downloads.at(index));
-		pthread_mutex_unlock(&mutex);
+	pthread_mutex_lock(&active_download_mutex);
+	if (active_download->getRootHash().compare(download_hash) == 0) {
 		
-		pthread_mutex_lock(&active_download_mutex);
+		active_download->resume();
+		pthread_mutex_unlock(&active_download_mutex);
 		
-		if (active_download->getID() > -1) {
+	} else if (index >= 0 && index < getDownloads().size() && getDownloads().at(index).getStatus() == PAUSED) {
+		
+		pthread_mutex_unlock(&active_download_mutex);
+		
+		if (getDownloads().at(index).getStatus() == PAUSED && getDownloads().at(index).getID() > -1) {
+			pthread_mutex_lock(&active_download_mutex);
+			std::string hash = active_download->getRootHash();
+			pthread_mutex_unlock(&active_download_mutex);
+			
+			pauseDownload(hash);
+			
+			pthread_mutex_lock(&mutex);
+			setActiveDownload(&downloads.at(index));
+			pthread_mutex_unlock(&mutex);
+			
+			pthread_mutex_lock(&active_download_mutex);
 			active_download->resume();
-			std::cout << max_upspeed << std::endl;
 			active_download->limitDownSpeed(max_downspeed);
 			active_download->limitUpSpeed(max_upspeed);
-		} else {
 			pthread_mutex_unlock(&active_download_mutex);
-			return -1;
+		} else {
+			CannotResumeException *e = new CannotResumeException();
+			throw *e;
 		}
-		
+	} else {
 		pthread_mutex_unlock(&active_download_mutex);
 	}
 	return 0;
@@ -532,7 +546,7 @@ void DownloadManager::switchDownload(std::string hash) {
 			startDownload(hash);
 			pauseDownload(previous_hash);
 		}
-		catch(FileNotFoundException e) {
+		catch (FileNotFoundException e) {
 			active_download->setStatus(original_state);
 			std::cout << "FileNotFoundException caught in switchDownload, exception was thrown" << std::endl;
 			throw e;
@@ -540,6 +554,8 @@ void DownloadManager::switchDownload(std::string hash) {
 	}
 	else {
 		pthread_mutex_unlock(&active_download_mutex);
+		AlreadyDownloadingException *e = new AlreadyDownloadingException();
+		throw *e;
 	}
 }
 
@@ -637,7 +653,11 @@ void DownloadManager::upload(std::string filename) {
 		}
 		
 		root_hash = swift::RootMerkleHash(id).hex().c_str();
-		Download file("145.94.189.245:20000", root_hash, filename);
+		
+		std::ostringstream stream;
+		stream << Settings::getIP() << ":" << DEFAULT_PORT;
+		
+		Download file(stream.str(), root_hash, filename);
 		file.setID(id);
 		
 		try {
@@ -909,6 +929,7 @@ void* DownloadManager::startStreamThread(void* arg) {
 void DownloadManager::startStream(std::string tracker) {
 	for (int i = 0; i < downloads.size(); i++) {
 		if (downloads.at(i).getStatus() == DOWNLOADING) {
+		
 			pauseDownload(downloads.at(i).getRootHash());
 			std::cout << downloads.at(i).getFilename() << std::endl;
 		}

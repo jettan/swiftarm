@@ -13,16 +13,21 @@ class SearchEngineTest : public ::testing::Test {
 	virtual void TearDown() {}
 };
 
+std::vector<struct SearchEngine::result> toVector(std::string result) {
+	
+	
+}
+
+
 /* Search Tests */
 
 // Trivial
 TEST_F(SearchEngineTest, searchTrivial) {
 	
 	SearchEngine::clearSearchResults();
-	std::string res = SearchEngine::search("test");
+	SearchEngine::search("test");
 	
 	EXPECT_LT(0, SearchEngine::getResults().size());
-	EXPECT_LT(0, res.size());
 }
 
 /* Get Results Test */
@@ -71,11 +76,14 @@ TEST_F(SearchEngineTest, getResultWithNameNonexistent) {
 TEST_F(SearchEngineTest, getResultWithHashTrivial) {
 	
 	SearchEngine::search("test");
+	std::string result = SearchEngine::getResults();
 	
-	std::string name = SearchEngine::getResults().at(0).filename;
-	std::string hash = SearchEngine::getResults().at(0).hash;
+	ticpp::Document doc;
+	doc.Parse(result, true, TIXML_DEFAULT_ENCODING);
 	
-	EXPECT_EQ(name, SearchEngine::getResultWithHash(hash).filename);
+	
+	
+	std::cout
 }
 
 // Doesn't exist
