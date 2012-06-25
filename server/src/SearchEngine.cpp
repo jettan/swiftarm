@@ -71,10 +71,21 @@ std::string SearchEngine::getResults() {
 			
 			std::vector<std::string> item = Settings::split(result_string, ':');
 			struct SearchEngine::result r;
-			r.tracker   = Settings::getIP() + ":9999";
-			r.hash      = item[0];
-			r.filename  = item[1];
-			search_results.push_back(r);
+			
+			std::ostringstream dht_ip;
+			dht_ip << Settings::getIP() << ":" << DHT_PORT;
+			
+			int j = 0;
+			while (j < search_results.size() && item[0].compare(search_results.at(j).hash) != 0) {
+				j++;
+			}
+			
+			if (j == search_results.size()) {
+				r.tracker   = dht_ip.str();
+				r.hash      = item[0];
+				r.filename  = item[1];
+				search_results.push_back(r);
+			}
 		}
 		
 		PyGILState_Release(gstate);

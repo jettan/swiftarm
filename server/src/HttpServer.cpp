@@ -105,63 +105,54 @@ static void HttpServer::handleRequest(struct evhttp_request *req, void *arg) {
 	} else if (result.size() == 2) {
 		// Message will look like: "/add:hash".
 		if (result.at(1).size() == 40 && result.at(0).compare("/add") == 0) {
-			
 			std::string hash = result.at(1);
 			std::string response = addRequest(hash);
 			sendResponse(req, evb, response.c_str());
 			
 		// Message will look like: "/download:hash".
 		} else if (result.at(1).size() == 40 && result.at(0).compare("/download") == 0) {
-			
 			std::string hash = result.at(1);
 			std::string response = downloadRequest(hash);
 			sendResponse(req, evb, response.c_str());
 			
 		// Message will look like: "/upload:filename"
 		} else if (result.at(0).compare("/upload") == 0) {
-			
 			std::string filename = result.at(1);
 			std::string response = uploadRequest(filename);
 			sendResponse(req, evb, response.c_str());
 			
 		// Message will look like: "/stop:roothash"
 		} else if (result.at(1).size() == 40 && result.at(0).compare("/stop") == 0) {
-			
 			std::string hash = result.at(1);
 			std::string response = stopRequest(hash);
 			sendResponse(req, evb, response.c_str());
 			
 		// Message will look like: "/remove:roothash"
 		} else if (result.at(1).size() == 40 && result.at(0).compare("/remove") == 0) {
-			
 			std::string hash = result.at(1);
 			std::string response = removeRequest(hash);
 			sendResponse(req, evb, response.c_str());
 			
 		// Message will look like: "/pause:hash"
 		} else if (result.at(1).size() == 40 && result.at(0).compare("/pause") == 0) {
-			
 			std::string hash = result.at(1);
 			std::string response = pauseRequest(hash);
 			sendResponse(req, evb, response.c_str());
 			
 		// Message will look like: "/resume:roothash"
 		} else if (result.at(1).size() == 40 && result.at(0).compare("/resume") == 0) {
-			
 			std::string hash = result.at(1);
 			std::string response = resumeRequest(hash);
 			sendResponse(req, evb, response.c_str());
 			
 		// Message will look like: "/search:searchterm"
 		} else if (result.at(0).compare("/search") == 0) {
-			
 			std::string search_term = result.at(1);
 			SearchEngine::search(search_term);
 			sendResponse(req, evb, "Search request sent.");
 			
 		// Message will look like: "/stream:hash"
 		} else if (result.at(0).compare("/stream") == 0) {
-			
 			std::string hash = result.at(1);
 			std::string response = streamRequest(hash);
 			sendResponse(req, evb, response.c_str());
@@ -174,7 +165,6 @@ static void HttpServer::handleRequest(struct evhttp_request *req, void *arg) {
 	} else if (result.size() == 4) {
 		// Parse settings, message will look like: "/settings:downmax:upmax:downdir".
 		if (result.at(0).compare("/settings") == 0) {
-			
 			std::string response = settingsRequest(result);
 			sendResponse(req, evb, response.c_str());
 		}
