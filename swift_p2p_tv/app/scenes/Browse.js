@@ -1,442 +1,394 @@
 function SceneBrowse() {
-    this.row = 0;
+	this.row = 0;
 	this.column = 0;
 	
 	// List with available files for download/stream
 	// In future release a search function will be included
 	var stream = 'Initiele waarde motherf***er';
 	var buttons;
-	var but = 3;
 	var k = 0;
 }
 
-var downloadURL = "http://130.161.159.107:1337/add:";
-var uploadURL = "http://130.161.159.107:1337/upload:";
-var searchURL = "http://130.161.159.107:1337/search:";
-var resultURL = "http://130.161.159.107:1337/results";
-var streamURL = "http://130.161.159.107:1337/stream";
-var stopStreamURL = "http://130.161.159.107:1337/stopStream";
+var tv_url          = "http://130.161.159.107:1337";
+var download_url    = tv_url + "/add:";
+var upload_url      = tv_url + "/upload:";
+var search_url      = tv_url + "/search:";
+var result_url      = tv_url + "/results";
+var stream_url      = tv_url + "/stream";
+var stop_stream_url = tv_url + "/stopStream";
 
-var listShown = false;
-var searchResults = ["Search results"];
+var is_list_shown   = false;
+var search_results  = ["Search results"];
 
 SceneBrowse.prototype.initialize = function () {
-	alert('SceneBrowse.initialize()');
-	 
-	$('#list0').sfList({
-		data: searchResults, 
-		index:'0', 
+	$('#results_list').sfList({
+		data: search_results,
+		index:'0',
 		itemsPerPage:'7'
 	});
-	$('#list0').sfList('show');
 	
-	$('#labelList').sfLabel({text:'Filebrowser'});
-	$('#labelList').sfLabel('show');
+	$('#filebrowser_label').sfLabel({text:'Filebrowser'});
+	$('#usb_button').sfButton({text:'Browse USB'});
 	
-	$('#usbButton').sfButton({text:'Browse USB'});
-	
-	$('#svecInput_Z6V6').sfTextInput({
-		text:'sintel', 
+	$('#search_bar').sfTextInput({
+		text:'sintel',
 		maxlength:'10',
 		oncomplete: function (text) {
-			/*if (text)
-				search(searchURL + $("#svecInput_Z6V6").sfTextInput('getText'));*/
+			if (text) {
+				httpGet(search_url + text);
+				startResultPolling();
+			}
 		}
 	}).sfTextInput('blur');
 	
-	$('#svecLabel_EXXY').sfLabel({text:'Search'});
-	$('#playerButton').sfButton({text:'Go to player'});
-	$('#svecLabel_XKN9').sfLabel({text:'Selected file:'});
-	$('#svecLabel_YDEP').sfLabel({text:'...'});
-	$('#svecButton_4PT8').sfButton({text:'Add to playlist'});
+	$('#search_label').sfLabel({text:'Search'});
+	$('#go_to_player_button').sfButton({text:'Go to player'});
+	$('#selected_file_label').sfLabel({text:'Selected file:'});
+	$('#selection_label').sfLabel({text:'n/a'});
+	$('#add_to_playlist_button').sfButton({text:'Add to playlist'});
 	
-	$('#playerButton').sfButton({text:'Go to player'});
-	$('#svecLabel_EXXY').sfLabel({text:'Search'});	
+	$('#go_to_player_button').sfButton({text:'Go to player'});
+	$('#search_label').sfLabel({text:'Search'});
+	$('#upload_button').sfButton({text:'Upload file'});
 	
-	$('#uploadButton').sfButton({text:'Upload file'});
+	buttons = new Array('#usb_button','#add_to_playlist_button','#upload_button');
 	
-	buttons = new Array('#usbButton','#svecButton_4PT8','#uploadButton');
-	
-}
-  
-
-SceneBrowse.prototype.handleShow = function () {
-	alert('SceneBrowse.handleShow()');
 }
 
-SceneBrowse.prototype.handleHide = function () {
-	alert('SceneBrowse.handleHide()');
-}
+SceneBrowse.prototype.handleShow = function () {}
+
+SceneBrowse.prototype.handleHide = function () {}
 
 SceneBrowse.prototype.handleFocus = function () {
-	alert('SceneBrowse.handleFocus()');
-	
 	this.row = 0;
 	this.column = 1;
-	but = 0;
 	
-	$('#labelList').sfLabel('show');
-	$('#list0').sfList('show');
-	//$('#list0').sfList('focus');
-	$('#usbButton').sfButton('focus');
-	alert('-----------===================-------------------');
-	alert('They printing functions over here');
-	$('#svecInput_Z6V6').sfTextInput('setKeypadPos',0, 200)
-	//alert($('#svecInput_Z6V6').sfTextInput('setKeypadPos',250, 200));
+	$('#filebrowser_label').sfLabel('show');
+	$('#results_list').sfList('show');
+	$('#usb_button').sfButton('focus');
 	$("#keyhelp_bar").sfKeyHelp({
-		'user': 'Help',		
 		'move':'Move',
-        'return': 'Return'
+		'return': 'Return'
 	});
 }
 
 SceneBrowse.prototype.handleBlur = function () {
-	alert('SceneBrowse.handleBlur()');
-	
-	$('#button0').sfButton('blur');
-	$('#labelList').sfLabel('hide');
-	$('#list0').sfList('blur');
-	$('#list0').sfList('hide');
+	$('#filebrowser_label').sfLabel('hide');
+	$('#results_list').sfList('blur');
+	$('#results_list').sfList('hide');
 }
 
-SceneBrowse.prototype.handleKeyDown = function (keyCode) {
-	alert('SceneBrowse.handleKeyDown(' + keyCode + ')');
+SceneBrowser.prototype.handleEnter  = function () {}
+
+SceneBrowser.prototype.handleUp    = function () {
+	if (this.column == 0 && is_list_shown) {
+		if (this.row == 0) {
+			$('#search_bar').sfTextInput('blur');
+			$('#results_list').sfList('focus');
+			this.row = 1 + search_results.length;
+			$('#results_list').sfList('move', search_results.length - 1);
+			
+		} else if ($('#results_list').sfList('getIndex') == 0) {
+			$('#results_list').sfList('blur');
+			$('#search_bar').sfTextInput('focus');
+			this.row = 0;
+		} else {
+			$('#results_list').sfList('prev');
+			this.row -= 1;
+		}
+		
+	} else if (this.column == 1) {
+		if (this.row == 0) {
+			$('#usb_button').sfButton('blur');
+			$('#upload_button').sfButton('focus');
+			this.row = 2;
+		} else if (this.row == 1) {
+			$('#add_to_playlist_button').sfButton('blur');
+			$('#usb_button').sfButton('focus');
+			this.row = 0;
+		} else {
+			$('#upload_button').sfButton('blur');
+			$('#add_to_playlist_button').sfButton('focus');
+			this.row = 1;
+		}
+	}
+}
+
+SceneBrowser.prototype.handleDown  = function () {
+	if (this.column == 0 && is_list_shown) {
+		if (this.row == 0) {
+				$('#search_bar').sfTextInput('blur');
+				$('#results_list').sfList('focus');
+				this.row = 1;
+				$('#results_list').sfList('move',0);
+		} else if ($('#results_list').sfList('getIndex') == search_results.length - 1) {
+				$('#results_list').sfList('blur');
+				alert(search_results.length);
+				$('#search_bar').sfTextInput('focus');
+				this.row = 0;
+		} else {
+			$('#results_list').sfList('next');
+			this.row += 1;
+		}
+	} else if (this.column == 1) {
+		if (this.row == 0) {
+			$('#usb_button').sfButton('blur');
+			$('#add_to_playlist_button').sfButton('focus');
+			this.row = 1;
+		} else if (this.row == 1){
+			$('#add_to_playlist_button').sfButton('blur');
+			$('#upload_button').sfButton('focus');
+			this.row = 2;
+		} else {
+			$('#upload_button').sfButton('blur');
+			$('#usb_button').sfButton('focus');
+			this.row = 0;
+		}
+	}
+}
+
+
+SceneBrowser.prototype.handleLeft  = function () {
+	if (this.column == 0) {
+		if (this.row == 0)
+			$('#search_bar').sfTextInput('blur');
+		else if (is_list_shown)
+			$('#results_list').sfList('blur');
+			$('#usb_button').sfButton('focus');
+			this.column = 1;
+			this.row = 0;
+	} else if (this.column == 1) {
+		if (this.row == 0)
+			$('#usb_button').sfButton('blur');
+		else if (this.row == 1)
+			$('#add_to_playlist_button').sfButton('blur');
+		else
+			$('#upload_button').sfButton('blur');
+	
+		if (is_list_shown) {
+			$('#results_list').sfList('focus');
+			this.column = 0;
+			this.row = 1 + $('#results_list').sfList('getIndex');
+		} else {
+			$('#search_bar').sfTextInput('focus');
+			this.column = 0;
+			this.row = 0;
+		}
+		
+	} else if (this.column == 2) {
+		$('#go_to_player_button').sfButton('blur');
+		$('#add_to_playlist_button').sfButton('focus');
+		this.column = 1;
+		this.row = 1;
+	}
+}
+
+
+SceneBrowser.prototype.handleRight = function () {
+	if (this.column == 0) {
+		if (this.row == 0)
+			$('#search_bar').sfTextInput('blur');
+		else if (is_list_shown)
+			$('#results_list').sfList('blur');
+	
+	$('#usb_button').sfButton('focus');
+		this.column = 1;
+		this.row = 0;
+	} else if (this.column == 1) {
+		if (this.row == 1 || this.row == 2) {
+			$(buttons[this.row]).sfButton('blur');
+			$('#go_to_player_button').sfButton('focus');
+			this.column = 2;
+		} else
+			$('#usb_button').sfButton('blur');
+		
+		if (is_list_shown) {
+			$('#results_list').sfList('focus');
+			this.column = 0;
+			this.row = 1 + $('#results_list').sfList('getIndex');
+		} else {
+			$('#search_bar').sfTextInput('focus');
+			this.column = 0;
+			this.row = 0;
+		}
+	} else if (this.column == 2) {
+		$('#go_to_player_button').sfButton('blur');
+		if (is_list_shown) {
+			$('#results_list').sfList('focus');
+			this.column = 0;
+			this.row = 1 + $('#results_list').sfList('getIndex');
+		} else {
+			$('#search_bar').sfTextInput('focus');
+			this.column = 0;
+			this.row = 0;
+		}
+	}
+}
+
+// TODO: Use enumerator instead of rows and columns.
+SceneBrowse.prototype.handleKeyDown = function (key_code) {
 	switch (keyCode) {
 		case sf.key.LEFT:
-			if (this.column == 0) {
-				if (this.row == 0)
-					$('#svecInput_Z6V6').sfTextInput('blur');
-				else if (listShown)
-						$('#list0').sfList('blur');
-					
-				$('#usbButton').sfButton('focus');
-				this.column = 1;
-				this.row = 0;
-			} else if (this.column == 1) {
-				if (this.row == 0)
-					$('#usbButton').sfButton('blur');
-				else if (this.row == 1)
-					$('#svecButton_4PT8').sfButton('blur');
-				else
-					$('#uploadButton').sfButton('blur');
-				if (listShown) {
-					$('#list0').sfList('focus');
-					this.column = 0;
-					this.row = 1 + $('#list0').sfList('getIndex');
-				}
-				else {
-						$('#svecInput_Z6V6').sfTextInput('focus');
-					this.column = 0;
-					this.row = 0;
-				}
-			} else if (this.column == 2) {
-				$('#playerButton').sfButton('blur');
-				$('#svecButton_4PT8').sfButton('focus');
-				this.column = 1;
-				this.row = 1;
-			}		
+			this.handleLeft();
 			break;
+			
 		case sf.key.RIGHT:
-			if (this.column == 0) {
-				if (this.row == 0)
-					$('#svecInput_Z6V6').sfTextInput('blur');
-				else if (listShown)
-						$('#list0').sfList('blur');
-					
-				$('#usbButton').sfButton('focus');
-				this.column = 1;
-				this.row = 0;
-			} else if (this.column == 1) {
-				if (this.row == 1 || this.row == 2) {
-					$(buttons[this.row]).sfButton('blur');
-					$('#playerButton').sfButton('focus');
-					this.column = 2;
-					break;
-				}
-				else
-					$('#usbButton').sfButton('blur');
-					
-				if (listShown) {
-					$('#list0').sfList('focus');
-					this.column = 0;
-					this.row = 1 + $('#list0').sfList('getIndex');
-				}
-				else {
-						$('#svecInput_Z6V6').sfTextInput('focus');
-					this.column = 0;
-					this.row = 0;
-				}
-			} else if (this.column == 2) {
-				$('#playerButton').sfButton('blur');
-				if (listShown) {
-					$('#list0').sfList('focus');
-					this.column = 0;
-					this.row = 1 + $('#list0').sfList('getIndex');
-				}
-				else {
-						$('#svecInput_Z6V6').sfTextInput('focus');
-					this.column = 0;
-					this.row = 0;
-				}
-			}	
+			this.handleRight();
 			break;
+			
 		case sf.key.UP:
-			alert('=======================HIEROOOOOOOOOOOOOOOOOOO=======================');
-			alert(searchResults.length);
-			if (this.column == 0 && listShown) {
-				if (this.row == 0) {
-						$('#svecInput_Z6V6').sfTextInput('blur');
-						/*searchResults = [];
-						for(var y=0; y<names.length; y++)
-							searchResults.push(names[y]);*/
-						alert('=======================HIEROOOOOOOOOOOOOOOOOOO2=======================');
-						alert(searchResults.length);
-						$('#list0').sfList('focus');
-						this.row = 1 + searchResults.length;
-						$('#list0').sfList('move',searchResults.length-1);
-				} else if ($('#list0').sfList('getIndex') == 0) {
-						$('#list0').sfList('blur');
-						$('#svecInput_Z6V6').sfTextInput('focus');
-						this.row = 0;
-						break;
-				} else {
-					$('#list0').sfList('prev');
-					this.row = this.row - 1;
-				}
-			} else if (this.column == 1) {
-				if (this.row == 0) {
-					$('#usbButton').sfButton('blur');
-					$('#uploadButton').sfButton('focus');
-					this.row = 2;
-					break;
-				} else if (this.row == 1) {
-					$('#svecButton_4PT8').sfButton('blur');
-					$('#usbButton').sfButton('focus');
-					this.row = 0;
-					break;
-				} else {
-					$('#uploadButton').sfButton('blur');
-					$('#svecButton_4PT8').sfButton('focus');
-					this.row = 1;
-					break;
-				}
-			} 
+			this.handleUp();
 			break;
+			
 		case sf.key.DOWN:
-			alert('=======================HIEROOOOOOOOOOOOOOOOOOO=======================');
-			alert(searchResults.length);
-			if (this.column == 0 && listShown) {
-				if (this.row == 0) {
-						$('#svecInput_Z6V6').sfTextInput('blur');
-						/*searchResults = [];
-						for(var y=0; y<names.length; y++)
-							searchResults.push(names[y]);*/
-						alert('=======================HIEROOOOOOOOOOOOOOOOOOO2=======================');
-						alert(searchResults.length);
-						$('#list0').sfList('focus');
-						this.row = 1;
-						$('#list0').sfList('move',0);
-				} else if ($('#list0').sfList('getIndex') == searchResults.length - 1) {
-						$('#list0').sfList('blur');
-						alert(searchResults.length);
-						$('#svecInput_Z6V6').sfTextInput('focus');
-						this.row = 0;
-						break;
-				} else {
-					$('#list0').sfList('next');
-					this.row = this.row + 1;
-				}
-			} else if (this.column == 1) {
-				if (this.row == 0) {
-					$('#usbButton').sfButton('blur');
-					$('#svecButton_4PT8').sfButton('focus');
-					this.row = 1;
-					break;
-				} else if (this.row == 1){
-					$('#svecButton_4PT8').sfButton('blur');
-					$('#uploadButton').sfButton('focus');
-					this.row = 2;
-					break;
-				} else {
-					$('#uploadButton').sfButton('blur');
-					$('#usbButton').sfButton('focus');
-					this.row = 0;
-					break;
-				}
-			} 
+			this.handleDown();
 			break;
+			
 		case sf.key.ENTER:
-		if (this.column == 0 && this.row == 0) {
-			httpGet(searchURL + $("#svecInput_Z6V6").sfTextInput('getText'));
-			startResultPolling();
-		} else if (this.column == 0 && listShown && this.row > 0) {
-			var index = $('#list0').sfList('getIndex');
-			$('#svecLabel_YDEP').sfLabel("option", "text", searchResults[index]);
-			var _THIS_ = this;
-			$('#popupUD').sfPopup({
+			if (this.column == 0 && is_list_shown && this.row > 0) {
+				var index = $('#results_list').sfList('getIndex');
+				$('#selection_label').sfLabel("option", "text", search_results[index]);
+				var _THIS_ = this;
+				$('#on_select_popup').sfPopup({
 					text:"Do you want to download or stream this file?",
 					buttons: ["Download", "Stream"],
 					defaultFocus: 1,
 					keyhelp: {'return' : 'Return'},
-					callback : function(selectedIndex){
+					callback : function(selectedIndex) {
+						
 						if (selectedIndex == -1)
-							$('#labelUSB').sfLabel("option", "text", 'Operation canceled');
+							$('#feedback_label').sfLabel("option", "text", 'Operation canceled');
 						else if (selectedIndex == 0) {
 							// Start download
-							httpGet(downloadURL + hashes[index]);
-							//downloads.push(this.searchResults[index]);
+							httpGet(download_url + hashes[index]);
 							downloading = true;
 							$('#is_downloading').sfLabel('option','text','Downloading');
 						} else {
 							//Start streaming and redirect to player
-							httpGet(streamURL + ":" + hashes[index]);
-							alert("!dadada: " + stream);
-							alert("!lalala: " + $('#label_video').sfLabel("get").text());
-							var vid = stream;						
+							httpGet(stream_url + ":" + hashes[index]);
+							var vid = stream;
 							playlist.push({
 								url: vid,
 								title: 'Stream'
 							});
 							
-							//$('#svecLabel_YDEP').sfLabel("option","text",$('#label_video').sfLabel("get").text());
 							$('#label_redirect').sfLabel('option','text','Player');
 							sf.scene.focus('Main');
 						}
 					}
 				}).sfPopup('show');
-		} else if (this.row == 0 && this.column == 1) {
-			$("#usbButton").sfButton('blur');
-			var _THIS_ = this;
-			sf.service.USB.show({
-				callback: function(result){
-					alert("Callback of USB module: " + result);
-					 $('#label_video').sfLabel("option", "text", result[0]); 
-					 $('#svecLabel_YDEP').sfLabel("option", "text", result[0]); 
-					but = 1;
-					$("#playerButton").sfButton('focus');
-				},
-				fileType: 'all'
-			});
-			this.column = 2;
-			this.row = 1;
-		} else if (this.row == 1 && this.column == 1) {
-			// Add to selection to playlist(Check for correct path) 
-			//$('#svecLabel_YDEP').sfLabel("option","text","You are absolutely motherfucking right!");
+			} else if (this.row == 0 && this.column == 1) {
+				$("#usb_button").sfButton('blur');
+				sf.service.USB.show({
+					callback: function(result){
+						$('#label_video').sfLabel("option", "text", result[0]); 
+						$('#selection_label').sfLabel("option", "text", result[0]); 
+						$("#go_to_player_button").sfButton('focus');
+					},
+					fileType: 'all'
+				});
+				this.column = 2;
+				this.row = 1;
+			} else if (this.row == 1 && this.column == 1) {
+				// Add to selection to playlist(Check for correct path) 
+				var vid = $('#label_video').sfLabel("get").text();
+				vid = 'file:///dtv/usb' + vid.substring(8);
+				var n = vid.split("/");
+				var nlength = n.length - 1;
+				
+				playlist.push({
+					url: vid,
+					title: n[nlength]
+				});
+				
+				$('#selection_label').sfLabel("option","text",playlist.length);
 			
-			var vid = $('#label_video').sfLabel("get").text();
-			//var vid = '$Usb/sda1/lalala.mkv';
-			vid = 'file:///dtv/usb' + vid.substring(8);
-			var n = vid.split("/");
-			var nlength = n.length - 1;
-			
-			playlist.push({
-				url: vid,
-				title: n[nlength]
-			});
-			
-			//playlist = playlist.splice(4,5);
-			$('#svecLabel_YDEP').sfLabel("option","text",playlist.length);
-		
-		} else if (this.row == 2 && this.column == 1){
-			// Upload selection via swift(Check for correct path)
-			if($('#labelUSB').sfLabel("get").text()) {
-				var vid = $('#labelUSB').sfLabel("get").text()
-				vid = 'file:///dtv/usb' + link.substring(8);
-				httpGet(uploadUrl + vid);
+			} else if (this.row == 2 && this.column == 1){
+				// Upload selection via swift(Check for correct path)
+				if($('#feedback_label').sfLabel("get").text()) {
+					var vid = $('#feedback_label').sfLabel("get").text()
+					vid = 'file:///dtv/usb' + link.substring(8);
+					httpGet(uploadUrl + vid);
+				}
+				
+			} else if (this.row == 1 && this.column == 2) {
+				$('#label_redirect').sfLabel('option','text','Player');
+				$("#go_to_player_button").sfButton('blur');
+				sf.scene.focus('Main');
 			}
-			
-		} else if (this.row == 1 && this.column == 2) {
-			$('#label_redirect').sfLabel('option','text','Player');
-			$("#playerButton").sfButton('blur');
-			sf.scene.focus('Main');
-		}
 			break;
+			
 		case sf.key.RETURN:
 			$('#scene_list').sfList('show');
 			$('#image').sfImage('show');
 			$('#label').sfLabel('show');
 			sf.scene.focus('Main');
-            sf.key.preventDefault();
+			sf.key.preventDefault();
 			break;
-		case sf.key.RED:
-			searchResults = ['1','2','3','4','5'];
-			break;
-		case sf.key.GREEN:
-			$('#svecLabel_YDEP').sfLabel("option", "text", stream);
-			break;
-		case sf.key.YELLOW:
-			$('#svecLabel_YDEP').sfLabel("option", "text", $('#label_video').sfLabel("get").text());
-			break;
-		case sf.key.BLUE:
+			
+		default:
 			break;
 	}
 }
 
-var c=0;
+var c = 0;
 var t;
-var timer_is_on=0;
+var timer_is_on = 0;
 
-function timedCount()
-{
+function timedCount() {
 	result();
-	$('#svecLabel_YDEP').sfLabel("option", "text", "C =" + c);
-	c+=5;
-	if(c <= 15)
-		t=setTimeout("timedCount()",5000);
+	$('#selection_label').sfLabel("option", "text", "C =" + c);
+	c += 1;
+	if (c <= 4 && search_results.length < 1)
+		t = setTimeout("timedCount()", 4000);
 	else
 		stopCount();
 }
 
-function startResultPolling()
-{
-	c = 0;
+function startResultPolling() {
+	c              = 0;
+	search_results = [];
+	
 	if (!timer_is_on) {
-		timer_is_on=1;
+		timer_is_on = 1;
 		timedCount();
 	}
 }
 
-function stopCount()
-{
+function stopCount() {
 	clearTimeout(t);
-	timer_is_on=0;
+	timer_is_on = 0;
 }
 
-var requestXml
+var requestXml;
 function result() {
 	requestXml = new XMLHttpRequest();
-	requestXml.open("GET", resultURL, true);
+	requestXml.open("GET", result_url, true);
 	requestXml.onreadystatechange = processSearchResponse;
 	requestXml.send(null);
 }
 
 function processSearchResponse() {
-	alert('=====================READYSTATE ===============' + requestXml.readyState);
 	if (requestXml.readyState == 4) {
 		var resultXml = requestXml.responseXML;
 		
-		alert('GOT XML RESPONSE!');
-		alert(resultXml);
-		alert('--------------------END XML RESPONSE------------------');
 		k = 0;
-		$('RESULT',resultXml).each(function(i) {
+		$('RESULT', resultXml).each(function(i) {
 			names[k] = $(this).find("NAME").text();
 			trackers[k] = $(this).find("TRACKER").text();
 			hashes[k] = $(this).find("HASH").text();
 			k++;
 		});
 		
-		searchResults = [];
+		search_results = [];
 		
-		for(var j=0; j<names.length; j++)
-			searchResults.push(names[j]);
+		for (var j = 0; j < names.length; j++)
+			search_results.push(names[j]);
 		
-		$('#list0').sfList('clear');
-		$('#list0').sfList('option', 'data', searchResults);//.sfList('focus');
+		$('#results_list').sfList('clear');
+		$('#results_list').sfList('option', 'data', search_results);
 		
-		alert('=========LALALALALALLAL===========');
-		alert(searchResults.length);
-		listShown = true;
+		is_list_shown = true;
 	}
 }
 
@@ -455,10 +407,10 @@ function processRequest() {
 		stream = resultHttp;
 		// Url is returned in response when streaming, otherwise a number indicating fail or success
 		if (resultHttp == -1)
-			$('#labelUSB').sfLabel("option", "text", 'Request failed');
+			$('#feedback_label').sfLabel("option", "text", 'Request failed');
 		else {
 			if (resultHttp == 1)
-				$('#labelUSB').sfLabel("option", "text", 'Download started');
+				$('#feedback_label').sfLabel("option", "text", 'Download started');
 			else
 				$('#label_video').sfLabel('option','text',resultHttp);
 		}

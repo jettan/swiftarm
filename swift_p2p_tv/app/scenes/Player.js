@@ -246,7 +246,7 @@ ScenePlayer.prototype.handleKeyDown = function(keyCode) {
 				break;
 			}
 			sf.service.VideoPlayer.stop();
-			httpGetClose(stopStreamURL);
+			httpGetClose(stop_stream_url);
 			$('#scene_list').sfList('show');
 			$('#image').sfImage('show');
 			$('#label').sfLabel('show');

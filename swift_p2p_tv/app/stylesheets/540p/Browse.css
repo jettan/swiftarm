@@ -8,7 +8,7 @@
 	background-image: url("../../../images/background.jpg");
 }
 
-#labelUSB {
+#feedback_label {
     position:absolute;
     left:500px;
     top: 50px;
@@ -16,19 +16,11 @@
 	height: 75px;
 }
 
-#progress1{
-	position : absolute;
-	left : 500px;
-	top : 150px;
-	width : 200px;
-	height : 37px;
-}
-
-#popupUD {
+#on_select_popup {
     width:300px;
 }
 
-#SceneBrowse #list0{
+#SceneBrowse #results_list{
 	position : absolute;
 	left : 37px;
 	top : 90px;
@@ -36,14 +28,14 @@
 	height: 380px;
 }
 
-#SceneBrowse #playerButton{
+#SceneBrowse #go_to_player_button{
 	position : absolute;
 	left : 720px;
 	top : 330px;
 	width : 150px;
 }
 
-#SceneBrowse #labelList{
+#SceneBrowse #filebrowser_label{
 	position : absolute;
 	left : 510px;
 	top : 30px;
@@ -52,21 +44,21 @@
 	border-bottom-width:thin;
 }
 
-#SceneBrowse #svecLabel_EXXY{
+#SceneBrowse #search_label{
 	position : absolute;
 	left : 400px;
 	top : 50px;
 	width : 120px;
 }
 
-#SceneBrowse #usbButton{
+#SceneBrowse #usb_button{
 	position : absolute;
 	left : 510px;
 	top : 80px;
 	width : 150px;
 }
 
-#SceneBrowse #svecInput_Z6V6{
+#SceneBrowse #search_bar{
 	position : absolute;
 	left : 35px;
 	top : 30px;
@@ -94,7 +86,7 @@
 	border-color:#e6e6fa;
 }
 
-#SceneBrowse #svecLabel_XKN9{
+#SceneBrowse #selected_file_label{
 	position : absolute;
 	left : 510px;
 	top : 150px;
@@ -103,21 +95,21 @@
 	border-bottom-width:thin;
 }
 
-#SceneBrowse #svecLabel_YDEP{
+#SceneBrowse #selection_label{
 	position : absolute;
 	left : 580px;
 	top : 200px;
 	width : 290px;
 }
 
-#SceneBrowse #svecButton_4PT8{
+#SceneBrowse #add_to_playlist_button{
 	position : absolute;
 	left : 510px;
 	top : 330px;
 	width : 200px;
 }
 
-#SceneBrowse #uploadButton{
+#SceneBrowse #upload_button{
 	position : absolute;
 	left : 510px;
 	top : 380px;
