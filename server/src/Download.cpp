@@ -52,8 +52,6 @@ void Download::start() {
 	swift::Address trackeraddr = swift::Address(getTrackerAddress().c_str());
 	swift::Sha1Hash roothash   = swift::Sha1Hash(true, getRootHash().c_str());
 	
-	std::cout << "Filename = " << getFilename() << std::endl;
-	
 	if (getID() < 0) {
 		// Open the file with swift.
 		int id  = swift::Open(getFilename().c_str(), roothash, trackeraddr);
@@ -65,7 +63,6 @@ void Download::start() {
 		std::cout << "TRANSFER IS NULL" << std::endl;
 	}
 	pthread_mutex_unlock(&_transfer_mutex);
-	std::cout << "ID = " << getID() << std::endl;
 }
 
 /**

@@ -24,7 +24,7 @@ static void HttpServer::sendXMLResponse(std::string msg, struct evhttp_request *
 	
 	// Send the final message.
 	evhttp_send_reply(req, 200, "OK", buf);
-	std::cout << "Sent the message." << std::endl;
+	std::cout << "Sent the response." << std::endl;
 }
 
 /**
@@ -42,7 +42,7 @@ static void HttpServer::sendResponse(struct evhttp_request *req, struct evbuffer
 	
 	// Send the final message.
 	evhttp_send_reply(req, 200, "OK", buf);
-	std::cout << "Sent the message." << std::endl;
+	std::cout << "Sent the response." << std::endl;
 }
 
 /**
@@ -56,6 +56,7 @@ static void HttpServer::handleRequest(struct evhttp_request *req, void *arg) {
 	struct evbuffer *evb;
 	struct evhttp_uri *decoded;
 	
+	std::cout << "---------------------" << std::endl;
 	std::cout << "Got a GET request for " << uri << std::endl;
 	
 	// Decode the URI.
@@ -183,6 +184,7 @@ static void HttpServer::handleRequest(struct evhttp_request *req, void *arg) {
 		evbuffer_free(evb);
 		std::cout << "Cleaned evb garbage" << std::endl;
 	}
+	std::cout << "---------------------" << std::endl;
 }
 
 /**

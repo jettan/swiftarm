@@ -71,7 +71,6 @@ Download DownloadManager::getActiveDownload() {
  * Updates the download statistics.
  */
 void DownloadManager::updateDownloadStatistics() {
-	std::cout << "Entered" << std::endl;
 	pthread_mutex_lock(&mutex);
 	pthread_mutex_lock(&active_download_mutex);
 	
@@ -421,15 +420,13 @@ void downloadCallback(int fd, short event, void* arg) {
  */
 void *DownloadManager::dispatch(void* arg) {
 	// Assign callbacks to the event base.
-	std::cout << "Entered thread." << std::endl;
 	evtimer_assign(&evcompl, swift::Channel::evbase, downloadCallback, NULL);
 	evtimer_add(&evcompl, swift::tint2tv(TINT_SEC));
 	
 	// Dispatch the event base to enter the swift loop.
 	
-	std::cout << "Now dispatching event base." << std::endl;
 	event_base_dispatch(swift::Channel::evbase);
-	std::cout << "Download ID: " << active_download->getID() << std::endl;
+	std::cout << "Dispatched event base." << std::endl;
 	pthread_exit(NULL);
 }
 
@@ -438,9 +435,7 @@ void *DownloadManager::dispatch(void* arg) {
  * @param download_hash: The root hash of the download.
  */
 void DownloadManager::pauseDownload(const std::string download_hash) {
-	std::cout << "pausing" << std::endl;
 	int index = getIndexFromHash(download_hash);
-	std::cout << "Index = " << index << std::endl;
 	
 	if (index >= 0) {
 		pthread_mutex_lock(&mutex);
@@ -502,7 +497,6 @@ int DownloadManager::resumeDownload(std::string download_hash) {
  */
 int DownloadManager::startDownload(const std::string download_hash) {
 	int index = getIndexFromHash(download_hash);
-	std::cout << "Index = " << index << std::endl;
 	
 	if (index >= 0) {
 		pthread_mutex_lock(&mutex);
@@ -593,10 +587,6 @@ void DownloadManager::add(Download *download) {
 	pthread_mutex_unlock(&mutex);
 	
 	if (active_download) {
-		pthread_mutex_lock(&active_download_mutex);
-		std::cout << "Active Index is: " << getIndexFromHash(active_download->getRootHash()) << std::endl;
-		pthread_mutex_unlock(&active_download_mutex);
-		
 		pthread_mutex_lock(&mutex);
 		setActiveDownload(&downloads.at(active_index));
 		pthread_mutex_unlock(&mutex);

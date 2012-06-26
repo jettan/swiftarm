@@ -31,7 +31,6 @@ class DownloadTest : public ::testing::Test {
 			std::cout << "Failed opening Downloads directory in DownloadTest" << std::endl;
 			
 		} else {
-			std::cout << "TEST: Removing all files in " << Settings::getDownloadDirectory() << std::endl;
 			while ((dirp = readdir(dp)) != NULL) {
 				std::string filename(dirp->d_name);
 				if (filename.at(0) != '.') {
