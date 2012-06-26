@@ -10,77 +10,54 @@ body {
 	height: 540px;
 }
 
-#MainBG {
+#app_layout {
 	position: absolute;
 	left: 0px;
 	top: 0px;
 }
 
-#title {
-	position: absolute;
-	left: 0px;
-	top: 0px;
-	font-size: 13px;
-}
-
-#category {
+#scene_list {
 	position: absolute;
 	left: 37px;
-	top: 150px;
+	top: 48px;
 	width: 195px;
 	height: 225px;
-}
-
-#image {
-    position: absolute;
-    left: 20px;
-    top: 20px;
-	width: 108px;
-	height: 102px;
-    display:none;
 }
 
 #label {
 	position: absolute;
 	left: 20px;
-    top: 122px;
-    width: 300px;
+	top: 20px;
+	width: 300px;
 }
 
-#labelVideo {
+#label_video {
 	position: absolute;
 	left: 320px;
-    top: 122px;
-    width: 300px;
+	top: 122px;
+	width: 300px;
 }
 
-#labelRedirect {
+#label_redirect {
 	position: absolute;
 	left: 320px;
-    top: 152px;
-    width: 300px;
+	top: 152px;
+	width: 300px;
 }
 
-#labelDownloading {
+#is_downloading {
 	position: absolute;
 	left: 320px;
-    top: 182px;
-    width: 300px;
+	top: 182px;
+	width: 300px;
 }
 
 #popupExit {
-    width:300px;
+	width: 300px;
 }
 
-#Main_keyhelp {
+#keyhelp_bar {
 	z-index: 1;
-}
-
-#main_info {
-	position: absolute;
-	left: 0px;
-	top: 15px;
-	font-size: 13px;
 }
 
 #MainListPage {
@@ -89,3 +66,4 @@ body {
 	top: 480px;
 	font-size: 13px;
 }
+

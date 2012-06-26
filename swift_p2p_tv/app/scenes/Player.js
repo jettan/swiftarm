@@ -136,25 +136,25 @@ ScenePlayer.prototype.handleFocus = function() {
 	this.refreshList();
 
 	var _THIS_ = this;
-	var mode = $('#labelRedirect').sfLabel("get").text();
-	if ($('#labelRedirect').sfLabel("get").text())
-			$('#labelRedirect').sfLabel('option','text','');
+	var mode = $('#label_redirect').sfLabel("get").text();
+	if ($('#label_redirect').sfLabel("get").text())
+			$('#label_redirect').sfLabel('option','text','');
 	
 	if (mode == 'PlayerDownload') {
-			_THIS_.printEvent('Selected Video : ' + $('#labelVideo').sfLabel("get").text());
+			_THIS_.printEvent('Selected Video : ' + $('#label_video').sfLabel("get").text());
 			
-			var link = 'file://' + downloadPath + '/' + $('#labelVideo').sfLabel("get").text();
-			document.getElementById("MainListPage").innerHTML = $('#labelVideo').sfLabel("get").text();
+			var link = 'file://' + downloadPath + '/' + $('#label_video').sfLabel("get").text();
+			document.getElementById("MainListPage").innerHTML = $('#label_video').sfLabel("get").text();
 			stream = link;
 			
 			playlist[0].url = link;
-			playlist[0].title = $('#labelVideo').sfLabel("get").text();
+			playlist[0].title = $('#label_video').sfLabel("get").text();
 			
 			$("#lstPlayer").sfList('destroy');
 			
 			playlist = [{
 				url: link,
-				title: $('#labelVideo').sfLabel("get").text()
+				title: $('#label_video').sfLabel("get").text()
 			}];
 			
 			var items = [];
@@ -197,7 +197,7 @@ ScenePlayer.prototype.handleKeyDown = function(keyCode){
     switch (keyCode) {
         case sf.key.LEFT:
 			//sf.scene.show('Main');
-			$('#category').sfList('show');
+			$('#scene_list').sfList('show');
 			$('#image').sfImage('show');
 			$('#label').sfLabel('show');
 			sf.scene.focus('Main');
@@ -215,6 +215,8 @@ ScenePlayer.prototype.handleKeyDown = function(keyCode){
 			document.getElementById("MainListPage").innerHTML = playlist[$("#lstPlayer").sfList('getIndex')].url;
             break;
         case sf.key.ENTER:
+			if (playlist[$("#lstPlayer").sfList('getIndex')].title == "Stream")
+				playlist[$("#lstPlayer").sfList('getIndex')].url = stream;
 			if (sf.service.VideoPlayer.Skip.isInProgress()) {
 				sf.service.VideoPlayer.Skip.stop();
 			}
@@ -255,7 +257,7 @@ ScenePlayer.prototype.handleKeyDown = function(keyCode){
 			}
 			sf.service.VideoPlayer.stop();
 			httpGetClose(stopStreamURL);
-			$('#category').sfList('show');
+			$('#scene_list').sfList('show');
 			$('#image').sfImage('show');
 			$('#label').sfLabel('show');
 			//sf.scene.show('Main');
@@ -271,6 +273,7 @@ ScenePlayer.prototype.handleKeyDown = function(keyCode){
 		    }
 			break;
 		case sf.key.GREEN:
+			this.printEvent(stream);
 			break;
 		case sf.key.N9:
 			break;
@@ -379,7 +382,7 @@ ScenePlayer.prototype.setKeyHelp = function (state) {
         oKeyMap.RETURN = 'Return';
 	}
 	
-	$("#Main_keyhelp").sfKeyHelp(oKeyMap);
+	$("#keyhelp_bar").sfKeyHelp(oKeyMap);
 }
 
 function httpGetClose(url) {

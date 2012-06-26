@@ -4,7 +4,7 @@ function SceneBrowse() {
 	
 	// List with available files for download/stream
 	// In future release a search function will be included
-	var stream = '';
+	var stream = 'Initiele waarde motherf***er';
 	var buttons;
 	var but = 3;
 	var k = 0;
@@ -13,7 +13,7 @@ function SceneBrowse() {
 var downloadURL = "http://130.161.159.107:1337/add:";
 var uploadURL = "http://130.161.159.107:1337/upload:";
 var searchURL = "http://130.161.159.107:1337/search:";
-var resultURL = "http://130.161.159.107:1337/result";
+var resultURL = "http://130.161.159.107:1337/results";
 var streamURL = "http://130.161.159.107:1337/stream";
 var stopStreamURL = "http://130.161.159.107:1337/stopStream";
 
@@ -36,7 +36,7 @@ SceneBrowse.prototype.initialize = function () {
 	$('#usbButton').sfButton({text:'Browse USB'});
 	
 	$('#svecInput_Z6V6').sfTextInput({
-		text:'stream', 
+		text:'sintel', 
 		maxlength:'10',
 		oncomplete: function (text) {
 			/*if (text)
@@ -79,8 +79,11 @@ SceneBrowse.prototype.handleFocus = function () {
 	$('#list0').sfList('show');
 	//$('#list0').sfList('focus');
 	$('#usbButton').sfButton('focus');
-	
-	$("#Main_keyhelp").sfKeyHelp({
+	alert('-----------===================-------------------');
+	alert('They printing functions over here');
+	$('#svecInput_Z6V6').sfTextInput('setKeypadPos',0, 200)
+	//alert($('#svecInput_Z6V6').sfTextInput('setKeypadPos',250, 200));
+	$("#keyhelp_bar").sfKeyHelp({
 		'user': 'Help',		
 		'move':'Move',
         'return': 'Return'
@@ -283,20 +286,20 @@ SceneBrowse.prototype.handleKeyDown = function (keyCode) {
 							httpGet(downloadURL + hashes[index]);
 							//downloads.push(this.searchResults[index]);
 							downloading = true;
-							$('#labelDownloading').sfLabel('option','text','Downloading');
+							$('#is_downloading').sfLabel('option','text','Downloading');
 						} else {
 							//Start streaming and redirect to player
 							httpGet(streamURL + ":" + hashes[index]);
 							alert("!dadada: " + stream);
-							alert("!lalala: " + $('#labelVideo').sfLabel("get").text());
-							var vid = "http://" + stream;						
+							alert("!lalala: " + $('#label_video').sfLabel("get").text());
+							var vid = stream;						
 							playlist.push({
 								url: vid,
 								title: 'Stream'
 							});
 							
-							//$('#svecLabel_YDEP').sfLabel("option","text",$('#labelVideo').sfLabel("get").text());
-							$('#labelRedirect').sfLabel('option','text','Player');
+							//$('#svecLabel_YDEP').sfLabel("option","text",$('#label_video').sfLabel("get").text());
+							$('#label_redirect').sfLabel('option','text','Player');
 							sf.scene.focus('Main');
 						}
 					}
@@ -307,7 +310,7 @@ SceneBrowse.prototype.handleKeyDown = function (keyCode) {
 			sf.service.USB.show({
 				callback: function(result){
 					alert("Callback of USB module: " + result);
-					 $('#labelVideo').sfLabel("option", "text", result[0]); 
+					 $('#label_video').sfLabel("option", "text", result[0]); 
 					 $('#svecLabel_YDEP').sfLabel("option", "text", result[0]); 
 					but = 1;
 					$("#playerButton").sfButton('focus');
@@ -320,7 +323,7 @@ SceneBrowse.prototype.handleKeyDown = function (keyCode) {
 			// Add to selection to playlist(Check for correct path) 
 			//$('#svecLabel_YDEP').sfLabel("option","text","You are absolutely motherfucking right!");
 			
-			var vid = $('#labelVideo').sfLabel("get").text();
+			var vid = $('#label_video').sfLabel("get").text();
 			//var vid = '$Usb/sda1/lalala.mkv';
 			vid = 'file:///dtv/usb' + vid.substring(8);
 			var n = vid.split("/");
@@ -343,13 +346,13 @@ SceneBrowse.prototype.handleKeyDown = function (keyCode) {
 			}
 			
 		} else if (this.row == 1 && this.column == 2) {
-			$('#labelRedirect').sfLabel('option','text','Player');
+			$('#label_redirect').sfLabel('option','text','Player');
 			$("#playerButton").sfButton('blur');
 			sf.scene.focus('Main');
 		}
 			break;
 		case sf.key.RETURN:
-			$('#category').sfList('show');
+			$('#scene_list').sfList('show');
 			$('#image').sfImage('show');
 			$('#label').sfLabel('show');
 			sf.scene.focus('Main');
@@ -362,7 +365,7 @@ SceneBrowse.prototype.handleKeyDown = function (keyCode) {
 			$('#svecLabel_YDEP').sfLabel("option", "text", stream);
 			break;
 		case sf.key.YELLOW:
-			$('#svecLabel_YDEP').sfLabel("option", "text", $('#labelVideo').sfLabel("get").text());
+			$('#svecLabel_YDEP').sfLabel("option", "text", $('#label_video').sfLabel("get").text());
 			break;
 		case sf.key.BLUE:
 			break;
@@ -399,23 +402,24 @@ function stopCount()
 	timer_is_on=0;
 }
 
+var requestXml
 function result() {
-	request = new XMLHttpRequest();
-	request.open("GET", resultURL, true);
-	request.onreadystatechange = processSearchResponse;
-	request.send(null);
+	requestXml = new XMLHttpRequest();
+	requestXml.open("GET", resultURL, true);
+	requestXml.onreadystatechange = processSearchResponse;
+	requestXml.send(null);
 }
 
 function processSearchResponse() {
-	alert('=====================READYSTATE ===============' + request.readyState);
-	if (request.readyState == 4) {
-		var resultxml = request.responseXML;
+	alert('=====================READYSTATE ===============' + requestXml.readyState);
+	if (requestXml.readyState == 4) {
+		var resultXml = requestXml.responseXML;
 		
 		alert('GOT XML RESPONSE!');
-		alert(resultxml);
+		alert(resultXml);
 		alert('--------------------END XML RESPONSE------------------');
 		k = 0;
-		$('RESULT',resultxml).each(function(i) {
+		$('RESULT',resultXml).each(function(i) {
 			names[k] = $(this).find("NAME").text();
 			trackers[k] = $(this).find("TRACKER").text();
 			hashes[k] = $(this).find("HASH").text();
@@ -436,26 +440,27 @@ function processSearchResponse() {
 	}
 }
 
+var requestHttp;
 function httpGet(url) {
-	request = new XMLHttpRequest();
-	request.open("GET", url, true);
-	request.onreadystatechange = processRequest;
-	request.send(null);
+	requestHttp = new XMLHttpRequest();
+	requestHttp.open("GET", url, true);
+	requestHttp.onreadystatechange = processRequest;
+	requestHttp.send(null);
 }
 
 function processRequest() {
-	if (request.readyState == 4) {
-		var resulthttp = request.responseText;
+	if (requestHttp.readyState == 4) {
+		var resultHttp = requestHttp.responseText;
 		
-		stream = resulthttp;
+		stream = resultHttp;
 		// Url is returned in response when streaming, otherwise a number indicating fail or success
-		if (resulthttp == -1)
+		if (resultHttp == -1)
 			$('#labelUSB').sfLabel("option", "text", 'Request failed');
 		else {
-			if (resulthttp == 1)
+			if (resultHttp == 1)
 				$('#labelUSB').sfLabel("option", "text", 'Download started');
 			else
-				$('#labelVideo').sfLabel('option','text',resulthttp);
+				$('#label_video').sfLabel('option','text',resultHttp);
 		}
 	}	
 }

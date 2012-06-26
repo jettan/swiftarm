@@ -5,18 +5,18 @@ function SceneStart() {
 SceneStart.prototype.initialize = function () {
 	alert('SceneStart.initialize()');
 	
-	$('#startimage').sfImage({src:'images/logobg22.png'});
+	$('#background_image').sfImage({src:'images/logobg22.png'});
 	
 }
 
 SceneStart.prototype.handleShow = function () {
 	alert('SceneStart.handleShow()');
-	$('#startimage').sfImage('show');
+	$('#background_image').sfImage('show');
 }
 
 SceneStart.prototype.handleHide = function () {
 	alert('SceneStart.handleHide()');
-	$('#startimage').sfImage('hide');
+	$('#background_image').sfImage('hide');
 }
 
 SceneStart.prototype.handleFocus = function () {
@@ -28,12 +28,12 @@ SceneStart.prototype.handleFocus = function () {
 	
 	$('#image').sfImage('show');
 	$('#label').sfLabel('show');
-	$('#category').sfList('show');
+	$('#scene_list').sfList('show');
 	
-	$('#startimage').sfImage('show');
+	$('#background_image').sfImage('show');
 	//startProgress();
 	
-	$("#Main_keyhelp").sfKeyHelp({
+	$("#keyhelp_bar").sfKeyHelp({
 		'user': 'Help',		
 		'move':'Move',
         'return': 'Return'

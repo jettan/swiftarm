@@ -9,15 +9,15 @@ function SceneDownloads(options) {
 	//this.downloadList;
 	this.elementList = [];
 	this.linesList = [];
-	this.count = 0;
 	this.size = 5;
 }
 
-var statsURL = "http://130.161.169.107:1337/stats";
+var statsURL = "http://192.168.1.75:1337/stats";
 var downloadList;
 var allDownloads;
 var progressBarList = [];
 var focus = 0;
+var count = 0;
 var downloadNumber = 0;
 
 SceneDownloads.prototype.initialize = function () {
@@ -301,11 +301,13 @@ SceneDownloads.prototype.handleFocus = function () {
 	
 	$('#image').sfImage('show');
 	$('#label').sfLabel('show');
-	$('#category').sfList('show');
+	$('#scene_list').sfList('show');
 	focus = 0;
 	this.focusElement(focus);
 	
-	$("#Main_keyhelp").sfKeyHelp({
+	startProgress();
+	
+	$("#keyhelp_bar").sfKeyHelp({
 		'user': 'Help',		
 		'move':'Move',
         'return': 'Return',
@@ -358,9 +360,10 @@ SceneDownloads.prototype.handleKeyDown = function (keyCode) {
 			break;
 
 		case sf.key.ENTER:
-			this.httpGetXML(statsURL);
+			//this.httpGetXML(statsURL);
 			break;
 		case sf.key.RETURN:
+			stopProgress();
 			sf.scene.focus('Main');
             sf.key.preventDefault();
 			break;
@@ -368,14 +371,14 @@ SceneDownloads.prototype.handleKeyDown = function (keyCode) {
 }
 
 var statsRequest;
-SceneDownloads.prototype.httpGetXML = function(url) {
+function httpGetXML(url) {
 	statsRequest = new XMLHttpRequest();
 	statsRequest.open("GET", url, true);
-	statsRequest.onreadystatechange = this.processStatsResponse;
+	statsRequest.onreadystatechange = processStatsResponse;
 	statsRequest.send(null);
 }
 
-SceneDownloads.prototype.processStatsResponse = function() {
+function processStatsResponse() {
 	if (statsRequest.readyState == 4) {
 		var result = statsRequest.responseXML;
 		allDownloads = [];
@@ -388,7 +391,7 @@ SceneDownloads.prototype.processStatsResponse = function() {
 		downloadStats = [];
 		//downloadStats = new Array(5);
 		alert(result);
-		this.count = 0;
+		count = 0;
 		var _THIS_ = this;
 		$('DOWNLOAD',result).each(function(i) {
 			//downloadStats = [];
@@ -412,7 +415,7 @@ SceneDownloads.prototype.processStatsResponse = function() {
 			//downloadStats.push($(this).find("TIMESECONDS").text());
 			allDownloads[_THIS_.count].push($(this).find("HASH").text());
 			alert(allDownloads[_THIS_.count].length);
-			_THIS_.count++;
+			count++;
 		});
 		alert(allDownloads.length);
 		var d;
@@ -425,6 +428,29 @@ SceneDownloads.prototype.processStatsResponse = function() {
 		}
 		
 	}
+}
+
+var timer;
+var timer_on=0;
+
+function getProgress()
+{
+	httpGetXML(statsURL);
+	t=setTimeout("getProgress()",4000);
+}
+
+function startProgress()
+{
+	if (!timer_on) {
+		timer_on=1;
+		getProgress();
+	}
+}
+
+function stopProgress()
+{
+	clearTimeout(timer);
+	timer_on=0;
 }
 
 SceneDownloads.prototype.nextPage = function () {

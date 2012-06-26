@@ -125,12 +125,12 @@ SceneSettings.prototype.handleFocus = function () {
 	
 	$('#image').sfImage('show');
 	$('#label').sfLabel('show');
-	$('#category').sfList('show');
+	$('#scene_list').sfList('show');
 	
 	$('#toggleButton0').sfToggleButton('focus');
 	this.row = 0
 	
-	$("#Main_keyhelp").sfKeyHelp({
+	$("#keyhelp_bar").sfKeyHelp({
 		'user': 'Help',		
 		'move':'Move',
         'return': 'Return'

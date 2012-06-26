@@ -1,147 +1,131 @@
 function SceneMain() {
-	
+	this.items_per_page = 4;
 }
 
-var names = new Array();
-var trackers = new Array();
-var hashes = new Array();
-var downloadStats = new Array();
-var downloads = [];
-var playlist = {};
-var downloading = false;
-var downloadPath = '/dtv/usb/sda1';
+// Global variables.
+var names           = new Array();
+var trackers        = new Array();
+var hashes          = new Array();
+var playlist        = [];
+var downloading     = false;
+var download_path   = '/dtv/usb/sda1';
 
 SceneMain.prototype.initialize = function () {
-	alert('SceneMain.initialize()');
-	this.itemPerPage = 8;
 	this.data = [
-		// UI Components
 		'Browse',
 		'Downloads',
 		'Player',
 		'Settings',
 	];
-	playlist = [];
+	
 	var listdata = [];
-	for(var i=0; i<this.data.length; i++) {
+	for (var i = 0; i < this.data.length; i++) {
 		listdata.push(this.data[i]);
 	}
 	
-	$('#category').sfList({
+	$('#scene_list').sfList({
 		data: listdata,
 		index: 0,
-		itemsPerPage: this.itemPerPage
+		itemsPerPage: this.items_per_page
 	});
 	
-	$('#image').sfImage({src:'images/logo2.jpg'});
 	$('#label').sfLabel({
 		text: 'Swift P2P TV'
 	});
-	$('#label').sfLabel('hide');
-	$('#labelVideo').sfLabel({text: ""});
-	$('#labelVideo').sfLabel('hide');
-	$('#labelDownloading').sfLabel({text: ""});
-	$('#labelDownloading').sfLabel('hide');
+	$('#label_video').sfLabel({text: ""});
 	
-	$('#MainBG').sfBackground({
-        light: true,
-        column: null,
-        columnShadow: true,
-        columnSize: 350
-    });
+	$('#label').sfLabel('hide');
+	$('#label_video').sfLabel('hide');
+	
+	$('#app_layout').sfBackground({
+		light: false,
+		column: null,
+		columnShadow: true,
+		columnSize: 350
+	});
 	
 	this.defaultOpts = {
-        light: true,
-        column: null,
-        columnShadow: true,
-        columnSize: 350/720*curWidget.height
-    }
+		light: false,
+		column: null,
+		columnShadow: true,
+		columnSize: 350 / 720 * curWidget.height
+	}
 }
 
 SceneMain.prototype.handleShow = function (data) {
-	alert('SceneMain.handleShow()');	
-	//var index = $('#category').sfList('getIndex');
-	sf.scene.show('Start');
+	$('#loading').sfLoading('show');
+	// TODO: Show eyecandy while waiting for load.
+	sf.scene.show('Browse');
+	setTimeout(function() { sf.scene.hide('Browse'); sf.scene.show('Player');}, 3000);
+	setTimeout(function() { sf.scene.hide('Player'); sf.scene.show('Settings');}, 5000);
+	setTimeout(function() { sf.scene.hide('Settings'); sf.scene.show('Downloads');}, 7000);
+	setTimeout(function() { sf.scene.hide('Downloads'); $('#loading').sfLoading('hide'); sf.scene.show('Start');}, 9000);
 }
 
-SceneMain.prototype.handleHide = function () {
-	alert('SceneMain.handleHide()');
-}
+SceneMain.prototype.handleHide = function () {}
 
 SceneMain.prototype.handleFocus = function () {
-	alert('SceneMain.handleFocus()');
-	var index = $('#category').sfList('getIndex');
+	var index = $('#scene_list').sfList('getIndex');
+	// Hide whatever scene was focused on.
 	sf.scene.hide(this.data[index]);
-	if ($('#labelRedirect').sfLabel("get").text()) {
-		$('#category').sfList('move',2);
+	
+	// TODO: change to javascript variable.
+	if ($('#label_redirect').sfLabel("get").text()) {
+		$('#label_redirect').sfLabel('hide');
+		
+		// Redirect to Player scene.
+		$('#scene_list').sfList('move', 2);
 		sf.scene.show('Player');
-		$('#category').sfList('blur'); 
-		$('#category').sfList('hide');
-		$('#image').sfImage('hide');
+		
+		// Hide components of Main scene.
+		$('#scene_list').sfList('blur'); 
+		$('#scene_list').sfList('hide');
 		$('#label').sfLabel('hide');
-		$('#labelRedirect').sfLabel('hide');
-		$('#MainBG').sfBackground(this.defaultOpts);
+		$('#app_layout').sfBackground(this.defaultOpts);
 		sf.scene.focus('Player');
+	
 	} else {
-		$('#category').sfList('focus');
-		$('#image').sfImage('show');
+		$('#scene_list').sfList('focus');
 		$('#label').sfLabel('show');
-		$('#Main_keyhelp').sfKeyHelp({
-			'user': 'user',
-			'enter': 'Enter',		
-			'move':'move',
-			'return': 'Exit app',
+		$('#keyhelp_bar').sfKeyHelp({
+			'enter': 'Enter',
+			'move':'Move',
+			'return': 'Quit',
 		});
-		$('#MainBG').sfBackground('option', 'column', 'left');
-		$('#MainBG').sfBackground(this.defaultOpts);
-		$('#MainBG').sfBackground('option', 'column', 'left');
+		
+		$('#app_layout').sfBackground('option', 'column', 'left');
+		$('#app_layout').sfBackground(this.defaultOpts);
+		$('#app_layout').sfBackground('option', 'column', 'left');
 	}
-
 }
 
 SceneMain.prototype.handleBlur = function () {
-	alert('SceneMain.handleBlur()');
-	$('#image').sfImage('hide');
 	$('#label').sfLabel('hide');
-	$('#MainBG').sfBackground(this.defaultOpts);
+	$('#app_layout').sfBackground(this.defaultOpts);
 }
 
 SceneMain.prototype.handleKeyDown = function (keyCode) {
-	alert('SceneMain.handleKeyDown(' + keyCode + ')');
 	switch (keyCode) {
-		case sf.key.LEFT:
-			break;
 		case sf.key.RIGHT:
 		case sf.key.ENTER:
-			$('#startimage').sfImage('hide');
-			var index = $('#category').sfList('getIndex');
+			$('#background_image').sfImage('hide');
+			var index = $('#scene_list').sfList('getIndex');
 			sf.scene.show(this.data[index]);
-			$('#category').sfList('blur');            
-			var index = $('#category').sfList('getIndex');
-			$('#category').sfList('hide');
-			$('#image').sfImage('hide');
+			$('#scene_list').sfList('blur');
+			$('#scene_list').sfList('hide');
 			$('#label').sfLabel('hide');
-			$('#MainBG').sfBackground(this.defaultOpts);
+			$('#app_layout').sfBackground(this.defaultOpts);
 			sf.scene.focus(this.data[index]);
 			break;
+		
 		case sf.key.UP:
-			$('#category').sfList('prev');
-			document.getElementById("MainListPage").innerHTML = (Math.floor($('#category').sfList('getIndex')/this.itemPerPage)+1) + "/" + Math.ceil(this.data.length/this.itemPerPage);
+			$('#scene_list').sfList('prev');
 			break;
+		
 		case sf.key.DOWN:
-			$('#category').sfList('next');
-			document.getElementById("MainListPage").innerHTML = (Math.floor($('#category').sfList('getIndex')/this.itemPerPage)+1) + "/" + Math.ceil(this.data.length/this.itemPerPage);
+			$('#scene_list').sfList('next');
 			break;
-		case sf.key.RED:
-			$('#MainBG').sfBackground('option', 'column', 'left');
-			break;
-		case sf.key.GREEN:
-		    $('#MainBG').sfBackground(this.defaultOpts);
-			break;
-		case sf.key.YELLOW:
-			break;
-		case sf.key.BLUE:
-			break;
+		
 		case sf.key.RETURN:
 			var _THIS_ = this;
 			var exit = false;
@@ -150,17 +134,22 @@ SceneMain.prototype.handleKeyDown = function (keyCode) {
 					buttons: ["Yes", "No"],
 					defaultFocus: 1,
 					keyhelp: {'return' : 'Return'},
-					callback : function(selectedIndex){
+					callback : function (selectedIndex){
 						if (selectedIndex == 0) {
 							exit = true;
 						}
 					}
-				}).sfPopup('show');
+			}).sfPopup('show');
+			
 			if (!exit)
 				sf.key.preventDefault();
 			else
 				widgetApi.sendReturnEvent();
 				//sf.core.exit(false);
 			break;
+			
+		default:
+			break;
 	}
 }
+
