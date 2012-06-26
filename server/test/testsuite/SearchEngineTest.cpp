@@ -78,7 +78,7 @@ TEST_F(SearchEngineTest, getResultWithHashNonexistent) {
 	
 	SearchEngine::search("test");
 	
-	ASSERT_THROW(SearchEngine::getResultWithName("LOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLO"), FileNotFoundException);
+	ASSERT_THROW(SearchEngine::getResultWithName("1234554321123455432112345543211234554321"), FileNotFoundException);
 }
 
 
