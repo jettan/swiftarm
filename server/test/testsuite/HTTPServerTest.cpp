@@ -5,6 +5,7 @@
 #include "HttpServer.h"
 #include "gtest.h"
 #include "SearchEngine.h"
+#include "DownloadManager.h"
 
 class HTTPServerTest : public ::testing::Test {
 	protected:
@@ -26,6 +27,45 @@ class HTTPServerTest : public ::testing::Test {
 		std::string addr1 = Settings::getIP() + ":1337/search:test";
 		curl_easy_setopt(easyHandle, CURLOPT_URL, addr1.c_str());
 		res = curl_easy_perform(easyHandle);
+	}
+	
+	// Turns an XML string into a vector of results
+	std::vector<struct SearchEngine::result> toVector(std::string response) {
+		
+		std::vector<struct SearchEngine::result> results;
+		ticpp::Document doc;
+		doc.Parse(response, true, TIXML_DEFAULT_ENCODING);
+		
+		ticpp::Element *list = doc.FirstChildElement();
+		if (list->NoChildren()) {
+			return results;
+			
+		} else {
+			ticpp::Element *result = list->FirstChildElement();
+			std::cout << result->Value() <<  std::endl;
+			
+			while (result) {
+				
+				ticpp::Element *info = result->FirstChildElement();
+				
+				struct SearchEngine::result r;
+				while (info) {
+					
+					if(info->Value() == "NAME") {
+						r.filename = info->GetText();
+					} else if (info->Value() == "HASH") {
+						r.hash = info->GetText();
+					} else if (info->Value() == "TRACKER") {
+						r.tracker = info->GetText();
+					}
+					
+					info = info->NextSiblingElement(false);
+				}
+				results.push_back(r);
+				result = result->NextSiblingElement(false);
+			}
+			return results;
+		}
 	}
 	
 	virtual void SetUp(){
@@ -63,11 +103,19 @@ TEST_F(HTTPServerTest, searchTrivial) {
 	
 	SearchEngine::clearSearchResults();
 	
-	std::string addr = Settings::getIP() + ":1337/search:test";
-	curl_easy_setopt(easyHandle, CURLOPT_URL, addr.c_str());
+	std::string addr1 = Settings::getIP() + ":1337/search:test";
+	curl_easy_setopt(easyHandle, CURLOPT_URL, addr1.c_str());
 	res = curl_easy_perform(easyHandle);
 	
 	EXPECT_EQ("Search request sent.", response);
+	response = "";
+	
+	std::string addr2 = Settings::getIP() + ":1337/results";
+	curl_easy_setopt(easyHandle, CURLOPT_URL, addr2.c_str());
+	res = curl_easy_perform(easyHandle);
+	
+	std::vector<struct SearchEngine::result> results = toVector(response);
+	EXPECT_LT(0, results.size());
 }
 
 // Test whether an empty searh is handled properly
@@ -79,8 +127,15 @@ TEST_F(HTTPServerTest, searchEmpty) {
 	curl_easy_setopt(easyHandle, CURLOPT_URL, addr.c_str());
 	res = curl_easy_perform(easyHandle);
 	
-	// PARSE EMPTY XML HERE
 	EXPECT_EQ("Bad Request", response);
+	response = "";
+	
+	std::string addr2 = Settings::getIP() + ":1337/results";
+	curl_easy_setopt(easyHandle, CURLOPT_URL, addr2.c_str());
+	res = curl_easy_perform(easyHandle);
+	
+	std::vector<struct SearchEngine::result> results = toVector(response);	
+	EXPECT_EQ(0, results.size());
 }
 
 /* Add and Download */
@@ -225,7 +280,69 @@ TEST_F(HTTPServerTest, pauseResumeStats) {
 
 /* Remove */
 
+// Trivial
 TEST_F(HTTPServerTest, removeTrivial){
 	
+	search();
 	
+	std::string addr1 = Settings::getIP() + ":1337/add:367d26a6ce626e049a21921100e24eac86dbcd32";
+	curl_easy_setopt(easyHandle, CURLOPT_URL, addr1.c_str());
+	res = curl_easy_perform(easyHandle);
+	
+	response = "";
+	std::string addr2 = Settings::getIP() + ":1337/add:012b5549e2622ea8bf3d694b4f55c959539ac848";
+	curl_easy_setopt(easyHandle, CURLOPT_URL, addr2.c_str());
+	res = curl_easy_perform(easyHandle);
+	
+	EXPECT_EQ(2, DownloadManager::getDownloads().size());
+	EXPECT_EQ("Download Added", response);
+	response = "";
+	
+	std::string addr3 = Settings::getIP() + ":1337/remove:012b5549e2622ea8bf3d694b4f55c959539ac848";
+	curl_easy_setopt(easyHandle, CURLOPT_URL, addr3.c_str());
+	res = curl_easy_perform(easyHandle);
+	
+	EXPECT_EQ(1, DownloadManager::getDownloads().size());
+	EXPECT_EQ("Download removed from disk", response);
+}
+
+// Remove the active download
+TEST_F(HTTPServerTest, removeActiveDownload) {
+	
+	search();
+	
+	std::string addr1 = Settings::getIP() + ":1337/add:367d26a6ce626e049a21921100e24eac86dbcd32";
+	curl_easy_setopt(easyHandle, CURLOPT_URL, addr1.c_str());
+	res = curl_easy_perform(easyHandle);
+	
+	response = "";
+	std::string addr2 = Settings::getIP() + ":1337/add:012b5549e2622ea8bf3d694b4f55c959539ac848";
+	curl_easy_setopt(easyHandle, CURLOPT_URL, addr2.c_str());
+	res = curl_easy_perform(easyHandle);
+	
+	EXPECT_EQ("367d26a6ce626e049a21921100e24eac86dbcd32", DownloadManager::getActiveDownload().getRootHash());
+	EXPECT_EQ(2, DownloadManager::getDownloads().size());
+	response = "";
+	
+	// After removing the active download, the second download should become active
+	std::string addr3 = Settings::getIP() + ":1337/remove:367d26a6ce626e049a21921100e24eac86dbcd32";
+	curl_easy_setopt(easyHandle, CURLOPT_URL, addr3.c_str());
+	res = curl_easy_perform(easyHandle);
+	
+	EXPECT_EQ("Download removed from disk", response);
+	EXPECT_EQ("012b5549e2622ea8bf3d694b4f55c959539ac848", DownloadManager::getActiveDownload().getRootHash());
+	EXPECT_EQ(1, DownloadManager::getDownloads().size());
+}
+
+// Remove nonexistent download
+TEST_F(HTTPServerTest, removeNonexistent) {
+	
+	EXPECT_EQ(0, DownloadManager::getDownloads().size());
+	
+	std::string addr1 = Settings::getIP() + ":1337/remove:367d26a6ce626e049a21921100e24eac86dbcd32";
+	curl_easy_setopt(easyHandle, CURLOPT_URL, addr1.c_str());
+	res = curl_easy_perform(easyHandle);
+	
+	EXPECT_EQ("Could not find the file.", response);
+	EXPECT_EQ(0, DownloadManager::getDownloads().size());
 }

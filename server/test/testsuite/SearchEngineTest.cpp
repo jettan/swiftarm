@@ -13,16 +13,6 @@ class SearchEngineTest : public ::testing::Test {
 	virtual void TearDown() {}
 };
 
-std::vector<struct SearchEngine::result> toVector(std::string result) {
-	
-	ticpp::Document doc;
-	doc.Parse(result, true, TIXML_DEFAULT_ENCODING);
-	ticpp::Iterator<ticpp::Element> iterator;
-	iterator = iterator.begin(&doc);
-	
-}
-
-
 /* Search Tests */
 
 // Trivial
@@ -58,8 +48,9 @@ TEST_F(SearchEngineTest, getResultsEmpty) {
 TEST_F(SearchEngineTest, getResultWithNameTrivial) {
 	
 	SearchEngine::search("test");
-	// TODO
 	
+	struct SearchEngine::result r = SearchEngine::getResultWithName("Test1.test");
+	EXPECT_EQ("367d26a6ce626e049a21921100e24eac86dbcd32", r.hash);
 }
 
 // Doesn't exist
@@ -78,9 +69,8 @@ TEST_F(SearchEngineTest, getResultWithHashTrivial) {
 	SearchEngine::search("test");
 	std::string result = SearchEngine::getResults();
 	
-	// UNFINISHED
-	
-	
+	struct SearchEngine::result r = SearchEngine::getResultWithHash("367d26a6ce626e049a21921100e24eac86dbcd32");
+	EXPECT_EQ("Test1.test", r.filename);
 }
 
 // Doesn't exist
