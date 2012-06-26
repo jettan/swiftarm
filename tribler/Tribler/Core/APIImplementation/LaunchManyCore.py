@@ -380,7 +380,7 @@ class TriblerLaunchMany(Thread):
             else:
                 schedule = []
                 schedule.append((SearchCommunity, (self.session.dispersy_member,), {}))
-                schedule.append((AllChannelCommunity, (self.session.dispersy_member,), {}))
+                #schedule.append((AllChannelCommunity, (self.session.dispersy_member,), {}))
                 schedule.append((ChannelCommunity, (), {}))
 
             for cls, args, kargs in schedule:
