@@ -56,6 +56,8 @@ namespace DownloadManager {
 	void init();
 	void startStream(std::string tracker);
 	void stopStream();
+	void pauseAllDownloads();
+	void resumeAllDownloads();
 	void *startStreamThread(void *arg);
 	void updateDownloadStatistics();
 	std::string buildXML();

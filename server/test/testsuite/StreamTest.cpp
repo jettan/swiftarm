@@ -1,4 +1,5 @@
 #include "Download.h"
+#include "Stream.h"
 #include "gtest.h"
 #include <string>
 #include <iostream>
@@ -9,11 +10,65 @@ class StreamTest : public ::testing::Test {
 	
 	virtual ~StreamTest() {}
 	
-	virtual void SetUp() {}
+	virtual void SetUp() {
 	
-	virtual void TearDown() {}
+		Stream::getInstance()->setTracker("127.0.0.1:9999");
+	}
+	
+	virtual void TearDown() {
+		
+		if(Stream::getInstance()->readStreaming()) {
+			Stream::getInstance()->stop();
+		}
+	}
 	
 };
 
+// Check whether Stream always returns the same instance
+TEST_F(StreamTest, getInstance) {
+	
+	// check whether pointer address is equal
+	EXPECT_EQ(Stream::getInstance(), Stream::getInstance());
+}
 
+// Start stream trivial
+TEST_F(StreamTest, startStreamTrivial) {
+	
+	Stream::getInstance()->start();
+	EXPECT_EQ(true, Stream::getInstance()->readStreaming());
+}
+
+// Start stream twice
+TEST_F(StreamTest, startTwice) {
+	
+	Stream::getInstance()->start();
+	Stream::getInstance()->start();
+	EXPECT_EQ(true, Stream::getInstance()->readStreaming());
+}
+
+// Start, stop and start the stream again
+TEST_F(StreamTest, startStopStart) {
+	
+	Stream::getInstance()->start();
+	Stream::getInstance()->stop();
+	Stream::getInstance()->start();
+	EXPECT_EQ(true, Stream::getInstance()->readStreaming());
+}
+
+// Stop stream trivial
+TEST_F(StreamTest, stopTrivial) {
+	
+	Stream::getInstance()->start();
+	Stream::getInstance()->stop();
+	EXPECT_EQ(false, Stream::getInstance()->readStreaming());
+}
+
+// Stop the stream twice
+TEST_F(StreamTest, stopTwice) {
+	
+	Stream::getInstance()->start();
+	Stream::getInstance()->stop();
+	Stream::getInstance()->stop();
+	EXPECT_EQ(false, Stream::getInstance()->readStreaming());
+}
 

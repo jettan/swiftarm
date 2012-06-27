@@ -95,7 +95,7 @@ void Stream::start() {
 	evtimer_add(getEvent(), swift::tint2tv(TINT_SEC));
 	
 	//Set the tracker
-	std::cout << "Setting the tracker to " << _tracker  << std::endl;
+	std::cout << "Setting the tracker to " << _tracker << std::endl;
 	swift::SetTracker(trackeraddr);
 	
 	beginStreaming();

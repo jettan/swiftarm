@@ -1,5 +1,6 @@
 #include "DownloadManager.h"
 #include "Download.h"
+#include "Stream.h"
 #include "Utils.h"
 #include "gtest.h"
 #include <string>
@@ -23,13 +24,16 @@ class DownloadManagerTest : public ::testing::Test {
 			std::cout << "Failed opening Downloads directory in DownloadManagerTest" << std::endl;
 			
 		} else {
-			std::cout << "TEST: Removing all files in " << Settings::getDownloadDirectory() << std::endl;
 			while ((dirp = readdir(dp)) != NULL) {
 				std::string filename(dirp->d_name);
 				if (filename.at(0) != '.') {
 					remove(filename.c_str());
 				}
 			}
+		}
+		
+		if(Stream::getInstance()->readStreaming()) {
+			Stream::getInstance()->stop();
 		}
 		
 	}
@@ -355,5 +359,61 @@ TEST_F(DownloadManagerTest, switchDownloadNonexistent) {
 	EXPECT_THROW(DownloadManager::switchDownload(hash2), FileNotFoundException);
 	
 	testDownloadsAreEqual(dl1, DownloadManager::getActiveDownload());
+	EXPECT_EQ(DOWNLOADING, DownloadManager::getActiveDownload().getStatus());
+}
+
+TEST_F(DownloadManagerTest, startStreamTrivial) {
+	
+	DownloadManager::startStream("127.0.0.1:9999");
+	sleep(1);
+	EXPECT_EQ(true, Stream::getInstance()->readStreaming());
+}
+
+TEST_F(DownloadManagerTest, startStreamWithActiveDownload) {
+	
+	std::string hash1 = "1234abcd1234abcd1234abcd1234abcd1234abcd";
+	Download dl1("track1", hash1, "name1");
+	DownloadManager::add(&dl1);
+	int index = DownloadManager::getIndexFromHash(hash1);
+	dl1.setID(DownloadManager::getDownloads().at(index).getID());
+	
+	testDownloadsAreEqual(dl1, DownloadManager::getActiveDownload());
+	EXPECT_EQ(DOWNLOADING, DownloadManager::getActiveDownload().getStatus());
+	
+	DownloadManager::startStream("127.0.0.1:9999");
+	sleep(1);
+	
+	EXPECT_EQ(true, Stream::getInstance()->readStreaming());
+	EXPECT_EQ(PAUSED, DownloadManager::getActiveDownload().getStatus());
+}
+
+TEST_F(DownloadManagerTest, stopStreamTrivial) {
+	
+	DownloadManager::startStream("127.0.0.1:9999");
+	sleep(1);
+	EXPECT_EQ(true, Stream::getInstance()->readStreaming());
+	
+	DownloadManager::stopStream();
+	EXPECT_EQ(false, Stream::getInstance()->readStreaming());
+}
+
+TEST_F(DownloadManagerTest, stopStreamWithActiveDownload) {
+	
+	std::string hash1 = "1234abcd1234abcd1234abcd1234abcd1234abcd";
+	Download dl1("track1", hash1, "name1");
+	DownloadManager::add(&dl1);
+	int index = DownloadManager::getIndexFromHash(hash1);
+	dl1.setID(DownloadManager::getDownloads().at(index).getID());
+	
+	testDownloadsAreEqual(dl1, DownloadManager::getActiveDownload());
+	EXPECT_EQ(DOWNLOADING, DownloadManager::getActiveDownload().getStatus());
+	
+	DownloadManager::startStream("127.0.0.1:9999");
+	sleep(1);
+	EXPECT_EQ(true, Stream::getInstance()->readStreaming());
+	EXPECT_EQ(PAUSED, DownloadManager::getActiveDownload().getStatus());
+	
+	DownloadManager::stopStream();
+	EXPECT_EQ(false, Stream::getInstance()->readStreaming());
 	EXPECT_EQ(DOWNLOADING, DownloadManager::getActiveDownload().getStatus());
 }

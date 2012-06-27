@@ -378,14 +378,14 @@ void downloadCallback(int fd, short event, void* arg) {
 		std::cout << "Download Name: " << DownloadManager::active_download->getFilename() << std::endl;
 		std::cout << "Status: " << DownloadManager::active_download->getStatus() << std::endl;
 		
-		if (DownloadManager::active_download->getStatus() == UPLOADING || DownloadManager::active_download->getStatus() == DOWNLOADING)
+		if (DownloadManager::active_download->getStatus() == UPLOADING || DownloadManager::active_download->getStatus() == DOWNLOADING){
 			std::cout << "Percentage downloaded: " << floorf(((swift::Complete(DownloadManager::active_download->getID()) * 10000.0) /
-			  swift::Size(DownloadManager::active_download->getID()) * 1.0) + 0.5) / 100 << std::endl;
-		
+			swift::Size(DownloadManager::active_download->getID()) * 1.0) + 0.5) / 100 << std::endl;
+		}
 		bool is_unlocked = false;
-			
+		
 		if (swift::SeqComplete(DownloadManager::active_download->getID()) == swift::Size(DownloadManager::active_download->getID()) ||
-		  DownloadManager::active_download->getStatus() == PAUSED) {
+		    DownloadManager::active_download->getStatus() == PAUSED) {
 			
 			if (DownloadManager::active_download->getStatus() != UPLOADING && DownloadManager::active_download->getStatus() != PAUSED) {
 				DownloadManager::active_download->setStatus(UPLOADING);
@@ -847,7 +847,6 @@ void DownloadManager::removeFromList(const std::string download_hash) {
  * @param download_hash: The root hash of the download to be removed.
  */
 void DownloadManager::removeFromDisk(const std::string download_hash) {
-	
 	int index = getIndexFromHash(download_hash);
 	
 	if (index >= 0) {
@@ -895,6 +894,38 @@ void DownloadManager::clearList() {
  */
 void DownloadManager::stopStream() {
 	Stream::getInstance()->stop();
+	
+	if(active_download) {
+		pthread_mutex_lock(&active_download_mutex);
+		active_download->resume();
+		pthread_mutex_unlock(&active_download_mutex);
+	}
+}
+
+/**
+ * Pause all the downloads.
+ */
+void DownloadManager::pauseAllDownloads() {
+	for (int i = 0; i < getDownloads().size(); i++) {
+		if (getDownloads().at(i).getStatus() == DOWNLOADING) {
+			
+			pauseDownload(downloads.at(i).getRootHash());
+			std::cout << "Paused: " << downloads.at(i).getFilename() << std::endl;
+		}
+	}
+}
+
+/**
+ * Resume all the downloads.
+ */
+void DownloadManager::resumeAllDownloads() {
+	for (int i = 0; i < getDownloads().size(); i++) {
+		if (getDownloads().at(i).getStatus() == PAUSED) {
+			
+			resumeDownload(downloads.at(i).getRootHash());
+			std::cout << "Resumed: " << downloads.at(i).getFilename() << std::endl;
+		}
+	}
 }
 
 /**
@@ -917,12 +948,10 @@ void* DownloadManager::startStreamThread(void* arg) {
  * @param tracker: The tracker from which we stream content.
  */
 void DownloadManager::startStream(std::string tracker) {
-	for (int i = 0; i < downloads.size(); i++) {
-		if (downloads.at(i).getStatus() == DOWNLOADING) {
-		
-			pauseDownload(downloads.at(i).getRootHash());
-			std::cout << downloads.at(i).getFilename() << std::endl;
-		}
+	if(active_download) {
+		pthread_mutex_lock(&active_download_mutex);
+		active_download->pause();
+		pthread_mutex_unlock(&active_download_mutex);
 	}
 	
 	if (!Stream::getInstance()->readStreaming()) {

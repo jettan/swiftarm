@@ -346,3 +346,33 @@ TEST_F(HTTPServerTest, removeNonexistent) {
 	EXPECT_EQ("Could not find the file.", response);
 	EXPECT_EQ(0, DownloadManager::getDownloads().size());
 }
+
+TEST_F(HTTPServerTest, startStreamTrivial) {
+	
+	search();
+	response = "";
+	
+	std::string hash = "367d26a6ce626e049a21921100e24eac86dbcd32";
+	std::string addr1 = Settings::getIP() + ":1337/stream:" + hash;
+	curl_easy_setopt(easyHandle, CURLOPT_URL, addr1.c_str());
+	res = curl_easy_perform(easyHandle);
+	
+	EXPECT_EQ("http://" + Settings::getIP() + ":17758/" + hash, response);
+}
+
+TEST_F(HTTPServerTest, stopStreamTrivial) {
+	
+	search();
+	
+	std::string hash = "367d26a6ce626e049a21921100e24eac86dbcd32";
+	std::string addr1 = Settings::getIP() + ":1337/stream:" + hash;
+	curl_easy_setopt(easyHandle, CURLOPT_URL, addr1.c_str());
+	res = curl_easy_perform(easyHandle);
+	
+	response = "";
+	std::string addr2 = Settings::getIP() + ":1337/stopStream";
+	curl_easy_setopt(easyHandle, CURLOPT_URL, addr2.c_str());
+	res = curl_easy_perform(easyHandle);
+	
+	EXPECT_EQ("Not streaming anymore.", response);
+}

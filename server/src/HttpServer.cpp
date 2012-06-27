@@ -201,6 +201,10 @@ static std::string HttpServer::addRequest(std::string hash) {
 		std::cout << "Exception Caught In HttpServer" << std::endl;
 		std::cout << e.what() << std::endl;
 		response = e.what();
+	} catch(AlreadyDownloadingException e) {
+		std::cout << "Exception Caught In HttpServer" << std::endl;
+		std::cout << e.what() << std::endl;
+		response = e.what();
 	}
 	
 	return response;
