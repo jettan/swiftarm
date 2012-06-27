@@ -27,19 +27,7 @@ namespace HttpServer {
 	static void sendResponse(struct evhttp_request *req, struct evbuffer *buf,  const char *message);
 	static void handleRequest(struct evhttp_request *req, void *arg);
 	
-	static std::string addRequest(std::string hash);
-	static std::string downloadRequest(std::string hash);
-	static std::string uploadRequest(std::string filename);
-	static std::string stopRequest(std::string hash);
-	static std::string removeRequest(std::string hash);
-	static std::string pauseRequest(std::string hash);
-	static std::string resumeRequest(std::string hash);
-	static std::string streamRequest(std::string hash);
-	static std::string settingsRequest(std::vector<std::string> settings);
-	static std::string clearRequest();
-	
 	int init();
-	
 }
 
 #endif
