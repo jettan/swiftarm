@@ -73,10 +73,12 @@ Stream *Stream::getInstance() {
  * Stops the stream.
  */
 void Stream::stop() {
-	pthread_mutex_lock( &_mutex );
-	_streaming = false;
-	pthread_mutex_unlock( &_mutex );
-	evtimer_del(getEvent());
+	if (readStreaming()) {
+		pthread_mutex_lock( &_mutex );
+		_streaming = false;
+		pthread_mutex_unlock( &_mutex );
+		evtimer_del(getEvent());
+	}
 }
 
 /**
