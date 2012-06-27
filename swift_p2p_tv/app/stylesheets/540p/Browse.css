@@ -4,15 +4,14 @@
 	top : 0px;
 	width : 960px;
 	height : 540px;
-	/*background-color : #ffffff;*/
 	background-image: url("../../../images/background.jpg");
 }
 
 #feedback_label {
-    position:absolute;
-    left:500px;
-    top: 50px;
-    width: 300px;
+	position:absolute;
+	left:500px;
+	top: 50px;
+	width: 300px;
 	height: 75px;
 }
 
@@ -23,7 +22,7 @@
 #SceneBrowse #results_list{
 	position : absolute;
 	left : 37px;
-	top : 90px;
+	top : 140px;
 	width : 445px;
 	height: 380px;
 }
@@ -47,7 +46,7 @@
 #SceneBrowse #search_label{
 	position : absolute;
 	left : 400px;
-	top : 50px;
+	top : 100px;
 	width : 120px;
 }
 
@@ -61,7 +60,7 @@
 #SceneBrowse #search_bar{
 	position : absolute;
 	left : 35px;
-	top : 30px;
+	top : 80px;
 	width : 355px;
 }
 

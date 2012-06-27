@@ -7,15 +7,15 @@ function SceneDownloads(options) {
 	}];
 	
 	//this.downloadList;
-	this.elementList = [];
-	this.linesList = [];
 	this.size = 5;
 }
 
-var statsURL = "http://192.168.1.75:1337/stats";
+var statsURL = tv_url + "/stats";
 var downloadList;
 var allDownloads;
 var progressBarList = [];
+var elementList = [];
+var linesList = [];
 var focus = 0;
 var count = 0;
 var downloadNumber = 0;
@@ -263,20 +263,20 @@ SceneDownloads.prototype.initialize = function () {
 	$("#progressDownload5").sfProgressBar(this.progressopts[0]);
 	$("#progressDownload5").sfProgressBar('setValue', 50);
 	
-	progressBarList.push("progressDownload");
-	progressBarList.push("progressDownload2");
-	progressBarList.push("progressDownload3");
-	progressBarList.push("progressDownload4");
-	progressBarList.push("progressDownload5");
+	progressBarList.push("#progressDownload");
+	progressBarList.push("#progressDownload2");
+	progressBarList.push("#progressDownload3");
+	progressBarList.push("#progressDownload4");
+	progressBarList.push("#progressDownload5");
 	
-	this.linesList.push("line3");
-	this.linesList.push("line4");
-	this.linesList.push("line5");
-	this.linesList.push("line6");
-	this.linesList.push("line7");
+	linesList.push("line3");
+	linesList.push("line4");
+	linesList.push("line5");
+	linesList.push("line6");
+	linesList.push("line7");
 	
 	downloadList = [downloadZero, downloadOne, downloadTwo, downloadThree, downloadFour];
-	this.elementList = [elementZero, elementOne, elementTwo, elementThree, elementFour];
+	elementList = [elementZero, elementOne, elementTwo, elementThree, elementFour];
 }
 
 
@@ -302,8 +302,13 @@ SceneDownloads.prototype.handleFocus = function () {
 	$('#image').sfImage('show');
 	$('#label').sfLabel('show');
 	$('#scene_list').sfList('show');
+	
+	var d;
+	for (d = 0; d < 5; d++)
+		hideElement(d);
+	
 	focus = 0;
-	this.focusElement(focus);
+	focusElement(focus);
 	
 	startProgress();
 	
@@ -324,13 +329,12 @@ SceneDownloads.prototype.handleBlur = function () {
 
 SceneDownloads.prototype.handleKeyDown = function (keyCode) {
 	alert("SceneDownloads.handleKeyDown(" + keyCode + ")");
-	// TODO : write an key event handler when this scene get focued
 	switch (keyCode) {
 		case sf.key.LEFT:
-			this.hideElement(focus);
+			hideElement(focus);
 			break;
 		case sf.key.RIGHT:
-			this.showElement(focus);
+			showElement(focus);
 			break;
 		case sf.key.UP:
 			if (focus == 0 && downloadNumber == 0)
@@ -339,11 +343,11 @@ SceneDownloads.prototype.handleKeyDown = function (keyCode) {
 			this.blurElement(focus);	
 			if (focus == 0 && downloadNumber > 0) {
 				focus = 4;
-				this.prevPage();
+				prevPage();
 			}
 			else {
 				focus = focus - 1;
-				this.focusElement(focus);
+				focusElement(focus);
 			}
 			break;
 		case sf.key.DOWN:
@@ -352,18 +356,19 @@ SceneDownloads.prototype.handleKeyDown = function (keyCode) {
 				
 			this.blurElement(focus);
 			if (focus == 4)
-					this.nextPage();
+					nextPage();
 			else {
 				focus = focus + 1;
-				this.focusElement(focus);
+				focusElement(focus);
 			}
 			break;
 
 		case sf.key.ENTER:
 			//this.httpGetXML(statsURL);
+			$('#MainBG').sfBackground('option', 'column', 'left');
 			break;
 		case sf.key.RETURN:
-			stopProgress();
+			this.stopProgress();
 			sf.scene.focus('Main');
             sf.key.preventDefault();
 			break;
@@ -396,35 +401,40 @@ function processStatsResponse() {
 		$('DOWNLOAD',result).each(function(i) {
 			//downloadStats = [];
 			alert($(this).find("SIZE").text());
-			allDownloads[_THIS_.count] = [];
-			allDownloads[_THIS_.count].push($(this).find("SIZE").text());
-			allDownloads[_THIS_.count].push($(this).find("COMPLETED").text());
-			allDownloads[_THIS_.count].push($(this).find("STATUS").text());
-			allDownloads[_THIS_.count].push($(this).find("NAME").text());
-			allDownloads[_THIS_.count].push($(this).find("DSPEED").text());
-			allDownloads[_THIS_.count].push($(this).find("USPEED").text());
-			allDownloads[_THIS_.count].push($(this).find("PROGRESS").text());
+			allDownloads[count] = [];
+			allDownloads[count].push($(this).find("SIZE").text());
+			allDownloads[count].push($(this).find("COMPLETED").text());
+			allDownloads[count].push($(this).find("STATUS").text());
+			allDownloads[count].push($(this).find("NAME").text());
+			allDownloads[count].push($(this).find("DSPEED").text());
+			allDownloads[count].push($(this).find("USPEED").text());
+			allDownloads[count].push($(this).find("PROGRESS").text());
 			/*downloadStats.push($(this).find("RATIO").text());
 			downloadStats.push($(this).find("UPLOADAMOUNT").text());
 			downloadStats.push($(this).find("DOWNLOADAMOUNT").text());*/
-			allDownloads[_THIS_.count].push($(this).find("SEEDERS").text());
-			allDownloads[_THIS_.count].push($(this).find("PEERS").text());
+			allDownloads[count].push($(this).find("SEEDERS").text());
+			allDownloads[count].push($(this).find("PEERS").text());
 			/*downloadStats.push($(this).find("TIMEDAYS").text());
 			downloadStats.push($(this).find("TIMEHOURS").text());*/
-			allDownloads[_THIS_.count].push($(this).find("TIMEMINUTES").text());
+			allDownloads[count].push($(this).find("TIMEMINUTES").text());
 			//downloadStats.push($(this).find("TIMESECONDS").text());
-			allDownloads[_THIS_.count].push($(this).find("HASH").text());
-			alert(allDownloads[_THIS_.count].length);
+			allDownloads[count].push($(this).find("HASH").text());
+			alert(allDownloads[count].length);
 			count++;
 		});
+		alert('Processing response');
 		alert(allDownloads.length);
+		var limit = (allDownloads.length >= 5 ? 5 : allDownloads.length);
 		var d;
-		for(d = 0; d< 5; d++) {
+		for(d = 0; d< limit; d++) {
+			alert('In de loop!');
 			var counter;
 			for(counter = 0; counter < 11; counter++)
 				$(downloadList[d][counter]).sfLabel("option","text",allDownloads[d][counter]);
 			
 			$(progressBarList[d]).sfProgressBar('setValue', allDownloads[d][6]);
+			
+			showElement(d);
 		}
 		
 	}
@@ -433,61 +443,60 @@ function processStatsResponse() {
 var timer;
 var timer_on=0;
 
-function getProgress()
-{
+function getProgress() {
+	alert('Get progress!');
 	httpGetXML(statsURL);
 	t=setTimeout("getProgress()",4000);
 }
 
-function startProgress()
-{
+function startProgress() {
+	alert('Start progress!');
 	if (!timer_on) {
 		timer_on=1;
 		getProgress();
 	}
 }
 
-function stopProgress()
-{
+function stopProgress() {
 	clearTimeout(timer);
 	timer_on=0;
 }
 
-SceneDownloads.prototype.nextPage = function () {
+function nextPage() {
 	if(downloadNumber < Math.floor(allDownloads.length / 5) - 1) {
 		downloadNumber++;
-		this.switchPage();
+		switchPage();
 		focus = 0;
-		this.focusElement(focus);
+		focusElement(focus);
 	} else if (downloadNumber == Math.floor(allDownloads.length / 5) - 1) {
 		downloadNumber++;
 		var numelements = allDownloads.length % 5;
 		var hidecounter = 0;
 		for (hidecounter = numelements; hidecounter < 5; hidecounter++)
-			this.hideElement(hidecounter);
-		this.switchPage();
+			hideElement(hidecounter);
+		switchPage();
 		focus = 0;
-		this.focusElement(focus);
+		focusElement(focus);
 	}
 }
 
-SceneDownloads.prototype.prevPage = function () {
+function prevPage() {
 	
 	if (downloadNumber == Math.floor(allDownloads.length / 5)) {
 			var showcounter = 0;
 			for (showcounter = 0; showcounter < 5; showcounter++)
-				this.showElement(showcounter);
+				showElement(showcounter);
 	}
 		
 	if(downloadNumber > 0) {
 		downloadNumber--;
-		this.switchPage();
+		switchPage();
 		focus = 4;
-		this.focusElement(focus);
+		focusElement(focus);
 	}
 }
 
-SceneDownloads.prototype.switchPage = function () {
+function switchPage() {
 	var end = 5;
 	if ((allDownloads.length % 5) > 0)
 		end = allDownloads.length % 5;
@@ -503,43 +512,43 @@ SceneDownloads.prototype.switchPage = function () {
 	}
 }
 
-SceneDownloads.prototype.hideElement = function (index) {
+function hideElement(index) {
 	alert("SceneDownloads.hideElement()");
-	var element = this.elementList[index];
+	var element = elementList[index];
 	var i;
 	for(i=0; i<element.length; i++)
 		$(element[i]).sfLabel('hide');	
 		
-	var myElement = document.getElementById(progressBarList[index]);
+	var myElement = document.getElementById(progressBarList[index].substring(1));
 	myElement.style.visibility="hidden";
-	var myElement = document.getElementById(this.linesList[index]);
+	var myElement = document.getElementById(linesList[index]);
 	myElement.style.visibility="hidden";
 }
 
-SceneDownloads.prototype.showElement = function (index) {
+function showElement(index) {
 	alert("SceneDownloads.showElement()");
-	var element = this.elementList[index];
+	var element = elementList[index];
 	var i;
 	for(i=0; i<element.length; i++)
 		$(element[i]).sfLabel('show');	
 		
-	var myElement = document.getElementById(progressBarList[index]);
+	var myElement = document.getElementById(progressBarList[index].substring(1));
 	myElement.style.visibility="visible";
-	var myElement = document.getElementById(this.linesList[index]);
+	var myElement = document.getElementById(linesList[index]);
 	myElement.style.visibility="visible";
 }
 
-SceneDownloads.prototype.focusElement = function (index) {
+function focusElement(index) {
 	alert("SceneDownloads.focusElement()");	
-	var myElement = document.getElementById(this.linesList[index]);
+	var myElement = document.getElementById(linesList[index]);
 	myElement.style.borderWidth="4px";
 	myElement.style.borderBottomStyle="inset";
 	myElement.style.borderBottomColor="#40e0d0";
 }
 
-SceneDownloads.prototype.blurElement = function (index) {
+function blurElement(index) {
 	alert("SceneDownloads.blurElement()");	
-	var myElement = document.getElementById(this.linesList[index]);
+	var myElement = document.getElementById(linesList[index]);
 	myElement.style.borderWidth="2px";
 	myElement.style.borderBottomStyle="groove";
 	myElement.style.borderBottomColor="#e6e6fa";
