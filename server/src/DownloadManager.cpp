@@ -893,12 +893,14 @@ void DownloadManager::clearList() {
  * Stops streaming.
  */
 void DownloadManager::stopStream() {
+	if (Stream::getInstance()->readStreaming()) {
 	Stream::getInstance()->stop();
 	
-	if(active_download) {
-		pthread_mutex_lock(&active_download_mutex);
-		active_download->resume();
-		pthread_mutex_unlock(&active_download_mutex);
+		if(active_download) {
+			pthread_mutex_lock(&active_download_mutex);
+			active_download->resume();
+			pthread_mutex_unlock(&active_download_mutex);
+		}
 	}
 }
 
