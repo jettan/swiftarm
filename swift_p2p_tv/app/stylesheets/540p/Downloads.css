@@ -4,14 +4,14 @@
 	top : 0px;
 	width : 960px;
 	height : 540px;
-	#background-color : #ffffff;
-	#background-image: url("../../../images/background.jpg");
 }
 
 #SceneDownloads #svecButton_EZNV{
 	position : absolute;
+	font-size : 10pt;
+	color : #ffffff;
 	left : 310px;
-	top : 460px;
+	top : 480px;
 	width : 120px;
 }
 
@@ -49,79 +49,6 @@
 	left : 590px;
 	top : 480px;
 	width : 30px;
-}
-
-/*#SceneDownloads #line0{
-	position : absolute;
-	left : 300px;
-	top : 0px;
-	#width: 300px;
-	height: 540px;
-	border-width:2px;	
-	border-left-style:groove;
-}
-
-#SceneDownloads #line1{
-	position : absolute;
-	left : 300px;
-	top : 0px;
-	width: 660px;
-	border-width:2px;	
-	border-bottom-style:groove;
-}
-
-#SceneDownloads #line2{
-	position : absolute;
-	left : 415px;
-	top : 0px;
-	height: 40px;
-	border-width:2px;	
-	border-right-style:groove;
-}*/
-
-#SceneDownloads #line3{
-	position : absolute;
-	left : 263px;
-	top : 90px;
-	width: 697px;
-	border-width:2px;	
-	border-bottom-style:groove;
-}
-
-#SceneDownloads #line4{
-	position : absolute;
-	left : 263px;
-	top : 180px;
-	width: 697px;
-	border-width:2px;	
-	border-bottom-style:groove;
-}
-
-#SceneDownloads #line5{
-	position : absolute;
-	left : 263px;
-	top : 270px;
-	width: 697px;
-	border-width:2px;	
-	border-bottom-style:groove;
-}
-
-#SceneDownloads #line6{
-	position : absolute;
-	left : 263px;
-	top : 360px;
-	width: 697px;
-	border-width:2px;	
-	border-bottom-style:groove;
-}
-
-#SceneDownloads #line7{
-	position : absolute;
-	left : 263px;
-	top : 450px;
-	width: 697px;
-	border-width:2px;	
-	border-bottom-style:groove;
 }
 
 #SceneDownloads #progressDownload {
@@ -173,7 +100,7 @@ Download 1 START
 
 #SceneDownloads #roothashLabel{
 	position : absolute;
-	font-size : 12pt;
+	font-size : 10pt;
 	color : #ffffff;
 	left : 530px;
 	top : 10px;
@@ -182,7 +109,7 @@ Download 1 START
 
 #SceneDownloads #completeLabel{
 	position : absolute;
-	font-size : 12pt;
+	font-size : 10pt;
 	text-align: right;
 	color : #ffffff;
 	left : 310px;
@@ -192,7 +119,7 @@ Download 1 START
 
 #SceneDownloads #sizeLabel{
 	position : absolute;
-	font-size : 12pt;
+	font-size : 10pt;
 	color : #ffffff;
 	left : 390px;
 	top : 70px;
@@ -201,7 +128,7 @@ Download 1 START
 
 #SceneDownloads #progressLabel{
 	position : absolute;
-	font-size : 12pt;
+	font-size : 10pt;
 	color : #ffffff;
 	left : 450px;
 	top : 70px;
@@ -255,7 +182,7 @@ Download 1 START
 
 #SceneDownloads #slashLabel{
 	position : absolute;
-	font-size : 12pt;
+	font-size : 10pt;
 	color : #ffffff;
 	left : 380px;
 	top : 70px;
@@ -282,7 +209,7 @@ Download 1 START
 
 #SceneDownloads #timeLabel{
 	position : absolute;
-	font-size : 12pt;
+	font-size : 10pt;
 	color : #ffffff;
 	left : 560px;
 	top : 70px;
@@ -291,7 +218,7 @@ Download 1 START
 
 #SceneDownloads #svecLabel_QQM0{
 	position : absolute;
-	font-size : 12pt;
+	font-size : 10pt;
 	color : #ffffff;
 	left : 530px;
 	top : 70px;
@@ -318,7 +245,7 @@ Download 1 START
 
 #SceneDownloads #svecLabel_5911{
 	position : absolute;
-	font-size : 12pt;
+	font-size : 10pt;
 	color : #ffffff;
 	left : 455px;
 	top : 70px;
@@ -327,7 +254,7 @@ Download 1 START
 
 #SceneDownloads #svecLabel_7ANW{
 	position : absolute;
-	font-size : 12pt;
+	font-size : 10pt;
 	color : #ffffff;
 	left : 485px;
 	top : 70px;
@@ -350,7 +277,7 @@ Download 1 START
 /* root hash label */
 #SceneDownloads #svecLabel_6WZA{
 	position : absolute;
-	font-size : 12pt;
+	font-size : 10pt;
 	color : #ffffff;
 	left : 530px;
 	top : 100px;
@@ -359,7 +286,7 @@ Download 1 START
 /* complete label */
 #SceneDownloads #svecLabel_V7AX{
 	position : absolute;
-	font-size : 12pt;
+	font-size : 10pt;
 	text-align: right;
 	color : #ffffff;
 	left : 310px;
@@ -370,7 +297,7 @@ Download 1 START
 /* size label */
 #SceneDownloads #svecLabel_9JQR{
 	position : absolute;
-	font-size : 12pt;
+	font-size : 10pt;
 	color : #ffffff;
 	left : 390px;
 	top : 160px;
@@ -380,7 +307,7 @@ Download 1 START
 /* ( label */
 #SceneDownloads #svecLabel_09H7{
 	position : absolute;
-	font-size : 12pt;
+	font-size : 10pt;
 	color : #ffffff;
 	left : 450px;
 	top : 160px;
@@ -389,7 +316,7 @@ Download 1 START
 
 /*#SceneDownloads #svecLabel_XU1R{
 	position : absolute;
-	font-size : 12pt;
+	font-size : 10pt;
 	color : #ffffff;
 	left : 530px;
 	top : 160px;
@@ -449,7 +376,7 @@ Download 1 START
 /* / label */
 #SceneDownloads #svecLabel_0L1K{
 	position : absolute;
-	font-size : 12pt;
+	font-size : 10pt;
 	color : #ffffff;
 	left : 380px;
 	top : 160px;
@@ -479,7 +406,7 @@ Download 1 START
 /* remaining label */
 #SceneDownloads #svecLabel_K8Y8{
 	position : absolute;
-	font-size : 12pt;
+	font-size : 10pt;
 	color : #ffffff;
 	left : 560px;
 	top : 160px;
@@ -489,7 +416,7 @@ Download 1 START
 /* time label */
 #SceneDownloads #svecLabel_HLQI{
 	position : absolute;
-	font-size : 12pt;
+	font-size : 10pt;
 	color : #ffffff;
 	left : 530px;
 	top : 160px;
@@ -519,7 +446,7 @@ Download 1 START
 /* progress label */
 #SceneDownloads #svecLabel_YY6U{
 	position : absolute;
-	font-size : 12pt;
+	font-size : 10pt;
 	color : #ffffff;
 	left : 455px;
 	top : 160px;
@@ -529,7 +456,7 @@ Download 1 START
 /* ) label */
 #SceneDownloads #svecLabel_Y145{
 	position : absolute;
-	font-size : 12pt;
+	font-size : 10pt;
 	color : #ffffff;
 	left : 485px;
 	top : 160px;
@@ -553,7 +480,7 @@ Download 1 START
 /* root hash label */
 #SceneDownloads #svecLabel_YLU6{
 	position : absolute;
-	font-size : 12pt;
+	font-size : 10pt;
 	color : #ffffff;
 	left : 530px;
 	top : 190px;
@@ -563,7 +490,7 @@ Download 1 START
 /* complete label */
 #SceneDownloads #svecLabel_8MZF{
 	position : absolute;
-	font-size : 12pt;
+	font-size : 10pt;
 	text-align: right;
 	color : #ffffff;
 	left : 310px;
@@ -574,7 +501,7 @@ Download 1 START
 /* size label */
 #SceneDownloads #svecLabel_VJNN{
 	position : absolute;
-	font-size : 12pt;
+	font-size : 10pt;
 	color : #ffffff;
 	left : 390px;
 	top : 250px;
@@ -584,7 +511,7 @@ Download 1 START
 /* ( label */
 #SceneDownloads #svecLabel_N4Q2{
 	position : absolute;
-	font-size : 12pt;
+	font-size : 10pt;
 	color : #ffffff;
 	left : 450px;
 	top : 250px;
@@ -593,7 +520,7 @@ Download 1 START
 
 #SceneDownloads #svecLabel_CB8O{
 	position : absolute;
-	font-size : 12pt;
+	font-size : 10pt;
 	color : #ffffff;
 	left : 560px;
 	top : 250px;
@@ -647,7 +574,7 @@ Download 1 START
 
 #SceneDownloads #svecLabel_N9IC{
 	position : absolute;
-	font-size : 12pt;
+	font-size : 10pt;
 	color : #ffffff;
 	left : 380px;
 	top : 250px;
@@ -665,7 +592,7 @@ Download 1 START
 
 #SceneDownloads #svecLabel_LC37{
 	position : absolute;
-	font-size : 12pt;
+	font-size : 10pt;
 	color : #ffffff;
 	left : 530px;
 	top : 280px;
@@ -674,7 +601,7 @@ Download 1 START
 
 #SceneDownloads #svecLabel_J8RO{
 	position : absolute;
-	font-size : 12pt;
+	font-size : 10pt;
 	text-align: right;
 	color : #ffffff;
 	left : 310px;
@@ -684,7 +611,7 @@ Download 1 START
 
 #SceneDownloads #svecLabel_YPN4{
 	position : absolute;
-	font-size : 12pt;
+	font-size : 10pt;
 	color : #ffffff;
 	left : 390px;
 	top : 340px;
@@ -693,7 +620,7 @@ Download 1 START
 
 #SceneDownloads #svecLabel_K8OX{
 	position : absolute;
-	font-size : 12pt;
+	font-size : 10pt;
 	color : #ffffff;
 	left : 450px;
 	top : 340px;
@@ -702,7 +629,7 @@ Download 1 START
 
 #SceneDownloads #svecLabel_IUIV{
 	position : absolute;
-	font-size : 12pt;
+	font-size : 10pt;
 	color : #ffffff;
 	left : 560px;
 	top : 340px;
@@ -756,7 +683,7 @@ Download 1 START
 
 #SceneDownloads #svecLabel_M14B{
 	position : absolute;
-	font-size : 12pt;
+	font-size : 10pt;
 	color : #ffffff;
 	left : 380px;
 	top : 340px;
@@ -774,7 +701,7 @@ Download 1 START
 
 #SceneDownloads #svecLabel_XIH7{
 	position : absolute;
-	font-size : 12pt;
+	font-size : 10pt;
 	color : #ffffff;
 	left : 530px;
 	top : 370px;
@@ -783,7 +710,7 @@ Download 1 START
 
 #SceneDownloads #svecLabel_7CVC{
 	position : absolute;
-	font-size : 12pt;
+	font-size : 10pt;
 	text-align: right;
 	color : #ffffff;
 	left : 310px;
@@ -793,7 +720,7 @@ Download 1 START
 
 #SceneDownloads #svecLabel_T44Z{
 	position : absolute;
-	font-size : 12pt;
+	font-size : 10pt;
 	color : #ffffff;
 	left : 390px;
 	top : 430px;
@@ -802,7 +729,7 @@ Download 1 START
 
 #SceneDownloads #svecLabel_0S90{
 	position : absolute;
-	font-size : 12pt;
+	font-size : 10pt;
 	color : #ffffff;
 	left : 450px;
 	top : 430px;
@@ -811,7 +738,7 @@ Download 1 START
 
 #SceneDownloads #svecLabel_GQFE{
 	position : absolute;
-	font-size : 12pt;
+	font-size : 10pt;
 	color : #ffffff;
 	left : 560px;
 	top : 430px;
@@ -865,7 +792,7 @@ Download 1 START
 
 #SceneDownloads #svecLabel_CQNS{
 	position : absolute;
-	font-size : 12pt;
+	font-size : 10pt;
 	color : #ffffff;
 	left : 380px;
 	top : 430px;
@@ -874,7 +801,7 @@ Download 1 START
 
 #SceneDownloads #svecLabel_GB6Y{
 	position : absolute;
-	font-size : 12pt;
+	font-size : 10pt;
 	color : #ffffff;
 	left : 630px;
 	top : 480px;
@@ -883,7 +810,7 @@ Download 1 START
 
 #SceneDownloads #svecLabel_1XTU{
 	position : absolute;
-	font-size : 12pt;
+	font-size : 10pt;
 	color : #ffffff;
 	left : 800px;
 	top : 480px;
@@ -946,7 +873,7 @@ Download 1 START
 
 #SceneDownloads #svecLabel_DMIE{
 	position : absolute;
-	font-size : 12pt;
+	font-size : 10pt;
 	color : #ffffff;
 	left : 530px;
 	top : 250px;
@@ -973,7 +900,7 @@ Download 1 START
 
 #SceneDownloads #svecLabel_6IRF{
 	position : absolute;
-	font-size : 12pt;
+	font-size : 10pt;
 	color : #ffffff;
 	left : 455px;
 	top : 250px;
@@ -982,7 +909,7 @@ Download 1 START
 
 #SceneDownloads #svecLabel_MB4M{
 	position : absolute;
-	font-size : 12pt;
+	font-size : 10pt;
 	color : #ffffff;
 	left : 485px;
 	top : 250px;
@@ -991,7 +918,7 @@ Download 1 START
 
 #SceneDownloads #svecLabel_P71T{
 	position : absolute;
-	font-size : 12pt;
+	font-size : 10pt;
 	color : #ffffff;
 	left : 530px;
 	top : 340px;
@@ -1018,7 +945,7 @@ Download 1 START
 
 #SceneDownloads #svecLabel_NNKJ{
 	position : absolute;
-	font-size : 12pt;
+	font-size : 10pt;
 	color : #ffffff;
 	left : 455px;
 	top : 340px;
@@ -1027,7 +954,7 @@ Download 1 START
 
 #SceneDownloads #svecLabel_AXTX{
 	position : absolute;
-	font-size : 12pt;
+	font-size : 10pt;
 	color : #ffffff;
 	left : 485px;
 	top : 340px;
@@ -1036,7 +963,7 @@ Download 1 START
 
 #SceneDownloads #svecLabel_9H7R{
 	position : absolute;
-	font-size : 12pt;
+	font-size : 10pt;
 	color : #ffffff;
 	left : 530px;
 	top : 430px;
@@ -1063,7 +990,7 @@ Download 1 START
 
 #SceneDownloads #svecLabel_BJKU{
 	position : absolute;
-	font-size : 12pt;
+	font-size : 10pt;
 	color : #ffffff;
 	left : 455px;
 	top : 430px;
@@ -1072,10 +999,101 @@ Download 1 START
 
 #SceneDownloads #svecLabel_XGFC{
 	position : absolute;
-	font-size : 12pt;
+	font-size : 10pt;
 	color : #ffffff;
 	left : 485px;
 	top : 430px;
 	width : 40px;
+}
+
+#pause_image {
+	position : absolute;
+	left : 320px;
+	top : 30px;
+	width : 28px;
+	height : 28px;
+	display : none;
+}
+
+#SceneDownloads #download_holder0 {
+	position : absolute;
+	left : 265px;
+	top : 0px;
+	width: 690px;
+	height: 85px;
+	border-width: 2px;
+	border-bottom-style:groove;
+	border-top-style:groove;
+	border-left-style:groove;
+	border-right-style:groove;
+	border-bottom-color: #000000;
+	border-top-color: #000000;
+	border-left-color: #000000;
+	border-right-color: #000000;
+}
+
+#SceneDownloads #download_holder1 {
+	position : absolute;
+	left : 265px;
+	top : 89px;
+	width: 690px;
+	height: 85px;
+	border-width: 2px;
+	border-bottom-style:groove;
+	border-top-style:groove;
+	border-left-style:groove;
+	border-right-style:groove;
+	border-bottom-color: #000000;
+	border-top-color: #000000;
+	border-left-color: #000000;
+	border-right-color: #000000;
+}
+#SceneDownloads #download_holder2 {
+	position : absolute;
+	left : 265px;
+	top : 178px;
+	width: 690px;
+	height: 85px;
+	border-width: 2px;
+	border-bottom-style:groove;
+	border-top-style:groove;
+	border-left-style:groove;
+	border-right-style:groove;
+	border-bottom-color: #000000;
+	border-top-color: #000000;
+	border-left-color: #000000;
+	border-right-color: #000000;
+}
+#SceneDownloads #download_holder3 {
+	position : absolute;
+	left : 265px;
+	top : 267px;
+	width: 690px;
+	height: 85px;
+	border-width: 2px;
+	border-bottom-style:groove;
+	border-top-style:groove;
+	border-left-style:groove;
+	border-right-style:groove;
+	border-bottom-color: #000000;
+	border-top-color: #000000;
+	border-left-color: #000000;
+	border-right-color: #000000;
+}
+#SceneDownloads #download_holder4 {
+	position : absolute;
+	left : 265px;
+	top : 356px;
+	width: 690px;
+	height: 85px;
+	border-width: 2px;
+	border-bottom-style:groove;
+	border-top-style:groove;
+	border-left-style:groove;
+	border-right-style:groove;
+	border-bottom-color: #e6e6fa;
+	border-top-color: #e6e6fa;
+	border-left-color: #e6e6fa;
+	border-right-color: #e6e6fa;
 }
 

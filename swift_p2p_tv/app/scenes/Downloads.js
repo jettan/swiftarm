@@ -1,19 +1,25 @@
 function SceneDownloads(options) {
 	this.options = options;
 	
-	this.progressopts = [{
+	this.progress_bar_type = [{
 		type: 'status',
 		max: 100
 	}];
 	
-	//this.downloadList;
 	this.size = 5;
 }
 
-var statsURL = tv_url + "/stats";
-var downloadList;
-var allDownloads;
-var progressBarList = [];
+var stats_url  = tv_url + "/stats";
+var pause_url  = tv_url + "/pause:";
+var resume_url = tv_url + "/resume:";
+var switch_url = tv_url + "/download:";
+var stop_url   = tv_url + "/stop:";
+var remove_url = tv_url + "/remove:";
+var clear_url  = tv_url + "/clear";
+
+var download_list;
+var stats_results;
+var progress_bar_list = [];
 var elementList = [];
 var linesList = [];
 var focus = 0;
@@ -21,7 +27,6 @@ var count = 0;
 var downloadNumber = 0;
 
 SceneDownloads.prototype.initialize = function () {
-	alert("SceneDownloads.initialize()");
 	// this function will be called only once when the scene manager show this scene first time
 	// initialize the scene controls and styles, and initialize your variables here 
 	// scene HTML and CSS will be loaded before this function is called
@@ -36,14 +41,13 @@ SceneDownloads.prototype.initialize = function () {
 	var elementTwo = [];
 	var elementThree = [];
 	var elementFour = [];
-	
-	$('#svecButton_EZNV').sfButton({text:'clear'});
+
+	$('#svecButton_EZNV').sfLabel({text: 'Ratio:'});
 	$('#svecLabel_4MQH').sfLabel({text:'up:'});
 	$('#svecLabel_F9M8').sfLabel({text:'XX'});
 	$('#svecLabel_TCTT').sfLabel({text:'down:'});
 	$('#svecLabel_0KZJ').sfLabel({text:'XX'});
-	$('#svecLabel_GB6Y').sfLabel({text:'Selected download:'});
-	$('#svecLabel_1XTU').sfLabel({text:'X / X'});
+	$('#pause_image').sfImage({src:'images/navi/pause.png'});
 	
 	// First download 
 	$('#nameLabel').sfLabel({text:'Name'});
@@ -252,126 +256,166 @@ SceneDownloads.prototype.initialize = function () {
 	elementFour.push('#svecLabel_XGFC');
 
 	
-	$("#progressDownload").sfProgressBar(this.progressopts[0]);
+	$("#progressDownload").sfProgressBar(this.progress_bar_type[0]);
 	$("#progressDownload").sfProgressBar('setValue', 50);
-	$("#progressDownload2").sfProgressBar(this.progressopts[0]);
+	$("#progressDownload2").sfProgressBar(this.progress_bar_type[0]);
 	$("#progressDownload2").sfProgressBar('setValue', 50);
-	$("#progressDownload3").sfProgressBar(this.progressopts[0]);
+	$("#progressDownload3").sfProgressBar(this.progress_bar_type[0]);
 	$("#progressDownload3").sfProgressBar('setValue', 50);
-	$("#progressDownload4").sfProgressBar(this.progressopts[0]);
+	$("#progressDownload4").sfProgressBar(this.progress_bar_type[0]);
 	$("#progressDownload4").sfProgressBar('setValue', 50);
-	$("#progressDownload5").sfProgressBar(this.progressopts[0]);
+	$("#progressDownload5").sfProgressBar(this.progress_bar_type[0]);
 	$("#progressDownload5").sfProgressBar('setValue', 50);
 	
-	progressBarList.push("#progressDownload");
-	progressBarList.push("#progressDownload2");
-	progressBarList.push("#progressDownload3");
-	progressBarList.push("#progressDownload4");
-	progressBarList.push("#progressDownload5");
+	progress_bar_list.push("#progressDownload");
+	progress_bar_list.push("#progressDownload2");
+	progress_bar_list.push("#progressDownload3");
+	progress_bar_list.push("#progressDownload4");
+	progress_bar_list.push("#progressDownload5");
 	
-	linesList.push("line3");
-	linesList.push("line4");
-	linesList.push("line5");
-	linesList.push("line6");
-	linesList.push("line7");
+	linesList.push("download_holder0");
+	linesList.push("download_holder1");
+	linesList.push("download_holder2");
+	linesList.push("download_holder3");
+	linesList.push("download_holder4");
 	
-	downloadList = [downloadZero, downloadOne, downloadTwo, downloadThree, downloadFour];
+	download_list = [downloadZero, downloadOne, downloadTwo, downloadThree, downloadFour];
 	elementList = [elementZero, elementOne, elementTwo, elementThree, elementFour];
 }
 
 
 
 
-SceneDownloads.prototype.handleShow = function () {
-	alert("SceneDownloads.handleShow()");
-	// this function will be called when the scene manager show this scene 
-}
+SceneDownloads.prototype.handleShow = function () {}
 
-SceneDownloads.prototype.handleHide = function () {
-	alert("SceneDownloads.handleHide()");
-	// this function will be called when the scene manager hide this scene  
-}
+SceneDownloads.prototype.handleHide = function () {}
 
 SceneDownloads.prototype.handleFocus = function () {
-	alert("SceneDownloads.handleFocus()");
-	// this function will be called when the scene manager focus this scene
-	$('#MainBG').sfBackground('option', 'column', 'left');
-	$('#MainBG').sfBackground(this.defaultOpts);
-	$('#MainBG').sfBackground('option', 'column', 'left');
-	
-	$('#image').sfImage('show');
+	$('#app_layout').sfBackground('option', 'column', 'left');
 	$('#label').sfLabel('show');
 	$('#scene_list').sfList('show');
 	
 	var d;
-	for (d = 0; d < 5; d++)
+	for (d = 0; d < 5; d++) {
+		blurElement(d);
 		hideElement(d);
-	
+	}
 	focus = 0;
 	focusElement(focus);
 	
 	startProgress();
 	
 	$("#keyhelp_bar").sfKeyHelp({
-		'user': 'Help',		
 		'move':'Move',
-        'return': 'Return',
+		'return': 'Return',
+		'theme' : 'TRANSPARENT',
 		'pause': 'Pause download/upload',
 		'play': 'Start/Resume download',
-		'stop': 'Stop download'
+		'stop': 'Stop download',
+		'rew' : 'Remove download'
+		
 	});
 }
 
-SceneDownloads.prototype.handleBlur = function () {
-	alert("SceneDownloads.handleBlur()");
-	// this function will be called when the scene manager move focus to another scene from this scene
-}
+SceneDownloads.prototype.handleBlur = function () {}
 
-SceneDownloads.prototype.handleKeyDown = function (keyCode) {
-	alert("SceneDownloads.handleKeyDown(" + keyCode + ")");
-	switch (keyCode) {
-		case sf.key.LEFT:
-			hideElement(focus);
-			break;
-		case sf.key.RIGHT:
-			showElement(focus);
-			break;
+SceneDownloads.prototype.handleKeyDown = function (key_code) {
+	switch (key_code) {
 		case sf.key.UP:
 			if (focus == 0 && downloadNumber == 0)
 				break;
 				
-			this.blurElement(focus);	
+			blurElement(focus);
 			if (focus == 0 && downloadNumber > 0) {
 				focus = 4;
 				prevPage();
-			}
-			else {
+			} else {
 				focus = focus - 1;
 				focusElement(focus);
 			}
 			break;
 		case sf.key.DOWN:
-			if (focus == (allDownloads.length -1) % 5 && downloadNumber == Math.floor(allDownloads.length / 5))
+			if (focus == (stats_results.length -1) % 5 && downloadNumber == Math.floor((stats_results.length - 1) / 5))
 				break;
 				
-			this.blurElement(focus);
-			if (focus == 4)
-					nextPage();
-			else {
-				focus = focus + 1;
+			blurElement(focus);
+			if (focus == 4) {
+				nextPage();
+			} else {
+				focus += 1;
 				focusElement(focus);
 			}
 			break;
-
-		case sf.key.ENTER:
-			//this.httpGetXML(statsURL);
-			$('#MainBG').sfBackground('option', 'column', 'left');
+		case sf.key.PAUSE:
+			$('#statusLabel').sfLabel('hide');
+			httpGetSpecial(pause_url + stats_results[focus + downloadNumber * 5][10]);
+			$('#pause_image').sfImage('show');
+			break;
+		case sf.key.PLAY:
+			$('#pause_image').sfImage('hide');
+			httpGetSpecial(resume_url + stats_results[focus + downloadNumber * 5][10]);
+			$('#statusLabel').sfLabel('show');
+			break;
+		case sf.key.STOP:
+			$('#popup_confirmation').sfPopup({
+				text:"Are you sure you want to stop the selection?",
+				buttons: ["Yes", "No"],
+				defaultFocus: 1,
+				keyhelp: {'return' : 'Return'},
+				callback : function(selectedIndex) {
+					 if (selectedIndex == 0) {
+						httpGetSpecial(stop_url + stats_results[focus + downloadNumber * 5][10]);
+						if (focus == 0 && downloadNumber > 0){
+							prevPage();
+						} else if (focus > 0) {
+							focus -= 1;
+							focusElement(focus);
+						}
+					}
+				}
+			}).sfPopup('show');
+			break;
+		case sf.key.REW:
+			$('#popup_confirmation').sfPopup({
+				text:"Are you sure you want to remove the selection?",
+				buttons: ["Yes", "No"],
+				defaultFocus: 1,
+				keyhelp: {'return' : 'Return'},
+				callback : function(selectedIndex) {
+					 if (selectedIndex == 0) {
+						httpGetSpecial(remove_url + stats_results[focus + downloadNumber * 5][10]);
+						if (focus == 0 && downloadNumber > 0){
+							prevPage();
+						} else if (focus > 0) {
+							focus -= 1;
+							focusElement(focus);
+						}
+					}
+				}
+			}).sfPopup('show');
 			break;
 		case sf.key.RETURN:
-			this.stopProgress();
+			stopProgress();
 			sf.scene.focus('Main');
-            sf.key.preventDefault();
+			sf.key.preventDefault();
 			break;
+		default:
+			break;
+	}
+}
+
+var specialRequest;
+function httpGetSpecial(url) {
+	specialRequest = new XMLHttpRequest();
+	specialRequest.open("GET", url, true);
+	specialRequest.onreadystatechange = processSpecialResponse;
+	specialRequest.send(null);
+}
+
+function processSpecialResponse() {
+	if(specialRequest.readyState == 4) {
+		var special_result = statsRequest.responseText;
+		$('#svecButton_EZNV').sfLabel("option","text","Ratio: " + special_result);
 	}
 }
 
@@ -386,56 +430,43 @@ function httpGetXML(url) {
 function processStatsResponse() {
 	if (statsRequest.readyState == 4) {
 		var result = statsRequest.responseXML;
-		allDownloads = [];
-		var one = [];
-		var two = [];
-		var three = [];
-		var four = [];
-		var five = [];
-		//downloadStats = [one , two, three, four, five];
-		downloadStats = [];
-		//downloadStats = new Array(5);
-		alert(result);
+		stats_results = [];
 		count = 0;
 		var _THIS_ = this;
 		$('DOWNLOAD',result).each(function(i) {
-			//downloadStats = [];
-			alert($(this).find("SIZE").text());
-			allDownloads[count] = [];
-			allDownloads[count].push($(this).find("SIZE").text());
-			allDownloads[count].push($(this).find("COMPLETED").text());
-			allDownloads[count].push($(this).find("STATUS").text());
-			allDownloads[count].push($(this).find("NAME").text());
-			allDownloads[count].push($(this).find("DSPEED").text());
-			allDownloads[count].push($(this).find("USPEED").text());
-			allDownloads[count].push($(this).find("PROGRESS").text());
-			/*downloadStats.push($(this).find("RATIO").text());
-			downloadStats.push($(this).find("UPLOADAMOUNT").text());
-			downloadStats.push($(this).find("DOWNLOADAMOUNT").text());*/
-			allDownloads[count].push($(this).find("SEEDERS").text());
-			allDownloads[count].push($(this).find("PEERS").text());
-			/*downloadStats.push($(this).find("TIMEDAYS").text());
-			downloadStats.push($(this).find("TIMEHOURS").text());*/
-			allDownloads[count].push($(this).find("TIMEMINUTES").text());
-			//downloadStats.push($(this).find("TIMESECONDS").text());
-			allDownloads[count].push($(this).find("HASH").text());
-			alert(allDownloads[count].length);
+			stats_results[count] = [];
+			stats_results[count].push($(this).find("SIZE").text());
+			stats_results[count].push($(this).find("COMPLETED").text());
+			stats_results[count].push($(this).find("STATUS").text());
+			stats_results[count].push($(this).find("NAME").text());
+			stats_results[count].push($(this).find("DSPEED").text());
+			stats_results[count].push($(this).find("USPEED").text());
+			stats_results[count].push($(this).find("PROGRESS").text());
+			stats_results[count].push($(this).find("SEEDERS").text());
+			stats_results[count].push($(this).find("PEERS").text());
+			stats_results[count].push($(this).find("TIMEMINUTES").text());
+			stats_results[count].push($(this).find("HASH").text());
+			if (count == 0) {
+				$('#svecLabel_F9M8').sfLabel("option","text",$(this).find("UPLOADAMOUNT").text());
+				$('#svecLabel_0KZJ').sfLabel("option","text",$(this).find("DOWNLOADAMOUNT").text());
+				$('#svecButton_EZNV').sfLabel("option","text","Ratio: " + $(this).find("RATIO").text());
+			}
 			count++;
 		});
-		alert('Processing response');
-		alert(allDownloads.length);
-		var limit = (allDownloads.length >= 5 ? 5 : allDownloads.length);
+		var limit = stats_results.length - downloadNumber * 5;
 		var d;
-		for(d = 0; d< limit; d++) {
-			alert('In de loop!');
+		for(d = 0; d < limit; d++) {
 			var counter;
 			for(counter = 0; counter < 11; counter++)
-				$(downloadList[d][counter]).sfLabel("option","text",allDownloads[d][counter]);
+				$(download_list[d][counter]).sfLabel("option","text",stats_results[d + downloadNumber * 5][counter]);
 			
-			$(progressBarList[d]).sfProgressBar('setValue', allDownloads[d][6]);
+			$(progress_bar_list[d]).sfProgressBar('setValue', stats_results[d + downloadNumber * 5][6]);
 			
 			showElement(d);
 		}
+		var h;
+		for (h = d; h < 5; h++)
+			hideElement(h);
 		
 	}
 }
@@ -444,13 +475,11 @@ var timer;
 var timer_on=0;
 
 function getProgress() {
-	alert('Get progress!');
-	httpGetXML(statsURL);
-	t=setTimeout("getProgress()",4000);
+	httpGetXML(stats_url);
+	t = setTimeout("getProgress()", 4000);
 }
 
 function startProgress() {
-	alert('Start progress!');
 	if (!timer_on) {
 		timer_on=1;
 		getProgress();
@@ -463,15 +492,14 @@ function stopProgress() {
 }
 
 function nextPage() {
-	if(downloadNumber < Math.floor(allDownloads.length / 5) - 1) {
+	if (downloadNumber < Math.floor((stats_results.length - 1) / 5)) {
 		downloadNumber++;
 		switchPage();
 		focus = 0;
 		focusElement(focus);
-	} else if (downloadNumber == Math.floor(allDownloads.length / 5) - 1) {
-		downloadNumber++;
-		var numelements = allDownloads.length % 5;
-		var hidecounter = 0;
+	} else if (downloadNumber == Math.floor(stats_results.length - 1 / 5)) {
+		var numelements = stats_results.length % 5;
+		var hidecounter;
 		for (hidecounter = numelements; hidecounter < 5; hidecounter++)
 			hideElement(hidecounter);
 		switchPage();
@@ -482,7 +510,7 @@ function nextPage() {
 
 function prevPage() {
 	
-	if (downloadNumber == Math.floor(allDownloads.length / 5)) {
+	if (downloadNumber == Math.floor((stats_results.length - 1) / 5)) {
 			var showcounter = 0;
 			for (showcounter = 0; showcounter < 5; showcounter++)
 				showElement(showcounter);
@@ -498,17 +526,17 @@ function prevPage() {
 
 function switchPage() {
 	var end = 5;
-	if ((allDownloads.length % 5) > 0)
-		end = allDownloads.length % 5;
+	if (downloadNumber == Math.floor((stats_results.length - 1) / 5) && (stats_results.length % 5) > 0)
+		end = stats_results.length % 5;
 		
 	var j;
 	var start = downloadNumber * 5;
 	for(j = 0; j < end; j++) {
 		var counter;
 		for(counter = 0; counter < 11; counter++)
-			$(downloadList[j][counter]).sfLabel("option","text",allDownloads[j+start][counter]);
+			$(download_list[j][counter]).sfLabel("option","text",stats_results[j+start][counter]);
 		
-		$(progressBarList[j]).sfProgressBar('setValue', allDownloads[j+start][6]);
+		$(progress_bar_list[j]).sfProgressBar('setValue', stats_results[j+start][6]);
 	}
 }
 
@@ -517,9 +545,9 @@ function hideElement(index) {
 	var element = elementList[index];
 	var i;
 	for(i=0; i<element.length; i++)
-		$(element[i]).sfLabel('hide');	
+		$(element[i]).sfLabel('hide');
 		
-	var myElement = document.getElementById(progressBarList[index].substring(1));
+	var myElement = document.getElementById(progress_bar_list[index].substring(1));
 	myElement.style.visibility="hidden";
 	var myElement = document.getElementById(linesList[index]);
 	myElement.style.visibility="hidden";
@@ -529,27 +557,37 @@ function showElement(index) {
 	alert("SceneDownloads.showElement()");
 	var element = elementList[index];
 	var i;
-	for(i=0; i<element.length; i++)
-		$(element[i]).sfLabel('show');	
+	for(i = 0; i < element.length; i++)
+		$(element[i]).sfLabel('show');
 		
-	var myElement = document.getElementById(progressBarList[index].substring(1));
+	var myElement = document.getElementById(progress_bar_list[index].substring(1));
 	myElement.style.visibility="visible";
 	var myElement = document.getElementById(linesList[index]);
 	myElement.style.visibility="visible";
 }
 
 function focusElement(index) {
-	alert("SceneDownloads.focusElement()");	
-	var myElement = document.getElementById(linesList[index]);
-	myElement.style.borderWidth="4px";
-	myElement.style.borderBottomStyle="inset";
-	myElement.style.borderBottomColor="#40e0d0";
-}
-
-function blurElement(index) {
-	alert("SceneDownloads.blurElement()");	
 	var myElement = document.getElementById(linesList[index]);
 	myElement.style.borderWidth="2px";
 	myElement.style.borderBottomStyle="groove";
-	myElement.style.borderBottomColor="#e6e6fa";
+	myElement.style.borderBottomColor="#ffffff";
+	myElement.style.borderTopStyle="groove";
+	myElement.style.borderTopColor="#ffffff";
+	myElement.style.borderLeftStyle="groove";
+	myElement.style.borderLeftColor="#ffffff";
+	myElement.style.borderRightStyle="groove";
+	myElement.style.borderRightColor="#ffffff";
+}
+
+function blurElement(index) {
+	var myElement = document.getElementById(linesList[index]);
+	myElement.style.borderWidth="2px";
+	myElement.style.borderBottomStyle="solid";
+	myElement.style.borderBottomColor="#000000";
+	myElement.style.borderTopStyle="solid";
+	myElement.style.borderTopColor="#000000";
+	myElement.style.borderLeftStyle="solid";
+	myElement.style.borderLeftColor="#000000";
+	myElement.style.borderRightStyle="solid";
+	myElement.style.borderRightColor="#000000";
 }
