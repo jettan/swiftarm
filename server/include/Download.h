@@ -82,6 +82,7 @@ class Download {
 		void setDownloadSpeed(double speed);
 		void setUploadSpeed(double speed);
 		void setProgress(double percentage);
+		bool isComplete();
 		
 		void setSeeders(int amount);
 		void setPeers(int amount);

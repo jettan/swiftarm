@@ -42,7 +42,6 @@ class HTTPServerTest : public ::testing::Test {
 			
 		} else {
 			ticpp::Element *result = list->FirstChildElement();
-			std::cout << result->Value() <<  std::endl;
 			
 			while (result) {
 				
@@ -134,7 +133,7 @@ TEST_F(HTTPServerTest, searchEmpty) {
 	curl_easy_setopt(easyHandle, CURLOPT_URL, addr2.c_str());
 	res = curl_easy_perform(easyHandle);
 	
-	std::vector<struct SearchEngine::result> results = toVector(response);	
+	std::vector<struct SearchEngine::result> results = toVector(response);
 	EXPECT_EQ(0, results.size());
 }
 
@@ -225,7 +224,7 @@ TEST_F(HTTPServerTest, downloadTwice){
 	response = "";
 }
 
-// Test the infamous pause-resume-stats segfault.
+// Test the infamous pause-resume-pause segfault.
 TEST_F(HTTPServerTest, pauseResumePause) {
 	
 	search();

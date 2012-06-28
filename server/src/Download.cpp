@@ -174,6 +174,13 @@ void Download::setProgress(double percentage) {
 }
 
 /**
+ * Determines whether the download is complete
+ */
+bool Download::isComplete() {
+	return swift::Complete(getID()) == swift::Size(getID());
+}
+
+/**
  * Setter for amount of seeders.
  * @param amount: The amount of seeders to be set.
  */

@@ -467,10 +467,14 @@ int DownloadManager::resumeDownload(std::string download_hash) {
 		
 		if (getDownloads().at(index).getStatus() == PAUSED && getDownloads().at(index).getID() > -1) {
 			pthread_mutex_lock(&active_download_mutex);
-			std::string hash = active_download->getRootHash();
+			std::string active_hash = active_download->getRootHash();
 			pthread_mutex_unlock(&active_download_mutex);
 			
-			pauseDownload(hash);
+			pthread_mutex_lock(&active_download_mutex);
+			if (active_download->getStatus() == DOWNLOADING && !getDownloads().at(index).isComplete()) {
+				pauseDownload(active_hash);
+			}
+			pthread_mutex_unlock(&active_download_mutex);
 			
 			pthread_mutex_lock(&mutex);
 			setActiveDownload(&downloads.at(index));
