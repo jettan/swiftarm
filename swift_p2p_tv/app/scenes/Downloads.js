@@ -42,53 +42,53 @@ SceneDownloads.prototype.initialize = function () {
 	var elementThree = [];
 	var elementFour = [];
 
-	$('#svecButton_EZNV').sfLabel({text: 'Ratio:'});
-	$('#svecLabel_4MQH').sfLabel({text:'up:'});
-	$('#svecLabel_F9M8').sfLabel({text:'XX'});
-	$('#svecLabel_TCTT').sfLabel({text:'down:'});
-	$('#svecLabel_0KZJ').sfLabel({text:'XX'});
+	$('#ratio_label').sfLabel({text: 'Ratio:'});
+	$('#total_up_label').sfLabel({text:'up:'});
+	$('#init_total_up').sfLabel({text:'XX'});
+	$('#total_down_label').sfLabel({text:'down:'});
+	$('#init_total_down').sfLabel({text:'XX'});
 	$('#pause_image').sfImage({src:'images/navi/pause.png'});
 	
 	// First download 
-	$('#nameLabel').sfLabel({text:'Name'});
-	$('#roothashLabel').sfLabel({text:'roothash'});
-	$('#completeLabel').sfLabel({text:'Complete'});
-	$('#sizeLabel').sfLabel({text:'Size'});
-	$('#progressLabel').sfLabel({text:'('});
-	$('#statusLabel').sfLabel({text:'X'});
-	$('#downSpeed').sfLabel({text:'DL: '});
-	$('#upSpeed').sfLabel({text:'UL: '});
-	$('#svecLabel_07NY').sfLabel({text:'seeders: '});
-	$('#svecLabel_ZB04').sfLabel({text:'peers: '});
-	$('#slashLabel').sfLabel({text:'/'});
-	$('#seedersLabel').sfLabel({text:'..'});
-	$('#peersLabel').sfLabel({text:'..'});
-	$('#timeLabel').sfLabel({text:' remaining'});
+	$('#00_download_name').sfLabel({text:'Name'});
+	$('#00_download_hash').sfLabel({text:'roothash'});
+	$('#00_download_completed').sfLabel({text:'Complete'});
+	$('#00_download_size').sfLabel({text:'Size'});
+	$('#00_download_progress').sfLabel({text:'('});
+	$('#00_download_status').sfLabel({text:'X'});
+	$('#00_download_dspeed').sfLabel({text:'DL: '});
+	$('#00_download_uspeed').sfLabel({text:'UL: '});
+	$('#00_download_seeders').sfLabel({text:'seeders: '});
+	$('#00_download_peers').sfLabel({text:'peers: '});
+	$('#00_download_separator').sfLabel({text:'/'});
+	$('#00_download_num_seeders').sfLabel({text:'..'});
+	$('#00_download_num_peers').sfLabel({text:'..'});
+	$('#00_download_eta').sfLabel({text:' remaining'});
 	$('#svecLabel_QQM0').sfLabel({text:'XX'});
 	$('#svecLabel_0660').sfLabel({text:'XXXX'});
 	$('#svecLabel_AO6B').sfLabel({text:'XXXX'});
-	$('#svecLabel_5911').sfLabel({text:'100'});
-	$('#svecLabel_7ANW').sfLabel({text:'%)'});
-	downloadZero.push('#sizeLabel');
-	downloadZero.push('#completeLabel');
-	downloadZero.push('#statusLabel');
-	downloadZero.push('#nameLabel');
+	$('#00_download_num_progress').sfLabel({text:'100'});
+	$('#00_download_percentage').sfLabel({text:'%)'});
+	downloadZero.push('#00_download_size');
+	downloadZero.push('#00_download_completed');
+	downloadZero.push('#00_download_status');
+	downloadZero.push('#00_download_name');
 	downloadZero.push('#svecLabel_AO6B');
 	downloadZero.push('#svecLabel_0660');
-	downloadZero.push('#svecLabel_5911');
-	downloadZero.push('#seedersLabel');
-	downloadZero.push('#peersLabel');
+	downloadZero.push('#00_download_num_progress');
+	downloadZero.push('#00_download_num_seeders');
+	downloadZero.push('#00_download_num_peers');
 	downloadZero.push('#svecLabel_QQM0');
-	downloadZero.push('#roothashLabel');
+	downloadZero.push('#00_download_hash');
 	elementZero = downloadZero.slice(0);
-	elementZero.push('#progressLabel');
-	elementZero.push('#downSpeed');
-	elementZero.push('#upSpeed');
-	elementZero.push('#svecLabel_07NY');
-	elementZero.push('#svecLabel_ZB04');
-	elementZero.push('#slashLabel');
-	elementZero.push('#timeLabel');
-	elementZero.push('#svecLabel_7ANW');
+	elementZero.push('#00_download_progress');
+	elementZero.push('#00_download_dspeed');
+	elementZero.push('#00_download_uspeed');
+	elementZero.push('#00_download_seeders');
+	elementZero.push('#00_download_peers');
+	elementZero.push('#00_download_separator');
+	elementZero.push('#00_download_eta');
+	elementZero.push('#00_download_percentage');
 	
 	//Second download
 	$('#svecLabel_5032').sfLabel({text:'Name'});
@@ -347,14 +347,14 @@ SceneDownloads.prototype.handleKeyDown = function (key_code) {
 			}
 			break;
 		case sf.key.PAUSE:
-			$('#statusLabel').sfLabel('hide');
+			$('#00_download_status').sfLabel('hide');
 			httpGetSpecial(pause_url + stats_results[focus + downloadNumber * 5][10]);
 			$('#pause_image').sfImage('show');
 			break;
 		case sf.key.PLAY:
 			$('#pause_image').sfImage('hide');
 			httpGetSpecial(resume_url + stats_results[focus + downloadNumber * 5][10]);
-			$('#statusLabel').sfLabel('show');
+			$('#00_download_status').sfLabel('show');
 			break;
 		case sf.key.STOP:
 			$('#popup_confirmation').sfPopup({
@@ -415,7 +415,7 @@ function httpGetSpecial(url) {
 function processSpecialResponse() {
 	if(specialRequest.readyState == 4) {
 		var special_result = statsRequest.responseText;
-		$('#svecButton_EZNV').sfLabel("option","text","Ratio: " + special_result);
+		$('#ratio_label').sfLabel("option","text","Ratio: " + special_result);
 	}
 }
 
@@ -447,9 +447,9 @@ function processStatsResponse() {
 			stats_results[count].push($(this).find("TIMEMINUTES").text());
 			stats_results[count].push($(this).find("HASH").text());
 			if (count == 0) {
-				$('#svecLabel_F9M8').sfLabel("option","text",$(this).find("UPLOADAMOUNT").text());
-				$('#svecLabel_0KZJ').sfLabel("option","text",$(this).find("DOWNLOADAMOUNT").text());
-				$('#svecButton_EZNV').sfLabel("option","text","Ratio: " + $(this).find("RATIO").text());
+				$('#init_total_up').sfLabel("option","text",$(this).find("UPLOADAMOUNT").text());
+				$('#init_total_down').sfLabel("option","text",$(this).find("DOWNLOADAMOUNT").text());
+				$('#ratio_label').sfLabel("option","text","Ratio: " + $(this).find("RATIO").text());
 			}
 			count++;
 		});

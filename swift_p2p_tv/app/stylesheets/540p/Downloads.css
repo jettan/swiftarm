@@ -6,7 +6,7 @@
 	height : 540px;
 }
 
-#SceneDownloads #svecButton_EZNV{
+#SceneDownloads #ratio_label{
 	position : absolute;
 	font-size : 10pt;
 	color : #ffffff;
@@ -15,7 +15,7 @@
 	width : 120px;
 }
 
-#SceneDownloads #svecLabel_4MQH{
+#SceneDownloads #total_up_label{
 	position : absolute;
 	font-size : 10pt;
 	color : #ffffff;
@@ -24,7 +24,7 @@
 	width : 40px;
 }
 
-#SceneDownloads #svecLabel_F9M8{
+#SceneDownloads #init_total_up{
 	position : absolute;
 	font-size : 10pt;
 	color : #ffffff;
@@ -33,7 +33,7 @@
 	width : 30px;
 }
 
-#SceneDownloads #svecLabel_TCTT{
+#SceneDownloads #total_down_label{
 	position : absolute;
 	font-size : 10pt;
 	color : #ffffff;
@@ -42,7 +42,7 @@
 	width : 40px;
 }
 
-#SceneDownloads #svecLabel_0KZJ{
+#SceneDownloads #init_total_down{
 	position : absolute;
 	font-size : 10pt;
 	color : #ffffff;
@@ -89,7 +89,7 @@
 /*
 Download 1 START
 */
-#SceneDownloads #nameLabel{
+#SceneDownloads #00_download_name{
 	position : absolute;
 	font-size : 12pt;
 	color : #ffffff;
@@ -98,7 +98,7 @@ Download 1 START
 	width : 200px;
 }
 
-#SceneDownloads #roothashLabel{
+#SceneDownloads #00_download_hash{
 	position : absolute;
 	font-size : 10pt;
 	color : #ffffff;
@@ -107,7 +107,7 @@ Download 1 START
 	width : 400px;
 }
 
-#SceneDownloads #completeLabel{
+#SceneDownloads #00_download_completed{
 	position : absolute;
 	font-size : 10pt;
 	text-align: right;
@@ -117,7 +117,7 @@ Download 1 START
 	width : 70px;
 }
 
-#SceneDownloads #sizeLabel{
+#SceneDownloads #00_download_size{
 	position : absolute;
 	font-size : 10pt;
 	color : #ffffff;
@@ -126,7 +126,7 @@ Download 1 START
 	width : 70px;
 }
 
-#SceneDownloads #progressLabel{
+#SceneDownloads #00_download_progress{
 	position : absolute;
 	font-size : 10pt;
 	color : #ffffff;
@@ -135,7 +135,7 @@ Download 1 START
 	width : 70px;
 }
 
-#SceneDownloads #statusLabel{
+#SceneDownloads #00_download_status{
 	position : absolute;
 	font-size : 10pt;
 	color : #ffffff;
@@ -144,7 +144,7 @@ Download 1 START
 	width : 30px;
 }
 
-#SceneDownloads #downSpeed{
+#SceneDownloads #00_download_dspeed{
 	position : absolute;
 	font-size : 10pt;
 	color : #ffffff;
@@ -153,7 +153,7 @@ Download 1 START
 	width : 80px;
 }
 
-#SceneDownloads #upSpeed{
+#SceneDownloads #00_download_uspeed{
 	position : absolute;
 	font-size : 10pt;
 	color : #ffffff;
@@ -162,7 +162,7 @@ Download 1 START
 	width : 80px;
 }
 /* seeders */
-#SceneDownloads #svecLabel_07NY{
+#SceneDownloads #00_download_seeders{
 	position : absolute;
 	font-size : 10pt;
 	color : #ffffff;
@@ -171,7 +171,7 @@ Download 1 START
 	width : 80px;
 }
 /* peers */
-#SceneDownloads #svecLabel_ZB04{
+#SceneDownloads #00_download_peers{
 	position : absolute;
 	font-size : 10pt;
 	color : #ffffff;
@@ -180,7 +180,7 @@ Download 1 START
 	width : 80px;
 }
 
-#SceneDownloads #slashLabel{
+#SceneDownloads #00_download_separator{
 	position : absolute;
 	font-size : 10pt;
 	color : #ffffff;
@@ -189,7 +189,7 @@ Download 1 START
 	width : 20px;
 }
 
-#SceneDownloads #seedersLabel{
+#SceneDownloads #00_download_num_seeders{
 	position : absolute;
 	font-size : 10pt;
 	color : #ffffff;
@@ -198,7 +198,7 @@ Download 1 START
 	width : 50px;
 }
 
-#SceneDownloads #peersLabel{
+#SceneDownloads #00_download_num_peers{
 	position : absolute;
 	font-size : 10pt;
 	color : #ffffff;
@@ -207,7 +207,7 @@ Download 1 START
 	width : 60px;
 }
 
-#SceneDownloads #timeLabel{
+#SceneDownloads #00_download_eta{
 	position : absolute;
 	font-size : 10pt;
 	color : #ffffff;
@@ -243,7 +243,7 @@ Download 1 START
 	width : 80px;
 }
 
-#SceneDownloads #svecLabel_5911{
+#SceneDownloads #00_download_num_progress{
 	position : absolute;
 	font-size : 10pt;
 	color : #ffffff;
@@ -252,7 +252,7 @@ Download 1 START
 	width : 40px;
 }
 
-#SceneDownloads #svecLabel_7ANW{
+#SceneDownloads #00_download_percentage{
 	position : absolute;
 	font-size : 10pt;
 	color : #ffffff;
