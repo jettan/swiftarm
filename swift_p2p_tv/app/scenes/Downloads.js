@@ -395,28 +395,51 @@ function showElement(index) {
 }
 
 function focusElement(index) {
-	var myElement = document.getElementById(lines_list[index]);
-	myElement.style.borderWidth="2px";
-	myElement.style.borderBottomStyle="groove";
-	myElement.style.borderBottomColor="#ffffff";
-	myElement.style.borderTopStyle="groove";
-	myElement.style.borderTopColor="#ffffff";
-	myElement.style.borderLeftStyle="groove";
-	myElement.style.borderLeftColor="#ffffff";
-	myElement.style.borderRightStyle="groove";
-	myElement.style.borderRightColor="#ffffff";
+	if (index > 0) {
+		var my_element = document.getElementById(lines_list[index - 1]);
+		my_element.style.borderBottomWidth = "0px";
+	}
+	
+	for (var j = 0; j < 5; j++) {
+		if (j != index) {
+			var my_element = document.getElementById(lines_list[j]);
+			my_element.style.width = "692px";
+		}
+	}
+		
+	var my_element = document.getElementById(lines_list[index]);
+	my_element.style.borderWidth="4px";
+	my_element.style.borderStyle="inset";
+	my_element.style.borderColor="#40e0d0";
+	
+	if (index < 4) {
+		var my_element = document.getElementById(lines_list[index + 1]);
+		my_element.style.borderTopWidth = "0px";
+	}
 }
 
 function blurElement(index) {
+	if (index > 0) {
+		var my_element = document.getElementById(lines_list[index - 1]);
+		my_element.style.borderBottomWidth = "2px";
+	}
+	
+	for (var j = 0; j < 5; j++) {
+		if (j != index) {
+			var my_element = document.getElementById(lines_list[j]);
+			my_element.style.width = "690px";
+		}
+	}
+		
+	var my_element = document.getElementById(lines_list[index]);
+	my_element.style.borderWidth="2px";
+	my_element.style.borderStyle="groove";
+	my_element.style.borderColor="#e6e6fa";
+	
+	if (index < 4) {
+		var my_element = document.getElementById(lines_list[index + 1]);
+		my_element.style.borderTopWidth = "2px";
+	}
 	var myElement = document.getElementById(lines_list[index]);
-	myElement.style.borderWidth="2px";
-	myElement.style.borderBottomStyle="solid";
-	myElement.style.borderBottomColor="#000000";
-	myElement.style.borderTopStyle="solid";
-	myElement.style.borderTopColor="#000000";
-	myElement.style.borderLeftStyle="solid";
-	myElement.style.borderLeftColor="#000000";
-	myElement.style.borderRightStyle="solid";
-	myElement.style.borderRightColor="#000000";
 }
 
