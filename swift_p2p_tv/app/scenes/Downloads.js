@@ -17,274 +17,109 @@ var stop_url   = tv_url + "/stop:";
 var remove_url = tv_url + "/remove:";
 var clear_url  = tv_url + "/clear";
 
+var special_request;
+var stats_request;
+
 var download_list;
 var stats_results;
-var progress_bar_list = [];
-var elementList = [];
-var linesList = [];
-var focus = 0;
-var count = 0;
-var downloadNumber = 0;
+var element_list      = [];
+var focus             = 0;
+var count             = 0;
+var page_number       = 0;
+
+var download_zero = ["#00_download_size","#00_download_completed", "#00_download_status", "#00_download_name",
+                 "#00_download_dspeed", "#00_download_uspeed", "#00_download_num_progress",
+                 "#00_download_num_seeders", "#00_download_num_peers", "#00_download_time_remaining",
+                 "#00_download_hash"];
+
+var element_zero = download_zero.slice(0);
+element_zero.splice(download_zero.length - 1, 0, "#00_download_progress", "#00_download_dspeed_label",
+                    "#00_download_uspeed_label", "#00_download_seeders", "#00_download_peers",
+                    "#00_download_separator", "#00_download_eta", "#00_download_percentage");
+
+var download_one = ["#01_download_size","#01_download_completed", "#01_download_status", "#01_download_name",
+                "#01_download_dspeed", "#01_download_uspeed", "#01_download_num_progress",
+                "#01_download_num_seeders", "#01_download_num_peers", "#01_download_time_remaining",
+                "#01_download_hash"];
+
+var element_one = download_one.slice(0);
+element_one.splice(download_one.length - 1, 0, "#01_download_progress", "#01_download_dspeed_label",
+                    "#01_download_uspeed_label", "#01_download_seeders", "#01_download_peers",
+                    "#01_download_separator", "#01_download_eta", "#01_download_percentage");
+
+var download_two = ["#02_download_size","#02_download_completed", "#02_download_status", "#02_download_name",
+                "#02_download_dspeed", "#02_download_uspeed", "#02_download_num_progress",
+                "#02_download_num_seeders", "#02_download_num_peers", "#02_download_time_remaining",
+                "#02_download_hash"];
+
+var element_two  = download_two.slice(0);
+element_two.splice(download_two.length - 1, 0, "#02_download_progress", "#02_download_dspeed_label",
+                    "#02_download_uspeed_label", "#02_download_seeders", "#02_download_peers",
+                    "#02_download_separator", "#02_download_eta", "#02_download_percentage");
+
+var download_three = ["#03_download_size","#03_download_completed", "#03_download_status", "#03_download_name",
+                  "#03_download_dspeed", "#03_download_uspeed", "#03_download_num_progress",
+                  "#03_download_num_seeders", "#03_download_num_peers", "#03_download_time_remaining",
+                  "#03_download_hash"];
+
+var element_three  = download_three.slice(0);
+element_three.splice(download_three.length - 1, 0, "#03_download_progress", "#03_download_dspeed_label",
+                    "#03_download_uspeed_label", "#03_download_seeders", "#03_download_peers",
+                    "#03_download_separator", "#03_download_eta", "#03_download_percentage");
+
+var download_four = ["#04_download_size","#04_download_completed", "#04_download_status", "#04_download_name",
+                 "#04_download_dspeed", "#04_download_uspeed", "#04_download_num_progress",
+                 "#04_download_num_seeders", "#04_download_num_peers", "#04_download_time_remaining",
+                 "#04_download_hash"];
+
+var element_four  = download_four.slice(0);
+element_four.splice(download_four.length - 1, 0, "#04_download_progress", "#04_download_dspeed_label",
+                    "#04_download_uspeed_label", "#04_download_seeders", "#04_download_peers",
+                    "#04_download_separator", "#04_download_eta", "#04_download_percentage");
+
+var progress_bar_list = ["#progress_download0", "#progress_download1", "#progress_download2",
+                     "#progress_download3", "#progress_download4"];
+
+var lines_list        = ["download_holder0", "download_holder1", "download_holder2",
+                     "download_holder3", "download_holder4"];
 
 SceneDownloads.prototype.initialize = function () {
-	// this function will be called only once when the scene manager show this scene first time
-	// initialize the scene controls and styles, and initialize your variables here 
-	// scene HTML and CSS will be loaded before this function is called
-	var downloadZero = [];
-	var downloadOne = [];
-	var downloadTwo = [];
-	var downloadThree = [];
-	var downloadFour = [];
-	
-	var elementZero = [];
-	var elementOne = [];
-	var elementTwo = [];
-	var elementThree = [];
-	var elementFour = [];
-
 	$('#ratio_label').sfLabel({text: 'Ratio:'});
 	$('#total_up_label').sfLabel({text:'up:'});
-	$('#init_total_up').sfLabel({text:'XX'});
+	$('#init_total_up').sfLabel({text:'0'});
 	$('#total_down_label').sfLabel({text:'down:'});
-	$('#init_total_down').sfLabel({text:'XX'});
+	$('#init_total_down').sfLabel({text:'0'});
 	$('#pause_image').sfImage({src:'images/navi/pause.png'});
 	
-	// First download 
-	$('#00_download_name').sfLabel({text:'Name'});
-	$('#00_download_hash').sfLabel({text:'roothash'});
-	$('#00_download_completed').sfLabel({text:'Complete'});
-	$('#00_download_size').sfLabel({text:'Size'});
-	$('#00_download_progress').sfLabel({text:'('});
-	$('#00_download_status').sfLabel({text:'X'});
-	$('#00_download_dspeed').sfLabel({text:'DL: '});
-	$('#00_download_uspeed').sfLabel({text:'UL: '});
-	$('#00_download_seeders').sfLabel({text:'seeders: '});
-	$('#00_download_peers').sfLabel({text:'peers: '});
-	$('#00_download_separator').sfLabel({text:'/'});
-	$('#00_download_num_seeders').sfLabel({text:'..'});
-	$('#00_download_num_peers').sfLabel({text:'..'});
-	$('#00_download_eta').sfLabel({text:' remaining'});
-	$('#svecLabel_QQM0').sfLabel({text:'XX'});
-	$('#svecLabel_0660').sfLabel({text:'XXXX'});
-	$('#svecLabel_AO6B').sfLabel({text:'XXXX'});
-	$('#00_download_num_progress').sfLabel({text:'100'});
-	$('#00_download_percentage').sfLabel({text:'%)'});
-	downloadZero.push('#00_download_size');
-	downloadZero.push('#00_download_completed');
-	downloadZero.push('#00_download_status');
-	downloadZero.push('#00_download_name');
-	downloadZero.push('#svecLabel_AO6B');
-	downloadZero.push('#svecLabel_0660');
-	downloadZero.push('#00_download_num_progress');
-	downloadZero.push('#00_download_num_seeders');
-	downloadZero.push('#00_download_num_peers');
-	downloadZero.push('#svecLabel_QQM0');
-	downloadZero.push('#00_download_hash');
-	elementZero = downloadZero.slice(0);
-	elementZero.push('#00_download_progress');
-	elementZero.push('#00_download_dspeed');
-	elementZero.push('#00_download_uspeed');
-	elementZero.push('#00_download_seeders');
-	elementZero.push('#00_download_peers');
-	elementZero.push('#00_download_separator');
-	elementZero.push('#00_download_eta');
-	elementZero.push('#00_download_percentage');
+	for (var i = 0; i < 5; i++) {
+		$('#0' + i +'_download_name').sfLabel({text:'Name'});
+		$('#0' + i +'_download_hash').sfLabel({text:'roothash'});
+		$('#0' + i +'_download_completed').sfLabel({text:'0'});
+		$('#0' + i +'_download_size').sfLabel({text:'0'});
+		$('#0' + i +'_download_progress').sfLabel({text:'('});
+		$('#0' + i +'_download_status').sfLabel({text:'n/a'});
+		$('#0' + i +'_download_dspeed_label').sfLabel({text:'DL: '});
+		$('#0' + i +'_download_uspeed_label').sfLabel({text:'UL: '});
+		$('#0' + i +'_download_seeders').sfLabel({text:'seeders: '});
+		$('#0' + i +'_download_peers').sfLabel({text:'peers: '});
+		$('#0' + i +'_download_separator').sfLabel({text:'/'});
+		$('#0' + i +'_download_num_seeders').sfLabel({text:'0'});
+		$('#0' + i +'_download_num_peers').sfLabel({text:'0'});
+		$('#0' + i +'_download_eta').sfLabel({text:' remaining'});
+		$('#0' + i +'_download_time_remaining').sfLabel({text:'0'});
+		$('#0' + i +'_download_uspeed').sfLabel({text:'0'});
+		$('#0' + i +'_download_dspeed').sfLabel({text:'0'});
+		$('#0' + i +'_download_num_progress').sfLabel({text:'0'});
+		$('#0' + i +'_download_percentage').sfLabel({text:'%)'});
+	}
 	
-	//Second download
-	$('#svecLabel_5032').sfLabel({text:'Name'});
-	$('#svecLabel_6WZA').sfLabel({text:'roothash'});
-	$('#svecLabel_V7AX').sfLabel({text:'Complete'});
-	$('#svecLabel_9JQR').sfLabel({text:'Size'});
-	$('#svecLabel_09H7').sfLabel({text:'('});
-	$('#svecLabel_4TO1').sfLabel({text:'X'});
-	$('#svecLabel_GYID').sfLabel({text:'DL: '});
-	$('#svecLabel_2V1Q').sfLabel({text:'UL: '});
-	$('#svecLabel_VP16').sfLabel({text:'seeders: '});
-	$('#svecLabel_GX9V').sfLabel({text:'peers: '});
-	$('#svecLabel_0L1K').sfLabel({text:'/'});
-	$('#svecLabel_S6BL').sfLabel({text:'..'});
-	$('#svecLabel_20PQ').sfLabel({text:'..'});
-	$('#svecLabel_K8Y8').sfLabel({text:'remaining'});
-	$('#svecLabel_HLQI').sfLabel({text:'XX'});
-	$('#svecLabel_BR0U').sfLabel({text:'XXXX'});
-	$('#svecLabel_PR2L').sfLabel({text:'XXXX'});
-	$('#svecLabel_YY6U').sfLabel({text:'100'});
-	$('#svecLabel_Y145').sfLabel({text:'%)'});
-	downloadOne.push('#svecLabel_9JQR');
-	downloadOne.push('#svecLabel_V7AX');
-	downloadOne.push('#svecLabel_4TO1');
-	downloadOne.push('#svecLabel_5032');
-	downloadOne.push('#svecLabel_PR2L');
-	downloadOne.push('#svecLabel_BR0U');
-	downloadOne.push('#svecLabel_YY6U');
-	downloadOne.push('#svecLabel_S6BL');
-	downloadOne.push('#svecLabel_20PQ');
-	downloadOne.push('#svecLabel_HLQI');
-	downloadOne.push('#svecLabel_6WZA');
-	elementOne = downloadOne.slice(0);
-	elementOne.push('#svecLabel_09H7');
-	elementOne.push('#svecLabel_GYID');
-	elementOne.push('#svecLabel_2V1Q');
-	elementOne.push('#svecLabel_VP16');
-	elementOne.push('#svecLabel_GX9V');
-	elementOne.push('#svecLabel_0L1K');
-	elementOne.push('#svecLabel_K8Y8');
-	elementOne.push('#svecLabel_Y145');
+	for (var j = 0; j < 5; j++) {
+		$("#progress_download" + j).sfProgressBar(this.progress_bar_type[0]);
+	}
 	
-	//Third download
-	$('#svecLabel_J3JD').sfLabel({text:'Name'});
-	$('#svecLabel_YLU6').sfLabel({text:'roothash'});
-	$('#svecLabel_8MZF').sfLabel({text:'Complete'});
-	$('#svecLabel_VJNN').sfLabel({text:'Size'});
-	$('#svecLabel_N4Q2').sfLabel({text:'('});
-	$('#svecLabel_CB8O').sfLabel({text:'remaining'});
-	$('#svecLabel_JVQZ').sfLabel({text:'X'});
-	$('#svecLabel_1L1N').sfLabel({text:'DL: '});
-	$('#svecLabel_56OO').sfLabel({text:'UL: '});
-	$('#svecLabel_1NU4').sfLabel({text:'seeders: '});
-	$('#svecLabel_SS0E').sfLabel({text:'peers: '});
-	$('#svecLabel_N9IC').sfLabel({text:'/'});
-	$('#svecLabel_PDRT').sfLabel({text:'..'});
-	$('#svecLabel_J5EW').sfLabel({text:'..'});
-	$('#svecLabel_DMIE').sfLabel({text:'XX'});
-	$('#svecLabel_Y6NL').sfLabel({text:'XXXX'});
-	$('#svecLabel_ST5V').sfLabel({text:'XXXX'});
-	$('#svecLabel_6IRF').sfLabel({text:'100'});
-	$('#svecLabel_MB4M').sfLabel({text:'%)'});
-	downloadTwo.push('#svecLabel_VJNN');
-	downloadTwo.push('#svecLabel_8MZF');
-	downloadTwo.push('#svecLabel_JVQZ');
-	downloadTwo.push('#svecLabel_J3JD');
-	downloadTwo.push('#svecLabel_ST5V');
-	downloadTwo.push('#svecLabel_Y6NL');
-	downloadTwo.push('#svecLabel_6IRF');
-	downloadTwo.push('#svecLabel_PDRT');
-	downloadTwo.push('#svecLabel_J5EW');
-	downloadTwo.push('#svecLabel_DMIE');
-	downloadTwo.push('#svecLabel_YLU6');
-	elementTwo = downloadTwo.slice(0);
-	elementTwo.push('#svecLabel_N4Q2');
-	elementTwo.push('#svecLabel_CB8O');
-	elementTwo.push('#svecLabel_1L1N');
-	elementTwo.push('#svecLabel_56OO');
-	elementTwo.push('#svecLabel_1NU4');
-	elementTwo.push('#svecLabel_SS0E');
-	elementTwo.push('#svecLabel_N9IC');
-	elementTwo.push('#svecLabel_MB4M');
-	
-	//Fourth download
-	$('#svecLabel_FDPV').sfLabel({text:'Name'});
-	$('#svecLabel_LC37').sfLabel({text:'roothash'});
-	$('#svecLabel_J8RO').sfLabel({text:'Complete'});
-	$('#svecLabel_YPN4').sfLabel({text:'Size'});
-	$('#svecLabel_K8OX').sfLabel({text:'('});
-	$('#svecLabel_IUIV').sfLabel({text:'remaining'});
-	$('#svecLabel_CXKL').sfLabel({text:'X'});
-	$('#svecLabel_QF5M').sfLabel({text:'DL:'});
-	$('#svecLabel_THE0').sfLabel({text:'UL:'});
-	$('#svecLabel_P51S').sfLabel({text:'seeders: '});
-	$('#svecLabel_CVU8').sfLabel({text:'peers: '});
-	$('#svecLabel_M14B').sfLabel({text:'/'});
-	$('#svecLabel_VLQT').sfLabel({text:'..'});
-	$('#svecLabel_OCZP').sfLabel({text:'..'});
-	$('#svecLabel_P71T').sfLabel({text:'XX'});
-	$('#svecLabel_FXXA').sfLabel({text:'XXXX'});
-	$('#svecLabel_S3AD').sfLabel({text:'XXXX'});
-	$('#svecLabel_NNKJ').sfLabel({text:'100'});
-	$('#svecLabel_AXTX').sfLabel({text:'%)'});
-	downloadThree.push('#svecLabel_YPN4');
-	downloadThree.push('#svecLabel_J8RO');
-	downloadThree.push('#svecLabel_CXKL');
-	downloadThree.push('#svecLabel_FDPV');
-	downloadThree.push('#svecLabel_S3AD');
-	downloadThree.push('#svecLabel_FXXA');
-	downloadThree.push('#svecLabel_NNKJ');
-	downloadThree.push('#svecLabel_VLQT');
-	downloadThree.push('#svecLabel_OCZP');
-	downloadThree.push('#svecLabel_P71T');
-	downloadThree.push('#svecLabel_LC37');
-	elementThree = downloadThree.slice(0);
-	elementThree.push('#svecLabel_K8OX');
-	elementThree.push('#svecLabel_IUIV');
-	elementThree.push('#svecLabel_QF5M');
-	elementThree.push('#svecLabel_THE0');
-	elementThree.push('#svecLabel_P51S');
-	elementThree.push('#svecLabel_CVU8');
-	elementThree.push('#svecLabel_M14B');
-	elementThree.push('#svecLabel_AXTX');
-
-	
-	//Fifth download
-	$('#svecLabel_9N28').sfLabel({text:'Name'});
-	$('#svecLabel_XIH7').sfLabel({text:'roothash'});
-	$('#svecLabel_7CVC').sfLabel({text:'Complete'});
-	$('#svecLabel_T44Z').sfLabel({text:'Size'});
-	$('#svecLabel_0S90').sfLabel({text:'('});
-	$('#svecLabel_GQFE').sfLabel({text:'remaining'});
-	$('#svecLabel_UQS1').sfLabel({text:'X'});
-	$('#svecLabel_7Q4C').sfLabel({text:'DL: '});
-	$('#svecLabel_JYIQ').sfLabel({text:'UL: '});
-	$('#svecLabel_6AAE').sfLabel({text:'seeders: '});
-	$('#svecLabel_BA3X').sfLabel({text:'peers: '});
-	$('#svecLabel_CQNS').sfLabel({text:'/'});
-	$('#svecLabel_YEV7').sfLabel({text:'..'});
-	$('#svecLabel_5RVG').sfLabel({text:'..'});
-	$('#svecLabel_9H7R').sfLabel({text:'XX'});
-	$('#svecLabel_CXDK').sfLabel({text:'XXXX'});
-	$('#svecLabel_SLJE').sfLabel({text:'XXXX'});
-	$('#svecLabel_BJKU').sfLabel({text:'100'});
-	$('#svecLabel_XGFC').sfLabel({text:'%)'});
-	downloadFour.push('#svecLabel_T44Z');
-	downloadFour.push('#svecLabel_7CVC');
-	downloadFour.push('#svecLabel_UQS1');
-	downloadFour.push('#svecLabel_9N28');
-	downloadFour.push('#svecLabel_SLJE');
-	downloadFour.push('#svecLabel_CXDK');
-	downloadFour.push('#svecLabel_BJKU');
-	downloadFour.push('#svecLabel_YEV7');
-	downloadFour.push('#svecLabel_5RVG');
-	downloadFour.push('#svecLabel_9H7R');
-	downloadFour.push('#svecLabel_XIH7');
-	elementFour = downloadFour.slice(0);
-	elementFour.push('#svecLabel_0S90');
-	elementFour.push('#svecLabel_GQFE');
-	elementFour.push('#svecLabel_7Q4C');
-	elementFour.push('#svecLabel_JYIQ');
-	elementFour.push('#svecLabel_6AAE');
-	elementFour.push('#svecLabel_BA3X');
-	elementFour.push('#svecLabel_CQNS');
-	elementFour.push('#svecLabel_XGFC');
-
-	
-	$("#progressDownload").sfProgressBar(this.progress_bar_type[0]);
-	$("#progressDownload").sfProgressBar('setValue', 50);
-	$("#progressDownload2").sfProgressBar(this.progress_bar_type[0]);
-	$("#progressDownload2").sfProgressBar('setValue', 50);
-	$("#progressDownload3").sfProgressBar(this.progress_bar_type[0]);
-	$("#progressDownload3").sfProgressBar('setValue', 50);
-	$("#progressDownload4").sfProgressBar(this.progress_bar_type[0]);
-	$("#progressDownload4").sfProgressBar('setValue', 50);
-	$("#progressDownload5").sfProgressBar(this.progress_bar_type[0]);
-	$("#progressDownload5").sfProgressBar('setValue', 50);
-	
-	progress_bar_list.push("#progressDownload");
-	progress_bar_list.push("#progressDownload2");
-	progress_bar_list.push("#progressDownload3");
-	progress_bar_list.push("#progressDownload4");
-	progress_bar_list.push("#progressDownload5");
-	
-	linesList.push("download_holder0");
-	linesList.push("download_holder1");
-	linesList.push("download_holder2");
-	linesList.push("download_holder3");
-	linesList.push("download_holder4");
-	
-	download_list = [downloadZero, downloadOne, downloadTwo, downloadThree, downloadFour];
-	elementList = [elementZero, elementOne, elementTwo, elementThree, elementFour];
+	download_list     = [download_zero, download_one, download_two, download_three, download_four];
+	element_list      = [element_zero, element_one, element_two, element_three, element_four];
 }
-
-
-
 
 SceneDownloads.prototype.handleShow = function () {}
 
@@ -295,8 +130,7 @@ SceneDownloads.prototype.handleFocus = function () {
 	$('#label').sfLabel('show');
 	$('#scene_list').sfList('show');
 	
-	var d;
-	for (d = 0; d < 5; d++) {
+	for (var d = 0; d < 5; d++) {
 		blurElement(d);
 		hideElement(d);
 	}
@@ -308,7 +142,6 @@ SceneDownloads.prototype.handleFocus = function () {
 	$("#keyhelp_bar").sfKeyHelp({
 		'move':'Move',
 		'return': 'Return',
-		'theme' : 'TRANSPARENT',
 		'pause': 'Pause download/upload',
 		'play': 'Start/Resume download',
 		'stop': 'Stop download',
@@ -322,11 +155,11 @@ SceneDownloads.prototype.handleBlur = function () {}
 SceneDownloads.prototype.handleKeyDown = function (key_code) {
 	switch (key_code) {
 		case sf.key.UP:
-			if (focus == 0 && downloadNumber == 0)
+			if (focus == 0 && page_number == 0)
 				break;
 				
 			blurElement(focus);
-			if (focus == 0 && downloadNumber > 0) {
+			if (focus == 0 && page_number > 0) {
 				focus = 4;
 				prevPage();
 			} else {
@@ -335,7 +168,7 @@ SceneDownloads.prototype.handleKeyDown = function (key_code) {
 			}
 			break;
 		case sf.key.DOWN:
-			if (focus == (stats_results.length -1) % 5 && downloadNumber == Math.floor((stats_results.length - 1) / 5))
+			if (focus == (stats_results.length -1) % 5 && page_number == Math.floor((stats_results.length - 1) / 5))
 				break;
 				
 			blurElement(focus);
@@ -348,12 +181,12 @@ SceneDownloads.prototype.handleKeyDown = function (key_code) {
 			break;
 		case sf.key.PAUSE:
 			$('#00_download_status').sfLabel('hide');
-			httpGetSpecial(pause_url + stats_results[focus + downloadNumber * 5][10]);
+			httpGetSpecial(pause_url + stats_results[focus + page_number * 5][10]);
 			$('#pause_image').sfImage('show');
 			break;
 		case sf.key.PLAY:
 			$('#pause_image').sfImage('hide');
-			httpGetSpecial(resume_url + stats_results[focus + downloadNumber * 5][10]);
+			httpGetSpecial(resume_url + stats_results[focus + page_number * 5][10]);
 			$('#00_download_status').sfLabel('show');
 			break;
 		case sf.key.STOP:
@@ -364,8 +197,8 @@ SceneDownloads.prototype.handleKeyDown = function (key_code) {
 				keyhelp: {'return' : 'Return'},
 				callback : function(selectedIndex) {
 					 if (selectedIndex == 0) {
-						httpGetSpecial(stop_url + stats_results[focus + downloadNumber * 5][10]);
-						if (focus == 0 && downloadNumber > 0){
+						httpGetSpecial(stop_url + stats_results[focus + page_number * 5][10]);
+						if (focus == 0 && page_number > 0){
 							prevPage();
 						} else if (focus > 0) {
 							focus -= 1;
@@ -383,8 +216,8 @@ SceneDownloads.prototype.handleKeyDown = function (key_code) {
 				keyhelp: {'return' : 'Return'},
 				callback : function(selectedIndex) {
 					 if (selectedIndex == 0) {
-						httpGetSpecial(remove_url + stats_results[focus + downloadNumber * 5][10]);
-						if (focus == 0 && downloadNumber > 0){
+						httpGetSpecial(remove_url + stats_results[focus + page_number * 5][10]);
+						if (focus == 0 && page_number > 0){
 							prevPage();
 						} else if (focus > 0) {
 							focus -= 1;
@@ -404,32 +237,30 @@ SceneDownloads.prototype.handleKeyDown = function (key_code) {
 	}
 }
 
-var specialRequest;
 function httpGetSpecial(url) {
-	specialRequest = new XMLHttpRequest();
-	specialRequest.open("GET", url, true);
-	specialRequest.onreadystatechange = processSpecialResponse;
-	specialRequest.send(null);
+	special_request = new XMLHttpRequest();
+	special_request.open("GET", url, true);
+	special_request.onreadystatechange = processSpecialResponse;
+	special_request.send(null);
 }
 
 function processSpecialResponse() {
-	if(specialRequest.readyState == 4) {
-		var special_result = statsRequest.responseText;
-		$('#ratio_label').sfLabel("option","text","Ratio: " + special_result);
+	if(special_request.readyState == 4) {
+		var special_result = stats_request.responseText;
+		$('#ratio_label').sfLabel("option", "text", "Ratio: " + special_result);
 	}
 }
 
-var statsRequest;
 function httpGetXML(url) {
-	statsRequest = new XMLHttpRequest();
-	statsRequest.open("GET", url, true);
-	statsRequest.onreadystatechange = processStatsResponse;
-	statsRequest.send(null);
+	stats_request = new XMLHttpRequest();
+	stats_request.open("GET", url, true);
+	stats_request.onreadystatechange = processStatsResponse;
+	stats_request.send(null);
 }
 
 function processStatsResponse() {
-	if (statsRequest.readyState == 4) {
-		var result = statsRequest.responseXML;
+	if (stats_request.readyState == 4) {
+		var result = stats_request.responseXML;
 		stats_results = [];
 		count = 0;
 		var _THIS_ = this;
@@ -453,14 +284,14 @@ function processStatsResponse() {
 			}
 			count++;
 		});
-		var limit = stats_results.length - downloadNumber * 5;
+		var limit = stats_results.length - page_number * 5;
 		var d;
 		for(d = 0; d < limit; d++) {
 			var counter;
 			for(counter = 0; counter < 11; counter++)
-				$(download_list[d][counter]).sfLabel("option","text",stats_results[d + downloadNumber * 5][counter]);
+				$(download_list[d][counter]).sfLabel("option","text",stats_results[d + page_number * 5][counter]);
 			
-			$(progress_bar_list[d]).sfProgressBar('setValue', stats_results[d + downloadNumber * 5][6]);
+			$(progress_bar_list[d]).sfProgressBar('setValue', stats_results[d + page_number * 5][6]);
 			
 			showElement(d);
 		}
@@ -492,12 +323,12 @@ function stopProgress() {
 }
 
 function nextPage() {
-	if (downloadNumber < Math.floor((stats_results.length - 1) / 5)) {
-		downloadNumber++;
+	if (page_number < Math.floor((stats_results.length - 1) / 5)) {
+		page_number++;
 		switchPage();
 		focus = 0;
 		focusElement(focus);
-	} else if (downloadNumber == Math.floor(stats_results.length - 1 / 5)) {
+	} else if (page_number == Math.floor(stats_results.length - 1 / 5)) {
 		var numelements = stats_results.length % 5;
 		var hidecounter;
 		for (hidecounter = numelements; hidecounter < 5; hidecounter++)
@@ -509,15 +340,14 @@ function nextPage() {
 }
 
 function prevPage() {
-	
-	if (downloadNumber == Math.floor((stats_results.length - 1) / 5)) {
+	if (page_number == Math.floor((stats_results.length - 1) / 5)) {
 			var showcounter = 0;
 			for (showcounter = 0; showcounter < 5; showcounter++)
 				showElement(showcounter);
 	}
-		
-	if(downloadNumber > 0) {
-		downloadNumber--;
+	
+	if(page_number > 0) {
+		page_number--;
 		switchPage();
 		focus = 4;
 		focusElement(focus);
@@ -526,48 +356,46 @@ function prevPage() {
 
 function switchPage() {
 	var end = 5;
-	if (downloadNumber == Math.floor((stats_results.length - 1) / 5) && (stats_results.length % 5) > 0)
+	if (page_number == Math.floor((stats_results.length - 1) / 5) && (stats_results.length % 5) > 0)
 		end = stats_results.length % 5;
 		
-	var j;
-	var start = downloadNumber * 5;
-	for(j = 0; j < end; j++) {
+	var start = page_number * 5;
+	for (var j = 0; j < end; j++) {
 		var counter;
-		for(counter = 0; counter < 11; counter++)
-			$(download_list[j][counter]).sfLabel("option","text",stats_results[j+start][counter]);
-		
+		for (counter = 0; counter < 11; counter++)
+			$(download_list[j][counter]).sfLabel("option", "text", stats_results[j + start][counter]);
 		$(progress_bar_list[j]).sfProgressBar('setValue', stats_results[j+start][6]);
 	}
 }
 
 function hideElement(index) {
 	alert("SceneDownloads.hideElement()");
-	var element = elementList[index];
+	var element = element_list[index];
 	var i;
 	for(i=0; i<element.length; i++)
 		$(element[i]).sfLabel('hide');
 		
 	var myElement = document.getElementById(progress_bar_list[index].substring(1));
 	myElement.style.visibility="hidden";
-	var myElement = document.getElementById(linesList[index]);
+	var myElement = document.getElementById(lines_list[index]);
 	myElement.style.visibility="hidden";
 }
 
 function showElement(index) {
 	alert("SceneDownloads.showElement()");
-	var element = elementList[index];
+	var element = element_list[index];
 	var i;
 	for(i = 0; i < element.length; i++)
 		$(element[i]).sfLabel('show');
 		
 	var myElement = document.getElementById(progress_bar_list[index].substring(1));
 	myElement.style.visibility="visible";
-	var myElement = document.getElementById(linesList[index]);
+	var myElement = document.getElementById(lines_list[index]);
 	myElement.style.visibility="visible";
 }
 
 function focusElement(index) {
-	var myElement = document.getElementById(linesList[index]);
+	var myElement = document.getElementById(lines_list[index]);
 	myElement.style.borderWidth="2px";
 	myElement.style.borderBottomStyle="groove";
 	myElement.style.borderBottomColor="#ffffff";
@@ -580,7 +408,7 @@ function focusElement(index) {
 }
 
 function blurElement(index) {
-	var myElement = document.getElementById(linesList[index]);
+	var myElement = document.getElementById(lines_list[index]);
 	myElement.style.borderWidth="2px";
 	myElement.style.borderBottomStyle="solid";
 	myElement.style.borderBottomColor="#000000";
@@ -591,3 +419,4 @@ function blurElement(index) {
 	myElement.style.borderRightStyle="solid";
 	myElement.style.borderRightColor="#000000";
 }
+
