@@ -307,7 +307,7 @@ var timer_on=0;
 
 function getProgress() {
 	httpGetXML(stats_url);
-	t = setTimeout("getProgress()", 4000);
+	timer = setTimeout("getProgress()", 4000);
 }
 
 function startProgress() {
@@ -409,8 +409,8 @@ function focusElement(index) {
 		
 	var my_element = document.getElementById(lines_list[index]);
 	my_element.style.borderWidth="4px";
-	my_element.style.borderStyle="inset";
-	my_element.style.borderColor="#40e0d0";
+	my_element.style.borderStyle="ridge";
+	my_element.style.borderColor="#19FCF4;
 	
 	if (index < 4) {
 		var my_element = document.getElementById(lines_list[index + 1]);
