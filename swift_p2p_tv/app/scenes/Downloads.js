@@ -410,7 +410,7 @@ function focusElement(index) {
 	var my_element = document.getElementById(lines_list[index]);
 	my_element.style.borderWidth="4px";
 	my_element.style.borderStyle="ridge";
-	my_element.style.borderColor="#19FCF4;
+	my_element.style.borderColor="#19fcf4";
 	
 	if (index < 4) {
 		var my_element = document.getElementById(lines_list[index + 1]);
