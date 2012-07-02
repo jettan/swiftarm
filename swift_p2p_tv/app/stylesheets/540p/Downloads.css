@@ -89,7 +89,7 @@
 /*
 Download 1 START
 */
-#SceneDownloads #00_download_name{
+#SceneDownloads #download_00_name{
 	position : absolute;
 	font-size : 12pt;
 	color : #ffffff;
@@ -98,7 +98,7 @@ Download 1 START
 	width : 200px;
 }
 
-#SceneDownloads #00_download_hash{
+#SceneDownloads #download_00_hash{
 	position : absolute;
 	font-size : 10pt;
 	color : #ffffff;
@@ -107,7 +107,7 @@ Download 1 START
 	width : 400px;
 }
 
-#SceneDownloads #00_download_completed{
+#SceneDownloads #download_00_completed{
 	position : absolute;
 	font-size : 10pt;
 	text-align: right;
@@ -117,7 +117,7 @@ Download 1 START
 	width : 70px;
 }
 
-#SceneDownloads #00_download_size{
+#SceneDownloads #download_00_size{
 	position : absolute;
 	font-size : 10pt;
 	color : #ffffff;
@@ -126,7 +126,7 @@ Download 1 START
 	width : 70px;
 }
 
-#SceneDownloads #00_download_progress{
+#SceneDownloads #download_00_progress{
 	position : absolute;
 	font-size : 10pt;
 	color : #ffffff;
@@ -135,7 +135,7 @@ Download 1 START
 	width : 70px;
 }
 
-#SceneDownloads #00_download_status{
+#SceneDownloads #download_00_status{
 	position : absolute;
 	font-size : 10pt;
 	color : #ffffff;
@@ -144,7 +144,7 @@ Download 1 START
 	width : 30px;
 }
 
-#SceneDownloads #00_download_dspeed_label{
+#SceneDownloads #download_00_dspeed_label{
 	position : absolute;
 	font-size : 10pt;
 	color : #ffffff;
@@ -153,7 +153,7 @@ Download 1 START
 	width : 80px;
 }
 
-#SceneDownloads #00_download_uspeed_label{
+#SceneDownloads #download_00_uspeed_label{
 	position : absolute;
 	font-size : 10pt;
 	color : #ffffff;
@@ -162,7 +162,7 @@ Download 1 START
 	width : 80px;
 }
 /* seeders */
-#SceneDownloads #00_download_seeders{
+#SceneDownloads #download_00_seeders{
 	position : absolute;
 	font-size : 10pt;
 	color : #ffffff;
@@ -171,7 +171,7 @@ Download 1 START
 	width : 80px;
 }
 /* peers */
-#SceneDownloads #00_download_peers{
+#SceneDownloads #download_00_peers{
 	position : absolute;
 	font-size : 10pt;
 	color : #ffffff;
@@ -180,7 +180,7 @@ Download 1 START
 	width : 80px;
 }
 
-#SceneDownloads #00_download_separator{
+#SceneDownloads #download_00_separator{
 	position : absolute;
 	font-size : 10pt;
 	color : #ffffff;
@@ -189,7 +189,7 @@ Download 1 START
 	width : 20px;
 }
 
-#SceneDownloads #00_download_num_seeders{
+#SceneDownloads #download_00_num_seeders{
 	position : absolute;
 	font-size : 10pt;
 	color : #ffffff;
@@ -198,7 +198,7 @@ Download 1 START
 	width : 50px;
 }
 
-#SceneDownloads #00_download_num_peers{
+#SceneDownloads #download_00_num_peers{
 	position : absolute;
 	font-size : 10pt;
 	color : #ffffff;
@@ -207,7 +207,7 @@ Download 1 START
 	width : 60px;
 }
 
-#SceneDownloads #00_download_eta{
+#SceneDownloads #download_00_eta{
 	position : absolute;
 	font-size : 10pt;
 	color : #ffffff;
@@ -216,7 +216,7 @@ Download 1 START
 	width : 100px;
 }
 
-#SceneDownloads #00_download_time_remaining{
+#SceneDownloads #download_00_time_remaining{
 	position : absolute;
 	font-size : 10pt;
 	color : #ffffff;
@@ -225,7 +225,7 @@ Download 1 START
 	width : 40px;
 }
 
-#SceneDownloads #00_download_uspeed{
+#SceneDownloads #download_00_uspeed{
 	position : absolute;
 	font-size : 10pt;
 	color : #ffffff;
@@ -234,7 +234,7 @@ Download 1 START
 	width : 80px;
 }
 
-#SceneDownloads #00_download_dspeed{
+#SceneDownloads #download_00_dspeed{
 	position : absolute;
 	font-size : 10pt;
 	color : #ffffff;
@@ -243,7 +243,7 @@ Download 1 START
 	width : 80px;
 }
 
-#SceneDownloads #00_download_num_progress{
+#SceneDownloads #download_00_num_progress{
 	position : absolute;
 	font-size : 10pt;
 	color : #ffffff;
@@ -252,7 +252,7 @@ Download 1 START
 	width : 40px;
 }
 
-#SceneDownloads #00_download_percentage{
+#SceneDownloads #download_00_percentage{
 	position : absolute;
 	font-size : 10pt;
 	color : #ffffff;
@@ -265,7 +265,7 @@ Download 1 START
 	Download 2 START
 */
 /* name label */
-#SceneDownloads #01_download_name{
+#SceneDownloads #download_01_name{
 	position : absolute;
 	font-size : 12pt;
 	color : #ffffff;
@@ -275,7 +275,7 @@ Download 1 START
 }
 
 /* root hash label */
-#SceneDownloads #01_download_hash{
+#SceneDownloads #download_01_hash{
 	position : absolute;
 	font-size : 10pt;
 	color : #ffffff;
@@ -284,7 +284,7 @@ Download 1 START
 	width : 400px;
 }
 /* complete label */
-#SceneDownloads #01_download_completed{
+#SceneDownloads #download_01_completed{
 	position : absolute;
 	font-size : 10pt;
 	text-align: right;
@@ -295,7 +295,7 @@ Download 1 START
 }
 
 /* size label */
-#SceneDownloads #01_download_size{
+#SceneDownloads #download_01_size{
 	position : absolute;
 	font-size : 10pt;
 	color : #ffffff;
@@ -305,7 +305,7 @@ Download 1 START
 }
 
 /* ( label */
-#SceneDownloads #01_download_progress{
+#SceneDownloads #download_01_progress{
 	position : absolute;
 	font-size : 10pt;
 	color : #ffffff;
@@ -316,7 +316,7 @@ Download 1 START
 
 
 /* status label */
-#SceneDownloads #01_download_status{
+#SceneDownloads #download_01_status{
 	position : absolute;
 	font-size : 10pt;
 	color : #ffffff;
@@ -326,7 +326,7 @@ Download 1 START
 }
 
 /* DL: label */
-#SceneDownloads #01_download_dspeed_label{
+#SceneDownloads #download_01_dspeed_label{
 	position : absolute;
 	font-size : 10pt;
 	color : #ffffff;
@@ -336,7 +336,7 @@ Download 1 START
 }
 
 /* UL: label */
-#SceneDownloads #01_download_uspeed_label{
+#SceneDownloads #download_01_uspeed_label{
 	position : absolute;
 	font-size : 10pt;
 	color : #ffffff;
@@ -346,7 +346,7 @@ Download 1 START
 }
 
 /* seeders: label */
-#SceneDownloads #01_download_seeders{
+#SceneDownloads #download_01_seeders{
 	position : absolute;
 	font-size : 10pt;
 	color : #ffffff;
@@ -356,7 +356,7 @@ Download 1 START
 }
 
 /* peers: label */
-#SceneDownloads #01_download_peers{
+#SceneDownloads #download_01_peers{
 	position : absolute;
 	font-size : 10pt;
 	color : #ffffff;
@@ -366,7 +366,7 @@ Download 1 START
 }
 
 /* / label */
-#SceneDownloads #01_download_separator{
+#SceneDownloads #download_01_separator{
 	position : absolute;
 	font-size : 10pt;
 	color : #ffffff;
@@ -376,7 +376,7 @@ Download 1 START
 }
 
 /* seeders label */
-#SceneDownloads #01_download_num_seeders{
+#SceneDownloads #download_01_num_seeders{
 	position : absolute;
 	font-size : 10pt;
 	color : #ffffff;
@@ -386,7 +386,7 @@ Download 1 START
 }
 
 /* peers label */
-#SceneDownloads #01_download_num_peers{
+#SceneDownloads #download_01_num_peers{
 	position : absolute;
 	font-size : 10pt;
 	color : #ffffff;
@@ -396,7 +396,7 @@ Download 1 START
 }
 
 /* remaining label */
-#SceneDownloads #01_download_eta{
+#SceneDownloads #download_01_eta{
 	position : absolute;
 	font-size : 10pt;
 	color : #ffffff;
@@ -406,7 +406,7 @@ Download 1 START
 }
 
 /* time label */
-#SceneDownloads #01_download_time_remaining{
+#SceneDownloads #download_01_time_remaining{
 	position : absolute;
 	font-size : 10pt;
 	color : #ffffff;
@@ -416,7 +416,7 @@ Download 1 START
 }
 
 /* down speed label */
-#SceneDownloads #01_download_uspeed{
+#SceneDownloads #download_01_uspeed{
 	position : absolute;
 	font-size : 10pt;
 	color : #ffffff;
@@ -426,7 +426,7 @@ Download 1 START
 }
 
 /* up speed label */
-#SceneDownloads #01_download_dspeed{
+#SceneDownloads #download_01_dspeed{
 	position : absolute;
 	font-size : 10pt;
 	color : #ffffff;
@@ -436,7 +436,7 @@ Download 1 START
 }
 
 /* progress label */
-#SceneDownloads #01_download_num_progress{
+#SceneDownloads #download_01_num_progress{
 	position : absolute;
 	font-size : 10pt;
 	color : #ffffff;
@@ -446,7 +446,7 @@ Download 1 START
 }
 
 /* ) label */
-#SceneDownloads #01_download_percentage{
+#SceneDownloads #download_01_percentage{
 	position : absolute;
 	font-size : 10pt;
 	color : #ffffff;
@@ -460,7 +460,7 @@ Download 1 START
 */
 
 /* name label */
-#SceneDownloads #02_download_name{
+#SceneDownloads #download_02_name{
 	position : absolute;
 	font-size : 12pt;
 	color : #ffffff;
@@ -470,7 +470,7 @@ Download 1 START
 }
 
 /* root hash label */
-#SceneDownloads #02_download_hash{
+#SceneDownloads #download_02_hash{
 	position : absolute;
 	font-size : 10pt;
 	color : #ffffff;
@@ -480,7 +480,7 @@ Download 1 START
 }
 
 /* complete label */
-#SceneDownloads #02_download_completed{
+#SceneDownloads #download_02_completed{
 	position : absolute;
 	font-size : 10pt;
 	text-align: right;
@@ -491,7 +491,7 @@ Download 1 START
 }
 
 /* size label */
-#SceneDownloads #02_download_size{
+#SceneDownloads #download_02_size{
 	position : absolute;
 	font-size : 10pt;
 	color : #ffffff;
@@ -501,7 +501,7 @@ Download 1 START
 }
 
 /* ( label */
-#SceneDownloads #02_download_progress{
+#SceneDownloads #download_02_progress{
 	position : absolute;
 	font-size : 10pt;
 	color : #ffffff;
@@ -510,7 +510,7 @@ Download 1 START
 	width : 70px;
 }
 
-#SceneDownloads #02_download_eta{
+#SceneDownloads #download_02_eta{
 	position : absolute;
 	font-size : 10pt;
 	color : #ffffff;
@@ -519,7 +519,7 @@ Download 1 START
 	width : 100px;
 }
 
-#SceneDownloads #02_download_status{
+#SceneDownloads #download_02_status{
 	position : absolute;
 	font-size : 10pt;
 	color : #ffffff;
@@ -528,7 +528,7 @@ Download 1 START
 	width : 30px;
 }
 
-#SceneDownloads #02_download_dspeed_label{
+#SceneDownloads #download_02_dspeed_label{
 	position : absolute;
 	font-size : 10pt;
 	color : #ffffff;
@@ -537,7 +537,7 @@ Download 1 START
 	width : 80px;
 }
 
-#SceneDownloads #02_download_uspeed_label{
+#SceneDownloads #download_02_uspeed_label{
 	position : absolute;
 	font-size : 10pt;
 	color : #ffffff;
@@ -546,7 +546,7 @@ Download 1 START
 	width : 80px;
 }
 
-#SceneDownloads #02_download_seeders{
+#SceneDownloads #download_02_seeders{
 	position : absolute;
 	font-size : 10pt;
 	color : #ffffff;
@@ -555,7 +555,7 @@ Download 1 START
 	width : 80px;
 }
 
-#SceneDownloads #02_download_peers{
+#SceneDownloads #download_02_peers{
 	position : absolute;
 	font-size : 10pt;
 	color : #ffffff;
@@ -564,7 +564,7 @@ Download 1 START
 	width : 80px;
 }
 
-#SceneDownloads #02_download_separator{
+#SceneDownloads #download_02_separator{
 	position : absolute;
 	font-size : 10pt;
 	color : #ffffff;
@@ -573,7 +573,7 @@ Download 1 START
 	width : 20px;
 }
 
-#SceneDownloads #03_download_name{
+#SceneDownloads #download_03_name{
 	position : absolute;
 	font-size : 12pt;
 	color : #ffffff;
@@ -582,7 +582,7 @@ Download 1 START
 	width : 200px;
 }
 
-#SceneDownloads #03_download_hash{
+#SceneDownloads #download_03_hash{
 	position : absolute;
 	font-size : 10pt;
 	color : #ffffff;
@@ -591,7 +591,7 @@ Download 1 START
 	width : 400px;
 }
 
-#SceneDownloads #03_download_completed{
+#SceneDownloads #download_03_completed{
 	position : absolute;
 	font-size : 10pt;
 	text-align: right;
@@ -601,7 +601,7 @@ Download 1 START
 	width : 70px;
 }
 
-#SceneDownloads #03_download_size{
+#SceneDownloads #download_03_size{
 	position : absolute;
 	font-size : 10pt;
 	color : #ffffff;
@@ -610,7 +610,7 @@ Download 1 START
 	width : 70px;
 }
 
-#SceneDownloads #03_download_progress{
+#SceneDownloads #download_03_progress{
 	position : absolute;
 	font-size : 10pt;
 	color : #ffffff;
@@ -619,7 +619,7 @@ Download 1 START
 	width : 70px;
 }
 
-#SceneDownloads #03_download_eta{
+#SceneDownloads #download_03_eta{
 	position : absolute;
 	font-size : 10pt;
 	color : #ffffff;
@@ -628,7 +628,7 @@ Download 1 START
 	width : 100px;
 }
 
-#SceneDownloads #03_download_status{
+#SceneDownloads #download_03_status{
 	position : absolute;
 	font-size : 10pt;
 	color : #ffffff;
@@ -637,7 +637,7 @@ Download 1 START
 	width : 30px;
 }
 
-#SceneDownloads #03_download_dspeed_label{
+#SceneDownloads #download_03_dspeed_label{
 	position : absolute;
 	font-size : 10pt;
 	color : #ffffff;
@@ -646,7 +646,7 @@ Download 1 START
 	width : 80px;
 }
 
-#SceneDownloads #03_download_uspeed_label{
+#SceneDownloads #download_03_uspeed_label{
 	position : absolute;
 	font-size : 10pt;
 	color : #ffffff;
@@ -655,7 +655,7 @@ Download 1 START
 	width : 80px;
 }
 
-#SceneDownloads #03_download_seeders{
+#SceneDownloads #download_03_seeders{
 	position : absolute;
 	font-size : 10pt;
 	color : #ffffff;
@@ -664,7 +664,7 @@ Download 1 START
 	width : 80px;
 }
 
-#SceneDownloads #03_download_peers{
+#SceneDownloads #download_03_peers{
 	position : absolute;
 	font-size : 10pt;
 	color : #ffffff;
@@ -673,7 +673,7 @@ Download 1 START
 	width : 80px;
 }
 
-#SceneDownloads #03_download_separator{
+#SceneDownloads #download_03_separator{
 	position : absolute;
 	font-size : 10pt;
 	color : #ffffff;
@@ -682,7 +682,7 @@ Download 1 START
 	width : 20px;
 }
 
-#SceneDownloads #04_download_name{
+#SceneDownloads #download_04_name{
 	position : absolute;
 	font-size : 12pt;
 	color : #ffffff;
@@ -691,7 +691,7 @@ Download 1 START
 	width : 200px;
 }
 
-#SceneDownloads #04_download_hash{
+#SceneDownloads #download_04_hash{
 	position : absolute;
 	font-size : 10pt;
 	color : #ffffff;
@@ -700,7 +700,7 @@ Download 1 START
 	width : 400px;
 }
 
-#SceneDownloads #04_download_completed{
+#SceneDownloads #download_04_completed{
 	position : absolute;
 	font-size : 10pt;
 	text-align: right;
@@ -710,7 +710,7 @@ Download 1 START
 	width : 70px;
 }
 
-#SceneDownloads #04_download_size{
+#SceneDownloads #download_04_size{
 	position : absolute;
 	font-size : 10pt;
 	color : #ffffff;
@@ -719,7 +719,7 @@ Download 1 START
 	width : 70px;
 }
 
-#SceneDownloads #04_download_progress{
+#SceneDownloads #download_04_progress{
 	position : absolute;
 	font-size : 10pt;
 	color : #ffffff;
@@ -728,7 +728,7 @@ Download 1 START
 	width : 70px;
 }
 
-#SceneDownloads #04_download_eta{
+#SceneDownloads #download_04_eta{
 	position : absolute;
 	font-size : 10pt;
 	color : #ffffff;
@@ -737,7 +737,7 @@ Download 1 START
 	width : 100px;
 }
 
-#SceneDownloads #04_download_status{
+#SceneDownloads #download_04_status{
 	position : absolute;
 	font-size : 10pt;
 	color : #ffffff;
@@ -746,7 +746,7 @@ Download 1 START
 	width : 30px;
 }
 
-#SceneDownloads #04_download_dspeed_label{
+#SceneDownloads #download_04_dspeed_label{
 	position : absolute;
 	font-size : 10pt;
 	color : #ffffff;
@@ -755,7 +755,7 @@ Download 1 START
 	width : 80px;
 }
 
-#SceneDownloads #04_download_uspeed_label{
+#SceneDownloads #download_04_uspeed_label{
 	position : absolute;
 	font-size : 10pt;
 	color : #ffffff;
@@ -764,7 +764,7 @@ Download 1 START
 	width : 80px;
 }
 
-#SceneDownloads #04_download_seeders{
+#SceneDownloads #download_04_seeders{
 	position : absolute;
 	font-size : 10pt;
 	color : #ffffff;
@@ -773,7 +773,7 @@ Download 1 START
 	width : 80px;
 }
 
-#SceneDownloads #04_download_peers{
+#SceneDownloads #download_04_peers{
 	position : absolute;
 	font-size : 10pt;
 	color : #ffffff;
@@ -782,7 +782,7 @@ Download 1 START
 	width : 80px;
 }
 
-#SceneDownloads #04_download_separator{
+#SceneDownloads #download_04_separator{
 	position : absolute;
 	font-size : 10pt;
 	color : #ffffff;
@@ -792,7 +792,7 @@ Download 1 START
 }
 
 
-#SceneDownloads #02_download_num_seeders{
+#SceneDownloads #download_02_num_seeders{
 	position : absolute;
 	font-size : 10pt;
 	color : #ffffff;
@@ -801,7 +801,7 @@ Download 1 START
 	width : 50px;
 }
 
-#SceneDownloads #02_download_num_peers{
+#SceneDownloads #download_02_num_peers{
 	position : absolute;
 	font-size : 10pt;
 	color : #ffffff;
@@ -810,7 +810,7 @@ Download 1 START
 	width : 60px;
 }
 
-#SceneDownloads #03_download_num_seeders{
+#SceneDownloads #download_03_num_seeders{
 	position : absolute;
 	font-size : 10pt;
 	color : #ffffff;
@@ -819,7 +819,7 @@ Download 1 START
 	width : 50px;
 }
 
-#SceneDownloads #03_download_num_peers{
+#SceneDownloads #download_03_num_peers{
 	position : absolute;
 	font-size : 10pt;
 	color : #ffffff;
@@ -828,7 +828,7 @@ Download 1 START
 	width : 60px;
 }
 
-#SceneDownloads #04_download_num_seeders{
+#SceneDownloads #download_04_num_seeders{
 	position : absolute;
 	font-size : 10pt;
 	color : #ffffff;
@@ -837,7 +837,7 @@ Download 1 START
 	width : 50px;
 }
 
-#SceneDownloads #04_download_num_peers{
+#SceneDownloads #download_04_num_peers{
 	position : absolute;
 	font-size : 10pt;
 	color : #ffffff;
@@ -846,7 +846,7 @@ Download 1 START
 	width : 60px;
 }
 
-#SceneDownloads #02_download_time_remaining{
+#SceneDownloads #download_02_time_remaining{
 	position : absolute;
 	font-size : 10pt;
 	color : #ffffff;
@@ -855,7 +855,7 @@ Download 1 START
 	width : 40px;
 }
 
-#SceneDownloads #02_download_uspeed{
+#SceneDownloads #download_02_uspeed{
 	position : absolute;
 	font-size : 10pt;
 	color : #ffffff;
@@ -864,7 +864,7 @@ Download 1 START
 	width : 80px;
 }
 
-#SceneDownloads #02_download_dspeed{
+#SceneDownloads #download_02_dspeed{
 	position : absolute;
 	font-size : 10pt;
 	color : #ffffff;
@@ -873,7 +873,7 @@ Download 1 START
 	width : 80px;
 }
 
-#SceneDownloads #02_download_num_progress{
+#SceneDownloads #download_02_num_progress{
 	position : absolute;
 	font-size : 10pt;
 	color : #ffffff;
@@ -882,7 +882,7 @@ Download 1 START
 	width : 40px;
 }
 
-#SceneDownloads #02_download_percentage{
+#SceneDownloads #download_02_percentage{
 	position : absolute;
 	font-size : 10pt;
 	color : #ffffff;
@@ -891,7 +891,7 @@ Download 1 START
 	width : 40px;
 }
 
-#SceneDownloads #03_download_time_remaining{
+#SceneDownloads #download_03_time_remaining{
 	position : absolute;
 	font-size : 10pt;
 	color : #ffffff;
@@ -900,7 +900,7 @@ Download 1 START
 	width : 40px;
 }
 
-#SceneDownloads #03_download_uspeed{
+#SceneDownloads #download_03_uspeed{
 	position : absolute;
 	font-size : 10pt;
 	color : #ffffff;
@@ -909,7 +909,7 @@ Download 1 START
 	width : 80px;
 }
 
-#SceneDownloads #03_download_dspeed{
+#SceneDownloads #download_03_dspeed{
 	position : absolute;
 	font-size : 10pt;
 	color : #ffffff;
@@ -918,7 +918,7 @@ Download 1 START
 	width : 80px;
 }
 
-#SceneDownloads #03_download_num_progress{
+#SceneDownloads #download_03_num_progress{
 	position : absolute;
 	font-size : 10pt;
 	color : #ffffff;
@@ -927,7 +927,7 @@ Download 1 START
 	width : 40px;
 }
 
-#SceneDownloads #03_download_percentage{
+#SceneDownloads #download_03_percentage{
 	position : absolute;
 	font-size : 10pt;
 	color : #ffffff;
@@ -936,7 +936,7 @@ Download 1 START
 	width : 40px;
 }
 
-#SceneDownloads #04_download_time_remaining{
+#SceneDownloads #download_04_time_remaining{
 	position : absolute;
 	font-size : 10pt;
 	color : #ffffff;
@@ -945,7 +945,7 @@ Download 1 START
 	width : 40px;
 }
 
-#SceneDownloads #04_download_uspeed{
+#SceneDownloads #download_04_uspeed{
 	position : absolute;
 	font-size : 10pt;
 	color : #ffffff;
@@ -954,7 +954,7 @@ Download 1 START
 	width : 80px;
 }
 
-#SceneDownloads #04_download_dspeed{
+#SceneDownloads #download_04_dspeed{
 	position : absolute;
 	font-size : 10pt;
 	color : #ffffff;
@@ -963,7 +963,7 @@ Download 1 START
 	width : 80px;
 }
 
-#SceneDownloads #04_download_num_progress{
+#SceneDownloads #download_04_num_progress{
 	position : absolute;
 	font-size : 10pt;
 	color : #ffffff;
@@ -972,7 +972,7 @@ Download 1 START
 	width : 40px;
 }
 
-#SceneDownloads #04_download_percentage{
+#SceneDownloads #download_04_percentage{
 	position : absolute;
 	font-size : 10pt;
 	color : #ffffff;

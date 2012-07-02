@@ -27,55 +27,55 @@ var focus             = 0;
 var count             = 0;
 var page_number       = 0;
 
-var download_zero = ["#00_download_size","#00_download_completed", "#00_download_status", "#00_download_name",
-                 "#00_download_dspeed", "#00_download_uspeed", "#00_download_num_progress",
-                 "#00_download_num_seeders", "#00_download_num_peers", "#00_download_time_remaining",
-                 "#00_download_hash"];
+var download_zero = ["#download_00_size","#download_00_completed", "#download_00_status", "#download_00_name",
+                 "#download_00_dspeed", "#download_00_uspeed", "#download_00_num_progress",
+                 "#download_00_num_seeders", "#download_00_num_peers", "#download_00_time_remaining",
+                 "#download_00_hash"];
 
 var element_zero = download_zero.slice(0);
-element_zero.splice(download_zero.length - 1, 0, "#00_download_progress", "#00_download_dspeed_label",
-                    "#00_download_uspeed_label", "#00_download_seeders", "#00_download_peers",
-                    "#00_download_separator", "#00_download_eta", "#00_download_percentage");
+element_zero.splice(download_zero.length - 1, 0, "#download_00_progress", "#download_00_dspeed_label",
+                    "#download_00_uspeed_label", "#download_00_seeders", "#download_00_peers",
+                    "#download_00_separator", "#download_00_eta", "#download_00_percentage");
 
-var download_one = ["#01_download_size","#01_download_completed", "#01_download_status", "#01_download_name",
-                "#01_download_dspeed", "#01_download_uspeed", "#01_download_num_progress",
-                "#01_download_num_seeders", "#01_download_num_peers", "#01_download_time_remaining",
-                "#01_download_hash"];
+var download_one = ["#download_01_size","#download_01_completed", "#download_01_status", "#download_01_name",
+                "#download_01_dspeed", "#download_01_uspeed", "#download_01_num_progress",
+                "#download_01_num_seeders", "#download_01_num_peers", "#download_01_time_remaining",
+                "#download_01_hash"];
 
 var element_one = download_one.slice(0);
-element_one.splice(download_one.length - 1, 0, "#01_download_progress", "#01_download_dspeed_label",
-                    "#01_download_uspeed_label", "#01_download_seeders", "#01_download_peers",
-                    "#01_download_separator", "#01_download_eta", "#01_download_percentage");
+element_one.splice(download_one.length - 1, 0, "#download_01_progress", "#download_01_dspeed_label",
+                    "#download_01_uspeed_label", "#download_01_seeders", "#download_01_peers",
+                    "#download_01_separator", "#download_01_eta", "#download_01_percentage");
 
-var download_two = ["#02_download_size","#02_download_completed", "#02_download_status", "#02_download_name",
-                "#02_download_dspeed", "#02_download_uspeed", "#02_download_num_progress",
-                "#02_download_num_seeders", "#02_download_num_peers", "#02_download_time_remaining",
-                "#02_download_hash"];
+var download_two = ["#download_02_size","#download_02_completed", "#download_02_status", "#download_02_name",
+                "#download_02_dspeed", "#download_02_uspeed", "#download_02_num_progress",
+                "#download_02_num_seeders", "#download_02_num_peers", "#download_02_time_remaining",
+                "#download_02_hash"];
 
 var element_two  = download_two.slice(0);
-element_two.splice(download_two.length - 1, 0, "#02_download_progress", "#02_download_dspeed_label",
-                    "#02_download_uspeed_label", "#02_download_seeders", "#02_download_peers",
-                    "#02_download_separator", "#02_download_eta", "#02_download_percentage");
+element_two.splice(download_two.length - 1, 0, "#download_02_progress", "#download_02_dspeed_label",
+                    "#download_02_uspeed_label", "#download_02_seeders", "#download_02_peers",
+                    "#download_02_separator", "#download_02_eta", "#download_02_percentage");
 
-var download_three = ["#03_download_size","#03_download_completed", "#03_download_status", "#03_download_name",
-                  "#03_download_dspeed", "#03_download_uspeed", "#03_download_num_progress",
-                  "#03_download_num_seeders", "#03_download_num_peers", "#03_download_time_remaining",
-                  "#03_download_hash"];
+var download_three = ["#download_03_size","#download_03_completed", "#download_03_status", "#download_03_name",
+                  "#download_03_dspeed", "#download_03_uspeed", "#download_03_num_progress",
+                  "#download_03_num_seeders", "#download_03_num_peers", "#download_03_time_remaining",
+                  "#download_03_hash"];
 
 var element_three  = download_three.slice(0);
-element_three.splice(download_three.length - 1, 0, "#03_download_progress", "#03_download_dspeed_label",
-                    "#03_download_uspeed_label", "#03_download_seeders", "#03_download_peers",
-                    "#03_download_separator", "#03_download_eta", "#03_download_percentage");
+element_three.splice(download_three.length - 1, 0, "#download_03_progress", "#download_03_dspeed_label",
+                    "#download_03_uspeed_label", "#download_03_seeders", "#download_03_peers",
+                    "#download_03_separator", "#download_03_eta", "#download_03_percentage");
 
-var download_four = ["#04_download_size","#04_download_completed", "#04_download_status", "#04_download_name",
-                 "#04_download_dspeed", "#04_download_uspeed", "#04_download_num_progress",
-                 "#04_download_num_seeders", "#04_download_num_peers", "#04_download_time_remaining",
-                 "#04_download_hash"];
+var download_four = ["#download_04_size","#download_04_completed", "#download_04_status", "#download_04_name",
+                 "#download_04_dspeed", "#download_04_uspeed", "#download_04_num_progress",
+                 "#download_04_num_seeders", "#download_04_num_peers", "#download_04_time_remaining",
+                 "#download_04_hash"];
 
 var element_four  = download_four.slice(0);
-element_four.splice(download_four.length - 1, 0, "#04_download_progress", "#04_download_dspeed_label",
-                    "#04_download_uspeed_label", "#04_download_seeders", "#04_download_peers",
-                    "#04_download_separator", "#04_download_eta", "#04_download_percentage");
+element_four.splice(download_four.length - 1, 0, "#download_04_progress", "#download_04_dspeed_label",
+                    "#download_04_uspeed_label", "#download_04_seeders", "#download_04_peers",
+                    "#download_04_separator", "#download_04_eta", "#download_04_percentage");
 
 var progress_bar_list = ["#progress_download0", "#progress_download1", "#progress_download2",
                      "#progress_download3", "#progress_download4"];
@@ -92,25 +92,25 @@ SceneDownloads.prototype.initialize = function () {
 	$('#pause_image').sfImage({src:'images/navi/pause.png'});
 	
 	for (var i = 0; i < 5; i++) {
-		$('#0' + i +'_download_name').sfLabel({text:'Name'});
-		$('#0' + i +'_download_hash').sfLabel({text:'roothash'});
-		$('#0' + i +'_download_completed').sfLabel({text:'0'});
-		$('#0' + i +'_download_size').sfLabel({text:'0'});
-		$('#0' + i +'_download_progress').sfLabel({text:'('});
-		$('#0' + i +'_download_status').sfLabel({text:'n/a'});
-		$('#0' + i +'_download_dspeed_label').sfLabel({text:'DL: '});
-		$('#0' + i +'_download_uspeed_label').sfLabel({text:'UL: '});
-		$('#0' + i +'_download_seeders').sfLabel({text:'seeders: '});
-		$('#0' + i +'_download_peers').sfLabel({text:'peers: '});
-		$('#0' + i +'_download_separator').sfLabel({text:'/'});
-		$('#0' + i +'_download_num_seeders').sfLabel({text:'0'});
-		$('#0' + i +'_download_num_peers').sfLabel({text:'0'});
-		$('#0' + i +'_download_eta').sfLabel({text:' remaining'});
-		$('#0' + i +'_download_time_remaining').sfLabel({text:'0'});
-		$('#0' + i +'_download_uspeed').sfLabel({text:'0'});
-		$('#0' + i +'_download_dspeed').sfLabel({text:'0'});
-		$('#0' + i +'_download_num_progress').sfLabel({text:'0'});
-		$('#0' + i +'_download_percentage').sfLabel({text:'%)'});
+		$('#download_0' + i +'_name').sfLabel({text:'Name'});
+		$('#download_0' + i +'_hash').sfLabel({text:'roothash'});
+		$('#download_0' + i +'_completed').sfLabel({text:'0'});
+		$('#download_0' + i +'_size').sfLabel({text:'0'});
+		$('#download_0' + i +'_progress').sfLabel({text:'('});
+		$('#download_0' + i +'_status').sfLabel({text:'n/a'});
+		$('#download_0' + i +'_dspeed_label').sfLabel({text:'DL: '});
+		$('#download_0' + i +'_uspeed_label').sfLabel({text:'UL: '});
+		$('#download_0' + i +'_seeders').sfLabel({text:'seeders: '});
+		$('#download_0' + i +'_peers').sfLabel({text:'peers: '});
+		$('#download_0' + i +'_separator').sfLabel({text:'/'});
+		$('#download_0' + i +'_num_seeders').sfLabel({text:'0'});
+		$('#download_0' + i +'_num_peers').sfLabel({text:'0'});
+		$('#download_0' + i +'_eta').sfLabel({text:' remaining'});
+		$('#download_0' + i +'_time_remaining').sfLabel({text:'0'});
+		$('#download_0' + i +'_uspeed').sfLabel({text:'0'});
+		$('#download_0' + i +'_dspeed').sfLabel({text:'0'});
+		$('#download_0' + i +'_num_progress').sfLabel({text:'0'});
+		$('#download_0' + i +'_percentage').sfLabel({text:'%)'});
 	}
 	
 	for (var j = 0; j < 5; j++) {
@@ -180,14 +180,14 @@ SceneDownloads.prototype.handleKeyDown = function (key_code) {
 			}
 			break;
 		case sf.key.PAUSE:
-			$('#00_download_status').sfLabel('hide');
+			$('#download_00_status').sfLabel('hide');
 			httpGetSpecial(pause_url + stats_results[focus + page_number * 5][10]);
 			$('#pause_image').sfImage('show');
 			break;
 		case sf.key.PLAY:
 			$('#pause_image').sfImage('hide');
 			httpGetSpecial(resume_url + stats_results[focus + page_number * 5][10]);
-			$('#00_download_status').sfLabel('show');
+			$('#download_00_status').sfLabel('show');
 			break;
 		case sf.key.STOP:
 			$('#popup_confirmation').sfPopup({
