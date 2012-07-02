@@ -46,7 +46,7 @@ int main() {
 	// HTTP gateway address for swift to stream.
 	swift::Address httpaddr = swift::Address(http_address.c_str());
 	
-	double maxspeed[2] = {DBL_MAX, DBL_MAX};
+	double maxspeed[2] = {700*1024, 700*1024};
 	
 	// Install the HTTP gateway to stream.
 	bool res = InstallHTTPGateway(swift::Channel::evbase, httpaddr, SWIFT_DEFAULT_CHUNK_SIZE, maxspeed);

@@ -7,7 +7,7 @@ Stream* Stream::_instance;
  */
 void Stream::init() {
 	_streaming = false;
-	pthread_mutex_init( &_mutex, NULL);
+	pthread_mutex_init(&_mutex, NULL);
 }
 
 /**
