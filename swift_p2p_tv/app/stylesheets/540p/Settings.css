@@ -6,7 +6,7 @@
     height : 540px;
 }
 
-#labelSetting0 {
+#debug_label {
     position:absolute;
     left:275px;
     top: 60px;
@@ -14,13 +14,13 @@
 	height: 75px;
 }
 
-#toggleButton0 {
+#debug_toggle {
 	position:absolute;
     left:475px;
     top: 50px;
 }
 
-#labelSetting1 {
+#upspeed_limit_label {
     position:absolute;
     left:275px;
     top: 135px;
@@ -28,19 +28,19 @@
 	height: 75px;
 }
 
-#toggleButton1 {
+#upspeed_limit_toggle {
 	position:absolute;
     left:475px;
     top: 125px;
 }
 
-#labelUp {
+#upspeed_limit_value {
     position:absolute;
     left:650px;
     top: 135px;
 }
 
-#labelSetting2 {
+#downspeed_limit_label {
     position:absolute;
     left:275px;
     top: 210px;
@@ -48,19 +48,19 @@
 	height: 75px;
 }
 
-#toggleButton2 {
+#downspeed_limit_toggle {
 	position:absolute;
     left:475px;
     top: 200px;
 }
 
-#labelDown {
+#downspeed_limit_value {
     position:absolute;
     left:650px;
     top: 210px;
 }
 
-#labelSetting3 {
+#download_path_label {
     position:absolute;
     left:275px;
     top: 285px;
@@ -68,19 +68,19 @@
 	height: 75px;
 }
 
-#toggleButton3 {
+#popup {
     position:absolute;
     left:475px;
     top: 275px;
 }
 
-#labelRatio {
+#ratio_limit_value {
     position:absolute;
     left:650px;
     top: 275px;
 }
 
-#labelSetting4 {
+#ratio_limit_label {
     position:absolute;
     left:275px;
     top: 350px;
@@ -88,13 +88,13 @@
 	height: 75px;
 }
 
-#toggleButton4 {
+#ratio_limit_toggle {
     position:absolute;
     left:475px;
     top: 350px;
 }
 
-#labelPath {
+#download_path_value {
     position:absolute;
     left:650px;
     top: 350px;
@@ -107,7 +107,7 @@
 	width:150px;
 }
 
-#input0{
+#input{
 	position : absolute;
 	left : 275px;
 	top : 90px;
