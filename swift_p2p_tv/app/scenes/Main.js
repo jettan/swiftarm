@@ -38,6 +38,8 @@ SceneMain.prototype.initialize = function () {
 	$('#label').sfLabel('hide');
 	$('#label_video').sfLabel('hide');
 	
+	$('#background_image').sfImage({src:'images/logobg22.png'});
+	
 	$('#app_layout').sfBackground({
 		light: false,
 		column: null,
@@ -52,7 +54,6 @@ SceneMain.prototype.initialize = function () {
 		columnSize: 350 / 720 * curWidget.height
 	}
 	
-	var _THIS_ = this;
 	this.methods = [{
 			title: 'getAvailableNetworks',
 			func: function(){
@@ -61,7 +62,7 @@ SceneMain.prototype.initialize = function () {
 						var retValue = pReturn;
 						
 						if(retValue[getActiveIndex(retValue)]) {					
-							tv_url = "http://" + retValue[getActiveIndex(retValue)].ip;
+							tv_url = "http://" + retValue[getActiveIndex(retValue)].ip + ":1337";
 						}
 					}, function(code){alert("getAvailableNetworks returns " + code);});
 				}
@@ -93,7 +94,7 @@ SceneMain.prototype.handleShow = function (data) {
 	setTimeout(function() { sf.scene.hide('Browse'); sf.scene.show('Player');}, 3000);
 	setTimeout(function() { sf.scene.hide('Player'); sf.scene.show('Settings');}, 5000);
 	setTimeout(function() { sf.scene.hide('Settings'); sf.scene.show('Downloads');}, 7000);
-	setTimeout(function() { sf.scene.hide('Downloads'); $('#loading').sfLoading('hide'); sf.scene.show('Start');}, 9000);
+	setTimeout(function() { sf.scene.hide('Downloads'); $('#loading').sfLoading('hide');}, 9000);
 }
 
 SceneMain.prototype.handleHide = function () {}
@@ -121,6 +122,7 @@ SceneMain.prototype.handleFocus = function () {
 	} else {
 		$('#scene_list').sfList('focus');
 		$('#label').sfLabel('show');
+		$('#background_image').sfImage('show');
 		$('#keyhelp_bar').sfKeyHelp({
 			'enter': 'Enter',
 			'move':'Move',

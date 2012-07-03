@@ -124,9 +124,9 @@ SceneSettings.prototype.handleHide = function () {
 SceneSettings.prototype.handleFocus = function () {
 	alert('SceneSettings.handleFocus()');
 	
-	$('#MainBG').sfBackground('option', 'column', 'left');
-	$('#MainBG').sfBackground(this.defaultOpts);
-	$('#MainBG').sfBackground('option', 'column', 'left');
+	$('#app_layout').sfBackground('option', 'column', 'left');
+	$('#app_layout').sfBackground(this.defaultOpts);
+	$('#app_layout').sfBackground('option', 'column', 'left');
 	
 	$('#image').sfImage('show');
 	$('#label').sfLabel('show');

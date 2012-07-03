@@ -67,3 +67,11 @@ body {
 	font-size: 13px;
 }
 
+#background_image {
+    position: absolute;
+    left: 450px;
+    top: 80px;
+	width: 324px;
+	height: 306px;
+    display:none;
+}

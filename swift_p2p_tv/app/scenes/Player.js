@@ -65,8 +65,7 @@ function ScenePlayer(options) {
 
 var item;
 var fullScreen = false;
-// TODO Get IP address dynamically
-var stopStreamURL = "http://130.161.159.107:1337/stopStream";
+var stopStreamURL = tv_url + "/stopStream";
 
 ScenePlayer.prototype.initialize = function() {
 	alert("ScenePlayer.initialize()");

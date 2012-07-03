@@ -38,12 +38,14 @@ SceneBrowse.prototype.initialize = function () {
 	$('#filebrowser_label').sfLabel({text:'Filebrowser'});
 	$('#usb_button').sfButton({text:'Browse USB'});
 	
+	var _THIS_ = this;
 	$('#search_bar').sfTextInput({
 		text:'sintel',
 		maxlength:'10',
 		oncomplete: function (text) {
 			if (text) {
-				httpGet(search_url + text);
+				var search_terms = _THIS_.removeSpaces(search_url);
+				httpGet(search_terms + text);
 				startResultPolling();
 			}
 		}
@@ -102,6 +104,17 @@ SceneBrowse.prototype.blurSearchLabel = function () {
 	var s_bar = document.getElementById('search_bar');
 	s_bar.style.borderWidth="0px";
 }
+
+SceneBrowse.prototype.removeSpaces = function (terms) {
+	var res; 
+	var temp = terms.split(" ");
+	res += temp[0];
+	for(var i = 1; i < temp.length; i++) {
+		res += "_" + temp[i];
+	}
+	return res;
+}
+
 
 SceneBrowse.prototype.handleEnter  = function () {
 	switch (this.browse_focus) {
