@@ -347,5 +347,5 @@ try:
     import psyco
     psyco.bind(bdecode)
     psyco.bind(bencode)
-except ImportError:
+except: #ImportError:
     pass

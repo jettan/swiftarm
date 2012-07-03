@@ -1,0 +1,167 @@
+1970-01-01 03:13:49,424 CRITICAL minitwisted.py:100 - run2()
+run
+
+1970-01-01 03:14:41,697 CRITICAL minitwisted.py:100 - run2()
+run
+
+1970-01-01 00:02:18,075 CRITICAL minitwisted.py:100 - run2()
+run
+
+1970-01-01 00:17:58,773 ERROR state.py:65 - load()
+Error when loading state, loading default.
+Traceback (most recent call last):
+  File "/mtd_rwcommon/widgets/user/SamyGO/SamyGO/tribler/Tribler/Core/DecentralizedTracking/pymdht/core/state.py", line 57, in load
+    _, hex_id, _, ip, port, _, _ = line.split()
+ValueError: need more than 3 values to unpack
+1970-01-01 00:17:58,907 CRITICAL minitwisted.py:100 - run2()
+run
+
+1970-01-01 00:12:58,161 CRITICAL minitwisted.py:100 - run2()
+run
+
+1970-01-01 00:01:29,443 CRITICAL minitwisted.py:100 - run2()
+run
+
+1970-01-01 00:03:07,122 CRITICAL minitwisted.py:100 - run2()
+run
+
+1970-01-01 00:16:40,137 CRITICAL minitwisted.py:100 - run2()
+run
+
+1970-01-01 00:19:00,896 CRITICAL minitwisted.py:100 - run2()
+run
+
+1970-01-01 00:41:33,454 CRITICAL minitwisted.py:100 - run2()
+run
+
+1970-01-01 00:43:15,875 CRITICAL minitwisted.py:100 - run2()
+run
+
+1970-01-01 00:49:11,598 CRITICAL minitwisted.py:100 - run2()
+run
+
+1970-01-01 00:52:06,818 CRITICAL minitwisted.py:100 - run2()
+run
+
+1970-01-01 01:04:26,387 CRITICAL minitwisted.py:100 - run2()
+run
+
+1970-01-01 02:33:34,270 CRITICAL minitwisted.py:100 - run2()
+run
+
+1970-01-01 02:36:08,258 CRITICAL minitwisted.py:100 - run2()
+run
+
+1970-01-01 02:39:10,952 CRITICAL minitwisted.py:100 - run2()
+run
+
+1970-01-01 02:50:33,080 CRITICAL minitwisted.py:100 - run2()
+run
+
+1970-01-01 02:54:17,838 CRITICAL minitwisted.py:100 - run2()
+run
+
+1970-01-01 02:59:25,479 CRITICAL minitwisted.py:100 - run2()
+run
+
+1970-01-01 00:11:10,192 CRITICAL minitwisted.py:100 - run2()
+run
+
+1970-01-01 00:02:25,886 CRITICAL minitwisted.py:100 - run2()
+run
+
+1970-01-01 00:05:12,619 CRITICAL minitwisted.py:100 - run2()
+run
+
+1970-01-01 02:15:19,790 CRITICAL minitwisted.py:100 - run2()
+run
+
+1970-01-01 02:59:48,763 CRITICAL minitwisted.py:100 - run2()
+run
+
+1970-01-01 03:09:37,415 CRITICAL minitwisted.py:100 - run2()
+run
+
+1970-01-01 00:01:58,868 CRITICAL minitwisted.py:100 - run2()
+run
+
+1970-01-01 00:17:58,609 CRITICAL minitwisted.py:100 - run2()
+run
+
+1970-01-01 00:38:20,953 CRITICAL minitwisted.py:100 - run2()
+run
+
+1970-01-01 00:57:59,430 CRITICAL minitwisted.py:100 - run2()
+run
+
+1970-01-01 03:11:10,062 CRITICAL minitwisted.py:100 - run2()
+run
+
+1970-01-01 03:38:22,679 CRITICAL minitwisted.py:105 - run2()
+MINITWISTED CRASHED
+
+1970-01-01 03:38:26,644 ERROR minitwisted.py:106 - run2()
+MINITWISTED CRASHED
+Traceback (most recent call last):
+  File "/mtd_rwcommon/widgets/user/SamyGO/SamyGO/tribler/Tribler/Core/DecentralizedTracking/pymdht/core/minitwisted.py", line 103, in run2
+  File "/mtd_rwcommon/widgets/user/SamyGO/SamyGO/tribler/Tribler/Core/DecentralizedTracking/pymdht/core/minitwisted.py", line 153, in run_one_step
+  File "/mtd_rwcommon/widgets/user/SamyGO/SamyGO/tribler/Tribler/Core/DecentralizedTracking/pymdht/core/controller.py", line 222, in main_loop
+  File "/mtd_rwcommon/widgets/user/SamyGO/SamyGO/tribler/Tribler/Core/DecentralizedTracking/pymdht/core/state.py", line 34, in save
+IOError: [Errno 24] Too many open files: u'/mtd_rwcommon/widgets/user/SamyGO/SamyGO/tribler/.tribler/pymdht.state'
+1970-01-01 03:41:08,445 CRITICAL minitwisted.py:100 - run2()
+run
+
+1970-01-01 03:41:59,383 CRITICAL minitwisted.py:100 - run2()
+run
+
+1970-01-01 04:31:20,894 CRITICAL minitwisted.py:100 - run2()
+run
+
+1970-01-01 00:01:17,369 CRITICAL minitwisted.py:100 - run2()
+run
+
+1970-01-01 00:01:27,363 CRITICAL minitwisted.py:100 - run2()
+run
+
+1970-01-01 00:01:22,463 CRITICAL minitwisted.py:100 - run2()
+run
+
+1970-01-01 00:20:44,910 CRITICAL minitwisted.py:100 - run2()
+run
+
+1970-01-01 00:21:54,135 CRITICAL minitwisted.py:100 - run2()
+run
+
+1970-01-01 00:24:21,109 CRITICAL minitwisted.py:100 - run2()
+run
+
+1970-01-01 00:25:20,748 CRITICAL minitwisted.py:100 - run2()
+run
+
+1970-01-01 00:26:48,998 CRITICAL minitwisted.py:100 - run2()
+run
+
+1970-01-01 00:31:54,599 CRITICAL minitwisted.py:100 - run2()
+run
+
+1970-01-01 00:33:17,609 CRITICAL minitwisted.py:100 - run2()
+run
+
+1970-01-01 00:02:02,807 CRITICAL minitwisted.py:100 - run2()
+run
+
+1970-01-01 00:21:47,386 CRITICAL minitwisted.py:100 - run2()
+run
+
+1970-01-01 01:46:01,481 CRITICAL minitwisted.py:100 - run2()
+run
+
+1970-01-01 00:09:37,146 CRITICAL minitwisted.py:100 - run2()
+run
+
+1970-01-01 00:30:12,101 CRITICAL minitwisted.py:100 - run2()
+run
+
+1970-01-01 01:08:48,753 CRITICAL minitwisted.py:100 - run2()
+run
+
