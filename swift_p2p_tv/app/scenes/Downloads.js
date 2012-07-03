@@ -9,13 +9,6 @@ function SceneDownloads(options) {
 	this.size = 5;
 }
 
-var stats_url  = tv_url + "/stats";
-var pause_url  = tv_url + "/pause:";
-var resume_url = tv_url + "/resume:";
-var switch_url = tv_url + "/download:";
-var stop_url   = tv_url + "/stop:";
-var remove_url = tv_url + "/remove:";
-var clear_url  = tv_url + "/clear";
 
 var special_request;
 var stats_request;
@@ -410,8 +403,8 @@ function focusElement(index) {
 		
 	var my_element = document.getElementById(lines_list[index]);
 	my_element.style.borderWidth="4px";
-	my_element.style.borderStyle="inset";
-	my_element.style.borderColor="#40e0d0";
+	my_element.style.borderStyle="ridge";
+	my_element.style.borderColor="#03fff7";  //#40e0d0";
 	
 	if (index < 4) {
 		var my_element = document.getElementById(lines_list[index + 1]);

@@ -65,7 +65,6 @@ function ScenePlayer(options) {
 
 var item;
 var fullScreen = false;
-var stopStreamURL = tv_url + "/stopStream";
 
 ScenePlayer.prototype.initialize = function() {
 	alert("ScenePlayer.initialize()");
@@ -122,7 +121,6 @@ ScenePlayer.prototype.handleFocus = function() {
 		_THIS_.refreshList();
 	}, 1500);
 	
-
 	var mode = $('#label_redirect').sfLabel("get").text();
 	if ($('#label_redirect').sfLabel("get").text()){
 		$('#label_redirect').sfLabel('option','text','');
@@ -245,12 +243,16 @@ ScenePlayer.prototype.handleKeyDown = function(keyCode) {
 				item.fullScreen = false;
 				fullScreen = false;
 				sf.service.VideoPlayer.resume(item);
+				this.setKeyHelp();
 				break;
 			}
 			sf.service.VideoPlayer.stop();
-			httpGetClose(stop_stream_url);
-			playlist.splice(playlist.length -1, playlist.length -1);
-			$('#lstplayer').sfList('clear');
+			if (streaming) {
+				httpGetClose(stop_stream_url);
+				playlist.splice(playlist.length -1, 1);
+				this.refreshList();
+				streaming = false;
+			}
 			$('#scene_list').sfList('show');
 			$('#label').sfLabel('show');
 			sf.scene.focus('Main');
@@ -267,7 +269,8 @@ ScenePlayer.prototype.handleKeyDown = function(keyCode) {
 			break;
 			
 		case sf.key.GREEN:
-			this.printEvent(tv_url);
+			playlist.splice($("#lstPlayer").sfList('getIndex'),1);
+			this.refreshList();
 			break;
 			
 		case sf.key.PAUSE:
@@ -287,6 +290,7 @@ ScenePlayer.prototype.handleKeyDown = function(keyCode) {
 				sf.service.VideoPlayer.Skip.cancel();
 			}
 			sf.service.VideoPlayer.stop();
+			this.setKeyHelp();
 			break;
 			
 		case sf.key.FF:
@@ -349,8 +353,6 @@ ScenePlayer.prototype.refreshList = function() {
 	$("#lstPlayer").sfList('show');
 	$("#lstPlayer").sfList('focus');
 	
-	this.printEvent('url: ' + playlist[0].url);
-	this.printEvent('title: ' + playlist[0].title);
 }
 
 ScenePlayer.prototype.setKeyHelp = function (state) {
@@ -379,6 +381,7 @@ ScenePlayer.prototype.setKeyHelp = function (state) {
 		oKeyMap.UPDOWN = 'Move Item';
 		oKeyMap.ENTER = 'Play';
 		oKeyMap.RETURN = 'Return';
+		oKeyMap.GREEN = 'Remove from playlist';
 	}
 	
 	$("#keyhelp_bar").sfKeyHelp(oKeyMap);

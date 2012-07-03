@@ -17,16 +17,10 @@ var browse_enum = {
 }
 
 var tv_url          = "";
-var download_url    = tv_url + "/add:";
-var upload_url      = tv_url + "/upload:";
-var search_url      = tv_url + "/search:";
-var result_url      = tv_url + "/results";
-var stream_url      = tv_url + "/stream";
-var stop_stream_url = tv_url + "/stopStream";
 
 var is_list_shown   = false;
 var search_results  = ["Search results"];
-
+var streaming = new Boolean();
 
 
 SceneBrowse.prototype.initialize = function () {
@@ -47,6 +41,9 @@ SceneBrowse.prototype.initialize = function () {
 			if (text) {
 				var search_terms = _THIS_.removeSpaces(text);
 				httpGet(search_url + search_terms);
+				$('#search_label').sfLabel("option","text", "Searching..");
+				var my_element = document.getElementById("search_label");
+				my_element.style.fontStyle = "italic";
 				startResultPolling();
 			}
 		}
@@ -76,10 +73,10 @@ SceneBrowse.prototype.handleFocus = function () {
 	$('#filebrowser_label').sfLabel('show');
 	$('#results_list').sfList('show');
 	$('#usb_button').sfButton('focus');
-	$("#keyhelp_bar").sfKeyHelp({
-		'move':'Move',
-		'return': 'Return'
-	});
+	var key_map = {};
+	key_map.UPDOWN = 'Move';
+	key_map.RETURN = 'Return';
+	$("#keyhelp_bar").sfKeyHelp(key_map);
 }
 
 SceneBrowse.prototype.handleBlur = function () {
@@ -107,7 +104,7 @@ SceneBrowse.prototype.blurSearchLabel = function () {
 }
 
 SceneBrowse.prototype.removeSpaces = function (terms) {
-	var res; 
+	var res = "";
 	var temp = terms.split(" ");
 	res += temp[0];
 	for(var i = 1; i < temp.length; i++) {
@@ -144,11 +141,13 @@ SceneBrowse.prototype.handleEnter  = function () {
 				url: vid,
 				title: n[filename_location]
 			});
+			$('#selection_label').sfLabel("option", "text", "File selection added to playlist");
 			break;
 		case 3:
 			var vid = $('#label_video').sfLabel("get").text()
 			vid = 'file:///dtv/usb' + link.substring(8);
 			httpGet(uploadUrl + vid);
+			$('#selection_label').sfLabel("option", "text", "Seeding file..");
 			break;
 		case 4:
 			$('#label_redirect').sfLabel('option','text','Player');
@@ -179,6 +178,7 @@ SceneBrowse.prototype.handleEnter  = function () {
 								url: vid,
 								title: 'Stream'
 							});
+							streaming = true;
 							$('loading').sfLoading('hide');
 							$('#label_redirect').sfLabel('option','text','Player');
 							sf.scene.focus('Main');
@@ -416,6 +416,9 @@ function startResultPolling() {
 function stopCount() {
 	clearTimeout(t);
 	timer_is_on = 0;
+	$('#search_label').sfLabel("option","text", "Search");
+	var my_element = document.getElementById("search_label");
+	my_element.style.fontStyle = "normal";
 }
 
 var requestXml;

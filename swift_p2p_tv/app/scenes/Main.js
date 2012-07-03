@@ -4,6 +4,21 @@ function SceneMain() {
 
 // Global variables.
 var tv_ip          = "";
+var stats_url      = "";
+var pause_url      = "";
+var resume_url     = "";
+var switch_url     = "";
+var stop_url       = "";
+var remove_url     = "";
+var clear_url      = "";
+
+var download_url    = "";
+var upload_url      = "";
+var search_url      = "";
+var result_url      = "";
+var stream_url      = "";
+var stop_stream_url = "";
+
 var names           = new Array();
 var trackers        = new Array();
 var hashes          = new Array();
@@ -86,6 +101,21 @@ SceneMain.prototype.initialize = function () {
 	if(method && method.func) {
 			method.func();
 	}
+	
+	stats_url  = tv_url + "/stats";
+	pause_url  = tv_url + "/pause:";
+	resume_url = tv_url + "/resume:";
+	switch_url = tv_url + "/download:";
+	stop_url   = tv_url + "/stop:";
+	remove_url = tv_url + "/remove:";
+	clear_url  = tv_url + "/clear";
+	
+	download_url    = tv_url + "/add:";
+	upload_url      = tv_url + "/upload:";
+	search_url      = tv_url + "/search:";
+	result_url      = tv_url + "/results";
+	stream_url      = tv_url + "/stream";
+	stop_stream_url = tv_url + "/stopStream";
 }
 
 SceneMain.prototype.handleShow = function (data) {

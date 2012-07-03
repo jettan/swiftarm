@@ -242,7 +242,7 @@ function sendSettings() {
 	
 	// TODO: build URL dynamically, not hard coded
 	// Build the URL to connect to
-	var url = "http://145.94.176.101:1337" + settings;
+	var url = tv_url + settings;
 	
 	// Open a connection to the server
 	xmlHttp.open("GET", url, true);

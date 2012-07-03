@@ -60,7 +60,7 @@
     top: 210px;
 }
 
-#download_path_label {
+#ratio_limit_label {
     position:absolute;
     left:275px;
     top: 285px;
@@ -80,7 +80,7 @@
     top: 275px;
 }
 
-#ratio_limit_label {
+#download_path_label {
     position:absolute;
     left:275px;
     top: 350px;
@@ -91,7 +91,7 @@
 #ratio_limit_toggle {
     position:absolute;
     left:475px;
-    top: 350px;
+    top: 275px;
 }
 
 #download_path_value {
