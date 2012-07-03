@@ -16,6 +16,7 @@ var browse_enum = {
 	RESULT_LIST: 5
 }
 
+var tv_url          = "";
 var download_url    = tv_url + "/add:";
 var upload_url      = tv_url + "/upload:";
 var search_url      = tv_url + "/search:";

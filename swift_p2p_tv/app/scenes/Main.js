@@ -3,7 +3,7 @@ function SceneMain() {
 }
 
 // Global variables.
-var tv_url          = "";
+var tv_ip          = "";
 var names           = new Array();
 var trackers        = new Array();
 var hashes          = new Array();
@@ -62,7 +62,8 @@ SceneMain.prototype.initialize = function () {
 						var retValue = pReturn;
 						
 						if(retValue[getActiveIndex(retValue)]) {					
-							tv_url = "http://" + retValue[getActiveIndex(retValue)].ip + ":1337";
+							tv_ip = "http://" + retValue[getActiveIndex(retValue)].ip + ":1337";
+							tv_url = tv_ip;
 						}
 					}, function(code){alert("getAvailableNetworks returns " + code);});
 				}
