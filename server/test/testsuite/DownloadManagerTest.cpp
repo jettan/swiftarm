@@ -95,9 +95,7 @@ TEST_F(DownloadManagerTest, addDownloadTrivial) {
 	Download *testDL = new Download("tracker", hash, "test");
 	DownloadManager::add(testDL);
 	
-	std::cout << "Added download" << std::endl;
 	int index = DownloadManager::getIndexFromHash(hash);
-	std::cout << "Got hash" << std::endl;
 	Download returnedDL = DownloadManager::getDownloads().at(index);
 	testDL->setID(returnedDL.getID());
 	
@@ -134,8 +132,6 @@ TEST_F(DownloadManagerTest, downloadFirstInListTrivial) {
 	std::string hash2 = "abcd1234abcd1234abcd1234abcd1234abcd1234";
 	Download dl2("track2", hash2, "name2");
 	DownloadManager::add(&dl2);
-	
-	std::cout << "Added downloads" << std::endl;
 	
 	// Check whether the first download started downloading automatically
 	testDownloadsAreEqual(dl1, DownloadManager::getActiveDownload());
@@ -304,9 +300,9 @@ TEST_F(DownloadManagerTest, removeFromListNonexistent) {
 TEST_F(DownloadManagerTest, switchDownloadTrivial) {
 	
 	std::string hash1 = "1234abcd1234abcd1234abcd1234abcd1234abcd";
-	Download dl1("track1", "1234abcd1234abcd1234abcd1234abcd1234abcd", "name1");
+	Download dl1("track1", hash1, "name1");
 	DownloadManager::add(&dl1);
-	int index = DownloadManager::getIndexFromHash("1234abcd1234abcd1234abcd1234abcd1234abcd");
+	int index = DownloadManager::getIndexFromHash(hash1);
 	dl1.setID(DownloadManager::getDownloads().at(index).getID());
 	
 	std::string hash2 = "abcd1234abcd1234abcd1234abcd1234abcd1234";

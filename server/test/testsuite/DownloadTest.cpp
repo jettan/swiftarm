@@ -256,7 +256,7 @@ TEST_F(DownloadTest, pauseTrivial){
 }
 
 // Not Downloading
-TEST_F(DownloadTest, pauseNotPlaying) {
+TEST_F(DownloadTest, pauseNeverStarted) {
 	
 	download->pause();
 	EXPECT_EQ(PAUSED, download->getStatus());

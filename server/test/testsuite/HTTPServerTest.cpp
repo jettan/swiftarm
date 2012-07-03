@@ -346,6 +346,7 @@ TEST_F(HTTPServerTest, removeNonexistent) {
 	EXPECT_EQ(0, DownloadManager::getDownloads().size());
 }
 
+// Start a stream
 TEST_F(HTTPServerTest, startStreamTrivial) {
 	
 	search();
@@ -359,6 +360,7 @@ TEST_F(HTTPServerTest, startStreamTrivial) {
 	EXPECT_EQ("http://" + Settings::getIP() + ":17758/" + hash, response);
 }
 
+// Stop a stream
 TEST_F(HTTPServerTest, stopStreamTrivial) {
 	
 	search();

@@ -6,40 +6,73 @@
 class SearchEngineTest : public ::testing::Test {
 	protected:
 	
+	// Turns an XML string into a vector of results
+	std::vector<struct SearchEngine::result> toVector(std::string response) {
+		
+		std::vector<struct SearchEngine::result> results;
+		ticpp::Document doc;
+		doc.Parse(response, true, TIXML_DEFAULT_ENCODING);
+		
+		ticpp::Element *list = doc.FirstChildElement();
+		if (list->NoChildren()) {
+			return results;
+			
+		} else {
+			ticpp::Element *result = list->FirstChildElement();
+			
+			while (result) {
+				
+				ticpp::Element *info = result->FirstChildElement();
+				
+				struct SearchEngine::result r;
+				while (info) {
+					
+					if(info->Value() == "NAME") {
+						r.filename = info->GetText();
+					} else if (info->Value() == "HASH") {
+						r.hash = info->GetText();
+					} else if (info->Value() == "TRACKER") {
+						r.tracker = info->GetText();
+					}
+					
+					info = info->NextSiblingElement(false);
+				}
+				results.push_back(r);
+				result = result->NextSiblingElement(false);
+			}
+			return results;
+		}
+	}
+	
 	virtual ~SearchEngineTest() {}
 	
-	virtual void SetUp() {}
+	virtual void SetUp() {
+		
+		SearchEngine::clearSearchResults();
+	}
 	
 	virtual void TearDown() {}
 };
-
-/* Search Tests */
-
-// Trivial
-TEST_F(SearchEngineTest, searchTrivial) {
-	
-	SearchEngine::clearSearchResults();
-	SearchEngine::search("test");
-	
-	EXPECT_LT(0, SearchEngine::getResults().size());
-}
 
 /* Get Results Test */
 
 // Trivial
 TEST_F(SearchEngineTest, getResultsTrivial) {
 	
-	SearchEngine::clearSearchResults();
-	// PARSE XML HERE
-	
 	SearchEngine::search("test");
+	std::vector<struct SearchEngine::result> results = toVector(SearchEngine::getResults());
+	
+	EXPECT_EQ(2, results.size());
 }
 
 // Empty
 TEST_F(SearchEngineTest, getResultsEmpty) {
 	
+	SearchEngine::search("test");
 	SearchEngine::clearSearchResults();
-	// PARSE XML HERE
+	std::vector<struct SearchEngine::result> results = toVector(SearchEngine::getResults());
+	
+	EXPECT_EQ(0, results.size());
 }
 
 /* Get Result With Name Tests */

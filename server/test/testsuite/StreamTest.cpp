@@ -31,6 +31,8 @@ TEST_F(StreamTest, getInstance) {
 	EXPECT_EQ(Stream::getInstance(), Stream::getInstance());
 }
 
+/* Start */
+
 // Start stream trivial
 TEST_F(StreamTest, startStreamTrivial) {
 	
@@ -54,6 +56,8 @@ TEST_F(StreamTest, startStopStart) {
 	Stream::getInstance()->start();
 	EXPECT_EQ(true, Stream::getInstance()->readStreaming());
 }
+
+/* Stop */
 
 // Stop stream trivial
 TEST_F(StreamTest, stopTrivial) {
