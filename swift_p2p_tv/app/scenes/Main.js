@@ -3,6 +3,7 @@ function SceneMain() {
 }
 
 // Global variables.
+var tv_url          = "";
 var names           = new Array();
 var trackers        = new Array();
 var hashes          = new Array();
@@ -49,6 +50,39 @@ SceneMain.prototype.initialize = function () {
 		column: null,
 		columnShadow: true,
 		columnSize: 350 / 720 * curWidget.height
+	}
+	
+	var _THIS_ = this;
+	this.methods = [{
+			title: 'getAvailableNetworks',
+			func: function(){
+				try {
+					var err = deviceapis.network.getAvailableNetworks(function(pReturn){
+						var retValue = pReturn;
+						
+						if(retValue[getActiveIndex(retValue)]) {					
+							tv_url = "http://" + retValue[getActiveIndex(retValue)].ip;
+						}
+					}, function(code){alert("getAvailableNetworks returns " + code);});
+				}
+				catch (err) {
+					alert("getAvailableNetworks returns " + err);
+				}
+			}
+		}
+	];
+	
+	function getActiveIndex( pNetList ) {
+		for( var i = 0; i < pNetList.length; i++ ) {
+			if( pNetList[i].isActive() ) {
+				return i;
+			}
+		}
+	}
+	
+	var method = this.methods[0];
+	if(method && method.func) {
+			method.func();
 	}
 }
 
@@ -125,7 +159,7 @@ SceneMain.prototype.handleKeyDown = function (keyCode) {
 		case sf.key.DOWN:
 			$('#scene_list').sfList('next');
 			break;
-		
+			
 		case sf.key.RETURN:
 			var _THIS_ = this;
 			var exit = false;

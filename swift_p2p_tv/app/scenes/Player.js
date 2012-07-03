@@ -268,7 +268,7 @@ ScenePlayer.prototype.handleKeyDown = function(keyCode) {
 			break;
 			
 		case sf.key.GREEN:
-			this.printEvent(stream);
+			this.printEvent(tv_url);
 			break;
 			
 		case sf.key.PAUSE:
