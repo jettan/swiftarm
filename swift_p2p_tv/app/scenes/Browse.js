@@ -44,8 +44,8 @@ SceneBrowse.prototype.initialize = function () {
 		maxlength:'10',
 		oncomplete: function (text) {
 			if (text) {
-				var search_terms = _THIS_.removeSpaces(search_url);
-				httpGet(search_terms + text);
+				var search_terms = _THIS_.removeSpaces(text);
+				httpGet(search_url + search_terms);
 				startResultPolling();
 			}
 		}
