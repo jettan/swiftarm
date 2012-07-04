@@ -315,6 +315,13 @@ static void HttpServer::handleRequest(struct evhttp_request *req, void *arg) {
 		} else if (result.at(0).compare("/stats") == 0) {
 			std::string msg = DownloadManager::buildXML();
 			sendXMLResponse(msg, req, evb);
+		
+		// Returns current settings to JavaScript frontend
+		} else if (result.at(0).compare("/settings") == 0) {
+			std::ostringstream stream;
+			stream << Settings::getMaxUpSpeed() << ":" << Settings::getMaxDownSpeed() << ":" << Settings::getDownloadDirectory();
+			std::string response = stream.str();
+			sendResponse(req, evb, response.c_str());
 			
 		// Reply at bad requests:
 		} else {

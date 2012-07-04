@@ -9,7 +9,7 @@
 #include <float.h>
 
 #include "swift.h"
-#include "Utils.h"
+#include "Settings.h"
 
 #define SECONDS_PER_MINUTE (60)
 #define SECONDS_PER_HOUR (SECONDS_PER_MINUTE * SECONDS_PER_MINUTE)

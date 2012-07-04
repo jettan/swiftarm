@@ -19,7 +19,7 @@
 #include "DownloadManager.h"
 #include "SearchEngine.h"
 #include "swift.h"
-#include "Utils.h"
+#include "Settings.h"
 
 namespace HttpServer {
 	

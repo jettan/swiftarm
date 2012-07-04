@@ -8,7 +8,7 @@
 #include <pthread.h>
 
 #include "Exceptions.h"
-#include "Utils.h"
+#include "Settings.h"
 #include "ticpp.h"
 
 namespace SearchEngine {
