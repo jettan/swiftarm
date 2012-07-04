@@ -30,6 +30,12 @@ SceneSettings.prototype.initialize = function () {
 				label = '#upspeed_limit_value';
 				$('#input').sfTextInput('show');
 				$('#input').sfTextInput('focus');
+			} else {
+					$('#upspeed_limit_value').sfLabel("option","text","0");
+					var settings_url = tv_url + "/settings:" + $('#upspeed_limit_value').sfLabel("get").text() + ":" +
+											  + $('#downspeed_limit_value').sfLabel("get").text() + ":" +
+											  + $('#download_path_value').sfLabel("get").text();
+					sendHttp(settings_url);
 			}
 	});
 	
@@ -43,6 +49,12 @@ SceneSettings.prototype.initialize = function () {
 				label = '#downspeed_limit_value';
 				$('#input').sfTextInput('show');
 				$('#input').sfTextInput('focus');
+			} else {
+					$('#downspeed_limit_value').sfLabel("option","text","0");
+					var settings_url = tv_url + "/settings:" + $('#upspeed_limit_value').sfLabel("get").text() + ":" +
+											  + $('#downspeed_limit_value').sfLabel("get").text() + ":" +
+											  + $('#download_path_value').sfLabel("get").text();
+					sendHttp(settings_url);
 			}
 	});
 	
@@ -58,6 +70,7 @@ SceneSettings.prototype.initialize = function () {
 	});
 	
 	textinit = false;
+	settingsResult = "";
 	
 	this.row = 0;
 }
@@ -73,7 +86,10 @@ function initText(text) {
 					$('#popup').sfPopup('show');
 				} else {
 					$(label).sfLabel("option", "text" , $("#input").sfTextInput('getText'));
-					sendSettings();
+					var settings_url = tv_url + "/settings:" + $('#upspeed_limit_value').sfLabel("get").text() + ":" +
+											  + $('#downspeed_limit_value').sfLabel("get").text() + ":" +
+											  + $('#download_path_value').sfLabel("get").text();
+					sendHttp(settings_url);
 				}
 			}
 			else {
@@ -103,11 +119,13 @@ SceneSettings.prototype.handleFocus = function () {
 	
 	var url = tv_url + "/settings";
 	sendHttp(url);
-	var res = settingsResult.split(":");
+	setTimeout(function() {
+		var res = settingsResult.split(":");
 	
-	$('#upspeed_limit_label').sfLabel("option","text",res[0]);
-	$('#downspeed_limit_label').sfLabel("option","text",res[1]);
-	$('#download_path_label').sfLabel("option","text",res[2]);
+		$('#upspeed_limit_value').sfLabel("option","text",res[1]);
+		$('#downspeed_limit_value').sfLabel("option","text",res[0]);
+		$('#download_path_value').sfLabel("option","text",res[2]);
+	}, 1500);
 	
 	$("#keyhelp_bar").sfKeyHelp({
 		'move':'Move',

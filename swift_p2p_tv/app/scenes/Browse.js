@@ -143,9 +143,8 @@ SceneBrowse.prototype.handleEnter  = function () {
 			$('#selection_label').sfLabel("option", "text", "File selection added to playlist");
 			break;
 		case 3:
-			var vid = video_selection.split("/");
-			var name = vid[vid.length - 1];
-			httpGet(uploadUrl + name);
+			var vid = "/dtv/usb" + video_selection.substring(8);
+			httpGet(uploadUrl + vid);
 			$('#selection_label').sfLabel("option", "text", "Seeding file..");
 			break;
 		case 4:
