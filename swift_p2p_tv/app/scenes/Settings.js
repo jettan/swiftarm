@@ -3,6 +3,7 @@ function SceneSettings() {
 	var row;
 	var label;
 	var textinit;
+	var settingsResult;
 }
 
 SceneSettings.prototype.initialize = function () {
@@ -100,6 +101,14 @@ SceneSettings.prototype.handleFocus = function () {
 	$('#upspeed_limit_toggle').sfToggleButton('focus');
 	this.row = 0
 	
+	var url = tv_url + "/settings";
+	sendHttp(url);
+	var res = settingsResult.split(":");
+	
+	$('#upspeed_limit_label').sfLabel("option","text",res[0]);
+	$('#downspeed_limit_label').sfLabel("option","text",res[1]);
+	$('#download_path_label').sfLabel("option","text",res[2]);
+	
 	$("#keyhelp_bar").sfKeyHelp({
 		'move':'Move',
 		'return': 'Return'
@@ -166,7 +175,12 @@ SceneSettings.prototype.handleKeyDown = function (keyCode) {
 						
 						$('#download_path_value').sfLabel("option", "text", path);
 						downloadPath = path;
-						sendSettings();
+						var settings =  "/settings:" + $('#downspeed_limit_value').sfLabel("get").text() +
+							":" + $('#upspeed_limit_value').sfLabel("get").text() +
+							":" + $('#download_path_value').sfLabel("get").text();
+	
+						var url = tv_url + settings;
+						sendHttp(url);
 						$("#browseButton").sfButton('focus');
 					},
 					fileType: 'all'
@@ -188,15 +202,8 @@ SceneSettings.prototype.handleKeyDown = function (keyCode) {
 }
 
 var xmlHttp;
-function sendSettings() {
+function sendHttp(url) {
 	xmlHttp = new XMLHttpRequest();
-	
-	var settings =  "/settings:" + $('#downspeed_limit_value').sfLabel("get").text() +
-					":" + $('#upspeed_limit_value').sfLabel("get").text() +
-					":" + $('#download_path_value').sfLabel("get").text();
-	
-	var url = tv_url + settings;
-	
 	xmlHttp.open("GET", url, true);
 	xmlHttp.onreadystatechange = processSettingsResponse;
 	xmlHttp.send(null);
@@ -204,6 +211,6 @@ function sendSettings() {
 
 function processSettingsResponse() {
 	if (xmlHttp.readyState == 4) {
-		var settingsResult = xmlHttp.responseText;
+		settingsResult = xmlHttp.responseText;
 	}
 }
