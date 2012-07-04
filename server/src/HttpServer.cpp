@@ -118,6 +118,8 @@ static std::string uploadRequest(std::string filename) {
 	std::string response = "-1";
 	
 	try {
+		filename  = Settings::replaceSubstring(filename, "%20", " ");
+		std::cout << filename << std::endl;
 		DownloadManager::upload(filename);
 		response = "Upload Started";
 	} catch(FileNotFoundException e) {
@@ -344,7 +346,6 @@ static void HttpServer::handleRequest(struct evhttp_request *req, void *arg) {
 		// Message will look like: "/upload:filename"
 		} else if (result.at(0).compare("/upload") == 0) {
 			std::string filename = result.at(1);
-			filename             = Settings::replaceSubstring(filename, "%20", " ");
 			std::string response = uploadRequest(filename);
 			sendResponse(req, evb, response.c_str());
 			

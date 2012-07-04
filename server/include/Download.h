@@ -15,6 +15,7 @@
 #define SECONDS_PER_HOUR (SECONDS_PER_MINUTE * SECONDS_PER_MINUTE)
 #define SECONDS_PER_DAY (SECONDS_PER_HOUR * 24)
 
+/// All states a Download can be in.
 enum Status {
 	READY,
 	PAUSED,
@@ -28,15 +29,23 @@ enum Status {
 	
 class Download {
 	protected:
+		/// Mutex to prevent download thread and main thread from accessing same data at the same time.
+		pthread_mutex_t _mutex;
 		
-		pthread_mutex_t _mutex;				/// Mutex to prevent download thread and main thread from accessing same data at the same time.
-		pthread_mutex_t _transfer_mutex;	/// Mutex to prevent download thread and main thread from accessing _transfer at the same time.
+		/// Mutex to prevent download thread and main thread from accessing _transfer at the same time.
+		pthread_mutex_t _transfer_mutex;
 		
-		volatile int _status;				/// Current status of the download.
+		/// Current status of the download.
+		volatile int _status;
 		
-		std::string _filename;				/// Name of the download.
-		std::string _tracker;				/// Trackers seeding this download.
-		std::string _root_hash;				/// Root hash needed to start swift download.
+		/// Name of the download.
+		std::string _filename;
+		
+		/// Trackers seeding this download.
+		std::string _tracker;
+		
+		/// Root hash needed to start swift download.
+		std::string _root_hash;
 		
 		/// Struct for holding time data.
 		struct time {
@@ -48,18 +57,32 @@ class Download {
 		
 		/// Struct for holding download statistics.
 		struct downloadStats {
-			int  id;						/// Download id needed to check the stats.
-			double download_speed;			/// Current download speed in kb/s.
-			double upload_speed;			/// Current upload speed in kb/s.
-			double download_percentage; 	/// Download progress in percentage.
-			
-			int seeders;					/// Number of seeders uploading this file.
-			int peers;						/// Number of peers connected to us for this file.
-			
-			struct time estimated;			/// Estimated time left for download to finish.
-		};
+			/// Download id needed to check the stats.
+			int  id;
 		
-		downloadStats _stats;				/// Struct holding the statistics of the download.
+			/// Current download speed in kb/s.
+			double download_speed;
+			
+			/// Current upload speed in kb/s.
+			double upload_speed;
+			
+			/// Download progress in percentage.
+			double download_percentage;
+			
+			/// Number of seeders uploading this file.
+			int seeders;
+			
+			/// Number of peers connected to us for this file.
+			int peers;
+			
+			/// Estimated time left for download to finish.
+			struct time estimated;
+			};
+		
+		/// Struct holding the statistics of the download.
+		downloadStats _stats;
+		
+		/// Swift FileTransfer needed to access certain data about swift downloads.
 		swift::FileTransfer *_transfer;
 		
 	public:

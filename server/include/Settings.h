@@ -24,13 +24,26 @@
 #define DHT_PORT              9999
 
 namespace Settings {
-	static std::string ip_address;			/// Keeps track of the current ip address.
-	static std::string download_directory;	/// Keeps track of the current download directory.
-	static pthread_mutex_t mutex;			/// Mutex to make download_directory variable thread safe.
-	static pthread_mutex_t max_mutex;		/// Mutex to make max speed variables thread safe.
-	static double max_download_speed;		/// Maximum download speed.
-	static double max_upload_speed;			/// Maximum upload speed.
-	static std::string settings_file;		/// Settings file.
+	/// Keeps track of the current ip address.
+	static std::string ip_address;
+	
+	/// Keeps track of the current download directory.
+	static std::string download_directory;
+	
+	/// Mutex to make download_directory variable thread safe.
+	static pthread_mutex_t mutex;
+	
+	/// Mutex to make max speed variables thread safe.
+	static pthread_mutex_t max_mutex;
+	
+	/// Maximum download speed.
+	static double max_download_speed;
+	
+	/// Maximum upload speed.
+	static double max_upload_speed;
+	
+	/// Settings file.
+	static std::string settings_file;
 	
 	void init(std::string download_dir);
 	void loadSettings(std::string filename);

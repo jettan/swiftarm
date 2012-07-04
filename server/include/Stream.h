@@ -12,14 +12,24 @@
 
 class Stream {
 	protected:
-		std::string _tracker;		/// Trackers seeding this stream.
-		std::string _hash;			/// Root hash of the stream.
-		pthread_mutex_t _mutex;		/// Mutex to prevent download thread and main thread from accessing same data at the same time.
-		struct event _evclose;		/// Event used by libevent to stop a stream.
-		volatile bool _streaming;	/// Boolean to determine whether a stream is opened or not.
+		/// Trackers seeding this stream.
+		std::string _tracker;		
+		
+		/// Root hash of the stream.
+		std::string _hash;			
+		
+		/// Mutex to prevent download thread and main thread from accessing same data at the same time.
+		pthread_mutex_t _mutex;	
+		
+		/// Event used by libevent to stop a stream.
+		struct event _evclose;
+		
+		/// Boolean to determine whether a stream is opened or not.
+		volatile bool _streaming;
 
 	private:
-		static Stream *_instance;	/// Singleton instance of Stream class.
+		/// Singleton instance of Stream class.
+		static Stream *_instance;
 		
 		/**
 		 * Constructor, made private to implement Singleton pattern.

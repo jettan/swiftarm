@@ -749,14 +749,14 @@ double DownloadManager::getRatio() {
  * Returns the maximum download speed in kb/s.
  */
 double DownloadManager::getMaxDownSpeed() {
-	return max_downspeed;
+	return max_downspeed / 1024;
 }
 
 /**
  * Returns the maximum download speed in kb/s.
  */
 double DownloadManager::getMaxUpSpeed() {
-	return max_upspeed;
+	return max_upspeed / 1024;
 }
 
 /**

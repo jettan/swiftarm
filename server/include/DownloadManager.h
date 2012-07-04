@@ -27,24 +27,47 @@ namespace DownloadManager {
 		std::string unit;
 	};
 	
-	static std::vector<Download> downloads;	/// Vector containing all downloads.
+	/// Vector containing all downloads.
+	static std::vector<Download> downloads;
 	
+	/// Event needed to start download loop.
 	static struct event evcompl;
-	static Download *active_download;
-	static pthread_t streaming_thread;
-	static pthread_t thread;
-	static pthread_mutex_t mutex;					/// Mutex to make downloads vector thread safe.
-	static pthread_mutex_t active_download_mutex;	/// Mutex to make active_download thread safe.
 	
+	///The currently active download.
+	static Download *active_download;
+	
+	///Thread needed to play streams.
+	static pthread_t streaming_thread;
+	
+	///Thread needed to download and upload.
+	static pthread_t thread;
+	
+	/// Mutex to make downloads vector thread safe.
+	static pthread_mutex_t mutex;
+	
+	/// Mutex to make active_download thread safe.
+	static pthread_mutex_t active_download_mutex;
+	
+	/// XML Document for the download statistics.
 	static ticpp::Document *doc;
 	
-	static double ratio;		/// Upload amount divided by download amount.
-	static double downloaded;	/// Total amount of bytes downloaded this session.
-	static double uploaded;		/// Total amount of bytes uploaded this session.
-	static int d_pid = -1;		/// Download thread pid.
+	/// Upload amount divided by download amount.
+	static double ratio;
 	
-	static double max_upspeed;		/// Max upload speed.
-	static double max_downspeed;	/// Max download speed.
+	/// Total amount of bytes downloaded this session.
+	static double downloaded;
+	
+	/// Total amount of bytes uploaded this session.
+	static double uploaded;
+	
+	/// Download thread pid.
+	static int d_pid = -1;
+	
+	/// Max upload speed.
+	static double max_upspeed;
+	
+	/// Max download speed.
+	static double max_downspeed;
 	
 	void calculateRatio();
 	void calculateDownloadAmount();

@@ -12,13 +12,18 @@
 #include "ticpp.h"
 
 namespace SearchEngine {
+	/// Thread to run dispersy module in.
 	
-	static pthread_t dispersy_thread;					/// Thread to run dispersy module in.
-	static pthread_mutex_t dispersy_mutex;				/// Mutex to protect dispersy thread.
-	static std::vector<struct result> search_results;	/// Vector of all search results.
-	static ticpp::Document *searchdoc;					/// Document used to build the list of search results.
+	static pthread_t dispersy_thread;
 	
-	void *startDispersy(void *arg);
+	/// Mutex to protect dispersy thread.
+	static pthread_mutex_t dispersy_mutex;
+	
+	/// Vector of all search results.
+	static std::vector<struct result> search_results;
+	
+	/// Document used to build the list of search results.
+	static ticpp::Document *searchdoc;
 	
 	/// Struct holding the data of a search result.
 	struct result {
@@ -26,6 +31,8 @@ namespace SearchEngine {
 		std::string tracker;
 		std::string hash;
 	};
+	
+	void *startDispersy(void *arg);
 	
 	void clearSearchResults();
 	std::string buildSearchXML();
