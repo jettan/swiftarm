@@ -6,20 +6,6 @@
     height : 540px;
 }
 
-#debug_label {
-    position:absolute;
-    left:275px;
-    top: 60px;
-    width: 200px;
-	height: 75px;
-}
-
-#debug_toggle {
-	position:absolute;
-    left:475px;
-    top: 50px;
-}
-
 #upspeed_limit_label {
     position:absolute;
     left:275px;
@@ -60,50 +46,30 @@
     top: 210px;
 }
 
-#ratio_limit_label {
-    position:absolute;
-    left:275px;
-    top: 285px;
-    width: 200px;
-	height: 75px;
-}
-
 #popup {
     position:absolute;
     left:475px;
     top: 275px;
 }
 
-#ratio_limit_value {
-    position:absolute;
-    left:650px;
-    top: 275px;
-}
-
 #download_path_label {
     position:absolute;
     left:275px;
-    top: 350px;
+    top: 275px;
     width: 200px;
 	height: 75px;
-}
-
-#ratio_limit_toggle {
-    position:absolute;
-    left:475px;
-    top: 275px;
 }
 
 #download_path_value {
     position:absolute;
     left:650px;
-    top: 350px;
+    top: 275px;
 }
 
 #browseButton {
     position:absolute;
     left:475px;
-    top: 340px;
+    top: 275px;
 	width:150px;
 }
 

@@ -6,81 +6,52 @@ function SceneSettings() {
 }
 
 SceneSettings.prototype.initialize = function () {
-	alert('SceneSettings.initialize()');
 	
-	$('#debug_label').sfLabel({text: "Enable debug logging"});
 	$('#downspeed_limit_label').sfLabel({text: "Limit down speed"});
 	$('#upspeed_limit_label').sfLabel({text: "Limit up speed"});
-	$('#ratio_limit_label').sfLabel({text: "Stop seeding after ratio"});
 	$('#download_path_label').sfLabel({text: "Download path: "});
 	
 	$('#upspeed_limit_value').sfLabel({text: "..."});
 	$('#downspeed_limit_value').sfLabel({text: "..."});
-	$('#ratio_limit_value').sfLabel({text: "..."});
 	$('#download_path_value').sfLabel({text: "/dtv/usb/sda1/..."});
 	
 	$('#browseButton').sfButton({
-		text: 'Change path..'
-	}).sfButton('addCallback', 'clicked', function (event, index) {
-		alert("Button0 clicked: " + index);
-	});
-	
-	$('#debug_toggle').sfToggleButton({
-		
-	}).sfToggleButton('addCallback', 'changed', function (event, checked) {
-		sendSettings();
+			text: 'Change path..'
 	});
 	
 	 $('#upspeed_limit_toggle').sfToggleButton({
-		
-	}).sfToggleButton('addCallback', 'changed', function (event, checked) {
-		if (checked) {
-			if (!textinit){
-				initText('#upspeed_limit_value');
+		}).sfToggleButton('addCallback', 'changed', function (event, checked) {
+			if (checked) {
+				if (!textinit){
+					initText('#upspeed_limit_value');
+				}
+				$("#input").sfTextInput('option','text',$('#upspeed_limit_value').sfLabel("get").text());
+				label = '#upspeed_limit_value';
+				$('#input').sfTextInput('show');
+				$('#input').sfTextInput('focus');
 			}
-			$("#input").sfTextInput('option','text',$('#upspeed_limit_value').sfLabel("get").text());
-			label = '#upspeed_limit_value';
-			$('#input').sfTextInput('show');
-			$('#input').sfTextInput('focus');
-		}
 	});
 	
 	$('#downspeed_limit_toggle').sfToggleButton({
-		
-	}).sfToggleButton('addCallback', 'changed', function (event, checked) {
-		if (checked) {
-			if (!textinit){
-				initText('#downspeed_limit_value');
+		}).sfToggleButton('addCallback', 'changed', function (event, checked) {
+			if (checked) {
+				if (!textinit){
+					initText('#downspeed_limit_value');
+				}
+				$("#input").sfTextInput('option','text',$('#downspeed_limit_value').sfLabel("get").text());
+				label = '#downspeed_limit_value';
+				$('#input').sfTextInput('show');
+				$('#input').sfTextInput('focus');
 			}
-			
-			$("#input").sfTextInput('option','text',$('#downspeed_limit_value').sfLabel("get").text());
-			label = '#downspeed_limit_value';
-			$('#input').sfTextInput('show');
-			$('#input').sfTextInput('focus');
-		}
 	});
 	
-	$('#ratio_limit_toggle').sfToggleButton({
-		
-	}).sfToggleButton('addCallback', 'changed', function (event, checked) {
-		if (checked) {
-			if (!textinit){
-				initText('#ratio_limit_value');
-			}
-			$("#input").sfTextInput('option','text',$('#ratio_limit_value').sfLabel("get").text());
-			label = '#ratio_limit_value';
-			$('#input').sfTextInput('show');
-			$('#input').sfTextInput('focus');
-		}
-	});
-	
-	index = new Array('#debug_toggle','#upspeed_limit_toggle','#downspeed_limit_toggle','#ratio_limit_toggle','#browseButton');
+	index = new Array('#upspeed_limit_toggle','#downspeed_limit_toggle','#browseButton');
 	
 	var _THIS_ = this;
 	$('#popup').sfPopup({
-		text: "Please enter a valid number",
-		buttons: "OK",
-		callback: function(){
+			text: "Please enter a valid number",
+			buttons: "OK",
+			callback: function(){
 			$(index[_THIS_.row]).sfToggleButton('toggle');
 		}
 	});
@@ -101,6 +72,7 @@ function initText(text) {
 					$('#popup').sfPopup('show');
 				} else {
 					$(label).sfLabel("option", "text" , $("#input").sfTextInput('getText'));
+					sendSettings();
 				}
 			}
 			else {
@@ -113,26 +85,21 @@ function initText(text) {
 	$('#input').sfTextInput('hide');
 }
 
-SceneSettings.prototype.handleShow = function () {
-	alert('SceneSettings.handleShow()');
-}
+SceneSettings.prototype.handleShow = function () {}
 
-SceneSettings.prototype.handleHide = function () {
-	alert('SceneSettings.handleHide()');
-}
+SceneSettings.prototype.handleHide = function () {}
 
 SceneSettings.prototype.handleFocus = function () {
-	alert('SceneSettings.handleFocus()');
 	
 	$('#app_layout').sfBackground('option', 'column', 'left');
-	$('#app_layout').sfBackground(this.defaultOpts);
-	$('#app_layout').sfBackground('option', 'column', 'left');
+	//$('#app_layout').sfBackground(this.defaultOpts);
+	//$('#app_layout').sfBackground('option', 'column', 'left');
 	
 	$('#image').sfImage('show');
 	$('#label').sfLabel('show');
 	$('#scene_list').sfList('show');
 	
-	$('#debug_toggle').sfToggleButton('focus');
+	$('#upspeed_limit_toggle').sfToggleButton('focus');
 	this.row = 0
 	
 	$("#keyhelp_bar").sfKeyHelp({
@@ -143,34 +110,27 @@ SceneSettings.prototype.handleFocus = function () {
 }
 
 SceneSettings.prototype.handleBlur = function () {
-	alert('SceneSettings.handleBlur()');
-	$('#debug_toggle').sfToggleButton('blur');
 	$('#upspeed_limit_toggle').sfToggleButton('blur');
 	$('#downspeed_limit_toggle').sfToggleButton('blur');
-	$('#ratio_limit_toggle').sfToggleButton('blur');
 }
 
 SceneSettings.prototype.handleKeyDown = function (keyCode) {
-	alert('SceneSettings.handleKeyDown(' + keyCode + ')');
+
 	switch (keyCode) {
 		case sf.key.LEFT:
 			sf.scene.focus('Main');
 			break;
 			
-		case sf.key.RIGHT:
-			break;
-			
 		case sf.key.DOWN:
-			alert("INDEX!!! : " + this.row);
-			if (this.row == 4) {
+			if (this.row == 2) {
 				$(index[this.row]).sfButton('blur');
 			} else {
 				$(index[this.row]).sfToggleButton('blur');
 			}
 			
-			this.row = (this.row + 1) % 5;
+			this.row = (this.row + 1) % 3;
 			
-			if (this.row == 4) {
+			if (this.row == 2) {
 				$(index[this.row]).sfButton('focus');
 			} else {
 				$(index[this.row]).sfToggleButton('focus');
@@ -178,14 +138,13 @@ SceneSettings.prototype.handleKeyDown = function (keyCode) {
 			break;
 			
 		case sf.key.UP:
-			alert("INDEX!!! : " + this.row);
-			if (this.row == 4) {
+			if (this.row == 2) {
 				$(index[this.row]).sfButton('blur');
 			} else {
 				$(index[this.row]).sfToggleButton('blur');
 			}
 			if (this.row == 0) {
-				this.row = 4;
+				this.row = 2;
 				$(index[this.row]).sfButton('focus');
 			} else {
 				this.row = this.row - 1;
@@ -194,12 +153,11 @@ SceneSettings.prototype.handleKeyDown = function (keyCode) {
 			break;
 			
 		case sf.key.ENTER:
-			if (this.row == 4) {
+			if (this.row == 2) {
 				$("#browseButton").sfButton('blur');
 				var _THIS_ = this;
 				sf.service.USB.show({
 					callback: function(result) {
-						alert("Callback of USB module: " + result);
 						
 						var chunks = result[0].split('/');
 						var i;
@@ -211,7 +169,7 @@ SceneSettings.prototype.handleKeyDown = function (keyCode) {
 						
 						$('#download_path_value').sfLabel("option", "text", path);
 						downloadPath = path;
-						//_THIS_.setResult(result?getObjString(result, 'result'):'null');
+						sendSettings();
 						$("#browseButton").sfButton('focus');
 					},
 					fileType: 'all'
@@ -240,30 +198,15 @@ function sendSettings() {
 					":" + $('#upspeed_limit_value').sfLabel("get").text() +
 					":" + $('#download_path_value').sfLabel("get").text();
 	
-	// TODO: build URL dynamically, not hard coded
-	// Build the URL to connect to
 	var url = tv_url + settings;
 	
-	// Open a connection to the server
 	xmlHttp.open("GET", url, true);
-	
-	// Tell the server you're sending it XML
-	xmlHttp.setRequestHeader("Content-Type", "text/xml");
-	
-	// Set up a function for the server to run when it's done
 	xmlHttp.onreadystatechange = processSettingsResponse;
-	
-	// Send the request
 	xmlHttp.send(null);
 }
 
 function processSettingsResponse() {
 	if (xmlHttp.readyState == 4) {
 		var settingsResult = xmlHttp.responseText;
-		alert(settingsResult);
 	}
-}
-
-SceneSettings.prototype.refreshButtons = function () {
-	alert('SceneSettings.refreshButtons()');
 }
