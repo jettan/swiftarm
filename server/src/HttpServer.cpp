@@ -319,7 +319,7 @@ static void HttpServer::handleRequest(struct evhttp_request *req, void *arg) {
 		// Returns current settings to JavaScript frontend
 		} else if (result.at(0).compare("/settings") == 0) {
 			std::ostringstream stream;
-			stream << Settings::getMaxUpSpeed() << ":" << Settings::getMaxDownSpeed() << ":" << Settings::getDownloadDirectory();
+			stream << DownloadManager::getMaxUpSpeed()  << ":" << DownloadManager::getMaxDownSpeed() << ":" << Settings::getDownloadDirectory();
 			std::string response = stream.str();
 			sendResponse(req, evb, response.c_str());
 			

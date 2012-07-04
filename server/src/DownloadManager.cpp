@@ -746,7 +746,22 @@ double DownloadManager::getRatio() {
 }
 
 /**
- * Sets the maximum download speed.
+ * Returns the maximum download speed in kb/s.
+ */
+double DownloadManager::getMaxDownSpeed() {
+	return max_downspeed;
+}
+
+/**
+ * Returns the maximum download speed in kb/s.
+ */
+double DownloadManager::getMaxUpSpeed() {
+	return max_upspeed;
+}
+
+/**
+ * Sets the maximum download speed in kb/s.
+ * @param speed: speed in byte/s.
  */
 void DownloadManager::setMaxDownSpeed(double speed) {
 	if (speed > 0) {
@@ -763,7 +778,8 @@ void DownloadManager::setMaxDownSpeed(double speed) {
 }
 
 /**
- * Sets the maximum upload speed.
+ * Sets the maximum upload speed in kb/s.
+ * @param speed: speed in byte/s.
  */
 void DownloadManager::setMaxUpSpeed(double speed) {
 	if (speed > 0) {
@@ -781,6 +797,7 @@ void DownloadManager::setMaxUpSpeed(double speed) {
 
 /**
  * Sets the maximum download speed in kb/s.
+ * @param speed: speed in kb/s.
  */
 void DownloadManager::limitDownSpeeds(double speed) {
 	if (speed > 0) {
@@ -788,7 +805,7 @@ void DownloadManager::limitDownSpeeds(double speed) {
 	} else {
 		Settings::setMaxDownSpeed(DBL_MAX);
 	}
-
+	
 	for (int i = 0; i < getDownloads().size(); i++) {
 		pthread_mutex_lock(&mutex);
 		downloads.at(i).limitDownSpeed(Settings::getMaxDownSpeed());
@@ -798,6 +815,7 @@ void DownloadManager::limitDownSpeeds(double speed) {
 
 /**
  * Sets the maximum upload speed in kb/s.
+ * @param speed: speed in kb/s.
  */
 void DownloadManager::limitUpSpeeds(double speed) {
 	if (speed > 0) {
