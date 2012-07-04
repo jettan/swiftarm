@@ -73,10 +73,10 @@ SceneBrowse.prototype.handleFocus = function () {
 	$('#filebrowser_label').sfLabel('show');
 	$('#results_list').sfList('show');
 	$('#usb_button').sfButton('focus');
-	var key_map = {};
-	key_map.UPDOWN = 'Move';
-	key_map.RETURN = 'Return';
-	$("#keyhelp_bar").sfKeyHelp(key_map);
+	$("#keyhelp_bar").sfKeyHelp({
+		'move':'Move',
+		'return': 'Return'
+	});
 }
 
 SceneBrowse.prototype.handleBlur = function () {
@@ -123,7 +123,7 @@ SceneBrowse.prototype.handleEnter  = function () {
 			$("#usb_button").sfButton('blur');
 			sf.service.USB.show({
 				callback: function(result) {
-					$('#label_video').sfLabel("option", "text", result[0]);
+					video_selection = result[0];
 					$('#selection_label').sfLabel("option", "text", result[0]);
 					$("#add_to_playlist_button").sfButton('focus');
 				},
@@ -132,8 +132,7 @@ SceneBrowse.prototype.handleEnter  = function () {
 			this.browse_focus = 2;
 			break;
 		case 2:
-			var vid = $('#label_video').sfLabel("get").text();
-			vid = 'file:///dtv/usb' + vid.substring(8);
+			var vid = 'file:///dtv/usb' + video_selection.substring(8);
 			var n = vid.split("/");
 			var filename_location = n.length - 1;
 			
@@ -144,13 +143,13 @@ SceneBrowse.prototype.handleEnter  = function () {
 			$('#selection_label').sfLabel("option", "text", "File selection added to playlist");
 			break;
 		case 3:
-			var vid = $('#label_video').sfLabel("get").text()
-			vid = 'file:///dtv/usb' + link.substring(8);
-			httpGet(uploadUrl + vid);
+			var vid = video_selection.split("/");
+			var name = vid[vid.length - 1];
+			httpGet(uploadUrl + name);
 			$('#selection_label').sfLabel("option", "text", "Seeding file..");
 			break;
 		case 4:
-			$('#label_redirect').sfLabel('option','text','Player');
+			redirect = true;
 			$("#go_to_player_button").sfButton('blur');
 			sf.scene.focus('Main');
 			break;
@@ -180,7 +179,7 @@ SceneBrowse.prototype.handleEnter  = function () {
 							});
 							streaming = true;
 							$('loading').sfLoading('hide');
-							$('#label_redirect').sfLabel('option','text','Player');
+							redirect = true;
 							sf.scene.focus('Main');
 							}, 1500);
 						

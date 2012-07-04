@@ -121,66 +121,28 @@ ScenePlayer.prototype.handleFocus = function() {
 		_THIS_.refreshList();
 	}, 1500);
 	
-	var mode = $('#label_redirect').sfLabel("get").text();
-	if ($('#label_redirect').sfLabel("get").text()){
-		$('#label_redirect').sfLabel('option','text','');
-	}
-	if (mode == 'PlayerDownload') {
-		_THIS_.printEvent('Selected Video : ' + $('#label_video').sfLabel("get").text());
-		
-		var link = 'file://' + downloadPath + '/' + $('#label_video').sfLabel("get").text();
-		document.getElementById("MainListPage").innerHTML = $('#label_video').sfLabel("get").text();
-		stream = link;
-		
-		playlist[0].url = link;
-		playlist[0].title = $('#label_video').sfLabel("get").text();
-		
-		$("#lstPlayer").sfList('destroy');
-		
-		playlist = [{
-			url: link,
-			title: $('#label_video').sfLabel("get").text()
-		}];
-		
-		var items = [];
-		for(var i=0; i<playlist.length; i++) {
-			items.push(playlist[i].title);
-		}
-		$("#lstPlayer").sfList({
-			data: items,
-			index: 0,
-			itemsPerPage: 8
-		}).sfList('blur');
-		$("#lstPlayer").sfList('show');
-		$("#lstPlayer").sfList('focus');
-		
-		_THIS_.printEvent('url: ' + playlist[0].url);
-		_THIS_.printEvent('title: ' + playlist[0].title);
+	if (redirect){
+		redirect = false;
 	}
 	
-	this.curOpts = {}; for(var prop in this.defaultOpts) {this.curOpts[prop] = this.defaultOpts[prop];};
-	$('#MainBG').sfBackground(this.curOpts);
+	$('#app_layout').sfBackground('option', 'column', 'left');
 }
 
 ScenePlayer.prototype.handleBlur = function() {
-	alert("ScenePlayer.handleBlur()");
-	// this function will be called when the scene manager move focus to another scene from this scene
+
 	$("#lstPlayer").sfList('blur');
 	$('#image').sfImage('hide');
 	$('#label').sfLabel('hide');
 	if (sf.service.VideoPlayer.Skip.isInProgress()) {
 		sf.service.VideoPlayer.Skip.cancel();
 	}
-	
-	$('#MainBG').sfBackground(this.defaultOpts);
+	document.getElementById("MainListPage").innerHTML = "";
 }
 
 ScenePlayer.prototype.handleKeyDown = function(keyCode) {
-	alert("ScenePlayer.handleKeyDown(" + keyCode + ")");
-	// TODO : write an key event handler when this scene get focued <- wut? -Samuel
+
 	switch (keyCode) {
 		case sf.key.LEFT:
-			//sf.scene.show('Main');
 			$('#scene_list').sfList('show');
 			$('#image').sfImage('show');
 			$('#label').sfLabel('show');
@@ -201,11 +163,8 @@ ScenePlayer.prototype.handleKeyDown = function(keyCode) {
 			document.getElementById("MainListPage").innerHTML = playlist[$("#lstPlayer").sfList('getIndex')].url;
 			break;
 			
-		// TODO: Make seperate enter key handler
 		case sf.key.ENTER:
-			if (playlist[$("#lstPlayer").sfList('getIndex')].title == "Stream") {
-				playlist[$("#lstPlayer").sfList('getIndex')].url = stream;
-			}
+			
 			if (sf.service.VideoPlayer.Skip.isInProgress()) {
 				sf.service.VideoPlayer.Skip.stop();
 			} else {
@@ -232,7 +191,6 @@ ScenePlayer.prototype.handleKeyDown = function(keyCode) {
 			}
 			break;
 			
-		// TODO: Make seperate return key handler
 		case sf.key.RETURN:
 			sf.key.preventDefault();
 			if (sf.service.VideoPlayer.Skip.isInProgress()) {
@@ -330,14 +288,12 @@ ScenePlayer.prototype.handleKeyDown = function(keyCode) {
 }
 
 ScenePlayer.prototype.printEvent = function(msg) {
-	alert("ScenePlayer.prototype.printEvent("+msg+")");
 	var date = new Date();
 	var timestr = date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
 	document.getElementById("PlayerEvent").innerHTML = (timestr + "- " + msg + "<br>") + document.getElementById("PlayerEvent").innerHTML;
 }
 
 ScenePlayer.prototype.refreshList = function() {
-	this.printEvent('REFRESHINGG!!');
 	$("#lstPlayer").sfList('destroy');
 	
 	var items = [];

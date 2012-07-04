@@ -24,6 +24,8 @@ var trackers        = new Array();
 var hashes          = new Array();
 var playlist        = [];
 var downloading     = false;
+var redirect        = false;
+var video_selection = "";
 var download_path   = '/dtv/usb/sda1';
 
 SceneMain.prototype.initialize = function () {
@@ -132,13 +134,10 @@ SceneMain.prototype.handleHide = function () {}
 
 SceneMain.prototype.handleFocus = function () {
 	var index = $('#scene_list').sfList('getIndex');
-	// Hide whatever scene was focused on.
+	// Hide whatever scene was focused.
 	sf.scene.hide(this.data[index]);
 	
-	// TODO: change to javascript variable.
-	if ($('#label_redirect').sfLabel("get").text()) {
-		$('#label_redirect').sfLabel('hide');
-		
+	if (redirect) {
 		// Redirect to Player scene.
 		$('#scene_list').sfList('move', 2);
 		sf.scene.show('Player');

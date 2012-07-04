@@ -92,8 +92,6 @@ SceneSettings.prototype.handleHide = function () {}
 SceneSettings.prototype.handleFocus = function () {
 	
 	$('#app_layout').sfBackground('option', 'column', 'left');
-	//$('#app_layout').sfBackground(this.defaultOpts);
-	//$('#app_layout').sfBackground('option', 'column', 'left');
 	
 	$('#image').sfImage('show');
 	$('#label').sfLabel('show');
@@ -103,7 +101,6 @@ SceneSettings.prototype.handleFocus = function () {
 	this.row = 0
 	
 	$("#keyhelp_bar").sfKeyHelp({
-		'user': 'Help',
 		'move':'Move',
 		'return': 'Return'
 	});
