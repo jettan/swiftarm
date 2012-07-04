@@ -45,11 +45,33 @@ void closeCallback(int fd, short event, void *arg) {
 }
 
 /**
+ * Returns the tracker address.
+ */
+std::string Stream::getTrackerAddress() {
+	return _tracker;
+}
+
+/**
+ * Returns the root hash.
+ */
+std::string Stream::getRootHash() {
+	return _hash;
+}
+
+/**
  * Sets the tracker address of the stream.
  * @param tracker: The tracker address to be set.
  */
 void Stream::setTracker(std::string tracker) {
 	_tracker = (std::string) tracker;
+}
+
+/**
+ * Sets the root hash of the stream.
+ * @param hash: The root hash to be set.
+ */
+void Stream::setRoothash(std::string hash) {
+	_hash = (std::string) hash;
 }
 
 /**
@@ -78,6 +100,14 @@ void Stream::stop() {
 		_streaming = false;
 		pthread_mutex_unlock( &_mutex );
 		evtimer_del(getEvent());
+		
+		std::string filename = getRootHash();
+		std::string mbinmap  = filename + ".mbinmap";
+		std::string mhash    = filename + ".mhash";
+		
+		remove(mbinmap.c_str());
+		remove(mhash.c_str());
+		remove(filename.c_str());
 	}
 }
 
@@ -86,7 +116,6 @@ void Stream::stop() {
  */
 void Stream::start() {
 	// Change the directory to Downloads folder.
-	// Temporarily hard coded.
 	int change = chdir(Settings::getDownloadDirectory().c_str());
 	
 	std::cout << "Tracker = " << _tracker <<std::endl;
@@ -101,7 +130,7 @@ void Stream::start() {
 	swift::SetTracker(trackeraddr);
 	
 	beginStreaming();
-	std::cout << "Dispatching the event base." <<std::endl;
+	std::cout << "Dispatching the event base." << std::endl;
 	
 }
 

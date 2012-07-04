@@ -13,6 +13,10 @@ from Tribler.dispersy.dispersy import Dispersy
 from Tribler.dispersy.message import Message
 from Tribler.community.search.community import SearchCommunity
 
+# TODO: Create function to store downloading/uploading stuff to the dispersy database.
+# TODO: Create function to delete deleted stuff from the dispersy database.
+# TODO: Remove duplicate results.
+# TODO: Multifile support.
 
 # Container for the search community of dispersy.
 search_community = []
@@ -80,15 +84,18 @@ def resultsCallback(keywords, results, candidate):
                         search_result = binascii.hexlify(swifthash) + ":"+ result[1]
                         print >> sys.stderr, search_result
                         search_results.append(search_result)
+                else:
+                    print >> sys.stderr, "swifthashless"
+                    
+                print >> sys.stderr, "-----------------------------------------------"
                 finger += 1
         finally:
-            print >> sys.stderr, "-----------------------------------------------"
             result_lock.release()
 
 # Main function to start a dispersy session and DHT in background.
 def main():
     sscfg = SessionStartupConfig()
-    sscfg.set_state_dir(unicode(os.path.realpath("/mtd_down/widgets/user/SamyGO/SamyGO/tribler/.tribler")))
+    sscfg.set_state_dir(unicode(os.path.realpath("/tmp")))
     sscfg.set_dispersy_port(6421)
     sscfg.set_nickname("dispersy")
     

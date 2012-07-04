@@ -213,7 +213,7 @@ static std::string streamRequest(std::string hash) {
 	
 	try {
 		struct SearchEngine::result res = SearchEngine::getResultWithHash(hash);
-		DownloadManager::startStream(res.tracker);
+		DownloadManager::startStream(res.tracker, res.hash);
 		std::string address = "http://" + Settings::getIP() + ":17758/" + res.hash;
 		std::cout << address << std::endl;
 		response = address.c_str();

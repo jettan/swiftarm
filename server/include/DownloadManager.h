@@ -54,7 +54,7 @@ namespace DownloadManager {
 	std::vector<Download> getDownloads();
 	
 	void init();
-	void startStream(std::string tracker);
+	void startStream(std::string tracker, std::string hash);
 	void stopStream();
 	void pauseAllDownloads();
 	void resumeAllDownloads();

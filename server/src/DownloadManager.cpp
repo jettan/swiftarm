@@ -971,7 +971,7 @@ void* DownloadManager::startStreamThread(void* arg) {
  * Starts the streaming thread.
  * @param tracker: The tracker from which we stream content.
  */
-void DownloadManager::startStream(std::string tracker) {
+void DownloadManager::startStream(std::string tracker, std::string hash) {
 	if(active_download) {
 		pthread_mutex_lock(&active_download_mutex);
 		active_download->pause();
@@ -980,6 +980,7 @@ void DownloadManager::startStream(std::string tracker) {
 	
 	if (!Stream::getInstance()->readStreaming()) {
 		Stream::getInstance()->setTracker(tracker);
+		Stream::getInstance()->setRoothash(hash);
 		
 		std::cout << "Spawning new thread..." << std::endl;
 		int return_code = pthread_create(&streaming_thread, NULL, startStreamThread, NULL);

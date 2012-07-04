@@ -13,6 +13,7 @@
 class Stream {
 	protected:
 		std::string _tracker;		/// Trackers seeding this stream.
+		std::string _hash;			/// Root hash of the stream.
 		pthread_mutex_t _mutex;		/// Mutex to prevent download thread and main thread from accessing same data at the same time.
 		struct event _evclose;		/// Event used by libevent to stop a stream.
 		volatile bool _streaming;	/// Boolean to determine whether a stream is opened or not.
@@ -38,13 +39,15 @@ class Stream {
 		void start();
 		void stop();
 		void init();
-		void setTracker(std::string);
+		void setTracker(std::string tracker);
+		void setRoothash(std::string hash);
 		
 		void beginStreaming();
 		bool readStreaming();
 		
 		const int getStatus();
 		std::string getTrackerAddress();
+		std::string getRootHash();
 		struct event *getEvent();
 		
 		void setStatus(int status);
