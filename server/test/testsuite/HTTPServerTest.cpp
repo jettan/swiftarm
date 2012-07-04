@@ -7,6 +7,12 @@
 #include "SearchEngine.h"
 #include "DownloadManager.h"
 
+/**
+ * This is the test class for HttpServer.cpp
+ * The setup initialises the Http Client in C++
+ * and also clears the search engine list and downloads list
+ * The teardown is empty
+ */
 class HTTPServerTest : public ::testing::Test {
 	protected:
 	
@@ -16,12 +22,18 @@ class HTTPServerTest : public ::testing::Test {
 	
 	virtual ~HTTPServerTest() {}
 	
+	/**
+	 * Returns the Http response
+	 */
 	size_t static getResponse(char *response, size_t size, size_t count, void *stream) {
 		
 		((std::string*)stream)->append((char*)response, 0, size * count);
 		return size*count;
 	}
 	
+	/**
+	 * Do a search in SearchEngine.cpp
+	 */
 	void search() {
 		
 		std::string addr1 = Settings::getIP() + ":1337/search:test";
@@ -29,7 +41,9 @@ class HTTPServerTest : public ::testing::Test {
 		res = curl_easy_perform(easyHandle);
 	}
 	
-	// Turns an XML string into a vector of results
+	/**
+	 * Turns an XML string into a vector of results
+	 */
 	std::vector<struct SearchEngine::result> toVector(std::string response) {
 		
 		std::vector<struct SearchEngine::result> results;
@@ -85,7 +99,9 @@ class HTTPServerTest : public ::testing::Test {
 
 /* Alive */
 
-// Test whether server is running
+/**
+ * Test whether the server is running
+ */
 TEST_F(HTTPServerTest, aliveTest) {
 	
 	std::string addr = Settings::getIP() + ":1337/alive";
@@ -97,7 +113,9 @@ TEST_F(HTTPServerTest, aliveTest) {
 
 /* Search */
 
-// Test whether a search returns results
+/**
+ * Test whether a search returns results
+ */
 TEST_F(HTTPServerTest, searchTrivial) {
 	
 	SearchEngine::clearSearchResults();
@@ -117,7 +135,9 @@ TEST_F(HTTPServerTest, searchTrivial) {
 	EXPECT_LT(0, results.size());
 }
 
-// Test whether an empty searh is handled properly
+/**
+ * Test whether an empty searh is handled properly
+ */
 TEST_F(HTTPServerTest, searchEmpty) {
 	
 	SearchEngine::clearSearchResults();
@@ -139,7 +159,9 @@ TEST_F(HTTPServerTest, searchEmpty) {
 
 /* Add and Download */
 
-// Test whether you can add and download a file after a search
+/**
+ * Test whether you can add and download a file after a search
+ */
 TEST_F(HTTPServerTest, downloadTrivial) {
 	
 	search();
@@ -170,7 +192,9 @@ TEST_F(HTTPServerTest, downloadTrivial) {
 	EXPECT_EQ("Download Started", response);
 }
 
-// Test whether adding a nonexistent download is handled properly
+/**
+ * Test whether adding a nonexistent download is handled properly
+ */
 TEST_F(HTTPServerTest, addNonexistent){
 	
 	std::string addr1 = Settings::getIP() + ":1337/add:367d26a6ce626e049a21921100e24eac86dbcd32";
@@ -180,7 +204,9 @@ TEST_F(HTTPServerTest, addNonexistent){
 	EXPECT_EQ("Could not find the file.", response);
 }
 
-// Test whether downloading a nonexistent download is handled properly
+/**
+ * Test whether downloading a nonexistent download is handled properly
+ */
 TEST_F(HTTPServerTest, downloadNonexistent){
 	
 	std::string addr1 = Settings::getIP() + ":1337/download:367d26a6ce626e049a21921100e24eac86dbcd32";
@@ -190,7 +216,9 @@ TEST_F(HTTPServerTest, downloadNonexistent){
 	EXPECT_EQ("Could not find the file.", response);
 }
 
-// Try downloading the same file twice
+/**
+ * Try downloading the same file twice
+ */
 TEST_F(HTTPServerTest, downloadTwice){
 	
 	search();
@@ -224,7 +252,9 @@ TEST_F(HTTPServerTest, downloadTwice){
 	response = "";
 }
 
-// Test the infamous pause-resume-pause segfault.
+/**
+ * Test the infamous pause-resume-pause segfault.
+ */
 TEST_F(HTTPServerTest, pauseResumePause) {
 	
 	search();
@@ -251,7 +281,9 @@ TEST_F(HTTPServerTest, pauseResumePause) {
 	response = "";
 }
 
-// Test the infamous pause-resume-stats segfault.
+/**
+ * Test the infamous pause-resume-stats segfault.
+ */
 TEST_F(HTTPServerTest, pauseResumeStats) {
 	
 	search();
@@ -279,7 +311,9 @@ TEST_F(HTTPServerTest, pauseResumeStats) {
 
 /* Remove */
 
-// Trivial
+/**
+ * Trivial test for remove
+ */
 TEST_F(HTTPServerTest, removeTrivial){
 	
 	search();
@@ -305,7 +339,9 @@ TEST_F(HTTPServerTest, removeTrivial){
 	EXPECT_EQ("Download removed from disk", response);
 }
 
-// Remove the active download
+/**
+ * Remove the active download
+ */
 TEST_F(HTTPServerTest, removeActiveDownload) {
 	
 	search();
@@ -333,7 +369,9 @@ TEST_F(HTTPServerTest, removeActiveDownload) {
 	EXPECT_EQ(1, DownloadManager::getDownloads().size());
 }
 
-// Remove nonexistent download
+/**
+ * Try Removing a nonexistent download
+ */
 TEST_F(HTTPServerTest, removeNonexistent) {
 	
 	EXPECT_EQ(0, DownloadManager::getDownloads().size());
@@ -346,7 +384,9 @@ TEST_F(HTTPServerTest, removeNonexistent) {
 	EXPECT_EQ(0, DownloadManager::getDownloads().size());
 }
 
-// Start a stream
+/**
+ * Start a stream
+ */
 TEST_F(HTTPServerTest, startStreamTrivial) {
 	
 	search();
@@ -360,7 +400,9 @@ TEST_F(HTTPServerTest, startStreamTrivial) {
 	EXPECT_EQ("http://" + Settings::getIP() + ":17758/" + hash, response);
 }
 
-// Stop a stream
+/**
+ * Stop a stream
+ */
 TEST_F(HTTPServerTest, stopStreamTrivial) {
 	
 	search();

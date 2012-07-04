@@ -8,7 +8,7 @@
 #include "DownloadManager.h"
 #include "HttpServer.h"
 #include "SearchEngine.h"
-#include "Utils.h"
+#include "Settings.h"
 
 #include <pthread.h>
 

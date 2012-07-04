@@ -4,7 +4,11 @@
 #include <string>
 #include <iostream>
 
-
+/**
+ * This is the class that tests Stream.cpp
+ * The setup sets the tracker
+ * The teardown stops the stream if it is still active
+ */
 class StreamTest : public ::testing::Test {
 	protected:
 	
@@ -24,7 +28,9 @@ class StreamTest : public ::testing::Test {
 	
 };
 
-// Check whether Stream always returns the same instance
+/**
+ * Check whether Stream always returns the same instance
+ */
 TEST_F(StreamTest, getInstance) {
 	
 	// check whether pointer address is equal
@@ -33,14 +39,18 @@ TEST_F(StreamTest, getInstance) {
 
 /* Start */
 
-// Start stream trivial
+/**
+ * Trivial test for start
+ */
 TEST_F(StreamTest, startStreamTrivial) {
 	
 	Stream::getInstance()->start();
 	EXPECT_EQ(true, Stream::getInstance()->readStreaming());
 }
 
-// Start stream twice
+/**
+ * Start stream twice
+ */
 TEST_F(StreamTest, startTwice) {
 	
 	Stream::getInstance()->start();
@@ -48,7 +58,9 @@ TEST_F(StreamTest, startTwice) {
 	EXPECT_EQ(true, Stream::getInstance()->readStreaming());
 }
 
-// Start, stop and start the stream again
+/**
+ * Start, stop and start the stream again
+ */
 TEST_F(StreamTest, startStopStart) {
 	
 	Stream::getInstance()->start();
@@ -59,7 +71,9 @@ TEST_F(StreamTest, startStopStart) {
 
 /* Stop */
 
-// Stop stream trivial
+/**
+ * Trivial test for stop
+ */
 TEST_F(StreamTest, stopTrivial) {
 	
 	Stream::getInstance()->start();
@@ -67,7 +81,9 @@ TEST_F(StreamTest, stopTrivial) {
 	EXPECT_EQ(false, Stream::getInstance()->readStreaming());
 }
 
-// Stop the stream twice
+/**
+ * Stop the stream twice
+ */
 TEST_F(StreamTest, stopTwice) {
 	
 	Stream::getInstance()->start();

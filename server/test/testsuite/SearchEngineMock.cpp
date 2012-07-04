@@ -1,9 +1,15 @@
 #include "SearchEngine.h"
 
+/**
+ * Clears the list of search results
+ */
 void SearchEngine::clearSearchResults() {
 	search_results.clear();
 }
 
+/**
+ * Builds an XML string from the vector of results
+ **/
 std::string SearchEngine::buildSearchXML() {
 	searchdoc = new ticpp::Document("searchdoc");
 	

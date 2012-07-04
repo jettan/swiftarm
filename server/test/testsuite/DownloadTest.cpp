@@ -3,7 +3,11 @@
 #include <string>
 #include <iostream>
 
-
+/**
+ * This is the class for testing Download.cpp
+ * The setup creates a new Download with a hard coded tracker, hash and filename
+ * The teardown removes any files that get created
+ */
 class DownloadTest : public ::testing::Test {
 	protected:
 	
@@ -43,6 +47,9 @@ class DownloadTest : public ::testing::Test {
 
 /* Constructor */
 
+/**
+ * Test whether the constructor sets values properly
+ */
 TEST_F(DownloadTest, constructor) {
 	
 	EXPECT_EQ(tracker, download->getTrackerAddress());
@@ -52,7 +59,9 @@ TEST_F(DownloadTest, constructor) {
 
 /* ID */
 
-// Trivial
+/**
+ * Trivial test for setID
+ */
 TEST_F(DownloadTest, setIDTrivial) {
 	
 	id = 100;
@@ -60,7 +69,9 @@ TEST_F(DownloadTest, setIDTrivial) {
 	EXPECT_EQ(id, download->getID());
 }
 
-// Negative
+/**
+ * Try setting the ID to a negative number
+ */
 TEST_F(DownloadTest, setIDNegative) {
 	
 	int id = -5;
@@ -74,7 +85,9 @@ TEST_F(DownloadTest, setIDNegative) {
 
 /* Download Speed */
 
-// Trivial
+/**
+ * Trivial test for setDownloadSpeed
+ */
 TEST_F(DownloadTest, setDownloadSpeedTrivial) {
 	
 	download->setID(1);
@@ -84,7 +97,9 @@ TEST_F(DownloadTest, setDownloadSpeedTrivial) {
 	EXPECT_DOUBLE_EQ(downloadSpeed, speed);
 }
 
-// Negative
+/**
+ * Try setting the downloadspeed to a negative number
+ */
 TEST_F(DownloadTest, setDownloadSpeedNegative) {
 	
 	download->setID(1);
@@ -98,7 +113,9 @@ TEST_F(DownloadTest, setDownloadSpeedNegative) {
 
 /* Upload Speed */
 
-// Trivial
+/**
+ * Trivial test for setUploadSpeed
+ */
 TEST_F(DownloadTest, setUploadSpeedTrivial) {
 	
 	download->setID(1);
@@ -108,7 +125,9 @@ TEST_F(DownloadTest, setUploadSpeedTrivial) {
 	EXPECT_DOUBLE_EQ(uploadSpeed, speed);
 }
 
-// Negative
+/**
+ * Try setting upload speed to a negative number
+ */
 TEST_F(DownloadTest, setUploadSpeedNegative) {
 	
 	download->setID(1);
@@ -121,7 +140,9 @@ TEST_F(DownloadTest, setUploadSpeedNegative) {
 
 /* Percentage */
 
-// Trivial
+/**
+ * Trivial test for setPercentage
+ */
 TEST_F(DownloadTest, percentageTrivial) {
 	
 	download->setID(1);
@@ -131,7 +152,9 @@ TEST_F(DownloadTest, percentageTrivial) {
 	EXPECT_DOUBLE_EQ(percentage, download->getStatistics().download_percentage);
 }
 
-// Negative
+/**
+ * Try setting the percentage to a negative number
+ */
 TEST_F(DownloadTest, percentageNegative) {
 	
 	download->setID(1);
@@ -142,7 +165,9 @@ TEST_F(DownloadTest, percentageNegative) {
 	EXPECT_DOUBLE_EQ(originalPercentage, download->getStatistics().download_percentage);
 }
 
-// Over 100
+/**
+ * Try setting the percentage to a number above 100
+ */
 TEST_F(DownloadTest, percentageOver100) {
 	
 	download->setID(1);
@@ -155,7 +180,9 @@ TEST_F(DownloadTest, percentageOver100) {
 
 /* Seeders */
 
-//Trivial
+/**
+ * Trivial test for setSeeders
+ */
 TEST_F(DownloadTest, seedersTrivial){
 	
 	download->setID(1);
@@ -165,7 +192,9 @@ TEST_F(DownloadTest, seedersTrivial){
 	EXPECT_EQ(seeders, download->getStatistics().seeders);
 }
 
-//Negative
+/**
+ * Try to set the seeders to a negative
+ */
 TEST_F(DownloadTest, seedersNegative){
 	
 	download->setID(1);
@@ -179,7 +208,9 @@ TEST_F(DownloadTest, seedersNegative){
 
 /* Peers */
 
-//Trivial
+/**
+ * Trivial test for setPeers
+ */
 TEST_F(DownloadTest, peersTrivial){
 	
 	download->setID(1);
@@ -189,7 +220,9 @@ TEST_F(DownloadTest, peersTrivial){
 	EXPECT_EQ(peers, download->getStatistics().peers);
 }
 
-//Negative
+/**
+ * Try setting the peers to a negative number
+ */
 TEST_F(DownloadTest, peersNegative){
 	
 	download->setID(1);
@@ -207,7 +240,9 @@ TEST_F(DownloadTest, peersNegative){
 
 /* Status */
 
-// Trivial
+/**
+ * Trivial test for setStatus
+ */
 TEST_F(DownloadTest, statusTrivial){
 	
 	download->setID(1);
@@ -215,7 +250,9 @@ TEST_F(DownloadTest, statusTrivial){
 	EXPECT_EQ(DOWNLOADING, download->getStatus());
 }
 
-// Bad Status
+/**
+ * Try setting the status to a status that doesn't exist
+ */
 TEST_F(DownloadTest, statusWrong){
 	
 	download->setID(1);
@@ -227,7 +264,9 @@ TEST_F(DownloadTest, statusWrong){
 
 /* Start */
 
-// Trivial
+/**
+ * Trivial test for start
+ */
 TEST_F(DownloadTest, startTrivial){
 	
 	EXPECT_EQ(READY, download->getStatus());
@@ -235,7 +274,9 @@ TEST_F(DownloadTest, startTrivial){
 	EXPECT_EQ(DOWNLOADING, download->getStatus());
 }
 
-// Already Started
+/**
+ * Try starting a download that has already started
+ */
 TEST_F(DownloadTest, startAlreadyStarted){
 	
 	download->start();
@@ -246,7 +287,9 @@ TEST_F(DownloadTest, startAlreadyStarted){
 
 /* Pause */
 
-// Trivial
+/**
+ * Trivial test for pause
+ */
 TEST_F(DownloadTest, pauseTrivial){
 	
 	download->start();
@@ -255,14 +298,18 @@ TEST_F(DownloadTest, pauseTrivial){
 	EXPECT_EQ(PAUSED, download->getStatus());
 }
 
-// Not Downloading
+/**
+ * Try pausing a download that has not started yet
+ */
 TEST_F(DownloadTest, pauseNeverStarted) {
 	
 	download->pause();
 	EXPECT_EQ(PAUSED, download->getStatus());
 }
 
-// Already Paused
+/**
+ * Try pausing a download that is already paused
+ */
 TEST_F(DownloadTest, pauseAlreadyPaused) {
 	
 	download->start();
@@ -274,7 +321,9 @@ TEST_F(DownloadTest, pauseAlreadyPaused) {
 
 /* Resume */
 
-// Trivial
+/**
+ * Trivial test for resume
+ */
 TEST_F(DownloadTest, resumeTrivial){
 	
 	download->start();
@@ -284,7 +333,9 @@ TEST_F(DownloadTest, resumeTrivial){
 	EXPECT_EQ(DOWNLOADING, download->getStatus());
 }
 
-// Already Downloading
+/**
+ * Try resuming a download that is already downlaoding
+ */
 TEST_F(DownloadTest, resumeAlreadyDownloading) {
 	
 	download->start();
@@ -297,7 +348,9 @@ TEST_F(DownloadTest, resumeAlreadyDownloading) {
 
 /* Stop */
 
-// Trivial
+/**
+ * Trivial test for stop
+ */
 TEST_F(DownloadTest, stopTrivial){
 	
 	download->start();
@@ -305,14 +358,18 @@ TEST_F(DownloadTest, stopTrivial){
 	EXPECT_EQ(STOPPED, download->getStatus());
 }
 
-// Not Started
+/**
+ * Try stopping a download that never started
+ */
 TEST_F(DownloadTest, stopNotStarted){
 	
 	download->stop();
 	EXPECT_EQ(STOPPED, download->getStatus());
 }
 
-// While Paused
+/**
+ * Stop a download that is paused
+ */
 TEST_F(DownloadTest, stopWhilePaused) {
 	
 	download->pause();
@@ -320,7 +377,9 @@ TEST_F(DownloadTest, stopWhilePaused) {
 	EXPECT_EQ(STOPPED, download->getStatus());
 }
 
-// Already Stopped
+/**
+ * Stop a download that is already stopped
+ */
 TEST_F(DownloadTest, stopAlreadyStopped){
 	
 	download->stop();

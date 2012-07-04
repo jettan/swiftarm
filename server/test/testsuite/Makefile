@@ -9,7 +9,7 @@ SOURCE = ../../src
 
 all: testsuite
 
-testsuite: Main.o Utils.o DownloadTest.o DownloadManagerTest.o HTTPServerTest.o SearchEngineTest.o Download.o StreamTest.o DownloadManager.o HttpServer.o Stream.o SearchEngine.o
+testsuite: Main.o Settings.o DownloadTest.o DownloadManagerTest.o HTTPServerTest.o SearchEngineTest.o Download.o StreamTest.o DownloadManager.o HttpServer.o Stream.o SearchEngine.o
 	$(CXX) $(CPPFLAGS) -o testsuite *.o ${LIBS} ${LDADD}
 
 Main.o: Main.cpp
@@ -30,8 +30,8 @@ HTTPServerTest.o: HTTPServerTest.cpp
 SearchEngineTest.o: SearchEngineTest.cpp
 	$(CXX) $(CPPFLAGS) SearchEngineTest.cpp -c
 
-Utils.o: $(SOURCE)/Utils.cpp
-	$(CXX) $(CPPFLAGS) $(SOURCE)/Utils.cpp -c
+Settings.o: $(SOURCE)/Settings.cpp
+	$(CXX) $(CPPFLAGS) $(SOURCE)/Settings.cpp -c
 
 Download.o: $(SOURCE)/Download.cpp
 	$(CXX) $(CPPFLAGS) $(SOURCE)/Download.cpp -c
