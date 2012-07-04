@@ -13,19 +13,19 @@
 
 namespace SearchEngine {
 	
-	static pthread_t dispersy_thread;
-	static pthread_mutex_t dispersy_mutex;
+	static pthread_t dispersy_thread;					/// Thread to run dispersy module in.
+	static pthread_mutex_t dispersy_mutex;				/// Mutex to protect dispersy thread.
+	static std::vector<struct result> search_results;	/// Vector of all search results.
+	static ticpp::Document *searchdoc;					/// Document used to build the list of search results.
 	
 	void *startDispersy(void *arg);
 	
+	/// Struct holding the data of a search result.
 	struct result {
 		std::string filename;
 		std::string tracker;
 		std::string hash;
 	};
-	
-	static std::vector<struct result> search_results;
-	static ticpp::Document *searchdoc;
 	
 	void clearSearchResults();
 	std::string buildSearchXML();

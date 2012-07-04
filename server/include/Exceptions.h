@@ -4,7 +4,9 @@
 #include <exception>
 #include <string>
 
-
+/**
+ * Exception thrown when a file is not found.
+ */
 class FileNotFoundException : public std::exception {
 	public:
 	
@@ -17,6 +19,9 @@ class FileNotFoundException : public std::exception {
 	
 };
 
+/**
+ * Exception thrown when a download attempt is made during streaming.
+ */
 class DownloadWhileStreamingException : public std::exception {
 	public:
 	
@@ -29,6 +34,9 @@ class DownloadWhileStreamingException : public std::exception {
 	
 };
 
+/**
+ * Exception thrown when a download is added which was already added before.
+ */
 class AlreadyDownloadingException : public std::exception {
 	public:
 	
