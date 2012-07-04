@@ -32,11 +32,11 @@ class Download {
 		pthread_mutex_t _mutex;				/// Mutex to prevent download thread and main thread from accessing same data at the same time.
 		pthread_mutex_t _transfer_mutex;	/// Mutex to prevent download thread and main thread from accessing _transfer at the same time.
 		
-		volatile int _status;			/// Current status of the download.
+		volatile int _status;				/// Current status of the download.
 		
-		std::string _filename;			/// Name of the download.
-		std::string _tracker;			/// Trackers seeding this download.
-		std::string _root_hash;			/// Root hash needed to start swift download.
+		std::string _filename;				/// Name of the download.
+		std::string _tracker;				/// Trackers seeding this download.
+		std::string _root_hash;				/// Root hash needed to start swift download.
 		
 		/// Struct for holding time data.
 		struct time {
@@ -48,18 +48,18 @@ class Download {
 		
 		/// Struct for holding download statistics.
 		struct downloadStats {
-			int  id;					/// Download id needed to check the stats.
-			double download_speed;		/// Current download speed in kb/s.
-			double upload_speed;		/// Current upload speed in kb/s.
-			double download_percentage; /// Download progress in percentage.
+			int  id;						/// Download id needed to check the stats.
+			double download_speed;			/// Current download speed in kb/s.
+			double upload_speed;			/// Current upload speed in kb/s.
+			double download_percentage; 	/// Download progress in percentage.
 			
-			int seeders;				/// Number of seeders uploading this file.
-			int peers;					/// Number of peers connected to us for this file.
+			int seeders;					/// Number of seeders uploading this file.
+			int peers;						/// Number of peers connected to us for this file.
 			
-			struct time estimated;		/// Estimated time left for download to finish.
+			struct time estimated;			/// Estimated time left for download to finish.
 		};
 		
-		downloadStats _stats;			/// Struct holding the statistics of the download.
+		downloadStats _stats;				/// Struct holding the statistics of the download.
 		swift::FileTransfer *_transfer;
 		
 	public:

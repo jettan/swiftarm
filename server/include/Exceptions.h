@@ -49,6 +49,9 @@ class AlreadyDownloadingException : public std::exception {
 	
 };
 
+/**
+ * Exception thrown when the format of the IP address is incorrect.
+ */
 class InvalidIPException : public std::exception {
 	public:
 	
@@ -61,6 +64,9 @@ class InvalidIPException : public std::exception {
 	
 };
 
+/**
+ * Exception thrown when something went wrong while trying to resume a download.
+ */
 class CannotResumeException : public std::exception {
 	public:
 	
