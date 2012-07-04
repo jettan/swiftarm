@@ -234,7 +234,7 @@ static std::string settingsRequest(std::vector<std::string> result) {
 	double max_down          = strtod(result.at(1).c_str(), NULL);
 	double max_up            = strtod(result.at(2).c_str(), NULL);
 	std::string download_dir = result.at(3);
-	
+	download_dir             = Settings::replaceSubstring(download_dir, "%20", " ");
 	DownloadManager::limitUpSpeeds(max_up);
 	DownloadManager::limitDownSpeeds(max_down);
 	Settings::setDownloadDirectory(download_dir);
@@ -344,6 +344,7 @@ static void HttpServer::handleRequest(struct evhttp_request *req, void *arg) {
 		// Message will look like: "/upload:filename"
 		} else if (result.at(0).compare("/upload") == 0) {
 			std::string filename = result.at(1);
+			filename             = Settings::replaceSubstring(filename, "%20", " ");
 			std::string response = uploadRequest(filename);
 			sendResponse(req, evb, response.c_str());
 			
