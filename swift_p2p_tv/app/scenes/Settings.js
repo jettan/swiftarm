@@ -7,7 +7,6 @@ function SceneSettings() {
 }
 
 SceneSettings.prototype.initialize = function () {
-	
 	$('#downspeed_limit_label').sfLabel({text: "Limit down speed"});
 	$('#upspeed_limit_label').sfLabel({text: "Limit up speed"});
 	$('#download_path_label').sfLabel({text: "Download path: "});
@@ -192,7 +191,7 @@ SceneSettings.prototype.handleKeyDown = function (keyCode) {
 						}
 						
 						$('#download_path_value').sfLabel("option", "text", path);
-						downloadPath = path;
+						download_path = path;
 						var settings =  "/settings:" + $('#downspeed_limit_value').sfLabel("get").text() +
 							":" + $('#upspeed_limit_value').sfLabel("get").text() +
 							":" + $('#download_path_value').sfLabel("get").text();

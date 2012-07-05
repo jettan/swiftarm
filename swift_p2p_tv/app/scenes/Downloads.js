@@ -82,7 +82,11 @@ SceneDownloads.prototype.initialize = function () {
 	$('#init_total_up').sfLabel({text:'0'});
 	$('#total_down_label').sfLabel({text:'down:'});
 	$('#init_total_down').sfLabel({text:'0'});
-	$('#pause_image').sfImage({src:'images/navi/pause.png'});
+	$('#pause_image0').sfImage({src:'images/navi/pause.png'});
+	$('#pause_image1').sfImage({src:'images/navi/pause.png'});
+	$('#pause_image2').sfImage({src:'images/navi/pause.png'});
+	$('#pause_image3').sfImage({src:'images/navi/pause.png'});
+	$('#pause_image4').sfImage({src:'images/navi/pause.png'});
 	
 	for (var i = 0; i < 5; i++) {
 		$('#download_0' + i +'_name').sfLabel({text:'Name'});
@@ -173,14 +177,15 @@ SceneDownloads.prototype.handleKeyDown = function (key_code) {
 			}
 			break;
 		case sf.key.PAUSE:
-			$('#download_00_status').sfLabel('hide');
+			$('#download_0'+ focus + '_status').sfLabel('hide');
 			httpGetSpecial(pause_url + stats_results[focus + page_number * 5][10]);
-			$('#pause_image').sfImage('show');
+			var myElement = document.getElementById("pause_image" + focus);
+			$('#pause_image' + focus).sfImage('show');
 			break;
 		case sf.key.PLAY:
-			$('#pause_image').sfImage('hide');
+			$('#pause_image' + focus).sfImage('hide');
 			httpGetSpecial(resume_url + stats_results[focus + page_number * 5][10]);
-			$('#download_00_status').sfLabel('show');
+			$('#download_0'+ focus +'_status').sfLabel('show');
 			break;
 		case sf.key.STOP:
 			$('#popup_confirmation').sfPopup({
@@ -191,6 +196,7 @@ SceneDownloads.prototype.handleKeyDown = function (key_code) {
 				callback : function(selectedIndex) {
 					 if (selectedIndex == 0) {
 						httpGetSpecial(stop_url + stats_results[focus + page_number * 5][10]);
+						$('#pause_image'+ focus).sfImage('hide');
 						if (focus == 0 && page_number > 0){
 							prevPage();
 						} else if (focus > 0) {
@@ -210,6 +216,7 @@ SceneDownloads.prototype.handleKeyDown = function (key_code) {
 				callback : function(selectedIndex) {
 					 if (selectedIndex == 0) {
 						httpGetSpecial(remove_url + stats_results[focus + page_number * 5][10]);
+						$('#pause_image'+ focus).sfImage('hide');
 						if (focus == 0 && page_number > 0){
 							prevPage();
 						} else if (focus > 0) {
@@ -219,6 +226,29 @@ SceneDownloads.prototype.handleKeyDown = function (key_code) {
 					}
 				}
 			}).sfPopup('show');
+			break;
+		case sf.key.ENTER:
+		if (stats_results.length > 0 ) {
+				var _THIS_ = this;
+				$('#player_popup').sfPopup({
+					text:"Do you want to go to player to play this video?",
+					buttons: ["Yes", "No"],
+					defaultFocus: 1,
+					keyhelp: {'return' : 'Return'},
+					callback : function(selectedIndex) {
+						if (selectedIndex == 0 && stats_results[focus + page_number*5][6]==100) {
+							// Redirect to player
+							playlist.push({
+								url: "file://" + download_path + '/' + stats_results[focus + page_number*5][3],
+								title: stats_results[focus + page_number*5][3]
+							});
+							redirect = true;
+							stopProgress();
+							sf.scene.focus('Main');
+						}
+					}
+				}).sfPopup('show');
+			}
 			break;
 		case sf.key.RETURN:
 			stopProgress();

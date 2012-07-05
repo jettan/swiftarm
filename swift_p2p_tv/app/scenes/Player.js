@@ -30,33 +30,6 @@ function ScenePlayer(options) {
 		columnSize: 350/720*curWidget.height
 	}
 	
-	this.curOpts = {}; for(var prop in this.defaultOpts) {this.curOpts[prop] = this.defaultOpts[prop];};
-	this.aColumnOpts = [null, 'left', 'right', 'bottom'];
-	this.iColumn = 0;
-	
-	this.btnData = [
-		{text: 'Toggle Light', method: function () {
-			this.curOpts.light = !this.curOpts.light;
-			$('#MainBG').sfBackground('option', 'light', this.curOpts.light);
-			this.setDescription('Toggle Light: ' + this.curOpts.light);
-		}},
-		{text: 'Toggle Column Mode', method: function () {
-			this.iColumn = (this.iColumn+1)%this.aColumnOpts.length;
-			this.curOpts.column = this.aColumnOpts[this.iColumn];
-			$('#MainBG').sfBackground('option', 'column', this.curOpts.column);
-		}},
-		{text: 'Toggle Column Shadow', method: function () {
-			this.curOpts.columnShadow = !this.curOpts.columnShadow;
-			$('#MainBG').sfBackground('option', 'columnShadow', this.curOpts.columnShadow);
-			this.setDescription('Toggle Column Shadow: ' + this.curOpts.columnShadow);
-		}},
-		{text: 'Change Column Size', method: function () {
-			this.curOpts.columnSize = (this.curOpts.columnSize==350/720*curWidget.height)?200/720*curWidget.height:350/720*curWidget.height;
-			$('#MainBG').sfBackground('option', 'columnSize', this.curOpts.columnSize);
-			this.setDescription('Change Column Size: ' + this.curOpts.columnSize);
-		}}
-	];
-	
 	function convCoord(val, baseResol) {
 		var rate = curWidget.height / baseResol;
 		return parseInt(val*rate, 10);

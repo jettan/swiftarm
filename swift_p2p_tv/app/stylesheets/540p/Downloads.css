@@ -21,7 +21,7 @@
 	color : #ffffff;
 	left : 440px;
 	top : 480px;
-	width : 40px;
+	width : 100px;
 }
 
 #SceneDownloads #init_total_up{
@@ -39,7 +39,7 @@
 	color : #ffffff;
 	left : 550px;
 	top : 480px;
-	width : 40px;
+	width : 100px;
 }
 
 #SceneDownloads #init_total_down{
@@ -981,10 +981,42 @@ Download 1 START
 	width : 40px;
 }
 
-#pause_image {
+#pause_image0 {
 	position : absolute;
-	left : 320px;
+	left : 290px;
 	top : 30px;
+	width : 28px;
+	height : 28px;
+	display : none;
+}
+#pause_image1 {
+	position : absolute;
+	left : 290px;
+	top : 119px;
+	width : 28px;
+	height : 28px;
+	display : none;
+}
+#pause_image2 {
+	position : absolute;
+	left : 290px;
+	top : 208px;
+	width : 28px;
+	height : 28px;
+	display : none;
+}
+#pause_image3 {
+	position : absolute;
+	left : 290px;
+	top : 297px;
+	width : 28px;
+	height : 28px;
+	display : none;
+}
+#pause_image4 {
+	position : absolute;
+	left : 290px;
+	top : 386px;
 	width : 28px;
 	height : 28px;
 	display : none;
@@ -1071,4 +1103,3 @@ Download 1 START
 	border-left-color: #e6e6fa;
 	border-right-color: #e6e6fa;
 }
-

@@ -2,16 +2,16 @@ function SceneMain() {
 	this.items_per_page = 4;
 }
 
-// Global variables.
-var tv_ip          = "";
-var stats_url      = "";
-var pause_url      = "";
-var resume_url     = "";
-var switch_url     = "";
-var stop_url       = "";
-var remove_url     = "";
-var clear_url      = "";
-
+/** Global variables. **/
+//
+var tv_ip           = "";
+var stats_url       = "";
+var pause_url       = "";
+var resume_url      = "";
+var switch_url      = "";
+var stop_url        = "";
+var remove_url      = "";
+var clear_url       = "";
 var download_url    = "";
 var upload_url      = "";
 var search_url      = "";
@@ -26,8 +26,9 @@ var playlist        = [];
 var downloading     = false;
 var redirect        = false;
 var video_selection = "";
-var download_path   = '/dtv/usb/sda1';
+var download_path   = '/tmp/Downloads';
 
+// Initialize the main screen.
 SceneMain.prototype.initialize = function () {
 	this.data = [
 		'Browse',
@@ -119,6 +120,7 @@ SceneMain.prototype.initialize = function () {
 	stream_url      = tv_url + "/stream";
 	stop_stream_url = tv_url + "/stopStream";
 }
+
 
 SceneMain.prototype.handleShow = function (data) {
 	$('#loading').sfLoading('show');
