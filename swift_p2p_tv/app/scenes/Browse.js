@@ -144,7 +144,7 @@ SceneBrowse.prototype.handleEnter  = function () {
 			break;
 		case 3:
 			var vid = "/dtv/usb" + video_selection.substring(8);
-			httpGet(uploadUrl + vid);
+			httpGet(upload_url + vid);
 			$('#selection_label').sfLabel("option", "text", "Seeding file..");
 			break;
 		case 4:

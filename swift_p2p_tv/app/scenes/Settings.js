@@ -122,8 +122,8 @@ SceneSettings.prototype.handleFocus = function () {
 	setTimeout(function() {
 		var res = settingsResult.split(":");
 	
-		$('#upspeed_limit_value').sfLabel("option","text",res[1]);
-		$('#downspeed_limit_value').sfLabel("option","text",res[0]);
+		$('#upspeed_limit_value').sfLabel("option","text",res[0]);
+		$('#downspeed_limit_value').sfLabel("option","text",res[1]);
 		$('#download_path_value').sfLabel("option","text",res[2]);
 	}, 1500);
 	
