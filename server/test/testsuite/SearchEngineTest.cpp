@@ -3,10 +3,18 @@
 #include "Exceptions.h"
 #include <string>
 
+/**
+ * This class tests the SearchEngine.
+ * It doesn not test the search function because it is mocked
+ * The setup clears the list of search results
+ * The tear down is empty
+ */
 class SearchEngineTest : public ::testing::Test {
 	protected:
 	
-	// Turns an XML string into a vector of results
+	/**
+	 * Turns an XML string into a vector of results
+	 */
 	std::vector<struct SearchEngine::result> toVector(std::string response) {
 		
 		std::vector<struct SearchEngine::result> results;
@@ -56,7 +64,9 @@ class SearchEngineTest : public ::testing::Test {
 
 /* Get Results Test */
 
-// Trivial
+/**
+ * Trivial test for getResults
+ */
 TEST_F(SearchEngineTest, getResultsTrivial) {
 	
 	SearchEngine::search("test");
@@ -65,7 +75,9 @@ TEST_F(SearchEngineTest, getResultsTrivial) {
 	EXPECT_EQ(2, results.size());
 }
 
-// Empty
+/**
+ * Get resuts when there are none
+ */
 TEST_F(SearchEngineTest, getResultsEmpty) {
 	
 	SearchEngine::search("test");
@@ -77,7 +89,9 @@ TEST_F(SearchEngineTest, getResultsEmpty) {
 
 /* Get Result With Name Tests */
 
-// Trivial
+/**
+ * Trivial test for getResultWithName
+ */
 TEST_F(SearchEngineTest, getResultWithNameTrivial) {
 	
 	SearchEngine::search("test");
@@ -86,7 +100,9 @@ TEST_F(SearchEngineTest, getResultWithNameTrivial) {
 	EXPECT_EQ("367d26a6ce626e049a21921100e24eac86dbcd32", r.hash);
 }
 
-// Doesn't exist
+/**
+ * Try to get a result by name that doesn't exist
+ */
 TEST_F(SearchEngineTest, getResultWithNameNonexistent) {
 	
 	SearchEngine::search("test");
@@ -96,7 +112,9 @@ TEST_F(SearchEngineTest, getResultWithNameNonexistent) {
 
 /* Get Result With Hash Tests */
 
-// Trivial
+/**
+ * Trivial test for getResultWithHash
+ */
 TEST_F(SearchEngineTest, getResultWithHashTrivial) {
 	
 	SearchEngine::search("test");
@@ -106,7 +124,9 @@ TEST_F(SearchEngineTest, getResultWithHashTrivial) {
 	EXPECT_EQ("Test1.test", r.filename);
 }
 
-// Doesn't exist
+/**
+ * Try to get a result by name that doesn't exist
+ */
 TEST_F(SearchEngineTest, getResultWithHashNonexistent) {
 	
 	SearchEngine::search("test");
