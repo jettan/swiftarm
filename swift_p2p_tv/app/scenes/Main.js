@@ -211,7 +211,7 @@ SceneMain.prototype.handleKeyDown = function (keyCode) {
 		case sf.key.DOWN:
 			$('#scene_list').sfList('next');
 			break;
-			
+		
 		case sf.key.RETURN:
 			var _THIS_ = this;
 			var exit = false;
@@ -222,15 +222,12 @@ SceneMain.prototype.handleKeyDown = function (keyCode) {
 					keyhelp: {'return' : 'Return'},
 					callback : function (selectedIndex){
 						if (selectedIndex == 0) {
-							exit = true;
+							sf.core.exit(false);
 						}
 					}
 			}).sfPopup('show');
 			
-			if (!exit)
-				sf.key.preventDefault();
-			else
-				widgetApi.sendReturnEvent();
+			sf.key.preventDefault();
 			break;
 			
 		default:
