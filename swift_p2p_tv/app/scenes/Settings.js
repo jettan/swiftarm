@@ -1,3 +1,6 @@
+/**
+ * Constructor of the Settings scene.
+ */
 function SceneSettings() {
 	var index;
 	var row;
@@ -6,6 +9,9 @@ function SceneSettings() {
 	var settingsResult;
 }
 
+/**
+ * Function called at scene init.
+ */
 SceneSettings.prototype.initialize = function () {
 	$('#downspeed_limit_label').sfLabel({text: "Limit down speed"});
 	$('#upspeed_limit_label').sfLabel({text: "Limit up speed"});
@@ -19,6 +25,8 @@ SceneSettings.prototype.initialize = function () {
 			text: 'Change path..'
 	});
 	
+	// Toggle button limits the upspeed and sends the new settings to
+	// the c++ backend via a http request
 	 $('#upspeed_limit_toggle').sfToggleButton({
 		}).sfToggleButton('addCallback', 'changed', function (event, checked) {
 			if (checked) {
@@ -38,6 +46,8 @@ SceneSettings.prototype.initialize = function () {
 			}
 	});
 	
+	// Toggle button limits the downspeed and sends the new settings to
+	// the c++ backend via a http request
 	$('#downspeed_limit_toggle').sfToggleButton({
 		}).sfToggleButton('addCallback', 'changed', function (event, checked) {
 			if (checked) {
@@ -74,6 +84,9 @@ SceneSettings.prototype.initialize = function () {
 	this.row = 0;
 }
 
+/**
+ * Function to initialize the textfield.
+ */
 function initText(text) {
 	label = text;
 	$('#input').sfTextInput({
@@ -101,10 +114,19 @@ function initText(text) {
 	$('#input').sfTextInput('hide');
 }
 
+/**
+ * Function called at scene show.
+ */
 SceneSettings.prototype.handleShow = function () {}
 
+/**
+ * Function called at scene hide.
+ */
 SceneSettings.prototype.handleHide = function () {}
 
+/**
+ * Function called at scene focus.
+ */
 SceneSettings.prototype.handleFocus = function () {
 	
 	$('#app_layout').sfBackground('option', 'column', 'left');
@@ -116,6 +138,7 @@ SceneSettings.prototype.handleFocus = function () {
 	$('#upspeed_limit_toggle').sfToggleButton('focus');
 	this.row = 0
 	
+	// Get current settings from C++ backend
 	var url = tv_url + "/settings";
 	sendHttp(url);
 	setTimeout(function() {
@@ -132,11 +155,17 @@ SceneSettings.prototype.handleFocus = function () {
 	});
 }
 
+/**
+ * Function called at scene blur.
+ */
 SceneSettings.prototype.handleBlur = function () {
 	$('#upspeed_limit_toggle').sfToggleButton('blur');
 	$('#downspeed_limit_toggle').sfToggleButton('blur');
 }
 
+/**
+ * Function called when remote key is pressed.
+ */
 SceneSettings.prototype.handleKeyDown = function (keyCode) {
 
 	switch (keyCode) {
@@ -179,6 +208,7 @@ SceneSettings.prototype.handleKeyDown = function (keyCode) {
 			if (this.row == 2) {
 				$("#browseButton").sfButton('blur');
 				var _THIS_ = this;
+				// Start samsung usb module to browse to a new download path
 				sf.service.USB.show({
 					callback: function(result) {
 						
@@ -219,6 +249,9 @@ SceneSettings.prototype.handleKeyDown = function (keyCode) {
 }
 
 var xmlHttp;
+/**
+ * Function used to send http requests to server to get and set the settings.
+ */
 function sendHttp(url) {
 	xmlHttp = new XMLHttpRequest();
 	xmlHttp.open("GET", url, true);
@@ -226,6 +259,9 @@ function sendHttp(url) {
 	xmlHttp.send(null);
 }
 
+/**
+ * Function called when the http server sends a response to the requests that have been sent.
+ */
 function processSettingsResponse() {
 	if (xmlHttp.readyState == 4) {
 		settingsResult = xmlHttp.responseText;

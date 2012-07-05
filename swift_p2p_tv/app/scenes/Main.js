@@ -1,3 +1,6 @@
+/**
+ * Constructor of the Main scene.
+ */
 function SceneMain() {
 	this.items_per_page = 4;
 }
@@ -22,13 +25,16 @@ var stop_stream_url = "";
 var names           = new Array();
 var trackers        = new Array();
 var hashes          = new Array();
+var streaming       = new Boolean();
 var playlist        = [];
 var downloading     = false;
 var redirect        = false;
 var video_selection = "";
 var download_path   = '/tmp/Downloads';
 
-// Initialize the main screen.
+/**
+ * Function called at scene init.
+ */
 SceneMain.prototype.initialize = function () {
 	this.data = [
 		'Browse',
@@ -72,6 +78,7 @@ SceneMain.prototype.initialize = function () {
 		columnSize: 350 / 720 * curWidget.height
 	}
 	
+	// Samsung API method to get ip adress of the tv
 	this.methods = [{
 			title: 'getAvailableNetworks',
 			func: function(){
@@ -79,7 +86,7 @@ SceneMain.prototype.initialize = function () {
 					var err = deviceapis.network.getAvailableNetworks(function(pReturn){
 						var retValue = pReturn;
 						
-						if(retValue[getActiveIndex(retValue)]) {					
+						if(retValue[getActiveIndex(retValue)]) {
 							tv_ip = "http://" + retValue[getActiveIndex(retValue)].ip + ":1337";
 							tv_url = tv_ip;
 						}
@@ -100,6 +107,7 @@ SceneMain.prototype.initialize = function () {
 		}
 	}
 	
+	// Call function to set ip adress
 	var method = this.methods[0];
 	if(method && method.func) {
 			method.func();
@@ -124,7 +132,6 @@ SceneMain.prototype.initialize = function () {
 
 SceneMain.prototype.handleShow = function (data) {
 	$('#loading').sfLoading('show');
-	// TODO: Show eyecandy while waiting for load.
 	sf.scene.show('Browse');
 	setTimeout(function() { sf.scene.hide('Browse'); sf.scene.show('Player');}, 3000);
 	setTimeout(function() { sf.scene.hide('Player'); sf.scene.show('Settings');}, 5000);
@@ -132,8 +139,14 @@ SceneMain.prototype.handleShow = function (data) {
 	setTimeout(function() { sf.scene.hide('Downloads'); $('#loading').sfLoading('hide');}, 9000);
 }
 
+/**
+ * Function called at scene hide.
+ */
 SceneMain.prototype.handleHide = function () {}
 
+/**
+ * Function called at scene focus.
+ */
 SceneMain.prototype.handleFocus = function () {
 	var index = $('#scene_list').sfList('getIndex');
 	// Hide whatever scene was focused.
@@ -162,20 +175,25 @@ SceneMain.prototype.handleFocus = function () {
 		});
 		
 		$('#app_layout').sfBackground('option', 'column', 'left');
-		$('#app_layout').sfBackground(this.defaultOpts);
-		$('#app_layout').sfBackground('option', 'column', 'left');
 	}
 }
 
+/**
+ * Function called at scene blur.
+ */
 SceneMain.prototype.handleBlur = function () {
 	$('#label').sfLabel('hide');
 	$('#app_layout').sfBackground(this.defaultOpts);
 }
 
+/**
+ * Function called when key is pressed on the remote.
+ */
 SceneMain.prototype.handleKeyDown = function (keyCode) {
 	switch (keyCode) {
 		case sf.key.RIGHT:
 		case sf.key.ENTER:
+			// Go to selected scene
 			$('#background_image').sfImage('hide');
 			var index = $('#scene_list').sfList('getIndex');
 			sf.scene.show(this.data[index]);
@@ -213,7 +231,6 @@ SceneMain.prototype.handleKeyDown = function (keyCode) {
 				sf.key.preventDefault();
 			else
 				widgetApi.sendReturnEvent();
-				//sf.core.exit(false);
 			break;
 			
 		default:

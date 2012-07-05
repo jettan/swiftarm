@@ -1,9 +1,13 @@
+/**
+ * Constructor of the Browse scene.
+ */
 function SceneBrowse() {
 	this.browse_focus = 1;
 	var stream = '';
 	var k = 0;
 }
 
+/// Enumerator to know where the focus is.
 var browse_enum = {
 	SEARCH_BAR: 0,
 	USB_BROWSER: 1,
@@ -13,10 +17,8 @@ var browse_enum = {
 	RESULT_LIST: 5
 }
 
-var tv_url          = "";
 var is_list_shown   = false;
 var search_results  = ["Search results"];
-var streaming       = new Boolean();
 var requestXml;
 var requestHttp;
 
@@ -57,10 +59,10 @@ SceneBrowse.prototype.initialize = function () {
 			}
 		}
 	}).sfTextInput('blur');
-
+	
 	// Dynamic label to show video selection, and server responses.
 	$('#selection_label').sfLabel({text:'n/a'});
-
+	
 	// Buttons to: go to player, add file to playlist, upload a file and browse usb
 	$('#go_to_player_button').sfButton({text:'Go to player'});
 	$('#add_to_playlist_button').sfButton({text:'Add to playlist'});
@@ -591,3 +593,4 @@ function processRequest() {
 		}
 	}
 }
+

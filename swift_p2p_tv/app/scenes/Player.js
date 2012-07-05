@@ -1,3 +1,6 @@
+/**
+ * Constructor of the Player scene.
+ */
 function ScenePlayer(options) {
 	this.options = options;
 	this.videoPos = {
@@ -39,9 +42,10 @@ function ScenePlayer(options) {
 var item;
 var fullScreen = false;
 
+/**
+ * Function called when initializing the scene Player.
+ */
 ScenePlayer.prototype.initialize = function() {
-	alert("ScenePlayer.initialize()");
-	
 	var items = [];
 	for(var i=0; i<playlist.length; i++) {
 		items.push(playlist[i].title);
@@ -54,18 +58,13 @@ ScenePlayer.prototype.initialize = function() {
 	
 }
 
+/**
+ * Function called when the scene Player is to be shown.
+ */
 ScenePlayer.prototype.handleShow = function() {
-	alert("ScenePlayer.handleShow()");
 	var opt = {};
 	var _THIS_ = this;
-	opt.onerror = function(error, info){
-		_THIS_.printEvent('ERROR : ' + (_THIS_.error_list[error]||error) + (info ? ' (' + info + ')' : ''));
-	};
-	opt.onend = function(){
-		_THIS_.printEvent('END');
-	};
-	opt.onstatechange = function(state, info){
-		_THIS_.printEvent('StateChange : ' + (_THIS_.state_list[state]||state) + (info ? ' (' + info + ')' : ''));
+	opt.onstatechange = function(state, info) {
 		_THIS_.video_state = state;
 		_THIS_.setKeyHelp();
 	};
@@ -78,42 +77,46 @@ ScenePlayer.prototype.handleShow = function() {
 	sf.service.VideoPlayer.show();
 }
 
+
+/**
+ * Function called when the scene Player is to be hidden.
+ */
 ScenePlayer.prototype.handleHide = function() {
-	alert("ScenePlayer.handleHide()");
-	// this function will be called when the scene manager hide this scene
 	sf.service.VideoPlayer.stop();
 	sf.service.VideoPlayer.hide();
 }
 
+/**
+ * Function called when the scene Player is given focus.
+ */
 ScenePlayer.prototype.handleFocus = function() {
-	alert("ScenePlayer.handleFocus()");
-	// this function will be called when the scene manager focus this scene
 	this.setKeyHelp();
 	var _THIS_ = this;
 	setTimeout(function() {
 		_THIS_.refreshList();
 	}, 1500);
 	
-	if (redirect){
+	if (redirect) {
 		redirect = false;
 	}
 	
 	$('#app_layout').sfBackground('option', 'column', 'left');
 }
 
+/**
+ * Function called when the scene Player is to be blurred.
+ */
 ScenePlayer.prototype.handleBlur = function() {
-
 	$("#lstPlayer").sfList('blur');
-	$('#image').sfImage('hide');
-	$('#label').sfLabel('hide');
 	if (sf.service.VideoPlayer.Skip.isInProgress()) {
 		sf.service.VideoPlayer.Skip.cancel();
 	}
-	document.getElementById("MainListPage").innerHTML = "";
 }
 
+/**
+ * Keyhandler for the scene Player.
+ */
 ScenePlayer.prototype.handleKeyDown = function(keyCode) {
-
 	switch (keyCode) {
 		case sf.key.LEFT:
 			$('#scene_list').sfList('show');
@@ -126,14 +129,12 @@ ScenePlayer.prototype.handleKeyDown = function(keyCode) {
 			if (!sf.service.VideoPlayer.Skip.isInProgress()) {
 				$("#lstPlayer").sfList('prev');
 			}
-			document.getElementById("MainListPage").innerHTML = playlist[$("#lstPlayer").sfList('getIndex')].url;
 			break;
 			
 		case sf.key.DOWN:
 			if (!sf.service.VideoPlayer.Skip.isInProgress()) {
 				$("#lstPlayer").sfList('next');
 			}
-			document.getElementById("MainListPage").innerHTML = playlist[$("#lstPlayer").sfList('getIndex')].url;
 			break;
 			
 		case sf.key.ENTER:
@@ -145,9 +146,6 @@ ScenePlayer.prototype.handleKeyDown = function(keyCode) {
 				
 				item = playlist[$("#lstPlayer").sfList('getIndex')];
 				item.fullScreen = false;
-				
-				var _THIS_ = this;
-				_THIS_.printEvent('Playing Video : ' + item.title + ' | ' + item.url);
 				
 				sf.service.VideoPlayer.play(item);
 				
@@ -242,7 +240,6 @@ ScenePlayer.prototype.handleKeyDown = function(keyCode) {
 				this.nCurSyncTime = 0;
 			}
 			sf.service.VideoPlayer.Subtitle.setSyncTime(this.nCurSyncTime);
-			this.printEvent("set subtitle sync time: " + this.nCurSyncTime + "ms");
 			break;
 			
 		case sf.key.BLUE:
@@ -252,7 +249,6 @@ ScenePlayer.prototype.handleKeyDown = function(keyCode) {
 				this.nCurSyncTime = 0;
 			}
 			sf.service.VideoPlayer.Subtitle.setSyncTime(this.nCurSyncTime);
-			this.printEvent("set subtitle sync time: " + this.nCurSyncTime + "ms");
 			break;
 			
 		default:
@@ -260,17 +256,14 @@ ScenePlayer.prototype.handleKeyDown = function(keyCode) {
 	}
 }
 
-ScenePlayer.prototype.printEvent = function(msg) {
-	var date = new Date();
-	var timestr = date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
-	document.getElementById("PlayerEvent").innerHTML = (timestr + "- " + msg + "<br>") + document.getElementById("PlayerEvent").innerHTML;
-}
-
+/**
+ * Refresh the playlist.
+ */
 ScenePlayer.prototype.refreshList = function() {
 	$("#lstPlayer").sfList('destroy');
 	
 	var items = [];
-	for(var i=0; i<playlist.length; i++) {
+	for (var i = 0; i < playlist.length; i++) {
 		items.push(playlist[i].title);
 	}
 	
@@ -281,20 +274,23 @@ ScenePlayer.prototype.refreshList = function() {
 	}).sfList('blur');
 	$("#lstPlayer").sfList('show');
 	$("#lstPlayer").sfList('focus');
-	
 }
 
+
+/**
+ * Set the keyhelpbar depending on the situation.
+ */
 ScenePlayer.prototype.setKeyHelp = function (state) {
 	var oKeyMap = {};
 	
 	if (this.video_state == sf.service.VideoPlayer.STATE_PLAYING ||
-		this.video_state == sf.service.VideoPlayer.STATE_PAUSED ||
+		this.video_state == sf.service.VideoPlayer.STATE_PAUSED  ||
 		this.video_state == sf.service.VideoPlayer.STATE_BUFFERING) {
 		
 		oKeyMap.RED = 'Fullscreen';
 	}
 	
-	if(this.use_subtitles) {
+	if (this.use_subtitles) {
 		oKeyMap.YELLOW = 'Sync -0.5sec',
 		oKeyMap.BLUE = 'Sync +0.5sec'
 	}
@@ -302,11 +298,9 @@ ScenePlayer.prototype.setKeyHelp = function (state) {
 	if (sf.service.VideoPlayer.Skip.isInProgress()) {
 		oKeyMap.ENTER = 'Play';
 		oKeyMap.RETURN = 'Cancel';
-	}
-	else if (fullScreen) {
+	} else if (fullScreen) {
 		oKeyMap.RETURN = 'Toggle fullscreen';
-	}
-	else {
+	} else {
 		oKeyMap.UPDOWN = 'Move Item';
 		oKeyMap.ENTER = 'Play';
 		oKeyMap.RETURN = 'Return';
@@ -316,6 +310,9 @@ ScenePlayer.prototype.setKeyHelp = function (state) {
 	$("#keyhelp_bar").sfKeyHelp(oKeyMap);
 }
 
+/**
+ * Make a GET /stopStream request to the HTTP server.
+ */
 function httpGetClose(url) {
 	request = new XMLHttpRequest();
 	request.open("GET", url, true);
@@ -323,8 +320,12 @@ function httpGetClose(url) {
 	request.send(null);
 }
 
+/**
+ * Process the response of the /stopStream request.
+ */
 function processCloseRequest() {
 	if (request.readyState == 4) {
 		var result = request.responseText;
 	}
 }
+
