@@ -436,9 +436,6 @@ int HttpServer::init() {
 	
 	// Now we tell the evhttp what port to listen on.
 	handle = evhttp_bind_socket_with_handle(http, Settings::getIP().c_str(), port);
-	//handle = evhttp_bind_socket_with_handle(http, "130.161.159.107", port);
-	//handle = evhttp_bind_socket_with_handle(http, "127.0.0.1", port);
-	//handle = evhttp_bind_socket_with_handle(http, "130.161.158.52", port);
 	
 	if (!handle) {
 		std::cerr << "Couldn't bind to port " << (int)port << ". Exiting." << std::endl;

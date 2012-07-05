@@ -6,9 +6,9 @@
 #include <string>
 
 /**
- * This is the class for testing DownloadManager.cpp
- * The setup clear the download list
- * The teardown also clears the download list and removes all downloaded files
+ * This is the class for testing DownloadManager.cpp.
+ * The setup clear the download list.
+ * The teardown also clears the download list and removes all downloaded files.
  */
 class DownloadManagerTest : public ::testing::Test {
 	protected:
@@ -46,10 +46,9 @@ class DownloadManagerTest : public ::testing::Test {
 
 
 /**
- * Check whether two downloads are the same
+ * Check whether two downloads are the same.
  */
 void testDownloadsAreEqual(Download dl1, Download dl2){
-	
 	EXPECT_EQ(dl1.getID(), dl2.getID());
 	EXPECT_EQ(dl1.getTrackerAddress(), dl2.getTrackerAddress());
 	EXPECT_EQ(dl1.getRootHash(), dl2.getRootHash());
@@ -59,10 +58,9 @@ void testDownloadsAreEqual(Download dl1, Download dl2){
 /* Download Directory */
 
 /**
- * Trivial test for setDirectory
+ * Trivial test for setDirectory.
  */
 TEST_F(DownloadManagerTest, setDirectoryTrivial) {
-	
 	std::string test = "/dtv/usb/sda1/Test";
 	Settings::setDownloadDirectory(test);
 	
@@ -74,10 +72,9 @@ TEST_F(DownloadManagerTest, setDirectoryTrivial) {
 /* getIndexFromHash */
 
 /**
- * Trivial test for getIndexFromHash
+ * Trivial test for getIndexFromHash.
  */
 TEST_F(DownloadManagerTest, getIndexFromHashTrivial) {
-	
 	std::string hash = "abcd1234abcd1234abcd1234abcd1234abcd1234";
 	
 	Download *testDL = new Download("tracker", hash, "test");
@@ -88,10 +85,9 @@ TEST_F(DownloadManagerTest, getIndexFromHashTrivial) {
 }
 
 /**
- * Try getting a download with a hash that doens't exist
+ * Try getting a download with a hash that doesn't exist.
  */
 TEST_F(DownloadManagerTest, getIndexFromHashNonexistent) {
-	
 	std::string hash = "abcd1234abcd1234abcd1234abcd1234abcd1234";
 	EXPECT_THROW(DownloadManager::getIndexFromHash(hash), FileNotFoundException);
 }
@@ -99,10 +95,9 @@ TEST_F(DownloadManagerTest, getIndexFromHashNonexistent) {
 /* Add Download */
 
 /**
- * Trivial test for addDownload
+ * Trivial test for addDownload.
  */
 TEST_F(DownloadManagerTest, addDownloadTrivial) {
-	
 	std::string hash = "abcd1234abcd1234abcd1234abcd1234abcd1234";
 
 	Download *testDL = new Download("tracker", hash, "test");
@@ -116,10 +111,9 @@ TEST_F(DownloadManagerTest, addDownloadTrivial) {
 }
 
 /**
- * Try downloading something that is already being download
+ * Try downloading something that is already being download.
  */
 TEST_F(DownloadManagerTest, addDownloadExists) {
-	
 	std::string hash = "abcd1234abcd1234abcd1234abcd1234abcd1234";
 	
 	Download *dl1 = new Download("tracker", hash, "test");
@@ -135,11 +129,10 @@ TEST_F(DownloadManagerTest, addDownloadExists) {
 /* Download First In List */
 
 /**
- * Trivial test for downloadFirstInList
+ * Trivial test for downloadFirstInList.
  */
 TEST_F(DownloadManagerTest, downloadFirstInListTrivial) {
-	
-	// Add two different downloads
+	// Add two different downloads.
 	std::string hash1 = "1234abcd1234abcd1234abcd1234abcd1234abcd";
 	Download dl1("track1", hash1, "name1");
 	DownloadManager::add(&dl1);
@@ -150,28 +143,27 @@ TEST_F(DownloadManagerTest, downloadFirstInListTrivial) {
 	Download dl2("track2", hash2, "name2");
 	DownloadManager::add(&dl2);
 	
-	// Check whether the first download started downloading automatically
+	// Check whether the first download started downloading automatically.
 	testDownloadsAreEqual(dl1, DownloadManager::getActiveDownload());
 	
-	// Start the second download
+	// Start the second download.
 	DownloadManager::startDownload(hash2);
 	index = DownloadManager::getIndexFromHash(hash2);
 	dl2.setID(DownloadManager::getDownloads().at(index).getID());
 	
-	// Check whether the second download is not downloading
+	// Check whether the second download is not downloading.
 	testDownloadsAreEqual(dl2, DownloadManager::getActiveDownload());
 	
-	// Start downloading the first again
+	// Start downloading the first again.
 	DownloadManager::downloadFirstInList();
 	
 	testDownloadsAreEqual(dl1, DownloadManager::getActiveDownload());
 }
 
 /**
- * Try downloading the first download when already downloading the first
+ * Try downloading the first download when already downloading the first.
  */
 TEST_F(DownloadManagerTest, downloadFirstInListAlreadyDownloading) {
-	
 	std::string hash1 = "1234abcd1234abcd1234abcd1234abcd1234abcd";
 	Download dl1("track1", hash1, "name1");
 	DownloadManager::add(&dl1);
@@ -188,10 +180,9 @@ TEST_F(DownloadManagerTest, downloadFirstInListAlreadyDownloading) {
 /* Clear List */
 
 /**
- * Trivial test for clearList
+ * Trivial test for clearList.
  */
 TEST_F(DownloadManagerTest, clearListTrivial) {
-	
 	std::string hash = "abcd1234abcd1234abcd1234abcd1234abcd1234";
 	Download *testDL = new Download("tracker", hash, "test");
 	DownloadManager::add(testDL);
@@ -204,10 +195,9 @@ TEST_F(DownloadManagerTest, clearListTrivial) {
 }
 
 /**
- * Try clearing list when it is already empty
+ * Try clearing list when it is already empty.
  */
 TEST_F(DownloadManagerTest, clearListEmpty) {
-	
 	EXPECT_EQ(0, DownloadManager::getDownloads().size());
 	
 	DownloadManager::clearList();
@@ -217,10 +207,9 @@ TEST_F(DownloadManagerTest, clearListEmpty) {
 /* Get Active Download */
 
 /**
- * Trivial test for getActiveDownload
+ * Trivial test for getActiveDownload.
  */
 TEST_F(DownloadManagerTest, getActiveDownloadTrivial) {
-	
 	std::string hash1 = "1234abcd1234abcd1234abcd1234abcd1234abcd";
 	Download testDL("track", hash1, "name");
 	DownloadManager::add(&testDL);
@@ -235,10 +224,9 @@ TEST_F(DownloadManagerTest, getActiveDownloadTrivial) {
 /* Start Download */
 
 /**
- * Trivial test for startDownload
+ * Trivial test for startDownload.
  */
 TEST_F(DownloadManagerTest, startDownloadTrivial) {
-	
 	std::string hash1 = "1234abcd1234abcd1234abcd1234abcd1234abcd";
 	Download dl1("track1", hash1, "name1");
 	DownloadManager::add(&dl1);
@@ -259,10 +247,9 @@ TEST_F(DownloadManagerTest, startDownloadTrivial) {
 }
 
 /**
- * Try downloading a file that doens't exist
+ * Try downloading a file that doesn't exist.
  */
 TEST_F(DownloadManagerTest, startDownloadNonexistent) {
-	
 	std::string hash = "abcd1234abcd1234abcd1234abcd1234abcd1234";
 	ASSERT_THROW(DownloadManager::startDownload(hash), FileNotFoundException);
 	
@@ -271,10 +258,9 @@ TEST_F(DownloadManagerTest, startDownloadNonexistent) {
 /* Remove From List */
 
 /**
- * Trivial test for removeFromList
+ * Trivial test for removeFromList.
  */
 TEST_F(DownloadManagerTest, removeFromListTrivial) {
-	
 	std::string hash1 = "1234abcd1234abcd1234abcd1234abcd1234abcd";
 	Download dl1("track1", hash1, "name1");
 	DownloadManager::add(&dl1);
@@ -294,10 +280,9 @@ TEST_F(DownloadManagerTest, removeFromListTrivial) {
 }
 
 /**
- * Remove the active download
+ * Remove the active download.
  */
 TEST_F(DownloadManagerTest, removeFromListActiveDownload) {
-	
 	std::string hash1 = "1234abcd1234abcd1234abcd1234abcd1234abcd";
 	Download dl1("track1", hash1, "name1");
 	DownloadManager::add(&dl1);
@@ -321,10 +306,9 @@ TEST_F(DownloadManagerTest, removeFromListActiveDownload) {
 }
 
 /**
- * try removing nonexistent file
+ * try removing nonexistent file.
  */
 TEST_F(DownloadManagerTest, removeFromListNonexistent) {
-	
 	std::string hash = "1234abcd1234abcd1234abcd1234abcd1234abcd";
 	EXPECT_THROW(DownloadManager::removeFromList(hash), FileNotFoundException);
 }
@@ -332,10 +316,9 @@ TEST_F(DownloadManagerTest, removeFromListNonexistent) {
 /* Switch Active Download */
 
 /**
- * Tivial test for switchDownload
+ * Tivial test for switchDownload.
  */
 TEST_F(DownloadManagerTest, switchDownloadTrivial) {
-	
 	std::string hash1 = "1234abcd1234abcd1234abcd1234abcd1234abcd";
 	Download dl1("track1", hash1, "name1");
 	DownloadManager::add(&dl1);
@@ -357,10 +340,9 @@ TEST_F(DownloadManagerTest, switchDownloadTrivial) {
 }
 
 /**
- * Try switching to the same download
+ * Try switching to the same download.
  */
 TEST_F(DownloadManagerTest, switchDownloadSame) {
-	
 	std::string hash1 = "1234abcd1234abcd1234abcd1234abcd1234abcd";
 	Download dl1("track1", hash1, "name1");
 	DownloadManager::add(&dl1);
@@ -385,7 +367,6 @@ TEST_F(DownloadManagerTest, switchDownloadSame) {
  * Switch to nonexistent download.
  */
 TEST_F(DownloadManagerTest, switchDownloadNonexistent) {
-	
 	std::string hash1 = "1234abcd1234abcd1234abcd1234abcd1234abcd";
 	Download dl1("track1", hash1, "name1");
 	DownloadManager::add(&dl1);
@@ -400,20 +381,18 @@ TEST_F(DownloadManagerTest, switchDownloadNonexistent) {
 }
 
 /**
- * Trivial test for starting a stream
+ * Trivial test for starting a stream.
  */
 TEST_F(DownloadManagerTest, startStreamTrivial) {
-	
-	DownloadManager::startStream("127.0.0.1:9999");
+	DownloadManager::startStream("127.0.0.1:9999", "abcd1234abcd1234abcd1234abcd1234abcd1234");
 	sleep(1);
 	EXPECT_EQ(true, Stream::getInstance()->readStreaming());
 }
 
 /**
- * Start a stream while there is an active download
+ * Start a stream while there is an active download.
  */
 TEST_F(DownloadManagerTest, startStreamWithActiveDownload) {
-	
 	std::string hash1 = "1234abcd1234abcd1234abcd1234abcd1234abcd";
 	Download dl1("track1", hash1, "name1");
 	DownloadManager::add(&dl1);
@@ -423,7 +402,7 @@ TEST_F(DownloadManagerTest, startStreamWithActiveDownload) {
 	testDownloadsAreEqual(dl1, DownloadManager::getActiveDownload());
 	EXPECT_EQ(DOWNLOADING, DownloadManager::getActiveDownload().getStatus());
 	
-	DownloadManager::startStream("127.0.0.1:9999");
+	DownloadManager::startStream("127.0.0.1:9999", "abcd1234abcd1234abcd1234abcd1234abcd1234");
 	sleep(1);
 	
 	EXPECT_EQ(true, Stream::getInstance()->readStreaming());
@@ -431,11 +410,10 @@ TEST_F(DownloadManagerTest, startStreamWithActiveDownload) {
 }
 
 /**
- * Trivial test for stopping a stream
+ * Trivial test for stopping a stream.
  */
 TEST_F(DownloadManagerTest, stopStreamTrivial) {
-	
-	DownloadManager::startStream("127.0.0.1:9999");
+	DownloadManager::startStream("127.0.0.1:9999", "1234abcd1234abcd1234abcd1234abcd1234abcd");
 	sleep(1);
 	EXPECT_EQ(true, Stream::getInstance()->readStreaming());
 	
@@ -444,10 +422,9 @@ TEST_F(DownloadManagerTest, stopStreamTrivial) {
 }
 
 /**
- * Stop a stream while there was an active download
+ * Stop a stream while there was an active download.
  */
 TEST_F(DownloadManagerTest, stopStreamWithActiveDownload) {
-	
 	std::string hash1 = "1234abcd1234abcd1234abcd1234abcd1234abcd";
 	Download dl1("track1", hash1, "name1");
 	DownloadManager::add(&dl1);
@@ -457,7 +434,7 @@ TEST_F(DownloadManagerTest, stopStreamWithActiveDownload) {
 	testDownloadsAreEqual(dl1, DownloadManager::getActiveDownload());
 	EXPECT_EQ(DOWNLOADING, DownloadManager::getActiveDownload().getStatus());
 	
-	DownloadManager::startStream("127.0.0.1:9999");
+	DownloadManager::startStream("127.0.0.1:9999", "1234abcd1234abcd1234abcd1234abcd1234abcd");
 	sleep(1);
 	EXPECT_EQ(true, Stream::getInstance()->readStreaming());
 	EXPECT_EQ(PAUSED, DownloadManager::getActiveDownload().getStatus());
@@ -466,3 +443,4 @@ TEST_F(DownloadManagerTest, stopStreamWithActiveDownload) {
 	EXPECT_EQ(false, Stream::getInstance()->readStreaming());
 	EXPECT_EQ(DOWNLOADING, DownloadManager::getActiveDownload().getStatus());
 }
+

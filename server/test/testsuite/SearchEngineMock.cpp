@@ -1,14 +1,14 @@
 #include "SearchEngine.h"
 
 /**
- * Clears the list of search results
+ * Clears the list of search results.
  */
 void SearchEngine::clearSearchResults() {
 	search_results.clear();
 }
 
 /**
- * Builds an XML string from the vector of results
+ * Builds an XML string from the vector of results.
  **/
 std::string SearchEngine::buildSearchXML() {
 	searchdoc = new ticpp::Document("searchdoc");
@@ -120,6 +120,6 @@ void SearchEngine::search(std::string search_term) {
  * Init function to set up python calls and start dispersy.
  */
 void SearchEngine::init() {
-	
 	std::cout <<  "SearchEngine Initialised." << std::endl;
 }
+

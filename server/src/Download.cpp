@@ -46,7 +46,6 @@ void Download::start() {
 	setStatus(DOWNLOADING);
 	
 	// Change the directory to Downloads folder.
-	// Temporarily hard coded.
 	int change = chdir(Settings::getDownloadDirectory().c_str());
 	
 	swift::Address trackeraddr = swift::Address(getTrackerAddress().c_str());

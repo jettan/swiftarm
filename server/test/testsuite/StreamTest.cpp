@@ -5,9 +5,9 @@
 #include <iostream>
 
 /**
- * This is the class that tests Stream.cpp
- * The setup sets the tracker
- * The teardown stops the stream if it is still active
+ * This is the class that tests Stream.cpp.
+ * The setup sets the tracker.
+ * The teardown stops the stream if it is still active.
  */
 class StreamTest : public ::testing::Test {
 	protected:
@@ -29,18 +29,18 @@ class StreamTest : public ::testing::Test {
 };
 
 /**
- * Check whether Stream always returns the same instance
+ * Check whether Stream always returns the same instance.
  */
 TEST_F(StreamTest, getInstance) {
 	
-	// check whether pointer address is equal
+	// Check whether pointer address is equal.
 	EXPECT_EQ(Stream::getInstance(), Stream::getInstance());
 }
 
 /* Start */
 
 /**
- * Trivial test for start
+ * Trivial test for start.
  */
 TEST_F(StreamTest, startStreamTrivial) {
 	
@@ -49,7 +49,7 @@ TEST_F(StreamTest, startStreamTrivial) {
 }
 
 /**
- * Start stream twice
+ * Start stream twice.
  */
 TEST_F(StreamTest, startTwice) {
 	
@@ -59,7 +59,7 @@ TEST_F(StreamTest, startTwice) {
 }
 
 /**
- * Start, stop and start the stream again
+ * Start, stop and start the stream again.
  */
 TEST_F(StreamTest, startStopStart) {
 	
@@ -72,7 +72,7 @@ TEST_F(StreamTest, startStopStart) {
 /* Stop */
 
 /**
- * Trivial test for stop
+ * Trivial test for stop.
  */
 TEST_F(StreamTest, stopTrivial) {
 	
@@ -82,7 +82,7 @@ TEST_F(StreamTest, stopTrivial) {
 }
 
 /**
- * Stop the stream twice
+ * Stop the stream twice.
  */
 TEST_F(StreamTest, stopTwice) {
 	

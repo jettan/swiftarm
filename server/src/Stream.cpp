@@ -40,7 +40,6 @@ void closeCallback(int fd, short event, void *arg) {
 	Stream* stream = (Stream*) arg;
 	if (stream->readStreaming()) {
 		evtimer_add(stream->getEvent(), swift::tint2tv(TINT_SEC));
-		std::cout << "Busy Streaming" << std::endl;
 	}
 }
 

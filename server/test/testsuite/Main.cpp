@@ -24,11 +24,8 @@ void *serverCallback(void *args) {
 	HttpServer::init();
 }
 
-int main(int argc, char **argv){
-	
-	// Copied from Main.cpp in ./ws
+int main(int argc, char **argv) {
 	SearchEngine::init();
-	
 	Settings::init(DEFAULT_DOWNLOAD_DIR);
 	
 	// Enable pthread use in libevent.
@@ -58,11 +55,11 @@ int main(int argc, char **argv){
 	
 	std::cout << "Initialised swift" << std::endl;
 	
-	// Set Download directory
+	// Set Download directory.
 	DownloadManager::init();
 	
-	//swift::Channel::debug_file = stdout;
-	// Make httpserver loop
+	// swift::Channel::debug_file = stdout;
+	// Make httpserver loop.
 	int rc = pthread_create(&server_thread, NULL, serverCallback, NULL);
 	std::cout << "pthread_create returned: " << rc << std::endl;
 	sleep(1);

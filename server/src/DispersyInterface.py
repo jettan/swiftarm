@@ -13,11 +13,6 @@ from Tribler.dispersy.dispersy import Dispersy
 from Tribler.dispersy.message import Message
 from Tribler.community.search.community import SearchCommunity
 
-# TODO: Create function to store downloading/uploading stuff to the dispersy database.
-# TODO: Create function to delete deleted stuff from the dispersy database.
-# TODO: Remove duplicate results.
-# TODO: Multifile support.
-
 # Container for the search community of dispersy.
 search_community = []
 
@@ -74,7 +69,7 @@ def resultsCallback(keywords, results, candidate):
             finger = 0
             for result in results:
                 swifthash = result[8]
-            
+
                 if swifthash:
                     if not isinstance(swifthash, str):
                         print >> sys.stderr, "Type error!"
@@ -86,7 +81,7 @@ def resultsCallback(keywords, results, candidate):
                         search_results.append(search_result)
                 else:
                     print >> sys.stderr, "swifthashless"
-                    
+
                 print >> sys.stderr, "-----------------------------------------------"
                 finger += 1
         finally:
@@ -98,11 +93,11 @@ def main():
     sscfg.set_state_dir(unicode(os.path.realpath("/tmp")))
     sscfg.set_dispersy_port(6421)
     sscfg.set_nickname("dispersy")
-    
+
     # The only modules needed by dispersy and DHT.
     sscfg.set_dispersy(True)
     sscfg.set_megacache(True)
-    
+
     # Disable all other tribler modules.
     sscfg.set_swift_proc(False)
     sscfg.set_buddycast(False)
@@ -113,43 +108,42 @@ def main():
     sscfg.set_torrent_collecting(False)
     sscfg.set_dialback(False)
     sscfg.set_internal_tracker(False)
-    
+
     # Create the session and wait for it to be created.
     session = Session(sscfg)
     time.sleep(5)
-    
+
     # Create the dispersy instance and make it accessible out of the main().
     dispersy.append(Dispersy.has_instance())
-    
+
     # Create the NetworkBuzzDBHandler that should be made in the tribler GUI.
     NetworkBuzzDBHandler.getInstance()
-    
-#    def on_torrent(messages):
-#        pass
-    
+
+    #def on_torrent(messages):
+    #pass
+
     # Find the search community from the dispersy instance.
     def findSearchCommunity():
         for community in dispersy[0].get_communities():
             if isinstance(community, SearchCommunity):
                  search_community.append(community)
-#                 searchCommunity.on_torrent = on_torrent
+                 #searchCommunity.on_torrent = on_torrent
                  break
-    
+
     # Let the dispersy thread find the search community.
     # MUST be called on the dispersy thread.
     dispersy[0].callback.register(findSearchCommunity)
-    
+
     # Any search request before this point will create a segfault!
-    # TODO: Disable searching on C++ side before this happens.
     print >> sys.stderr, "Ready to search!"
-    
+
     # Keep the main function spinning to keep the session alive and dispersy and DHT running.
     try:
         while True:
             sys.stdin.read()
     except:
         print_exc()
-    
+
     # Shutdown everything.
     session.shutdown()
     print "Shutting down..."

@@ -8,10 +8,10 @@
 #include "DownloadManager.h"
 
 /**
- * This is the test class for HttpServer.cpp
- * The setup initialises the Http Client in C++
- * and also clears the search engine list and downloads list
- * The teardown is empty
+ * This is the test class for HttpServer.cpp.
+ * The setup initialises the Http Client in C++.
+ * and also clears the search engine list and downloads list.
+ * The teardown is empty.
  */
 class HTTPServerTest : public ::testing::Test {
 	protected:
@@ -23,7 +23,7 @@ class HTTPServerTest : public ::testing::Test {
 	virtual ~HTTPServerTest() {}
 	
 	/**
-	 * Returns the Http response
+	 * Returns the Http response.
 	 */
 	size_t static getResponse(char *response, size_t size, size_t count, void *stream) {
 		
@@ -32,7 +32,7 @@ class HTTPServerTest : public ::testing::Test {
 	}
 	
 	/**
-	 * Do a search in SearchEngine.cpp
+	 * Do a search in SearchEngine.cpp.
 	 */
 	void search() {
 		
@@ -42,7 +42,7 @@ class HTTPServerTest : public ::testing::Test {
 	}
 	
 	/**
-	 * Turns an XML string into a vector of results
+	 * Turns an XML string into a vector of results.
 	 */
 	std::vector<struct SearchEngine::result> toVector(std::string response) {
 		
@@ -100,7 +100,7 @@ class HTTPServerTest : public ::testing::Test {
 /* Alive */
 
 /**
- * Test whether the server is running
+ * Test whether the server is running.
  */
 TEST_F(HTTPServerTest, aliveTest) {
 	
@@ -114,7 +114,7 @@ TEST_F(HTTPServerTest, aliveTest) {
 /* Search */
 
 /**
- * Test whether a search returns results
+ * Test whether a search returns results.
  */
 TEST_F(HTTPServerTest, searchTrivial) {
 	
@@ -136,7 +136,7 @@ TEST_F(HTTPServerTest, searchTrivial) {
 }
 
 /**
- * Test whether an empty searh is handled properly
+ * Test whether an empty searh is handled properly.
  */
 TEST_F(HTTPServerTest, searchEmpty) {
 	
@@ -160,7 +160,7 @@ TEST_F(HTTPServerTest, searchEmpty) {
 /* Add and Download */
 
 /**
- * Test whether you can add and download a file after a search
+ * Test whether you can add and download a file after a search.
  */
 TEST_F(HTTPServerTest, downloadTrivial) {
 	
@@ -176,8 +176,8 @@ TEST_F(HTTPServerTest, downloadTrivial) {
 	EXPECT_EQ("Download Added", response);
 	response = "";
 	
-	// Need to add a second download in order to use /download as the first download
-	// starts automatically
+	// Need to add a second download in order to use /download as the first download.
+	// Starts automatically.
 	std::string addr3 = Settings::getIP() + ":1337/add:012b5549e2622ea8bf3d694b4f55c959539ac848";
 	curl_easy_setopt(easyHandle, CURLOPT_URL, addr3.c_str());
 	res = curl_easy_perform(easyHandle);
@@ -193,9 +193,9 @@ TEST_F(HTTPServerTest, downloadTrivial) {
 }
 
 /**
- * Test whether adding a nonexistent download is handled properly
+ * Test whether adding a nonexistent download is handled properly.
  */
-TEST_F(HTTPServerTest, addNonexistent){
+TEST_F(HTTPServerTest, addNonexistent) {
 	
 	std::string addr1 = Settings::getIP() + ":1337/add:367d26a6ce626e049a21921100e24eac86dbcd32";
 	curl_easy_setopt(easyHandle, CURLOPT_URL, addr1.c_str());
@@ -205,9 +205,9 @@ TEST_F(HTTPServerTest, addNonexistent){
 }
 
 /**
- * Test whether downloading a nonexistent download is handled properly
+ * Test whether downloading a nonexistent download is handled properly.
  */
-TEST_F(HTTPServerTest, downloadNonexistent){
+TEST_F(HTTPServerTest, downloadNonexistent) {
 	
 	std::string addr1 = Settings::getIP() + ":1337/download:367d26a6ce626e049a21921100e24eac86dbcd32";
 	curl_easy_setopt(easyHandle, CURLOPT_URL, addr1.c_str());
@@ -217,9 +217,9 @@ TEST_F(HTTPServerTest, downloadNonexistent){
 }
 
 /**
- * Try downloading the same file twice
+ * Try downloading the same file twice.
  */
-TEST_F(HTTPServerTest, downloadTwice){
+TEST_F(HTTPServerTest, downloadTwice) {
 	
 	search();
 	response = "";
@@ -312,9 +312,9 @@ TEST_F(HTTPServerTest, pauseResumeStats) {
 /* Remove */
 
 /**
- * Trivial test for remove
+ * Trivial test for remove.
  */
-TEST_F(HTTPServerTest, removeTrivial){
+TEST_F(HTTPServerTest, removeTrivial) {
 	
 	search();
 	
@@ -340,7 +340,7 @@ TEST_F(HTTPServerTest, removeTrivial){
 }
 
 /**
- * Remove the active download
+ * Remove the active download.
  */
 TEST_F(HTTPServerTest, removeActiveDownload) {
 	
@@ -359,7 +359,7 @@ TEST_F(HTTPServerTest, removeActiveDownload) {
 	EXPECT_EQ(2, DownloadManager::getDownloads().size());
 	response = "";
 	
-	// After removing the active download, the second download should become active
+	// After removing the active download, the second download should become active.
 	std::string addr3 = Settings::getIP() + ":1337/remove:367d26a6ce626e049a21921100e24eac86dbcd32";
 	curl_easy_setopt(easyHandle, CURLOPT_URL, addr3.c_str());
 	res = curl_easy_perform(easyHandle);
@@ -370,7 +370,7 @@ TEST_F(HTTPServerTest, removeActiveDownload) {
 }
 
 /**
- * Try Removing a nonexistent download
+ * Try Removing a nonexistent download.
  */
 TEST_F(HTTPServerTest, removeNonexistent) {
 	
@@ -385,7 +385,7 @@ TEST_F(HTTPServerTest, removeNonexistent) {
 }
 
 /**
- * Start a stream
+ * Start a stream.
  */
 TEST_F(HTTPServerTest, startStreamTrivial) {
 	
@@ -401,7 +401,7 @@ TEST_F(HTTPServerTest, startStreamTrivial) {
 }
 
 /**
- * Stop a stream
+ * Stop a stream.
  */
 TEST_F(HTTPServerTest, stopStreamTrivial) {
 	
@@ -419,3 +419,4 @@ TEST_F(HTTPServerTest, stopStreamTrivial) {
 	
 	EXPECT_EQ("Not streaming anymore.", response);
 }
+
