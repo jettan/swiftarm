@@ -802,8 +802,10 @@ void DownloadManager::setMaxUpSpeed(double speed) {
 void DownloadManager::limitDownSpeeds(double speed) {
 	if (speed > 0) {
 		Settings::setMaxDownSpeed(speed * 1024);
+		setMaxDownSpeed(speed * 1024);
 	} else {
 		Settings::setMaxDownSpeed(DBL_MAX);
+		setMaxDownSpeed(DBL_MAX);
 	}
 	
 	for (int i = 0; i < getDownloads().size(); i++) {
@@ -820,8 +822,10 @@ void DownloadManager::limitDownSpeeds(double speed) {
 void DownloadManager::limitUpSpeeds(double speed) {
 	if (speed > 0) {
 		Settings::setMaxUpSpeed(speed * 1024);
+		setMaxUpSpeed(speed * 1024);
 	} else {
 		Settings::setMaxUpSpeed(DBL_MAX);
+		setMaxUpSpeed(DBL_MAX);
 	}
 
 	for (int i = 0; i < getDownloads().size(); i++) {
