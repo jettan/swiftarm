@@ -23,6 +23,9 @@
 #define DEFAULT_PORT          7758
 #define DHT_PORT              9999
 
+/**
+ * General Settings manager.
+ */
 namespace Settings {
 	/// Keeps track of the current ip address.
 	static std::string ip_address;

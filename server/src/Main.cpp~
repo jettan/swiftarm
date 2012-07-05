@@ -1,22 +1,3 @@
-/*
- #
- # This software is written as part of the Bachelor thesis of
- #
- # S.E. Austin,
- # A. Drif,
- # W.K.H. Ko,
- # J.E.T. Tan.
- #
- # The project was conducted at Delft University of Technology.
- #
- #    _____         _ ______ _______    __
- #   / ___/      __(_) __/ //_  __/ |  / /
- #   \__ \ | /| / / / /_/ __// /  | | / /
- #  ___/ / |/ |/ / / __/ /_ / /   | |/ /
- # /____/|__/|__/_/_/  \__//_/    |___/
- #
-*/
-
 #include <iostream>
 
 #include "ticpp.h"

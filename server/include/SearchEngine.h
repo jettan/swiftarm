@@ -11,9 +11,12 @@
 #include "Settings.h"
 #include "ticpp.h"
 
+/**
+ * Interface to Dispersy module.
+ * Makes use of Dispersy methods to find files online.
+ */
 namespace SearchEngine {
 	/// Thread to run dispersy module in.
-	
 	static pthread_t dispersy_thread;
 	
 	/// Mutex to protect dispersy thread.
@@ -33,7 +36,6 @@ namespace SearchEngine {
 	};
 	
 	void *startDispersy(void *arg);
-	
 	void clearSearchResults();
 	std::string buildSearchXML();
 	

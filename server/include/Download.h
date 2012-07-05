@@ -26,7 +26,10 @@ enum Status {
 	STATUS_SIZE,
 };
 
-	
+/**
+ * Data structure to store all data regarding swift downloads.
+ * Makes use of swift methods.
+ */
 class Download {
 	protected:
 		/// Mutex to prevent download thread and main thread from accessing same data at the same time.

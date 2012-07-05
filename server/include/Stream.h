@@ -10,6 +10,10 @@
 #include "Settings.h"
 #include "swift.h"
 
+/**
+ * Singleton class for downloading and binding streams.
+ * Makes use of swift methods.
+ */
 class Stream {
 	protected:
 		/// Trackers seeding this stream.

@@ -20,6 +20,10 @@
 
 #define UNLIMITED_SPEED 0
 
+/**
+ * Manages all up- and downloads.
+ * Also responsible for playing streams.
+ */
 namespace DownloadManager {
 	
 	struct Amount {

@@ -21,6 +21,10 @@
 #include "swift.h"
 #include "Settings.h"
 
+/**
+ * Http request handler.
+ * Acts as controller of the webserver subsystem.
+ */
 namespace HttpServer {
 	
 	static void sendXMLResponse(std::string msg, struct evhttp_request *req, struct evbuffer *buf);
