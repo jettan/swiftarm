@@ -233,8 +233,8 @@ static std::string streamRequest(std::string hash) {
  */
 static std::string settingsRequest(std::vector<std::string> result) {
 	
-	double max_down          = strtod(result.at(1).c_str(), NULL);
-	double max_up            = strtod(result.at(2).c_str(), NULL);
+	double max_up            = strtod(result.at(1).c_str(), NULL);
+	double max_down          = strtod(result.at(2).c_str(), NULL);
 	std::string download_dir = result.at(3);
 	download_dir             = Settings::replaceSubstring(download_dir, "%20", " ");
 	DownloadManager::limitUpSpeeds(max_up);
