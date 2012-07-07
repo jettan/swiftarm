@@ -378,13 +378,19 @@ void downloadCallback(int fd, short event, void* arg) {
 		std::cout << "Download Name: " << DownloadManager::active_download->getFilename() << std::endl;
 		std::cout << "Status: " << DownloadManager::active_download->getStatus() << std::endl;
 		
+		double progress = floorf(((swift::Complete(DownloadManager::active_download->getID()) * 10000.0) /
+			swift::Size(DownloadManager::active_download->getID()) * 1.0) + 0.5) / 100;
+		
 		if (DownloadManager::active_download->getStatus() == UPLOADING || DownloadManager::active_download->getStatus() == DOWNLOADING){
-			std::cout << "Percentage downloaded: " << floorf(((swift::Complete(DownloadManager::active_download->getID()) * 10000.0) /
-			swift::Size(DownloadManager::active_download->getID()) * 1.0) + 0.5) / 100 << std::endl;
+			std::cout << "Percentage downloaded: " << progress << std::endl;
 		}
 		bool is_unlocked = false;
 		
-		if (swift::SeqComplete(DownloadManager::active_download->getID()) == swift::Size(DownloadManager::active_download->getID()) ||
+		// Check for NaN
+		if (isnan(progress)) {
+			std::cout << "No peers..." << std::endl;
+		
+		} else if (swift::SeqComplete(DownloadManager::active_download->getID()) == swift::Size(DownloadManager::active_download->getID()) ||
 		    DownloadManager::active_download->getStatus() == PAUSED) {
 			
 			if (DownloadManager::active_download->getStatus() != UPLOADING && DownloadManager::active_download->getStatus() != PAUSED) {
